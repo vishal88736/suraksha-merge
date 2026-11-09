@@ -1,0 +1,3 @@
+# Optional actual AuditKIT runner and character-overlap metric.
+auditkit @ git+https://github.com/Lexsi-Labs/AuditKIT.git@9da5838e61ef54d560a37605ddbcb19aceded9b3
+sacrebleu>=2.4,<3

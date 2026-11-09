@@ -1,0 +1,3 @@
+# Optional GPU environment; do not install for the web demo.
+# Source-available components retain their own licences.
+aligntune @ git+https://github.com/Lexsi-Labs/aligntune.git@9a80753f2f0af7c5d9b1246904035e9149ea30e1

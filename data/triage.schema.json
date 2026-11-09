@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Suraksha internal UPI triage v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "utr_number",
+    "dispute_category",
+    "amount_inr",
+    "reporting_delay_working_days",
+    "rbi_liability_tier",
+    "mandatory_actions",
+    "detected_language",
+    "panic_severity"
+  ],
+  "properties": {
+    "utr_number": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9]{12}$"
+    },
+    "dispute_category": {
+      "enum": [
+        "COLLECT_REQUEST_SCAM",
+        "NEEDS_INFORMATION",
+        "P2M_CONFIRMATION_FAILURE",
+        "P2P_BENEFICIARY_NOT_CREDITED",
+        "REMOTE_ACCESS_SCAM",
+        "UNAUTHORIZED_ACCOUNT_TAKEOVER",
+        "VOLUNTARY_WRONG_VPA_TRANSFER"
+      ]
+    },
+    "amount_inr": {
+      "type": ["number", "null"],
+      "exclusiveMinimum": 0
+    },
+    "reporting_delay_working_days": {
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    "rbi_liability_tier": {
+      "enum": [
+        "BANK_POLICY_REVIEW",
+        "CUSTOMER_NEGLIGENCE_REVIEW",
+        "LIMITED_LIABILITY_ELIGIBLE",
+        "PENDING_VERIFICATION",
+        "TECHNICAL_T_PLUS_1",
+        "TECHNICAL_T_PLUS_5",
+        "ZERO_LIABILITY_ELIGIBLE"
+      ]
+    },
+    "mandatory_actions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "enum": [
+          "CALL_1930",
+          "CONTACT_BANK_PSP",
+          "HUMAN_REVIEW",
+          "RAISE_APP_DISPUTE",
+          "REPORT_CYBERCRIME",
+          "REQUEST_TRANSACTION_DETAILS",
+          "REQUEST_UTR",
+          "REVIEW_COMPENSATION",
+          "SECURE_PAYMENT_CHANNEL",
+          "TRACK_REVERSAL"
+        ]
+      }
+    },
+    "detected_language": {
+      "enum": [
+        "english",
+        "hindi_devanagari",
+        "hinglish",
+        "marathi_english",
+        "tanglish"
+      ]
+    },
+    "panic_severity": {
+      "enum": ["LOW", "MEDIUM", "HIGH_CRITICAL"]
+    }
+  }
+}

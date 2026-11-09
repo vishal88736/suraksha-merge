@@ -1,32 +1,372 @@
 "use client";
-import { ArrowDown, ArrowRight, ArrowUpRight, Braces, Check, Fingerprint, FolderLock, GitMerge, ShieldCheck, Sparkles, Star } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowRight,
+  ArrowUpRight,
+  Braces,
+  Check,
+  Fingerprint,
+  FolderLock,
+  GitMerge,
+  ShieldCheck,
+  Sparkles,
+  Star,
+} from "lucide-react";
 type Destination = "desk" | "pipeline" | "benchmarks" | "policy";
 function SecurityIllustration() {
- return <svg className="security-illustration" viewBox="0 0 680 590" role="img" aria-label="Illustration of a customer protected by a lock and source-grounded transaction records">
-  <defs><linearGradient id="pink-edge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#f86fbd"/><stop offset="1" stopColor="#f5e6ed"/></linearGradient><linearGradient id="yellow-edge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#ffda30"/><stop offset="1" stopColor="#fff8d8"/></linearGradient></defs>
-  <g transform="rotate(9 356 181)"><path d="M145 50H570V310H145Z" fill="#f3f3f1"/><path d="M145 50H570V60H145Z" fill="url(#yellow-edge)"/><rect x="158" y="69" width="398" height="225" fill="#fff"/><circle cx="424" cy="55" r="4" fill="#fff"/><circle cx="441" cy="55" r="4" fill="#fff"/><circle cx="458" cy="55" r="4" fill="#fff"/><rect x="183" y="95" width="150" height="7" fill="#e8e8e7"/><rect x="183" y="113" width="109" height="5" fill="#eee"/><rect x="183" y="130" width="130" height="5" fill="#eee"/></g>
-  <path d="M55 135H510V365H55Z" fill="#e6e7e4"/><path d="M55 135H510V148H55Z" fill="url(#pink-edge)"/><rect x="68" y="162" width="429" height="185" fill="white"/><circle cx="399" cy="142" r="4" fill="#fff"/><circle cx="416" cy="142" r="4" fill="#fff"/><circle cx="433" cy="142" r="4" fill="#fff"/>
-  <rect x="87" y="181" width="64" height="7" fill="#e2e3e0"/><rect x="87" y="196" width="36" height="4" fill="#eff0ed"/><rect x="86" y="224" width="109" height="6" fill="#e6e7e4"/><rect x="111" y="240" width="84" height="5" fill="#e6e7e4"/><rect x="96" y="256" width="99" height="5" fill="#e6e7e4"/><rect x="125" y="273" width="70" height="5" fill="#e6e7e4"/><rect x="86" y="290" width="109" height="5" fill="#e6e7e4"/><rect x="106" y="307" width="89" height="5" fill="#e6e7e4"/>
-  <g fill="#e5e6e3"><rect x="215" y="224" width="6" height="6"/><rect x="215" y="240" width="6" height="6"/><rect x="215" y="256" width="6" height="6"/><rect x="215" y="273" width="6" height="6"/><rect x="215" y="290" width="6" height="6"/><rect x="215" y="307" width="6" height="6"/></g>
-  <circle cx="376" cy="236" r="41" fill="#e8e9e7"/><circle cx="376" cy="222" r="11" fill="#fff"/><path d="M355 255l8-19h26l8 19z" fill="#fff"/><rect x="321" y="291" width="111" height="5" fill="#e8e9e7"/><rect x="341" y="305" width="71" height="5" fill="#e8e9e7"/>
-  <path d="M540 344v190q0 13 13 13h13q12 0 12-13V404h14v130q0 13 12 13h13q13 0 13-13V344Z" fill="#80cff5"/><path d="M548 363l-130-2q-19 0-21-15t18-16l145 6z" fill="#80cff5"/>
-  <path d="M530 169c22-1 49 14 58 36 9 25-5 55-30 67s-61 7-77-16c-14-23-13-49 4-67 11-12 26-19 45-20z" fill="#80cff5"/>
-  <path d="M543 157c-43-11-75 4-77 23-2 20 28 30 50 24 16-4 24-12 28-21" fill="none" stroke="#242332" strokeWidth="3.2" strokeLinecap="round"/><path d="M501 145c50-17 94 13 102 54 5 27-7 50-22 65" fill="none" stroke="#242332" strokeWidth="3.2" strokeLinecap="round"/>
-  <path d="M489 220h13m27 0h13m-25-4v25h7m-19 10q6 8 16 5" fill="none" stroke="#253349" strokeWidth="2.1" strokeLinecap="round"/>
-  <path d="M506 405l47-101q9-19 19 0l53 101q23 43-19 46h-78q-44-1-22-46z" fill="#050606"/><path d="M553 336q0-16 13-16t13 16v98q0 10-13 10t-13-10z" fill="#80cff5"/>
-  <path d="M326 333v-19c0-24 16-40 38-40s38 16 38 40v19" fill="none" stroke="#80cff5" strokeWidth="11"/>
-  <rect x="301" y="323" width="126" height="113" rx="20" fill="#040505"/><circle cx="364" cy="364" r="14" fill="#fff"/><rect x="358" y="369" width="12" height="29" rx="5" fill="#fff"/>
-  <path d="M467 548h196" stroke="#252b35" strokeWidth="1.4"/><path d="M655 548q3-38-13-56-11-12-18-16 2 30 17 39" fill="#e4e6e3"/><path d="M649 546q7-27 5-47" fill="none" stroke="#fff"/>
-  <g transform="translate(96 407)"><rect width="154" height="49" rx="8" fill="#fff" stroke="#d6eaed"/><circle cx="24" cy="24" r="13" fill="#b9eaff"/><path d="m17 25 5 5 10-12" fill="none" stroke="#151b20" strokeWidth="1.7"/><text x="48" y="22" fontFamily="sans-serif" fontSize="9" fontWeight="700" fill="#181e24">EVIDENCE, FIRST.</text><text x="48" y="35" fontFamily="sans-serif" fontSize="7" fill="#7b8588">Every field has a source.</text></g>
- </svg>;
+  return (
+    <svg
+      className="security-illustration"
+      viewBox="0 0 680 590"
+      role="img"
+      aria-label="Illustration of a customer protected by a lock and source-grounded transaction records"
+    >
+      <defs>
+        <linearGradient id="pink-edge" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#f86fbd" />
+          <stop offset="1" stopColor="#f5e6ed" />
+        </linearGradient>
+        <linearGradient id="yellow-edge" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#ffda30" />
+          <stop offset="1" stopColor="#fff8d8" />
+        </linearGradient>
+      </defs>
+      <g transform="rotate(9 356 181)">
+        <path d="M145 50H570V310H145Z" fill="#f3f3f1" />
+        <path d="M145 50H570V60H145Z" fill="url(#yellow-edge)" />
+        <rect x="158" y="69" width="398" height="225" fill="#fff" />
+        <circle cx="424" cy="55" r="4" fill="#fff" />
+        <circle cx="441" cy="55" r="4" fill="#fff" />
+        <circle cx="458" cy="55" r="4" fill="#fff" />
+        <rect x="183" y="95" width="150" height="7" fill="#e8e8e7" />
+        <rect x="183" y="113" width="109" height="5" fill="#eee" />
+        <rect x="183" y="130" width="130" height="5" fill="#eee" />
+      </g>
+      <path d="M55 135H510V365H55Z" fill="#e6e7e4" />
+      <path d="M55 135H510V148H55Z" fill="url(#pink-edge)" />
+      <rect x="68" y="162" width="429" height="185" fill="white" />
+      <circle cx="399" cy="142" r="4" fill="#fff" />
+      <circle cx="416" cy="142" r="4" fill="#fff" />
+      <circle cx="433" cy="142" r="4" fill="#fff" />
+      <rect x="87" y="181" width="64" height="7" fill="#e2e3e0" />
+      <rect x="87" y="196" width="36" height="4" fill="#eff0ed" />
+      <rect x="86" y="224" width="109" height="6" fill="#e6e7e4" />
+      <rect x="111" y="240" width="84" height="5" fill="#e6e7e4" />
+      <rect x="96" y="256" width="99" height="5" fill="#e6e7e4" />
+      <rect x="125" y="273" width="70" height="5" fill="#e6e7e4" />
+      <rect x="86" y="290" width="109" height="5" fill="#e6e7e4" />
+      <rect x="106" y="307" width="89" height="5" fill="#e6e7e4" />
+      <g fill="#e5e6e3">
+        <rect x="215" y="224" width="6" height="6" />
+        <rect x="215" y="240" width="6" height="6" />
+        <rect x="215" y="256" width="6" height="6" />
+        <rect x="215" y="273" width="6" height="6" />
+        <rect x="215" y="290" width="6" height="6" />
+        <rect x="215" y="307" width="6" height="6" />
+      </g>
+      <circle cx="376" cy="236" r="41" fill="#e8e9e7" />
+      <circle cx="376" cy="222" r="11" fill="#fff" />
+      <path d="M355 255l8-19h26l8 19z" fill="#fff" />
+      <rect x="321" y="291" width="111" height="5" fill="#e8e9e7" />
+      <rect x="341" y="305" width="71" height="5" fill="#e8e9e7" />
+      <path
+        d="M540 344v190q0 13 13 13h13q12 0 12-13V404h14v130q0 13 12 13h13q13 0 13-13V344Z"
+        fill="#80cff5"
+      />
+      <path d="M548 363l-130-2q-19 0-21-15t18-16l145 6z" fill="#80cff5" />
+      <path
+        d="M530 169c22-1 49 14 58 36 9 25-5 55-30 67s-61 7-77-16c-14-23-13-49 4-67 11-12 26-19 45-20z"
+        fill="#80cff5"
+      />
+      <path
+        d="M543 157c-43-11-75 4-77 23-2 20 28 30 50 24 16-4 24-12 28-21"
+        fill="none"
+        stroke="#242332"
+        strokeWidth="3.2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M501 145c50-17 94 13 102 54 5 27-7 50-22 65"
+        fill="none"
+        stroke="#242332"
+        strokeWidth="3.2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M489 220h13m27 0h13m-25-4v25h7m-19 10q6 8 16 5"
+        fill="none"
+        stroke="#253349"
+        strokeWidth="2.1"
+        strokeLinecap="round"
+      />
+      <path
+        d="M506 405l47-101q9-19 19 0l53 101q23 43-19 46h-78q-44-1-22-46z"
+        fill="#050606"
+      />
+      <path
+        d="M553 336q0-16 13-16t13 16v98q0 10-13 10t-13-10z"
+        fill="#80cff5"
+      />
+      <path
+        d="M326 333v-19c0-24 16-40 38-40s38 16 38 40v19"
+        fill="none"
+        stroke="#80cff5"
+        strokeWidth="11"
+      />
+      <rect x="301" y="323" width="126" height="113" rx="20" fill="#040505" />
+      <circle cx="364" cy="364" r="14" fill="#fff" />
+      <rect x="358" y="369" width="12" height="29" rx="5" fill="#fff" />
+      <path d="M467 548h196" stroke="#252b35" strokeWidth="1.4" />
+      <path d="M655 548q3-38-13-56-11-12-18-16 2 30 17 39" fill="#e4e6e3" />
+      <path d="M649 546q7-27 5-47" fill="none" stroke="#fff" />
+      <g transform="translate(96 407)">
+        <rect width="154" height="49" rx="8" fill="#fff" stroke="#d6eaed" />
+        <circle cx="24" cy="24" r="13" fill="#b9eaff" />
+        <path
+          d="m17 25 5 5 10-12"
+          fill="none"
+          stroke="#151b20"
+          strokeWidth="1.7"
+        />
+        <text
+          x="48"
+          y="22"
+          fontFamily="sans-serif"
+          fontSize="9"
+          fontWeight="700"
+          fill="#181e24"
+        >
+          EVIDENCE, FIRST.
+        </text>
+        <text x="48" y="35" fontFamily="sans-serif" fontSize="7" fill="#7b8588">
+          Every field has a source.
+        </text>
+      </g>
+    </svg>
+  );
 }
-export function Landing({ onNavigate }: { onNavigate: (view: Destination) => void }) {
- return <div className="landing"><header className="landing-nav"><a className="landing-logo" href="/" aria-label="SurakshaDesk home"><span className="gradient-dot"/>SURAKSHA<span>DESK</span></a><nav aria-label="Landing navigation"><a className="selected" href="#home">HOME</a><button onClick={()=>onNavigate("pipeline")}>HOW IT WORKS</button><a href="#features">FEATURES</a><a href="#questions">FAQ</a></nav><div className="landing-nav-actions"><a href="https://github.com/vishal88736/suraksha-merge" target="_blank" rel="noreferrer">GITHUB <ArrowUpRight size={12}/></a><button onClick={()=>onNavigate("desk")}>OPEN DESK <ArrowRight size={14}/></button></div></header>
-  <main className="landing-main" id="home"><svg className="contour-lines" viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true">{[0,1,2,3,4,5].map(i=><path key={i} d={`M-100 ${160+i*72} C 140 ${-20+i*72}, 390 ${-20+i*72}, 585 ${220+i*72} S 1050 ${800+i*38}, 1540 ${580+i*48}`} fill="none" stroke="#d3e3e4" strokeWidth=".8"/>)}</svg>
-   <section className="landing-hero" aria-labelledby="hero-title"><div className="hero-copy"><span className="next-level"><ShieldCheck size={16}/><span>SURAKSHA-MERGE</span></span><h1 id="hero-title">YOUR PAYMENT<br/><span>SECURITY <span className="fingerprint-pill"><Fingerprint strokeWidth={1.6}/></span></span></h1><p className="hero-description">NOISY MESSAGES. CLEAR NEXT STEPS.<br/>FRAUD TRIAGE WITH EVIDENCE — AND EMPATHY.</p><button className="hero-cta" onClick={()=>onNavigate("desk")}>EXPLORE THE DESK <ArrowRight size={29} strokeWidth={1.2}/></button><div className="hero-mode"><span/>WORKING RULE-BASED PREVIEW <span className="mode-separator">/</span> NO TRAINED MODEL YET</div>
-    <div className="unique-features" id="features"><h2>SECURITY, WITH A HUMAN SIDE</h2><div className="feature-tiles"><button onClick={()=>onNavigate("desk")}><span className="feature-square cyan-square"><Fingerprint size={65} strokeWidth={1.5}/></span><strong>PRIVATE BY DESIGN</strong><small>Context-aware PII masking</small></button><button onClick={()=>onNavigate("pipeline")}><span className="feature-square grey-square"><FolderLock size={64} strokeWidth={1.5}/></span><strong>BUILT ON EVIDENCE</strong><small>Traceable structured triage</small></button><button onClick={()=>onNavigate("benchmarks")}><span className="feature-square lavender-square"><span className="star-ring"><Star size={40} strokeWidth={1.7}/></span></span><strong>CARE IN EVERY REPLY</strong><small>Empathetic customer drafts</small></button></div></div>
-   </div><div className="hero-art"><SecurityIllustration/><div className="art-caption"><span className="caption-stars"><ShieldCheck size={17}/><Fingerprint size={17}/><Braces size={17}/></span><div><strong>ONE MESSAGE. A CLEARER NEXT STEP.</strong><span>CuratorKIT → AlignTune → AuditKIT</span></div><button aria-label="Explore how the pipeline works" onClick={()=>onNavigate("pipeline")}><ArrowUpRight size={22}/></button></div></div></section>
-   <section className="landing-explainer"><div><span className="landing-kicker">THE SURAKSHA APPROACH / 01</span><h2>LESS PANIC.<br/>MORE CLARITY.</h2></div><div><p>A collect-request scam. A payment that never arrived. A customer who needs help in their own words.</p><p>SurakshaDesk brings the message, the transaction evidence and the next steps into one reviewable workspace. Explore the live preview, then follow the research pipeline behind it.</p><button className="text-link" onClick={()=>onNavigate("pipeline")}>FOLLOW THE PIPELINE <ArrowRight size={19}/></button></div></section>
-   <section className="landing-faq" id="questions"><div><span className="landing-kicker">A LITTLE MORE CONTEXT / 02</span><h2>GOOD QUESTIONS.<br/>STRAIGHT ANSWERS.</h2></div><div className="faq-items"><details><summary>Is this a trained fraud detection model?<span>+</span></summary><p>The current desk uses deterministic extraction, policy rules and reply templates. Specialist training and model merging are research workflows; no trained checkpoint is connected yet.</p></details><details><summary>Does this file a dispute or approve a refund?<span>+</span></summary><p>The desk prepares a draft for review. It has no bank or NPCI connection and takes no external action. Actual disputes must be raised through the bank or PSP app.</p></details><details><summary>Where do the policy rules come from?<span>+</span></summary><p>Versioned RBI and NPCI sources inform the internal policy. Eligibility depends on verified facts and the applicable framework. <button onClick={()=>onNavigate("policy")}>Read the policy library ↗</button></p></details><details><summary>Can I inspect the source and evaluation plan?<span>+</span></summary><p>Yes. The project is public on GitHub. The benchmark lab lists all six planned checkpoints and keeps their scores blank until measured runs exist.</p></details></div></section>
-  </main><footer className="landing-footer"><a href="/" className="landing-logo"><span className="gradient-dot"/>SURAKSHA<span>DESK</span></a><span>THOUGHTFUL TRIAGE. TRACEABLE DECISIONS.</span><button onClick={()=>onNavigate("desk")}>OPEN THE WORKSPACE <ArrowUpRight size={15}/></button></footer></div>;
+export function Landing({
+  onNavigate,
+}: {
+  onNavigate: (view: Destination) => void;
+}) {
+  return (
+    <div className="landing">
+      <header className="landing-nav">
+        <a className="landing-logo" href="/" aria-label="SurakshaDesk home">
+          <span className="gradient-dot" />
+          SURAKSHA<span>DESK</span>
+        </a>
+        <nav aria-label="Landing navigation">
+          <a className="selected" href="#home">
+            HOME
+          </a>
+          <button onClick={() => onNavigate("pipeline")}>HOW IT WORKS</button>
+          <a href="#features">FEATURES</a>
+          <a href="#questions">FAQ</a>
+        </nav>
+        <div className="landing-nav-actions">
+          <a
+            href="https://github.com/vishal88736/suraksha-merge"
+            target="_blank"
+            rel="noreferrer"
+          >
+            GITHUB <ArrowUpRight size={12} />
+          </a>
+          <button onClick={() => onNavigate("desk")}>
+            OPEN DESK <ArrowRight size={14} />
+          </button>
+        </div>
+      </header>
+      <main className="landing-main" id="home">
+        <svg
+          className="contour-lines"
+          viewBox="0 0 1440 900"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          {[0, 1, 2, 3, 4, 5].map((i) => (
+            <path
+              key={i}
+              d={`M-100 ${160 + i * 72} C 140 ${-20 + i * 72}, 390 ${-20 + i * 72}, 585 ${220 + i * 72} S 1050 ${800 + i * 38}, 1540 ${580 + i * 48}`}
+              fill="none"
+              stroke="#d3e3e4"
+              strokeWidth=".8"
+            />
+          ))}
+        </svg>
+        <section className="landing-hero" aria-labelledby="hero-title">
+          <div className="hero-copy">
+            <span className="next-level">
+              <ShieldCheck size={16} />
+              <span>SURAKSHA-MERGE</span>
+            </span>
+            <h1 id="hero-title">
+              YOUR PAYMENT
+              <br />
+              <span>
+                SECURITY{" "}
+                <span className="fingerprint-pill">
+                  <Fingerprint strokeWidth={1.6} />
+                </span>
+              </span>
+            </h1>
+            <p className="hero-description">
+              NOISY MESSAGES. CLEAR NEXT STEPS.
+              <br />
+              FRAUD TRIAGE WITH EVIDENCE — AND EMPATHY.
+            </p>
+            <button className="hero-cta" onClick={() => onNavigate("desk")}>
+              EXPLORE THE DESK <ArrowRight size={29} strokeWidth={1.2} />
+            </button>
+            <div className="hero-mode">
+              <span />
+              WORKING RULE-BASED PREVIEW{" "}
+              <span className="mode-separator">/</span> NO TRAINED MODEL YET
+            </div>
+            <div className="unique-features" id="features">
+              <h2>SECURITY, WITH A HUMAN SIDE</h2>
+              <div className="feature-tiles">
+                <button onClick={() => onNavigate("desk")}>
+                  <span className="feature-square cyan-square">
+                    <Fingerprint size={65} strokeWidth={1.5} />
+                  </span>
+                  <strong>PRIVATE BY DESIGN</strong>
+                  <small>Context-aware PII masking</small>
+                </button>
+                <button onClick={() => onNavigate("pipeline")}>
+                  <span className="feature-square grey-square">
+                    <FolderLock size={64} strokeWidth={1.5} />
+                  </span>
+                  <strong>BUILT ON EVIDENCE</strong>
+                  <small>Traceable structured triage</small>
+                </button>
+                <button onClick={() => onNavigate("benchmarks")}>
+                  <span className="feature-square lavender-square">
+                    <span className="star-ring">
+                      <Star size={40} strokeWidth={1.7} />
+                    </span>
+                  </span>
+                  <strong>CARE IN EVERY REPLY</strong>
+                  <small>Empathetic customer drafts</small>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="hero-art">
+            <SecurityIllustration />
+            <div className="art-caption">
+              <span className="caption-stars">
+                <ShieldCheck size={17} />
+                <Fingerprint size={17} />
+                <Braces size={17} />
+              </span>
+              <div>
+                <strong>ONE MESSAGE. A CLEARER NEXT STEP.</strong>
+                <span>CuratorKIT → AlignTune → AuditKIT</span>
+              </div>
+              <button
+                aria-label="Explore how the pipeline works"
+                onClick={() => onNavigate("pipeline")}
+              >
+                <ArrowUpRight size={22} />
+              </button>
+            </div>
+          </div>
+        </section>
+        <section className="landing-explainer">
+          <div>
+            <span className="landing-kicker">THE SURAKSHA APPROACH / 01</span>
+            <h2>
+              LESS PANIC.
+              <br />
+              MORE CLARITY.
+            </h2>
+          </div>
+          <div>
+            <p>
+              A collect-request scam. A payment that never arrived. A customer
+              who needs help in their own words.
+            </p>
+            <p>
+              SurakshaDesk brings the message, the transaction evidence and the
+              next steps into one reviewable workspace. Explore the live
+              preview, then follow the research pipeline behind it.
+            </p>
+            <button
+              className="text-link"
+              onClick={() => onNavigate("pipeline")}
+            >
+              FOLLOW THE PIPELINE <ArrowRight size={19} />
+            </button>
+          </div>
+        </section>
+        <section className="landing-faq" id="questions">
+          <div>
+            <span className="landing-kicker">A LITTLE MORE CONTEXT / 02</span>
+            <h2>
+              GOOD QUESTIONS.
+              <br />
+              STRAIGHT ANSWERS.
+            </h2>
+          </div>
+          <div className="faq-items">
+            <details>
+              <summary>
+                Is this a trained fraud detection model?<span>+</span>
+              </summary>
+              <p>
+                The current desk uses deterministic extraction, policy rules and
+                reply templates. Specialist training and model merging are
+                research workflows; no trained checkpoint is connected yet.
+              </p>
+            </details>
+            <details>
+              <summary>
+                Does this file a dispute or approve a refund?<span>+</span>
+              </summary>
+              <p>
+                The desk prepares a draft for review. It has no bank or NPCI
+                connection and takes no external action. Actual disputes must be
+                raised through the bank or PSP app.
+              </p>
+            </details>
+            <details>
+              <summary>
+                Where do the policy rules come from?<span>+</span>
+              </summary>
+              <p>
+                Versioned RBI and NPCI sources inform the internal policy.
+                Eligibility depends on verified facts and the applicable
+                framework.{" "}
+                <button onClick={() => onNavigate("policy")}>
+                  Read the policy library ↗
+                </button>
+              </p>
+            </details>
+            <details>
+              <summary>
+                Can I inspect the source and evaluation plan?<span>+</span>
+              </summary>
+              <p>
+                Yes. The project is public on GitHub. The benchmark lab lists
+                all six planned checkpoints and keeps their scores blank until
+                measured runs exist.
+              </p>
+            </details>
+          </div>
+        </section>
+      </main>
+      <footer className="landing-footer">
+        <a href="/" className="landing-logo">
+          <span className="gradient-dot" />
+          SURAKSHA<span>DESK</span>
+        </a>
+        <span>THOUGHTFUL TRIAGE. TRACEABLE DECISIONS.</span>
+        <button onClick={() => onNavigate("desk")}>
+          OPEN THE WORKSPACE <ArrowUpRight size={15} />
+        </button>
+      </footer>
+    </div>
+  );
 }

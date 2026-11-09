@@ -14,4 +14,8 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run check
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m unittest research.test_pipeline -v
       - run: npm run build

@@ -49,7 +49,7 @@ yarn-error.log*
 __pycache__/
 *.pyc
 checkpoints/
-data/generated/
+data/generated*/
 data/private/
 artifacts/
 .env

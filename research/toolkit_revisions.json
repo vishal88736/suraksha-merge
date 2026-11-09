@@ -1,0 +1,14 @@
+{
+  "aligntune": {
+    "repository": "https://github.com/Lexsi-Labs/aligntune",
+    "revision": "9a80753f2f0af7c5d9b1246904035e9149ea30e1"
+  },
+  "curatorkit": {
+    "repository": "https://github.com/Lexsi-Labs/CuratorKIT",
+    "revision": "cee1aed21d14992f650c5dfe09094b9625d0ce87"
+  },
+  "auditkit": {
+    "repository": "https://github.com/Lexsi-Labs/AuditKIT",
+    "revision": "9da5838e61ef54d560a37605ddbcb19aceded9b3"
+  }
+}
