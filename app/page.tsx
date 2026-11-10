@@ -183,7 +183,10 @@ export default function Page() {
             <div className="eyebrow">{t("desk.eyebrow")}</div>
             <h1 tabIndex={-1}>
               {heading}
-              <span className="heading-dot">.</span>
+              {/* Some locales close the sentence themselves. */}
+              {/\s*[।.!]$/.test(heading) ? null : (
+                <span className="heading-dot">.</span>
+              )}
             </h1>
             <p>{subtitle}</p>
           </div>

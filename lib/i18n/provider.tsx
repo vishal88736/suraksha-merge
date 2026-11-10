@@ -40,6 +40,10 @@ function subscribe(onChange: () => void) {
 
 function getSnapshot(): UiLocale {
   try {
+    // A link may carry the language, so a shared view opens in the reader's
+    // language before the stored preference is applied.
+    const fromUrl = new URLSearchParams(window.location.search).get("lang");
+    if (isUiLocale(fromUrl)) return fromUrl;
     const stored = window.localStorage.getItem(STORAGE_KEY);
     return isUiLocale(stored) ? stored : DEFAULT_UI_LOCALE;
   } catch {
@@ -62,6 +66,9 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     } catch {
       // Private browsing can deny storage; the locale still applies.
     }
+    const url = new URL(window.location.href);
+    url.searchParams.set("lang", next);
+    window.history.replaceState(null, "", url);
     document.documentElement.lang = next;
     window.dispatchEvent(new Event(CHANGE_EVENT));
   }, []);
