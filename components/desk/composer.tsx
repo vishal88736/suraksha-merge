@@ -1,7 +1,22 @@
 "use client";
 import { useCallback, useRef, useState } from "react";
-import { Globe2, LoaderCircle, RotateCcw, ScanLine, Settings2, ChevronDown, TriangleAlert, Mic, Square } from "lucide-react";
-import { REPLY_LANGUAGES, replyLanguage, uiLocale, type UiLocale } from "../../lib/i18n/locales.ts";
+import {
+  Globe2,
+  LoaderCircle,
+  RotateCcw,
+  ScanLine,
+  Settings2,
+  ChevronDown,
+  TriangleAlert,
+  Mic,
+  Square,
+} from "lucide-react";
+import {
+  REPLY_LANGUAGES,
+  replyLanguage,
+  uiLocale,
+  type UiLocale,
+} from "../../lib/i18n/locales.ts";
 import { useI18n } from "../../lib/i18n/provider.tsx";
 import type { TriageInput } from "../../lib/engine.ts";
 import { useDictation } from "../../hooks/use-dictation.ts";
@@ -23,7 +38,9 @@ export function Composer({
   onRun,
   onRetry,
   onReset,
-  authRequired, apiKey, onApiKey,
+  authRequired,
+  apiKey,
+  onApiKey,
 }: {
   input: TriageInput;
   loading: boolean;
@@ -33,7 +50,9 @@ export function Composer({
   onRun: () => void;
   onRetry: () => void;
   onReset: () => void;
-  authRequired: boolean; apiKey: string; onApiKey: (key: string) => void;
+  authRequired: boolean;
+  apiKey: string;
+  onApiKey: (key: string) => void;
 }) {
   const { t } = useI18n();
   const [advanced, setAdvanced] = useState(false);
@@ -65,7 +84,9 @@ export function Composer({
         ? t("composer.voiceDenied")
         : dictation.status === "empty"
           ? t("composer.voiceEmpty")
-          : dictation.status === "error" ? t("composer.voiceError") : "";
+          : dictation.status === "error"
+            ? t("composer.voiceError")
+            : "";
 
   // A browser that cannot dictate still needs the operator context to hand.
   const contextOpen =
@@ -75,7 +96,19 @@ export function Composer({
 
   return (
     <div className="composer">
-      {authRequired && <label className="api-key-field">{t("composer.apiKey")}<input type="password" value={apiKey} autoComplete="off" spellCheck={false} onChange={e => onApiKey(e.target.value)} /><small>{t("composer.apiKeyHint")}</small></label>}
+      {authRequired && (
+        <label className="api-key-field">
+          {t("composer.apiKey")}
+          <input
+            type="password"
+            value={apiKey}
+            autoComplete="off"
+            spellCheck={false}
+            onChange={(e) => onApiKey(e.target.value)}
+          />
+          <small>{t("composer.apiKeyHint")}</small>
+        </label>
+      )}
       <div className="composer-heading">
         <label htmlFor="message">{t("composer.heading")}</label>
         <button onClick={onReset}>
@@ -90,11 +123,7 @@ export function Composer({
         aria-describedby="message-hint"
         onChange={(e) => onInput({ message: e.target.value })}
         onKeyDown={(e) => {
-          if (
-            (e.metaKey || e.ctrlKey) &&
-            e.key === "Enter" &&
-            !loading
-          ) {
+          if ((e.metaKey || e.ctrlKey) && e.key === "Enter" && !loading) {
             e.preventDefault();
             onRun();
           }
@@ -104,7 +133,12 @@ export function Composer({
       <p id="message-hint" className="composer-hint">
         {t("composer.languageHint")}
       </p>
-      <div className="composer-meta"><span>{t("composer.shortcut")}</span><span aria-live="off">{input.message.length.toLocaleString()} / 12,000</span></div>
+      <div className="composer-meta">
+        <span>{t("composer.shortcut")}</span>
+        <span aria-live="off">
+          {input.message.length.toLocaleString()} / 12,000
+        </span>
+      </div>
       <div className="composer-controls">
         <label className="language-select">
           <Globe2 size={14} />
@@ -119,7 +153,9 @@ export function Composer({
           >
             {REPLY_LANGUAGE_OPTIONS.map((option) => (
               <option value={option.code} key={option.code}>
-                {option.code === "auto" ? t("composer.autoDetect") : option.label}
+                {option.code === "auto"
+                  ? t("composer.autoDetect")
+                  : option.label}
               </option>
             ))}
           </select>
@@ -131,7 +167,9 @@ export function Composer({
                 dictation.status === "listening" ? "listening" : ""
               }`}
               onClick={() =>
-                dictation.status === "listening" ? dictation.stop() : dictation.start()
+                dictation.status === "listening"
+                  ? dictation.stop()
+                  : dictation.start()
               }
               aria-pressed={dictation.status === "listening"}
             >
@@ -184,8 +222,7 @@ export function Composer({
         aria-expanded={contextOpen}
         aria-controls="context-form"
       >
-        <Settings2 size={13} /> {t("context.toggle")}{" "}
-        <ChevronDown size={13} />
+        <Settings2 size={13} /> {t("context.toggle")} <ChevronDown size={13} />
       </button>
       {contextOpen && (
         <div className="context-form" id="context-form">
@@ -207,8 +244,15 @@ export function Composer({
             />
           </label>
           <label>
-            {t("context.transactionDate")}
-            <input type="date" value={input.transaction_date ?? ""} aria-describedby="context-note" onChange={(event) => onInput({ transaction_date: event.target.value || undefined })} />
+            {t("composer.transactionDate")}
+            <input
+              type="date"
+              value={input.transaction_date ?? ""}
+              aria-describedby="context-note"
+              onChange={(event) =>
+                onInput({ transaction_date: event.target.value || undefined })
+              }
+            />
           </label>
           <label>
             {t("context.elapsed")}

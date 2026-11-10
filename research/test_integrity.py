@@ -4,8 +4,9 @@ import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 from phase1_curatorkit_pipeline import curate
-from phase2_aligntune_train_and_merge import check_data, resolve_shared_base, write_manifest
+from phase2_aligntune_train_and_merge import check_data, resolve_shared_base, write_manifest, identity, materialize_base
 from phase3_auditkit_eval import evaluate, paired_bootstrap, score_prediction
 from research.artifacts import file_digest, resolve_adapter, safe_dataset_file, verify_prediction_manifest
 from research.common import ROOT, extraction_reward, read_jsonl, strict_json, write_jsonl
@@ -14,6 +15,29 @@ class IntegrityTests(unittest.TestCase):
     def setUp(self):
         self.rows=read_jsonl(ROOT/'data/seeds/synthetic_cases.jsonl')
         self.target=self.rows[0]['target']
+    def test_remote_weights_and_tokenizer_share_the_resolved_revision(self):
+        token_calls=[]
+        class Config:
+            @staticmethod
+            def from_pretrained(source, **kwargs):
+                self.assertEqual(kwargs["revision"], "requested-branch")
+                return SimpleNamespace(_commit_hash="immutable-fixture-revision")
+        class Tokenizer:
+            def __len__(self):return 2
+            def get_vocab(self):return {"a":0,"b":1}
+            @staticmethod
+            def from_pretrained(source, **kwargs):
+                token_calls.append(kwargs)
+                return Tokenizer()
+        hub=SimpleNamespace(snapshot_download=lambda **kwargs: kwargs)
+        with patch.dict("sys.modules", {"transformers":SimpleNamespace(AutoConfig=Config, AutoTokenizer=Tokenizer), "huggingface_hub":hub}):
+            ident=identity("org/fixture-only", "requested-branch")
+            loaded=materialize_base("org/fixture-only", ident)
+        self.assertEqual(token_calls[0]["revision"], "immutable-fixture-revision")
+        self.assertFalse(token_calls[0]["trust_remote_code"])
+        self.assertEqual(loaded["revision"], "immutable-fixture-revision")
+        self.assertIn("*.jinja", loaded["allow_patterns"])
+
     def test_checkpoint_only_outputs_resolve_without_loading_a_model(self):
         with tempfile.TemporaryDirectory() as tmp:
             output=Path(tmp)/'schema';adapter=output/'checkpoint-100';adapter.mkdir(parents=True)

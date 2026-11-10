@@ -13,21 +13,30 @@ const en = {
   "composer.shortcut": "Ctrl / ⌘ + Enter to run",
   "composer.transactionDate": "Transaction date",
   "composer.autoDetect": "Auto-detect language",
-  "composer.voiceError": "Voice recognition could not finish. Please retry or type your message.",
+  "composer.voiceError":
+    "Voice recognition could not finish. Please retry or type your message.",
 
   "desk.staleTitle": "Your inputs changed. Refresh the decision.",
-  "desk.staleBody": "The visible draft and policy assessment describe the previous inputs. Run triage before copying or exporting.",
+  "desk.staleBody":
+    "The visible draft and policy assessment describe the previous inputs. Run triage before copying or exporting.",
   "desk.runningTitle": "Checking the message and its evidence…",
-  "desk.runningBody": "Your previous result remains visible while the new assessment is prepared.",
+  "desk.runningBody":
+    "Your previous result remains visible while the new assessment is prepared.",
   "composer.apiKey": "Service API key",
-  "composer.apiKeyHint": "Used only for this request session. Never stored or included in exports.",
+  "composer.apiKeyHint":
+    "Used only for this request session. Never stored or included in exports.",
   "composer.replyLanguage": "Customer reply language",
-  "error.unauthorized": "This service requires an API key. Enter it below, then retry.",
+  "error.unauthorized":
+    "This service requires an API key. Enter it below, then retry.",
   "error.rateLimited": "Too many requests. Wait a minute, then retry.",
-  "error.timeout": "The request timed out. Your message is still here; please retry.",
-  "error.invalidInput": "Check your message and operator context, then try again.",
-  "error.tooLarge": "The message is too large. Keep it under 12,000 characters.",
-  "error.invalidResponse": "The service returned an incomplete response. Please retry.",
+  "error.timeout":
+    "The request timed out. Your message is still here; please retry.",
+  "error.invalidInput":
+    "Check your message and operator context, then try again.",
+  "error.tooLarge":
+    "The message is too large. Keep it under 12,000 characters.",
+  "error.invalidResponse":
+    "The service returned an incomplete response. Please retry.",
 
   "nav.brandHome": "SurakshaDesk home",
   "nav.brandTagline": "CLARITY. CARE. CONFIDENCE.",
@@ -108,7 +117,8 @@ const en = {
     "Voice input is not supported in this browser. You can paste the message instead.",
   "composer.voiceDenied":
     "Microphone access was refused. Paste the message instead.",
-  "composer.voiceEmpty": "No speech was recognised. Try again or paste the message.",
+  "composer.voiceEmpty":
+    "No speech was recognised. Try again or paste the message.",
   "composer.languageHint":
     "The reply is written in the language detected from your message.",
 
@@ -146,7 +156,8 @@ const en = {
   "liability.timeline": "REVERSAL TIMELINE",
   "liability.assessment": "LIABILITY ASSESSMENT",
   "liability.verificationRequired": "Bank verification required",
-  "liability.conditional": "Conditional eligibility · subject to bank investigation",
+  "liability.conditional":
+    "Conditional eligibility · subject to bank investigation",
   "liability.responsible":
     "Authorisation and responsibility determine the outcome",
   "liability.deadline": "T+{days} calendar days",
@@ -261,7 +272,8 @@ const en = {
   "error.connection": "Could not connect. Please try again.",
 
   "toast.copied": "Copied to clipboard",
-  "toast.clipboardUnavailable": "Clipboard unavailable. You can select and copy the text.",
+  "toast.clipboardUnavailable":
+    "Clipboard unavailable. You can select and copy the text.",
   "toast.traceExported": "Masked provenance trace exported",
 
   "landing.home": "HOME",
@@ -274,8 +286,7 @@ const en = {
   "landing.heroTitleLine1": "YOUR PAYMENT",
   "landing.heroTitleLine2": "SECURITY",
   "landing.heroDescriptionLine1": "NOISY MESSAGES. CLEAR NEXT STEPS.",
-  "landing.heroDescriptionLine2":
-    "FRAUD TRIAGE WITH EVIDENCE — AND EMPATHY.",
+  "landing.heroDescriptionLine2": "FRAUD TRIAGE WITH EVIDENCE — AND EMPATHY.",
   "landing.heroCta": "EXPLORE THE DESK",
   "landing.heroMode": "WORKING RULE-BASED PREVIEW",
   "landing.heroModeDivider": "NO TRAINED MODEL YET",
@@ -328,18 +339,23 @@ const hi: Record<MessageKey, string> = {
   "composer.shortcut": "चलाने के लिए Ctrl / ⌘ + Enter",
   "composer.transactionDate": "लेनदेन की तारीख़",
   "composer.autoDetect": "भाषा स्वतः पहचानें",
-  "composer.voiceError": "आवाज़ की पहचान पूरी नहीं हुई। पुनः प्रयास करें या संदेश लिखें।",
+  "composer.voiceError":
+    "आवाज़ की पहचान पूरी नहीं हुई। पुनः प्रयास करें या संदेश लिखें।",
 
   "desk.staleTitle": "जानकारी बदल गई है। निर्णय फिर से जाँचें।",
-  "desk.staleBody": "दिख रहा उत्तर और नीति आकलन पिछली जानकारी का है। कॉपी या निर्यात से पहले ट्रायेज फिर चलाएँ।",
+  "desk.staleBody":
+    "दिख रहा उत्तर और नीति आकलन पिछली जानकारी का है। कॉपी या निर्यात से पहले ट्रायेज फिर चलाएँ।",
   "desk.runningTitle": "संदेश और उसके प्रमाण जाँचे जा रहे हैं…",
   "desk.runningBody": "नया आकलन तैयार होने तक पिछला परिणाम दिख रहा है।",
   "composer.apiKey": "सेवा की API कुंजी",
-  "composer.apiKeyHint": "केवल इस सत्र के अनुरोध में उपयोग होगी। इसे सहेजा या निर्यात नहीं किया जाता।",
+  "composer.apiKeyHint":
+    "केवल इस सत्र के अनुरोध में उपयोग होगी। इसे सहेजा या निर्यात नहीं किया जाता।",
   "composer.replyLanguage": "ग्राहक के उत्तर की भाषा",
-  "error.unauthorized": "इस सेवा के लिए API कुंजी आवश्यक है। नीचे कुंजी भरें और पुनः प्रयास करें।",
+  "error.unauthorized":
+    "इस सेवा के लिए API कुंजी आवश्यक है। नीचे कुंजी भरें और पुनः प्रयास करें।",
   "error.rateLimited": "बहुत अधिक अनुरोध हुए। एक मिनट बाद पुनः प्रयास करें।",
-  "error.timeout": "अनुरोध की समय-सीमा समाप्त हुई। आपका संदेश सुरक्षित है; फिर प्रयास करें।",
+  "error.timeout":
+    "अनुरोध की समय-सीमा समाप्त हुई। आपका संदेश सुरक्षित है; फिर प्रयास करें।",
   "error.invalidInput": "संदेश और ऑपरेटर की जानकारी जाँचकर पुनः प्रयास करें।",
   "error.tooLarge": "संदेश बहुत बड़ा है। इसे 12,000 अक्षरों से कम रखें।",
   "error.invalidResponse": "सेवा का उत्तर अधूरा है। पुनः प्रयास करें।",
@@ -433,7 +449,8 @@ const hi: Record<MessageKey, string> = {
   "context.responsibility": "ज़िम्मेदारी · प्रमाण आवश्यक",
   "context.responsibilityUnknown": "अज्ञात / असत्यापित",
   "context.responsibilityBank": "बैंक की लापरवाही · ऑपरेटर द्वारा दी गई",
-  "context.responsibilityThirdParty": "तृतीय पक्ष की गड़बड़ी · ऑपरेटर द्वारा दी गई",
+  "context.responsibilityThirdParty":
+    "तृतीय पक्ष की गड़बड़ी · ऑपरेटर द्वारा दी गई",
   "context.responsibilityCustomer": "ग्राहक की लापरवाही · ऑपरेटर द्वारा दी गई",
   "context.tier": "खाता श्रेणी",
   "context.tierUnknown": "अज्ञात",
@@ -502,15 +519,15 @@ const hi: Record<MessageKey, string> = {
   "provenance.anchors": "{count} आँकर",
   "provenance.context": "सुरक्षित मॉडल संदर्भ",
   "provenance.regex": "रेगेक्स स्वच्छता",
-  "provenance.disclaimerTitle": "प्रमाण-श्रृंखला प्रामाणिकता का प्रमाण नहीं है।",
+  "provenance.disclaimerTitle":
+    "प्रमाण-श्रृंखला प्रामाणिकता का प्रमाण नहीं है।",
   "provenance.disclaimerBody":
     "किसी संदर्भ का पाठ से मेल खलना बैंक लेनदेन की पुष्टि नहीं करता। रेगेक्स स्क्रबर समर्थित पैटर्न पहचानता है; Presidio एक वैकल्पिक शोध चरण है।",
   "provenance.export": "संवेदनशील-रहित प्रमाण ट्रेस निर्यात करें",
 
   "teaser.eyebrow": "डेस्क के पीछे का शोध",
   "teaser.title": "संरचना के साथ थोड़ी समझ भी।",
-  "teaser.body":
-    "विशेषज्ञ अडैप्टर, टास्क अरिथमेटिक और मूल्यांकन ढाँचा देखें।",
+  "teaser.body": "विशेषज्ञ अडैप्टर, टास्क अरिथमेटिक और मूल्यांकन ढाँचा देखें।",
   "teaser.cta": "पाइपलाइन देखें",
 
   "pipeline.previous": "पिछला चरण",
@@ -534,8 +551,7 @@ const hi: Record<MessageKey, string> = {
     "प्रस्ताव के प्रतिशत और लागत अनुमान मापे नहीं गए हैं। यह तालिका केवल पहचाने जा सकने वाले मूल्यांकन पर runs से भरेगी।",
   "bench.notEvaluated": "अभी मूल्यांकन नहीं हुआ",
   "bench.ablation": "चेकपॉइंट अब्लेशन",
-  "bench.ablationBody":
-    "सभी विशेषज्ञ और आधार रेखाएँ, एक ही होल्ड-आउट केस पर।",
+  "bench.ablationBody": "सभी विशेषज्ञ और आधार रेखाएँ, एक ही होल्ड-आउट केस पर।",
   "bench.colCheckpoint": "चेकपॉइंट",
   "bench.colSchema": "स्कीमा उत्तीर्ण",
   "bench.colFields": "फ़ील्ड सटीक मिलान",
@@ -575,7 +591,8 @@ const hi: Record<MessageKey, string> = {
   "error.connection": "कनेक्ट नहीं हो सका। कृपया फिर कोशिश करें।",
 
   "toast.copied": "क्लिपबोर्ड पर कॉपी हो गया",
-  "toast.clipboardUnavailable": "क्लिपबोर्ड उपलब्ध नहीं। आप पाठ चुनकर कॉपी कर सकते हैं।",
+  "toast.clipboardUnavailable":
+    "क्लिपबोर्ड उपलब्ध नहीं। आप पाठ चुनकर कॉपी कर सकते हैं।",
   "toast.traceExported": "संवेदनशील-रहित प्रमाण ट्रेस निर्यात हुआ",
 
   "landing.home": "होम",
@@ -588,7 +605,8 @@ const hi: Record<MessageKey, string> = {
   "landing.heroTitleLine1": "आपके भुगतान की",
   "landing.heroTitleLine2": "सुरक्षा",
   "landing.heroDescriptionLine1": "शोरगुल वाले संदेश। स्पष्ट अगला कदम।",
-  "landing.heroDescriptionLine2": "प्रमाण के साथ धोखाधड़ी ट्रायेज — और सहानुभूति।",
+  "landing.heroDescriptionLine2":
+    "प्रमाण के साथ धोखाधड़ी ट्रायेज — और सहानुभूति।",
   "landing.heroCta": "डेस्क देखें",
   "landing.heroMode": "कार्यशील नियम-आधारित पूर्वावलोकन",
   "landing.heroModeDivider": "अभी कोई प्रशिक्षित मॉडल नहीं",
@@ -620,7 +638,8 @@ const hi: Record<MessageKey, string> = {
   "landing.faq1Question": "क्या यह प्रशिक्षित धोखाधड़ी-पहचान मॉडल है?",
   "landing.faq1Answer":
     "मौजूदा डेस्क नियतात्मक निष्कर्ष, नीति नियम और उत्तर-टेम्पलेट इस्तेमाल करता है। विशेषज्ञ प्रशिक्षण और मॉडल मर्ज शोध कार्यप्रवाह हैं; अभी कोई प्रशिक्षित चेकपॉइंट जुड़ा नहीं है।",
-  "landing.faq2Question": "क्या यह विवाद दर्ज करता है या रिफ़ंड मंज़ूर करता है?",
+  "landing.faq2Question":
+    "क्या यह विवाद दर्ज करता है या रिफ़ंड मंज़ूर करता है?",
   "landing.faq2Answer":
     "डेस्क समीक्षा हेतु ड्राफ़्ट तैयार करता है। इसका बैंक या NPCI से कोई जुड़ाव नहीं है और यह कोई बाहरी कार्रवाई नहीं करता। वास्तविक विवाद बैंक या PSP ऐप से दर्ज करें।",
   "landing.faq3Question": "नीति नियम कहाँ से आते हैं?",

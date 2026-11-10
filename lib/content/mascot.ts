@@ -8,7 +8,12 @@
 import type { LocalizedText } from "../i18n/locales.ts";
 import { isStale, type TriageState } from "../triage-reducer.ts";
 
-export type MascotMood = "idle" | "listening" | "thinking" | "found" | "warning";
+export type MascotMood =
+  | "idle"
+  | "listening"
+  | "thinking"
+  | "found"
+  | "warning";
 
 export type MascotHint = {
   id: string;
@@ -19,8 +24,24 @@ export type MascotHint = {
 
 /** Hints in priority order; the first match wins. */
 const HINTS: MascotHint[] = [
-  { id: "checking", mood: "thinking", title: { en: "Checking the evidence", hi: "प्रमाण जाँचे जा रहे हैं" }, body: { en: "The new assessment is running. Keep the previous draft for reference until the result is ready.", hi: "नया आकलन जारी है। परिणाम आने तक पिछले उत्तर को केवल संदर्भ मानें।" } },
-  { id: "retry", mood: "warning", title: { en: "Your message is still here", hi: "आपका संदेश यहीं है" }, body: { en: "The request did not finish. Check the message below, then retry; the last result has not been replaced.", hi: "अनुरोध पूरा नहीं हुआ। नीचे संदेश जाँचकर पुनः प्रयास करें; पिछला परिणाम बदला नहीं गया है।" } },
+  {
+    id: "checking",
+    mood: "thinking",
+    title: { en: "Checking the evidence", hi: "प्रमाण जाँचे जा रहे हैं" },
+    body: {
+      en: "The new assessment is running. Keep the previous draft for reference until the result is ready.",
+      hi: "नया आकलन जारी है। परिणाम आने तक पिछले उत्तर को केवल संदर्भ मानें।",
+    },
+  },
+  {
+    id: "retry",
+    mood: "warning",
+    title: { en: "Your message is still here", hi: "आपका संदेश यहीं है" },
+    body: {
+      en: "The request did not finish. Check the message below, then retry; the last result has not been replaced.",
+      hi: "अनुरोध पूरा नहीं हुआ। नीचे संदेश जाँचकर पुनः प्रयास करें; पिछला परिणाम बदला नहीं गया है।",
+    },
+  },
 
   {
     id: "fraud",
@@ -43,7 +64,10 @@ const HINTS: MascotHint[] = [
   {
     id: "wrong-transfer",
     mood: "warning",
-    title: { en: "No automatic reversal here", hi: "यहाँ स्वतः उलटी कार्रवाई नहीं" },
+    title: {
+      en: "No automatic reversal here",
+      hi: "यहाँ स्वतः उलटी कार्रवाई नहीं",
+    },
     body: {
       en: "A transfer you sent yourself has no refund guarantee. Recovery depends on the bank's review and the recipient's cooperation.",
       hi: "आपके द्वारा भेजे गए ट्रांसफ़र का कोई रिफ़ंड गारंटी नहीं है। वसूली बैंक की समीक्षा और प्राप्तकर्ता के सहयोग पर निर्भर है।",
@@ -79,7 +103,10 @@ const HINTS: MascotHint[] = [
   {
     id: "editing",
     mood: "thinking",
-    title: { en: "The panel is behind your edit", hi: "पैनल आपके बदलाव से पुराना है" },
+    title: {
+      en: "The panel is behind your edit",
+      hi: "पैनल आपके बदलाव से पुराना है",
+    },
     body: {
       en: "The result on the right describes the message you ran, not the text in the box. Run the triage again to refresh it.",
       hi: "दाईं ओर का परिणाम उस संदेश का है जो आपने चलाया था, बॉक्स में लिखे पाठ का नहीं। इसे ताज़ा करने के लिए फिर से ट्रायेज चलाइए।",
@@ -88,7 +115,10 @@ const HINTS: MascotHint[] = [
   {
     id: "start",
     mood: "idle",
-    title: { en: "Hello. I watch the evidence.", hi: "नमस्ते। मैं प्रमाण पर नज़र रखता हूँ।" },
+    title: {
+      en: "Hello. I watch the evidence.",
+      hi: "नमस्ते। मैं प्रमाण पर नज़र रखता हूँ।",
+    },
     body: {
       en: "Paste or dictate a customer message in any supported language. I will mask the personal details, extract only what the text supports, and never promise a refund.",
       hi: "किसी भी समर्थित भाषा में ग्राहक संदेश चिपकाएँ या बोलकर लिखवाएँ। मैं व्यक्तिगत विवरण छिपाऊँगा, केवल प्रमाणित फ़ील्ड निकालूँगा, और कभी रिफ़ंड का वादा नहीं करूँगा।",
@@ -123,13 +153,17 @@ export function mascotHintFor(
   if (category === "COLLECT_REQUEST_SCAM" || category === "REMOTE_ACCESS_SCAM")
     return byId("fraud");
   if (category === "UNAUTHORIZED_ACCOUNT_TAKEOVER") return byId("fraud");
-  if (category === "VOLUNTARY_WRONG_VPA_TRANSFER") return byId("wrong-transfer");
+  if (category === "VOLUNTARY_WRONG_VPA_TRANSFER")
+    return byId("wrong-transfer");
   if (
     category === "P2M_CONFIRMATION_FAILURE" ||
     category === "P2P_BENEFICIARY_NOT_CREDITED"
   )
     return byId("technical");
-  if (category === "NEEDS_INFORMATION" && state.result.payload.utr_number === null)
+  if (
+    category === "NEEDS_INFORMATION" &&
+    state.result.payload.utr_number === null
+  )
     return byId("missing-reference");
   if (category === "NEEDS_INFORMATION") return byId("needs-information");
   if (state.status === "dirty") return byId("editing");

@@ -12,7 +12,11 @@ import {
   ShieldCheck,
   X,
 } from "lucide-react";
-import { requestTriage, TriageClientError, type ClientErrorCode } from "../lib/triage-client.ts";
+import {
+  requestTriage,
+  TriageClientError,
+  type ClientErrorCode,
+} from "../lib/triage-client.ts";
 import { useI18n } from "../lib/i18n/provider.tsx";
 import { useUrlView } from "../lib/nav.ts";
 import {
@@ -34,7 +38,16 @@ import { Landing } from "../components/landing.tsx";
 
 import type { MessageKey } from "../lib/i18n/catalog.ts";
 
-const ERROR_KEYS: Record<ClientErrorCode, MessageKey> = { unauthorized: "error.unauthorized", rate_limited: "error.rateLimited", timeout: "error.timeout", invalid_input: "error.invalidInput", payload_too_large: "error.tooLarge", invalid_response: "error.invalidResponse", network: "error.connection", unavailable: "error.unavailable" };
+const ERROR_KEYS: Record<ClientErrorCode, MessageKey> = {
+  unauthorized: "error.unauthorized",
+  rate_limited: "error.rateLimited",
+  timeout: "error.timeout",
+  invalid_input: "error.invalidInput",
+  payload_too_large: "error.tooLarge",
+  invalid_response: "error.invalidResponse",
+  network: "error.connection",
+  unavailable: "error.unavailable",
+};
 
 type Tab = "overview" | "json" | "provenance";
 
@@ -70,10 +83,7 @@ export default function Page() {
       dispatch({ type: "privacy/hide" });
       return;
     }
-    const id = setTimeout(
-      () => dispatch({ type: "privacy/hide" }),
-      remaining,
-    );
+    const id = setTimeout(() => dispatch({ type: "privacy/hide" }), remaining);
     return () => clearTimeout(id);
   }, [state.revealed, state.revealUntil]);
 
@@ -93,24 +103,35 @@ export default function Page() {
     const input = { ...state.input };
     dispatch({ type: "run/start", requestId, input });
     try {
-      const result = await requestTriage(input, { signal: controller.signal, apiKey });
+      const result = await requestTriage(input, {
+        signal: controller.signal,
+        apiKey,
+      });
       if (!controller.signal.aborted) {
         dispatch({ type: "run/success", requestId, result });
         setTab("overview");
       }
     } catch (error) {
-      if (!controller.signal.aborted) dispatch({ type: "run/error", requestId, message: error instanceof TriageClientError ? error.code : "network" });
+      if (!controller.signal.aborted)
+        dispatch({
+          type: "run/error",
+          requestId,
+          message: error instanceof TriageClientError ? error.code : "network",
+        });
     }
   }, [state.input, apiKey]);
 
-  const copy = useCallback(async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setNotice(t("toast.copied"));
-    } catch {
-      setNotice(t("toast.clipboardUnavailable"));
-    }
-  }, [t]);
+  const copy = useCallback(
+    async (text: string) => {
+      try {
+        await navigator.clipboard.writeText(text);
+        setNotice(t("toast.copied"));
+      } catch {
+        setNotice(t("toast.clipboardUnavailable"));
+      }
+    },
+    [t],
+  );
 
   const exportTrace = useCallback(() => {
     download(
@@ -134,9 +155,7 @@ export default function Page() {
   }, [state, t]);
 
   if (view === "home")
-    return (
-      <Landing onNavigate={(target) => setView(target as View)} />
-    );
+    return <Landing onNavigate={(target) => setView(target as View)} />;
 
   const stale = isStale(state);
   const heading =
@@ -202,7 +221,25 @@ export default function Page() {
 
         {view === "desk" && (
           <>
-            {(stale || loading) && <div className="stale-banner" role="status"><ShieldCheck size={19}/><div><strong>{t(loading ? "desk.runningTitle" : "desk.staleTitle")}</strong><p>{t(loading ? "desk.runningBody" : "desk.staleBody")}</p></div><button className="button primary" disabled={loading} onClick={() => void run()}>{t(loading ? "composer.running" : "composer.run")}<ArrowRight size={15}/></button></div>}
+            {(stale || loading) && (
+              <div className="stale-banner" role="status">
+                <ShieldCheck size={19} />
+                <div>
+                  <strong>
+                    {t(loading ? "desk.runningTitle" : "desk.staleTitle")}
+                  </strong>
+                  <p>{t(loading ? "desk.runningBody" : "desk.staleBody")}</p>
+                </div>
+                <button
+                  className="button primary"
+                  disabled={loading}
+                  onClick={() => void run()}
+                >
+                  {t(loading ? "composer.running" : "composer.run")}
+                  <ArrowRight size={15} />
+                </button>
+              </div>
+            )}
             <div className="workflow-strip">
               {(
                 [
@@ -239,7 +276,14 @@ export default function Page() {
                 stale={stale}
                 hasRun={state.hasRun}
                 loading={loading}
-                error={state.error ? t(ERROR_KEYS[state.error as ClientErrorCode] ?? "error.unavailable") : ""}
+                error={
+                  state.error
+                    ? t(
+                        ERROR_KEYS[state.error as ClientErrorCode] ??
+                          "error.unavailable",
+                      )
+                    : ""
+                }
                 authRequired={state.error === "unauthorized"}
                 apiKey={apiKey}
                 onApiKey={setApiKey}
@@ -250,14 +294,18 @@ export default function Page() {
                 onRun={() => void run()}
                 onRetry={() => void run()}
                 onReset={() => choose(selected)}
-                onCopy={(text) => { if (!isStale(state) && !loading) void copy(text); }}
+                onCopy={(text) => {
+                  if (!isStale(state) && !loading) void copy(text);
+                }}
                 onTogglePrivacy={() => dispatch({ type: "privacy/toggle" })}
               />
               <EnginePanel
                 result={state.result}
                 tab={tab}
                 onTab={setTab}
-                onCopy={(text) => { if (!isStale(state) && !loading) void copy(text); }}
+                onCopy={(text) => {
+                  if (!isStale(state) && !loading) void copy(text);
+                }}
                 onExport={exportTrace}
                 onDownloadPayload={() =>
                   download(state.result.payload, "suraksha-triage.json")

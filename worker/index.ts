@@ -4,7 +4,11 @@ import { guardTriageApi } from "../lib/api-guard.ts";
 import type { ConnectorBinding } from "../lib/connector-contract.mjs";
 
 const worker = {
-  fetch(request: Request, env: Cloudflare.Env, ctx: ExecutionContext<{ CONNECTORS?: ConnectorBinding }>) {
+  fetch(
+    request: Request,
+    env: Cloudflare.Env,
+    ctx: ExecutionContext<{ CONNECTORS?: ConnectorBinding }>,
+  ) {
     const rejected = guardTriageApi(request, { apiKey: env.TRIAGE_API_KEY });
     if (rejected) return rejected;
     let binding = ctx.props?.CONNECTORS;
@@ -15,18 +19,24 @@ const worker = {
       const expiresAt = Date.now() + 60_000;
       binding = {
         async getContext() {
-          if (Date.now() >= expiresAt) return { status: "request_context_expired" };
+          if (Date.now() >= expiresAt)
+            return { status: "request_context_expired" };
           return preview.getContext?.() ?? { status: "binding_unavailable" };
         },
         async invoke(connectorId, actionName, args) {
           if (Date.now() >= expiresAt) {
-            return { status: "request_context_expired", message: "This request has expired. Please try again." };
+            return {
+              status: "request_context_expired",
+              message: "This request has expired. Please try again.",
+            };
           }
           return preview.invoke(connectorId, actionName, args);
         },
       };
     }
-    return runWithConnectorBinding(binding, () => handler.fetch(request, env, ctx));
+    return runWithConnectorBinding(binding, () =>
+      handler.fetch(request, env, ctx),
+    );
   },
 };
 

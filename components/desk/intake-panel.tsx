@@ -26,7 +26,9 @@ export function IntakePanel({
   error,
   masked,
   revealed,
-  authRequired, apiKey, onApiKey,
+  authRequired,
+  apiKey,
+  onApiKey,
   onSelect,
   onInput,
   onRun,
@@ -46,7 +48,9 @@ export function IntakePanel({
   error: string;
   masked: boolean;
   revealed: boolean;
-  authRequired: boolean; apiKey: string; onApiKey: (key: string) => void;
+  authRequired: boolean;
+  apiKey: string;
+  onApiKey: (key: string) => void;
   onSelect: (index: number) => void;
   onInput: (patch: Partial<TriageInput>) => void;
   onRun: () => void;
@@ -120,38 +124,43 @@ export function IntakePanel({
               : t("intake.scenarioPreview")}
           <span />
         </div>
-        <details className="source-details"><summary><LockKeyhole size={14}/>{t("intake.sourceMessage")}<ChevronDown size={14}/></summary>
-        <div className="message-label">
-          <span className="customer-avatar">C</span>
-          <strong>{t("intake.customer")}</strong>
-          <span>{replyLanguage(result.payload.detected_language).label}</span>
-        </div>
-        <div className="customer-bubble">
-          <p>
-            {masked ? (
-              <MaskedText text={result.privacy.sanitized} />
-            ) : (
-              rawMessage
-            )}
-          </p>
-          <div className="bubble-footer">
-            <span>
-              <span className="panic-dot" />
-              {t("intake.urgency", {
-                severity: pretty(result.payload.panic_severity),
-              })}
-            </span>
-            <button
-              onClick={onTogglePrivacy}
-              aria-pressed={revealed}
-              aria-label={t("intake.revealRaw")}
-              title={t("intake.revealRaw")}
-            >
-              <LockKeyhole size={12} />
-              {revealed ? t("intake.revealed") : t("intake.maskPii")}
-            </button>
+        <details className="source-details">
+          <summary>
+            <LockKeyhole size={14} />
+            {t("intake.sourceMessage")}
+            <ChevronDown size={14} />
+          </summary>
+          <div className="message-label">
+            <span className="customer-avatar">C</span>
+            <strong>{t("intake.customer")}</strong>
+            <span>{replyLanguage(result.payload.detected_language).label}</span>
           </div>
-        </div>
+          <div className="customer-bubble">
+            <p>
+              {masked ? (
+                <MaskedText text={result.privacy.sanitized} />
+              ) : (
+                rawMessage
+              )}
+            </p>
+            <div className="bubble-footer">
+              <span>
+                <span className="panic-dot" />
+                {t("intake.urgency", {
+                  severity: pretty(result.payload.panic_severity),
+                })}
+              </span>
+              <button
+                onClick={onTogglePrivacy}
+                aria-pressed={revealed}
+                aria-label={t("intake.revealRaw")}
+                title={t("intake.revealRaw")}
+              >
+                <LockKeyhole size={12} />
+                {revealed ? t("intake.revealed") : t("intake.maskPii")}
+              </button>
+            </div>
+          </div>
         </details>
         <div className="message-label assistant-label">
           <span className="assistant-avatar">
@@ -189,7 +198,6 @@ export function IntakePanel({
           </div>
         </div>
       </div>
-
     </section>
   );
 }

@@ -42,7 +42,8 @@ export const TECHNICAL_FAILURE_SIGNALS =
   /not\s*(?:credited|received)|stuck|pending|failed|nahi\s*(?:mila|pahuncha)|illa|debitaachu|confirmation|unconfirmed/i;
 
 /** Merchant or acquiring context. */
-export const MERCHANT_SIGNALS = /merchant|swiggy|zomato|shop|store|p2m|bigbasket/i;
+export const MERCHANT_SIGNALS =
+  /merchant|swiggy|zomato|shop|store|p2m|bigbasket/i;
 
 /** Peer-to-peer transfer context. */
 export const P2P_SIGNALS = /transfer|friend|p2p|beneficiary/i;
@@ -58,9 +59,16 @@ export function isFraudCategory(category: string): boolean {
 }
 
 function positive(text: string, signal: RegExp): boolean {
-  for (const match of text.matchAll(new RegExp(signal.source, signal.flags.replace("g", "") + "g"))) {
+  for (const match of text.matchAll(
+    new RegExp(signal.source, signal.flags.replace("g", "") + "g"),
+  )) {
     const prefix = text.slice(Math.max(0, match.index! - 35), match.index!);
-    if (!/\b(?:no|not|never|isn[’']?t|wasn[’']?t)\s+(?:(?:a|an|any)\s+)?$/i.test(prefix)) return true;
+    if (
+      !/\b(?:no|not|never|isn[’']?t|wasn[’']?t)\s+(?:(?:a|an|any)\s+)?$/i.test(
+        prefix,
+      )
+    )
+      return true;
   }
   return false;
 }
@@ -71,15 +79,9 @@ export function classify(text: string): Category {
   // Fraud evidence outranks any benign reading of the same sentence.
   if (positive(text, FRAUD_SIGNALS)) return "UNAUTHORIZED_ACCOUNT_TAKEOVER";
   // A voluntary transfer needs the customer's own statement of intent.
-  if (
-    WRONG_TRANSFER_SIGNALS.test(text) &&
-    VOLUNTARY_INTENT_SIGNALS.test(text)
-  )
+  if (WRONG_TRANSFER_SIGNALS.test(text) && VOLUNTARY_INTENT_SIGNALS.test(text))
     return "VOLUNTARY_WRONG_VPA_TRANSFER";
-  if (
-    TECHNICAL_FAILURE_SIGNALS.test(text) &&
-    MERCHANT_SIGNALS.test(text)
-  )
+  if (TECHNICAL_FAILURE_SIGNALS.test(text) && MERCHANT_SIGNALS.test(text))
     return "P2M_CONFIRMATION_FAILURE";
   if (TECHNICAL_FAILURE_SIGNALS.test(text) && P2P_SIGNALS.test(text))
     return "P2P_BENEFICIARY_NOT_CREDITED";

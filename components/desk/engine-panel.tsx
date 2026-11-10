@@ -116,7 +116,10 @@ export function EnginePanel({
         : t("engine.tabProvenance");
 
   return (
-    <section className="panel intelligence-panel" aria-labelledby="engine-heading">
+    <section
+      className="panel intelligence-panel"
+      aria-labelledby="engine-heading"
+    >
       <div className="panel-heading">
         <div className="panel-title">
           <span className="panel-icon teal-icon">
@@ -187,7 +190,8 @@ export function EnginePanel({
                   {t("transaction.reference")} <Fingerprint size={12} />
                 </span>
                 <strong className="mono utr-value">
-                  {result.payload.utr_number ?? t("transaction.needsConfirmation")}
+                  {result.payload.utr_number ??
+                    t("transaction.needsConfirmation")}
                 </strong>
                 <small>
                   {result.payload.utr_number ? (
@@ -202,7 +206,9 @@ export function EnginePanel({
               <div className="wide">
                 <span>
                   {t("transaction.classification")}{" "}
-                  <span className="muted">{t("transaction.internalTaxonomy")}</span>
+                  <span className="muted">
+                    {t("transaction.internalTaxonomy")}
+                  </span>
                 </span>
                 <strong className="classification">
                   {pretty(result.payload.dispute_category)}
@@ -230,9 +236,7 @@ export function EnginePanel({
                     ].join(" · ") || t("privacy.noPatterns")}
                   </p>
                   {rawVisible && (
-                    <p className="privacy-warning">
-                      {t("intake.revealed")}
-                    </p>
+                    <p className="privacy-warning">{t("intake.revealed")}</p>
                   )}
                 </div>
                 <ShieldCheck size={20} />
@@ -316,7 +320,8 @@ export function EnginePanel({
               </div>
             )}
             <button className="payload-link" onClick={() => onTab("json")}>
-              <Braces size={15} /> {t("engine.inspectJson")} <ArrowUpRight size={14} />
+              <Braces size={15} /> {t("engine.inspectJson")}{" "}
+              <ArrowUpRight size={14} />
             </button>
           </>
         )}
@@ -328,7 +333,8 @@ export function EnginePanel({
               </span>
               <button
                 className="small-button"
-                disabled={stale} onClick={() => onCopy(JSON.stringify(result.payload, null, 2))}
+                disabled={stale}
+                onClick={() => onCopy(JSON.stringify(result.payload, null, 2))}
               >
                 <Copy size={13} /> {t("engine.copyJson")}
               </button>
@@ -337,7 +343,11 @@ export function EnginePanel({
             <div className="json-bottom-note">
               <CircleHelp size={14} /> {t("engine.jsonNote")}
             </div>
-            <button className="payload-link" disabled={stale} onClick={onDownloadPayload}>
+            <button
+              className="payload-link"
+              disabled={stale}
+              onClick={onDownloadPayload}
+            >
               <Braces size={15} /> {t("engine.downloadPayload")}{" "}
               <ArrowUpRight size={14} />
             </button>
@@ -380,7 +390,11 @@ export function EnginePanel({
                 <p>{t("provenance.disclaimerBody")}</p>
               </div>
             </div>
-            <button className="payload-link" disabled={stale} onClick={onExport}>
+            <button
+              className="payload-link"
+              disabled={stale}
+              onClick={onExport}
+            >
               <ArrowUpRight size={15} /> {t("provenance.export")}
             </button>
           </>

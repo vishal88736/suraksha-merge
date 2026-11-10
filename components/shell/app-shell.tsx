@@ -107,7 +107,9 @@ export function AppShell({
             >
               <item.icon size={18} aria-hidden="true" />
               <span aria-hidden="true">{t(item.key)}</span>
-              {view === item.id && <span className="nav-dot" aria-hidden="true" />}
+              {view === item.id && (
+                <span className="nav-dot" aria-hidden="true" />
+              )}
             </button>
           ))}
         </nav>
@@ -127,7 +129,8 @@ export function AppShell({
           target="_blank"
           rel="noreferrer"
         >
-          <GitMerge size={16} /> {t("nav.viewSource")} <ArrowUpRight size={14} />
+          <GitMerge size={16} /> {t("nav.viewSource")}{" "}
+          <ArrowUpRight size={14} />
         </a>
         <div className="operator">
           <span className="avatar">R</span>
@@ -140,7 +143,16 @@ export function AppShell({
       </aside>
       <div className="main-shell">
         <header className="topbar">
-          <button className="mobile-brand" onClick={() => onView("home")} aria-label={t("nav.brandHome")}><ShieldCheck size={23}/><span>suraksha<strong>desk</strong></span></button>
+          <button
+            className="mobile-brand"
+            onClick={() => onView("home")}
+            aria-label={t("nav.brandHome")}
+          >
+            <ShieldCheck size={23} />
+            <span>
+              suraksha<strong>desk</strong>
+            </span>
+          </button>
           <div className="breadcrumb">
             {t("nav.breadcrumbRoot")} <ChevronRight size={13} />
             <strong>{current ? t(current.key) : ""}</strong>

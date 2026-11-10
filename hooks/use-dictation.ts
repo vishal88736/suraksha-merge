@@ -1,5 +1,11 @@
 "use client";
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 
 /**
  * Dictation through the browser speech recogniser.
@@ -78,12 +84,22 @@ export function useDictation(options: {
   const [interim, setInterim] = useState("");
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const finalRef = useRef<string>("");
-  const supported = useSyncExternalStore(() => () => {}, () => getRecognitionCtor() !== null, () => false);
+  const supported = useSyncExternalStore(
+    () => () => {},
+    () => getRecognitionCtor() !== null,
+    () => false,
+  );
   const onFinalRef = useRef(onFinal);
   onFinalRef.current = onFinal;
   const detach = useCallback(() => {
-    const current = recognitionRef.current; recognitionRef.current = null;
-    if (current) { current.onresult = null; current.onend = null; current.onerror = null; current.abort(); }
+    const current = recognitionRef.current;
+    recognitionRef.current = null;
+    if (current) {
+      current.onresult = null;
+      current.onend = null;
+      current.onerror = null;
+      current.abort();
+    }
     finalRef.current = "";
   }, []);
 
@@ -118,7 +134,10 @@ export function useDictation(options: {
       setInterim(live);
     };
     recognition.onerror = (event) => {
-      if (event.error === "not-allowed" || event.error === "service-not-allowed")
+      if (
+        event.error === "not-allowed" ||
+        event.error === "service-not-allowed"
+      )
         setStatus("denied");
       else if (event.error === "no-speech") setStatus("empty");
       else setStatus("error");
@@ -133,9 +152,7 @@ export function useDictation(options: {
         onFinalRef.current(transcript);
         return;
       }
-      setStatus((current) =>
-        current === "listening" ? "empty" : current,
-      );
+      setStatus((current) => (current === "listening" ? "empty" : current));
     };
 
     recognitionRef.current = recognition;
@@ -150,7 +167,9 @@ export function useDictation(options: {
 
   // Restart on a language change so the next utterance uses the new tag.
   useEffect(() => {
-    detach(); setStatus("idle"); setInterim("");
+    detach();
+    setStatus("idle");
+    setInterim("");
   }, [language, detach]);
 
   useEffect(
