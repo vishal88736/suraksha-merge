@@ -10,7 +10,7 @@ const request=(body:BodyInit,headers:Record<string,string>={})=>new Request(endp
 const POST=createTriageHandler();
 test("strict JSON rejects duplicate decoded keys, overflow and excessive nesting",()=>{
  for(const value of ['{"message":"a","message":"b"}','{"message":"a","messa\\u0067e":"b"}','{"x":1e999}', '['.repeat(60)+'0'+']'.repeat(60)])assert.throws(()=>parseStrictJson(value));
- assert.deepEqual(parseStrictJson('{"message":"literal \\" escaped", "x":[{"a":true}]}'),{message:'literal " escaped',x:[{a:true}]});
+ assert.deepEqual(parseStrictJson(String.raw`{"message":"literal \" escaped", "x":[{"a":true}]}`),{message:'literal " escaped',x:[{a:true}]});
 });
 test("the API rejects ambiguous JSON, unexpected fields and invalid dates",async()=>{
  for(const body of ['{"message":"a","message":"b"}',JSON.stringify({message:"hello",transaction_date:"2026-02-30"}),JSON.stringify({message:"hello",responsibility:"bad-value"})]) assert.equal((await POST(request(body))).status,400);

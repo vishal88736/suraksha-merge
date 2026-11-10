@@ -6,7 +6,8 @@ export function apiError(code: ApiErrorCode, message: string, status: number, re
   return Response.json({ error: { code, message, request_id: requestId } }, { status, headers: { ...NO_STORE, "x-request-id": requestId, ...extra } });
 }
 export class BodyReadError extends Error {
-  constructor(public code: "payload_too_large" | "request_timeout" | "invalid_json") { super(code); }
+  readonly code: "payload_too_large" | "request_timeout" | "invalid_json";
+  constructor(code: "payload_too_large" | "request_timeout" | "invalid_json") { super(code); this.code = code; }
 }
 /** Enforce a byte budget and a total deadline even without Content-Length. */
 export async function readBoundedText(request: Request | Response, options: { maxBytes?: number; timeoutMs?: number; signal?: AbortSignal } = {}): Promise<string> {

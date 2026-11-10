@@ -4,7 +4,8 @@ import { parseStrictJson } from "./strict-json.ts";
 import { readBoundedText } from "./http.ts";
 export type ClientErrorCode = "unauthorized" | "rate_limited" | "invalid_input" | "payload_too_large" | "timeout" | "network" | "invalid_response" | "unavailable";
 export class TriageClientError extends Error {
-  constructor(public code: ClientErrorCode, public requestId?: string, public retryAfterSeconds?: number) { super(code); }
+  readonly code: ClientErrorCode; readonly requestId?: string; readonly retryAfterSeconds?: number;
+  constructor(code: ClientErrorCode, requestId?: string, retryAfterSeconds?: number) { super(code); this.code = code; this.requestId = requestId; this.retryAfterSeconds = retryAfterSeconds; }
 }
 export async function requestTriage(input: TriageInput, options: { signal?: AbortSignal; apiKey?: string; timeoutMs?: number; fetch?: typeof fetch } = {}): Promise<TriageResult> {
   const controller = new AbortController(); let timedOut = false;

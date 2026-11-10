@@ -21,7 +21,7 @@ export const REVEAL_WINDOW_MS = 15_000;
 export function inputsMatch(left: TriageInput, right: TriageInput): boolean {
   const a = inputSchema.safeParse(left), b = inputSchema.safeParse(right);
   if (!a.success || !b.success) return false;
-  const normalize = (v: typeof a.data) => v ? { ...v, reporting_delay_working_days: v.reporting_delay_working_days ?? null, elapsed_calendar_days: v.elapsed_calendar_days ?? null, transaction_date: v.transaction_date ?? null } : null;
+  const normalize = (v: typeof a.data) => Object.keys(inputSchema.shape).map(key => v[key as keyof typeof v] ?? null);
   return JSON.stringify(normalize(a.data)) === JSON.stringify(normalize(b.data));
 }
 export function initialTriageState(): TriageState {
