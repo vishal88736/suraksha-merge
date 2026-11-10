@@ -99,7 +99,7 @@ export default function Page() {
       };
       if (!response.ok)
         throw new Error(
-          body.error?.message ?? "Triage is unavailable. Try again.",
+          body.error?.message ?? t("error.unavailable"),
         );
       if (!controller.signal.aborted) {
         dispatch({
@@ -116,12 +116,12 @@ export default function Page() {
           message:
             error instanceof Error
               ? error.message
-              : "Could not connect. Please try again.",
+              : t("error.connection"),
         });
     } finally {
       if (!controller.signal.aborted) setLoading(false);
     }
-  }, [state.input]);
+  }, [state.input, t]);
 
   const copy = useCallback(async (text: string) => {
     try {
@@ -144,7 +144,8 @@ export default function Page() {
         },
         context_note:
           "Operator-supplied responsibility is not verified by the engine.",
-        training_status: "No model checkpoint connected",
+        // A stable, machine-readable status field for the audit artifact.
+        training_status: "no_model_checkpoint_connected",
         stale: isStale(state),
       },
       "suraksha-provenance.json",

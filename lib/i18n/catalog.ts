@@ -235,6 +235,11 @@ const en = {
   "footer.tagline": "Thoughtful triage. Traceable decisions.",
   "footer.version": "Suraksha-Merge · Research preview v0.1",
 
+  "mascot.hideHint": "Hide hint",
+  "mascot.dismissHint": "Dismiss hint",
+  "error.unavailable": "Triage is unavailable. Try again.",
+  "error.connection": "Could not connect. Please try again.",
+
   "toast.copied": "Copied to clipboard",
   "toast.clipboardUnavailable": "Clipboard unavailable. You can select and copy the text.",
   "toast.traceExported": "Masked provenance trace exported",
@@ -523,6 +528,11 @@ const hi: Record<MessageKey, string> = {
 
   "footer.tagline": "विचारशील ट्रायेज। ट्रेस योग्य निर्णय।",
   "footer.version": "सुरक्षा-मर्ज · शोध पूर्वावलोकन v0.1",
+
+  "mascot.hideHint": "हाइट छिपाएँ",
+  "mascot.dismissHint": "हाइट हटाएँ",
+  "error.unavailable": "ट्रायेज उपलब्ध नहीं है। फिर कोशिश करें।",
+  "error.connection": "कनेक्ट नहीं हो सका। कृपया फिर कोशिश करें।",
 
   "toast.copied": "क्लिपबोर्ड पर कॉपी हो गया",
   "toast.clipboardUnavailable": "क्लिपबोर्ड उपलब्ध नहीं। आप पाठ चुनकर कॉपी कर सकते हैं।",

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { pick, type UiLocale } from "../../lib/i18n/locales.ts";
+import { useI18n } from "../../lib/i18n/provider.tsx";
 import {
   MASCOT_NAME,
   mascotHintFor,
@@ -78,6 +79,7 @@ function MascotBody({
   compact: boolean;
 }) {
   const face = FACES[mood];
+  const { t } = useI18n();
   const [dismissed, setDismissed] = useState(false);
 
   if (dismissed && !compact) return null;
@@ -138,9 +140,9 @@ function MascotBody({
           <button
             className="mascot-dismiss"
             onClick={() => setDismissed(true)}
-            aria-label="Dismiss hint"
+            aria-label={t("mascot.dismissHint")}
           >
-            {locale === "hi" ? "हाइट छिपाएँ" : "Hide hint"}
+            {t("mascot.hideHint")}
           </button>
         )}
       </div>
