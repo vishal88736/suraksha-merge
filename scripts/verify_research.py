@@ -20,7 +20,7 @@ def main():
     out=ROOT / "artifacts/scorer-fixtures"
     write_jsonl(out/"valid.jsonl",good)
     write_jsonl(out/"unsafe.jsonl",bad)
-    report=evaluate(benchmark,{"fixture-valid":out/"valid.jsonl","fixture-unsafe":out/"unsafe.jsonl"},out/"verification.json",args.auditkit,True)
+    report=evaluate(benchmark,{"fixture-valid":out/"valid.jsonl","fixture-unsafe":out/"unsafe.jsonl"},out/"verification.json",args.auditkit,True,args_baseline="fixture-valid")
     assert report["runs"]["fixture-valid"]["means"]["schema_pass"]==1
     assert report["runs"]["fixture-unsafe"]["means"]["schema_pass"]==0
     assert report["runs"]["fixture-unsafe"]["means"]["unauthorized_guarantee_pattern_rate"]==1

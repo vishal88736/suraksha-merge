@@ -5,6 +5,8 @@ import json
 import math
 import re
 import subprocess
+import os
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -23,7 +25,18 @@ def read_jsonl(path):
 def write_jsonl(path, rows):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text("".join(json.dumps(row, ensure_ascii=False, allow_nan=False) + "\n" for row in rows), encoding="utf-8")
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent, delete=False) as stream:
+            temporary = Path(stream.name)
+            for row in rows:
+                stream.write(json.dumps(row, ensure_ascii=False, allow_nan=False) + "\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    finally:
+        if temporary is not None and temporary.exists():temporary.unlink()
+
 
 def digest(value):
     blob = value if isinstance(value, bytes) else json.dumps(value, sort_keys=True, ensure_ascii=False).encode()
@@ -37,7 +50,11 @@ def strict_json(text):
                 raise ValueError("Duplicate JSON key")
             out[key] = value
         return out
-    return json.loads(text, object_pairs_hook=pairs, parse_constant=lambda _: (_ for _ in ()).throw(ValueError("Non-finite JSON constant")))
+    def finite_float(value):
+        parsed=float(value)
+        if not math.isfinite(parsed):raise ValueError("Non-finite JSON number")
+        return parsed
+    return json.loads(text, object_pairs_hook=pairs, parse_float=finite_float, parse_constant=lambda _: (_ for _ in ()).throw(ValueError("Non-finite JSON constant")))
 
 def schema_valid(p):
     if not isinstance(p, dict) or set(p) != FIELDS:
@@ -64,7 +81,7 @@ def payload_matches(actual, target):
     appends REQUEST_UTR last, so an order-sensitive comparison would reject
     every sample the moment the action order changes.
     """
-    if not isinstance(actual, dict) or not isinstance(target, dict):
+    if not schema_valid(actual) or not schema_valid(target):
         return False
     if set(actual) != set(target):
         return False
@@ -78,7 +95,7 @@ def payload_matches(actual, target):
 
 
 def engine_batch(inputs):
-    result = subprocess.run(["node", "scripts/triage.mjs"], input="".join(json.dumps(row, ensure_ascii=False) + "\n" for row in inputs), capture_output=True, text=True, cwd=ROOT, check=False)
+    result = subprocess.run(["node", "scripts/triage.mjs"], input="".join(json.dumps(row, ensure_ascii=False) + "\n" for row in inputs), capture_output=True, text=True, cwd=ROOT, check=False, timeout=120)
     if result.returncode:
         raise RuntimeError("Triage subprocess failed; run npm ci and npm test. Customer text is withheld from this error.")
     rows = [json.loads(line) for line in result.stdout.splitlines() if line.strip()]
@@ -102,8 +119,9 @@ def extraction_reward(completion, ground_truth):
         target = strict_json(ground_truth) if isinstance(ground_truth, str) else ground_truth
         if not schema_valid(parsed) or not schema_valid(target):
             return -1.0
-        equal = sum(parsed[k] == target[k] for k in sorted(FIELDS)) / len(FIELDS)
-        critical = all(parsed[k] == target[k] for k in ("utr_number", "amount_inr", "rbi_liability_tier", "dispute_category", "mandatory_actions"))
+        matches={k:(set(parsed[k])==set(target[k]) if k=="mandatory_actions" else parsed[k]==target[k]) for k in FIELDS}
+        equal=sum(matches.values())/len(FIELDS)
+        critical=all(matches[k] for k in ("utr_number", "amount_inr", "rbi_liability_tier", "dispute_category", "mandatory_actions"))
         return round(0.2 + 0.8 * equal, 6) if critical else round(0.2 * equal, 6)
     except (TypeError, ValueError, KeyError):
         return -1.0

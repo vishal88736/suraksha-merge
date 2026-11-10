@@ -324,3 +324,22 @@ test("calendar dates are real, including leap years",()=>{
 test("leading whitespace does not corrupt source offsets",()=>{
  const message="   Unauthorised Rs.100 UTR 431289014421";const result=triage({message});const anchor=result.privacy.anchors[0]!;assert.equal(message.slice(anchor.start,anchor.end),result.payload.utr_number);assert.equal(result.audit.utr_grounded,true);
 });
+
+test("amounts use exact decimal precision and valid grouping",()=>{
+ for(const [raw,value] of [["₹1,23,456.78",123456.78],["INR 12,345,678.90",12345678.90],["Rs.0.50",0.5]] as const)assert.equal(triage({message:raw}).payload.amount_inr,value);
+ for(const raw of ["₹1,23,45","Rs.12.345","INR 99999999999999999999999999"])assert.equal(triage({message:raw}).payload.amount_inr,null,raw);
+});
+test("Indic digits are handled without leaking identity or authentication numbers",()=>{
+ const message="₹१,५०० UTR ४३१२८९०१४४२१ Aadhaar १२३४५६७८९०१२ phone ९८७६५४३२१० OTP 123456 PIN 4321";
+ const r=triage({message});assert.equal(r.payload.amount_inr,1500);assert.equal(r.payload.utr_number,"431289014421");assert.equal(r.audit.utr_grounded,true);
+ for(const value of ["१२३४५६७८९०१२","९८७६५४३२१०","123456","4321"])assert.ok(!r.privacy.sanitized.includes(value),value);
+});
+test("numeric email and VPA identifiers are masked completely",()=>{
+ const r=redactPII("mail 9876543210@example.com vpa 9876543210@ybl");assert.ok(r.sanitized.includes("[EMAIL_REDACTED]"));assert.ok(r.sanitized.includes("[VPA_REDACTED]"));assert.ok(!r.sanitized.includes("@"));
+});
+test("a negated fraud claim does not override a voluntary transfer",()=>{
+ const r=triage({message:"This is not a scam. I voluntarily sent Rs.2000 to the wrong VPA by mistake. UTR 512345678901"});assert.equal(r.payload.dispute_category,"VOLUNTARY_WRONG_VPA_TRANSFER");
+});
+test("conflicting reporting windows never establish zero liability",()=>{
+ const r=triage({message:"Unauthorised Rs.500 debit, reported after 10 working days. UTR 431289014421",responsibility:"third_party",reporting_delay_working_days:2});assert.equal(r.payload.rbi_liability_tier,"PENDING_VERIFICATION");assert.equal(r.payload.reporting_delay_working_days,null);
+});

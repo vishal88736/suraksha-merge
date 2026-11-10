@@ -71,7 +71,8 @@ def curate(rows, output, use_presidio=False, use_curatorkit=False):
         payload = row["target"]
         failures = []
         if not schema_valid(payload):
-            failures.append("schema_invalid")
+            rejected.append({"sample_id":row["sample_id"],"reason":["schema_invalid"],"sanitized_input":sanitized})
+            continue
         if not payload_matches(trace["payload"], payload):
             failures.append("bootstrap_target_disagrees_with_independent_engine_check")
         if payload.get("utr_number") and payload["utr_number"] not in sanitized:
@@ -110,12 +111,14 @@ def curate(rows, output, use_presidio=False, use_curatorkit=False):
     write_jsonl(output / "accepted.jsonl", accepted)
     write_jsonl(output / "rejected.jsonl", rejected)
     write_jsonl(output / "recovery_pairs.jsonl", repairs)
+    owned_files = [output / split / f"{kind}.jsonl" for split, datasets in exports.items() for kind in datasets] + [output/name for name in ("accepted.jsonl","rejected.jsonl","recovery_pairs.jsonl")]
     toolkit = "not_run"
     if use_curatorkit:
         from curatorkit import Curator, CuratorConfig
         Curator(CuratorConfig(dataset=str((output / "train/sft.jsonl").resolve()), clean=True, dedup="exact", export_formats=["alpaca"], output_dir=str(output / "curatorkit"))).run()
         toolkit = importlib.metadata.version("curatorkit")
-    manifest = {"created_at": datetime.now(timezone.utc).isoformat(), "accepted": len(accepted), "rejected": len(rejected), "empty_dataset": not accepted, "bootstrap_only": not all(p["human_reviewed"] for p in accepted) or not accepted, "pii_backend": "contextual_regex+presidio" if use_presidio else "contextual_regex", "curatorkit": toolkit, "gate_backend": "local_schema_numeric_and_policy_patterns", "scenario_group_splits": group_splits, "split_counts": {s: {k: len(v) for k, v in d.items()} for s, d in exports.items()}, "files": {str(p.relative_to(output)): digest(p.read_bytes()) for p in sorted(output.rglob("*.jsonl"))}}
+        owned_files += sorted((output/"curatorkit").rglob("*.jsonl"))
+    manifest = {"created_at": datetime.now(timezone.utc).isoformat(), "accepted": len(accepted), "rejected": len(rejected), "empty_dataset": not accepted, "bootstrap_only": not all(p["human_reviewed"] for p in accepted) or not accepted, "pii_backend": "contextual_regex+presidio" if use_presidio else "contextual_regex", "curatorkit": toolkit, "gate_backend": "local_schema_numeric_and_policy_patterns", "scenario_group_splits": group_splits, "split_counts": {s: {k: len(v) for k, v in d.items()} for s, d in exports.items()}, "files": {str(p.relative_to(output)): digest(p.read_bytes()) for p in sorted(owned_files)}}
     if not accepted:
         # An empty dataset is valid but must never look like a healthy run.
         print("WARNING: no sample passed the curation gates; the dataset is empty. Inspect rejected.jsonl.", file=sys.stderr)
@@ -131,6 +134,8 @@ def main():
     parser.add_argument("--presidio", action="store_true", help="Requires Presidio and its configured NLP model")
     parser.add_argument("--use-curatorkit", action="store_true", help="Run an actual CuratorKIT clean/dedup/export pass after the local gates")
     args = parser.parse_args()
-    print(json.dumps(curate(read_jsonl(args.input), args.output, args.presidio, args.use_curatorkit), indent=2))
+    manifest=curate(read_jsonl(args.input), args.output, args.presidio, args.use_curatorkit)
+    print(json.dumps(manifest,indent=2))
+    if manifest["empty_dataset"]:raise SystemExit(2)
 if __name__ == "__main__":
     main()

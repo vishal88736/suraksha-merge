@@ -11,6 +11,7 @@ import statistics
 from datetime import datetime, timezone
 from pathlib import Path
 from research.common import FIELDS, ROOT, digest, no_guarantee, read_jsonl, required_rails, schema_valid, strict_json
+from research.artifacts import verify_prediction_manifest
 
 CHECKPOINTS = ["base", "uncurated-sft", "curated-sft", "schema", "empathy", "suraksha-merged"]
 
@@ -44,7 +45,7 @@ def score_prediction(prediction, target, reference_reply=None):
     guarantees = float(not no_guarantee(reply))
     rails = float(required_rails(reply, target))
     all_exact = float(all(matches.values()))
-    return {"schema_pass": schema_pass, "dual_contract_pass": float(payload is not None and dual_valid), "field_exact_match": statistics.mean(matches.values()), "all_fields_exact": all_exact, "utr_and_tier_exact": float(matches["utr_number"] and matches["rbi_liability_tier"]), "unauthorized_guarantee_pattern_rate": guarantees, "required_fraud_rails": rails, "chrf": chrf, "human_empathy_score": None, "utility": .4 * schema_pass + .4 * all_exact + .2 * (1-guarantees) * rails}
+    return {"schema_pass": schema_pass, "dual_contract_pass": float(payload is not None and dual_valid), "field_exact_match": statistics.mean(matches.values()), "all_fields_exact": all_exact, "utr_and_tier_exact": float(matches["utr_number"] and matches["rbi_liability_tier"]), "unauthorized_guarantee_pattern_rate": guarantees, "required_fraud_rails": rails, "chrf": chrf, "human_empathy_score": None, "utility": (.4 * schema_pass + .4 * all_exact + .2 * (1-guarantees) * rails) if payload is not None and dual_valid else 0.0}
 
 def align_predictions(samples, predictions):
     expected = {s["sample_id"] for s in samples}
@@ -62,6 +63,8 @@ def align_predictions(samples, predictions):
     return [actual[s["sample_id"]] for s in samples]
 
 def paired_bootstrap(samples, left, right, metric="utility", repeats=2000, seed=42):
+    if type(repeats) is not int or repeats < 20:
+        raise ValueError("At least 20 bootstrap repetitions are required")
     if len(samples) != len(left) or len(left) != len(right) or not samples:
         raise ValueError("Paired non-empty aligned runs are required")
     groups = {}
@@ -93,28 +96,31 @@ def auditkit_evaluate(samples, predictions):
     result = ak.evaluate([ak.Sample(input=s["input"], target=s["target"]) for s in samples], model=lambda prompts: [lookup[p] for p in prompts], scorers=[schema, fields, unsafe])
     return {"version": importlib.metadata.version("auditkit"), "summary": result.summary()}
 
-def evaluate(benchmark, named_predictions, output, use_auditkit=False, fixture_mode=False, args_baseline=None):
+def evaluate(benchmark, named_predictions, output, use_auditkit=False, fixture_mode=False, args_baseline=None, allow_unverified=False):
     samples = read_jsonl(benchmark)
     if not samples:
         raise ValueError("Empty benchmark")
     for sample in samples:
         if not schema_valid(strict_json(sample["target"])):
             raise ValueError("Benchmark contains an invalid gold schema")
+    if not named_predictions:raise ValueError("No prediction runs supplied")
+    baseline=args_baseline or ("base" if "base" in named_predictions else next(iter(named_predictions)) if len(named_predictions)==1 else None)
+    if baseline not in named_predictions:raise ValueError("The requested baseline is missing; pass --baseline with an exact checkpoint label")
     runs, per_case = {}, {}
     for label, path in named_predictions.items():
+        provenance = None if fixture_mode or allow_unverified else verify_prediction_manifest(path, benchmark)
         predictions = align_predictions(samples, read_jsonl(path))
         scores = [score_prediction(p["prediction"], strict_json(s["target"]), s.get("reference_reply")) for s, p in zip(samples, predictions, strict=True)]
         per_case[label] = scores
         totals = {metric: statistics.mean(s[metric] for s in scores if s[metric] is not None) if any(s[metric] is not None for s in scores) else None for metric in scores[0]}
-        runs[label] = {"count": len(samples), "means": totals, "prediction_sha256": digest(Path(path).read_bytes()), "per_case": [{"sample_id": s["sample_id"], "scenario_group": s["scenario_group"], **score} for s, score in zip(samples, scores, strict=True)], "inference_cost_per_1000": None, "human_empathy_evaluated": False}
+        runs[label] = {"count": len(samples), "means": totals, "prediction_sha256": digest(Path(path).read_bytes()), "per_case": [{"sample_id": s["sample_id"], "scenario_group": s["scenario_group"], **score} for s, score in zip(samples, scores, strict=True)], "inference_cost_per_1000": None, "human_empathy_evaluated": False, "inference_provenance_verified": provenance is not None}
         if use_auditkit:
             runs[label]["auditkit"] = auditkit_evaluate(samples, predictions)
     labels = list(runs)
     # Pin the baseline instead of inheriting the order of the command line:
     # reordering the flags must not silently re-baseline every delta.
-    baseline = args_baseline if args_baseline in runs else labels[0]
     comparisons = [{"left": baseline, "right": label, **paired_bootstrap(samples, per_case[baseline], per_case[label])} for label in labels if label != baseline]
-    report = {"created_at": datetime.now(timezone.utc).isoformat(), "mode": "SCORER_FIXTURE_VERIFICATION" if fixture_mode else "recorded_predictions", "model_quality_claim_permitted": not fixture_mode, "baseline": baseline, "benchmark_sha256": digest(Path(benchmark).read_bytes()), "all_six_checkpoints_present": set(labels) == set(CHECKPOINTS), "runs": runs, "comparisons": comparisons, "limitations": ["Pattern checks are not semantic safety certification.", "ChrF is reference overlap, not an empathy score.", "Bootstrap intervals do not remove dataset or annotation bias.", "No inference cost is inferred without measured hardware and pricing."]}
+    report = {"created_at": datetime.now(timezone.utc).isoformat(), "mode": "SCORER_FIXTURE_VERIFICATION" if fixture_mode else "recorded_predictions", "model_quality_claim_permitted": False, "benchmark_human_reviewed": all(s.get("provenance",{}).get("human_reviewed") is True for s in samples), "baseline": baseline, "benchmark_sha256": digest(Path(benchmark).read_bytes()), "all_six_checkpoints_present": set(labels) == set(CHECKPOINTS), "runs": runs, "comparisons": comparisons, "limitations": ["Pattern checks are not semantic safety certification.", "ChrF is reference overlap, not an empathy score.", "Bootstrap intervals do not remove dataset or annotation bias.", "No inference cost is inferred without measured hardware and pricing."]}
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, indent=2, ensure_ascii=False, allow_nan=False)+"\n")
@@ -127,7 +133,8 @@ def main():
     parser.add_argument("--output", type=Path, default=ROOT / "artifacts/evaluation.json")
     parser.add_argument("--auditkit", action="store_true")
     parser.add_argument("--fixture-mode", action="store_true", help="Mark a scorer-only verification; do not report it as model quality")
-    parser.add_argument("--baseline", default="Base Qwen2.5-3B", help="The checkpoint every delta is measured against")
+    parser.add_argument("--allow-unverified-predictions", action="store_true", help="Score imported outputs without claiming verified model provenance")
+    parser.add_argument("--baseline", default="base", help="The checkpoint every delta is measured against")
     args = parser.parse_args()
     named = {}
     for spec in args.predictions:
@@ -135,7 +142,7 @@ def main():
         if label in named:
             parser.error("Duplicate checkpoint label")
         named[label] = Path(path)
-    report = evaluate(args.benchmark, named, args.output, args.auditkit, args.fixture_mode, args.baseline)
+    report = evaluate(args.benchmark, named, args.output, args.auditkit, args.fixture_mode, args.baseline, args.allow_unverified_predictions)
     print(json.dumps({"mode": report["mode"], "runs": {label: data["means"] for label, data in report["runs"].items()}, "output": str(args.output)}, indent=2))
 if __name__ == "__main__":
     main()

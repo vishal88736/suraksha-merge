@@ -8,6 +8,7 @@ import importlib.metadata
 import json
 from pathlib import Path
 from research.common import ROOT, digest, extraction_reward, read_jsonl
+from research.artifacts import file_digest, read_adapter_manifest, write_adapter_manifest, resolve_adapter, safe_dataset_file
 
 BASE_MODEL = "Qwen/Qwen2.5-3B-Instruct"
 TARGET_MODULES = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
@@ -54,20 +55,14 @@ def identity(model_name):
     return {"base_model": model_name, "base_revision": revision, "base_weights": weight_hashes, "tokenizer_sha256": digest(tok.get_vocab()), "tokenizer_size": len(tok), "target_modules": TARGET_MODULES, "rank": 32, "alpha": 64}
 
 def resolve_shared_base(args):
-    """Return the one adapted base both specialists must share.
+    """An adapted vocabulary is optional; when selected it must exist explicitly."""
+    selected = getattr(args, "shared_base", None)
+    if selected is not None:
+        path=Path(selected).resolve()
+        if not path.is_dir():raise FileNotFoundError("The selected shared base does not exist")
+        return path
+    return Path(args.base).resolve() if Path(args.base).is_dir() else args.base
 
-    Training on the unadapted base and then merging with the adapted
-    tokenizer silently shifts every token id of the extended vocabulary.
-    """
-    candidate = Path(args.shared_base)
-    if candidate.is_dir():
-        return candidate
-    if Path(args.base).is_dir() and Path(args.base) != Path(BASE_MODEL):
-        return Path(args.base)
-    raise RuntimeError(
-        "No shared adapted base was found. Run --stage adapt-tokenizer first, "
-        "or pass --shared-base pointing at the adapted directory."
-    )
 
 def assert_tokenizer_matches_model(tokenizer, model):
     """The tokenizer and the embedding matrix must agree on the vocabulary."""
@@ -87,9 +82,15 @@ def check_data(args):
     if manifest.get("bootstrap_only", True) and not args.allow_bootstrap_data:
         raise ValueError("Bundled seeds are unreviewed bootstrap data. Supply human-reviewed data, or explicitly pass --allow-bootstrap-data for a smoke run.")
     for name, expected in manifest["files"].items():
-        path = args.data / name
+        path = safe_dataset_file(args.data, name)
         if not path.is_file() or digest(path.read_bytes()) != expected:
             raise ValueError(f"Dataset manifest checksum mismatch: {name}")
+    if not manifest.get("accepted") or manifest.get("empty_dataset"):
+        raise ValueError("The curated dataset is empty")
+    for kind in ("rlvr", "dpo", "sft", "uncurated_sft"):
+        name=f"train/{kind}.jsonl"
+        if name not in manifest["files"] or not read_jsonl(args.data/name):
+            raise ValueError(f"Training split {kind} is missing or empty")
     return manifest
 
 def register_reward():
@@ -104,17 +105,11 @@ def register_reward():
     RewardRegistry.register_custom_reward("suraksha_schema_exact", BFSIReward, RewardConfig(reward_type=RewardType.FINANCIAL_ACCURACY, device="cpu"))
 
 def write_manifest(adapter, output, manifest):
-    """Write the manifest where both the trainer and the merger can find it."""
-    for directory in {Path(adapter), Path(output)}:
-        directory.mkdir(parents=True, exist_ok=True)
-        (directory / "suraksha_manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    write_adapter_manifest(adapter, output, manifest)
 
 def read_manifest(adapter):
-    """Read the manifest from the adapter directory or its parent."""
-    for path in (Path(adapter) / "suraksha_manifest.json", Path(adapter).parent / "suraksha_manifest.json"):
-        if path.is_file():
-            return json.loads(path.read_text())
-    raise FileNotFoundError(f"No suraksha_manifest.json found at or above {adapter}")
+    return read_adapter_manifest(adapter)
+
 
 def train(args):
     check_data(args)
@@ -122,6 +117,9 @@ def train(args):
     from aligntune.core.backend_factory import create_rl_trainer, create_sft_trainer
     shared_base = resolve_shared_base(args)
     shared_identity = identity(str(shared_base))
+    output = args.output / args.stage
+    if output.exists() and ((output / "adapter_model.safetensors").exists() or any(output.glob("checkpoint-*"))):
+        raise ValueError("This output already contains checkpoints; choose a fresh --output to preserve prior runs")
     common = dict(model_name=str(shared_base), backend="trl", output_dir=str(args.output / args.stage), num_epochs=1, max_steps=args.max_steps, batch_size=1, learning_rate=5e-6, max_seq_length=2048, seed=SEED, use_peft=True, lora_r=32, lora_alpha=64, lora_target_modules=TARGET_MODULES, gradient_accumulation_steps=2, trust_remote_code=False, bf16=torch.cuda.is_available() and torch.cuda.is_bf16_supported(), fp16=torch.cuda.is_available() and not torch.cuda.is_bf16_supported())
     if args.stage == "schema":
         register_reward()
@@ -204,8 +202,9 @@ def merge(args):
     from peft import PeftModel
     from aligntune.core.merge.peft_merger import PEFTMerger
     shared_base = resolve_shared_base(args)
-    adapters = [args.schema_adapter, args.empathy_adapter]
-    manifests = [read_manifest(p) for p in adapters]
+    resolved = [resolve_adapter(path) for path in (args.schema_adapter, args.empathy_adapter)]
+    adapters = [item[0] for item in resolved]
+    manifests = [item[1] for item in resolved]
     if manifests[0]["identity"] != manifests[1]["identity"]:
         raise ValueError("Adapters differ in base revision/weights, tokenizer, rank, alpha or target modules")
     if manifests[0]["identity"] != identity(str(shared_base)):
@@ -233,7 +232,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--stage", choices=STAGES, default="plan")
     parser.add_argument("--base", default=BASE_MODEL)
-    parser.add_argument("--shared-base", type=Path, default=ROOT / "checkpoints/shared-indic-base", help="The adapted base both specialists must share")
+    parser.add_argument("--shared-base", type=Path, default=None, help="Optional adapted base shared by both specialists; omit to keep the original vocabulary")
     parser.add_argument("--data", type=Path, default=ROOT / "data/generated")
     parser.add_argument("--output", type=Path, default=ROOT / "checkpoints")
     parser.add_argument("--schema-adapter", type=Path, default=ROOT / "checkpoints/schema")
@@ -246,7 +245,7 @@ def main():
     if not 0 <= args.schema_weight <= 1 or args.max_steps < 1:
         parser.error("Weights must be between 0 and 1; steps must be positive")
     if args.stage == "plan":
-        print(json.dumps({"executed": False, "base": args.base, "shared_base": str(args.shared_base), "stages": STAGES[1:], "versions": package_versions(), "shared_vocabulary_required": True, "default_tokenizer": "unchanged until adapt-tokenizer is explicitly run", "weights": [args.schema_weight, round(1-args.schema_weight, 6)], "measured_results": None}, indent=2))
+        print(json.dumps({"executed": False, "base": args.base, "shared_base": str(args.shared_base) if args.shared_base else args.base, "stages": STAGES[1:], "versions": package_versions(), "shared_vocabulary_required": True, "default_tokenizer": "unchanged until adapt-tokenizer is explicitly run", "weights": [args.schema_weight, round(1-args.schema_weight, 6)], "measured_results": None}, indent=2))
     elif args.stage == "merge":
         merge(args)
     elif args.stage == "adapt-tokenizer":
