@@ -34,13 +34,21 @@ export const ACTIONS = [
   "REVIEW_COMPENSATION",
   "HUMAN_REVIEW",
 ] as const;
+export function isCalendarDate(value: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const [year, month, day] = value.split("-").map(Number) as [number, number, number];
+  if (year < 1900 || month < 1 || month > 12 || day < 1) return false;
+  const leap = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  return day <= [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1]!;
+}
+
 export const inputSchema = z
   .object({
     message: z
       .string()
-      .trim()
       .min(1, "Enter a customer message.")
-      .max(12000, "Keep the message under 12,000 characters."),
+      .max(12000, "Keep the message under 12,000 characters.")
+      .refine(value => value.trim().length > 0, "Enter a customer message."),
     reporting_delay_working_days: z
       .number()
       .int()
@@ -73,7 +81,7 @@ export const inputSchema = z
       .default("auto"),
     transaction_date: z
       .string()
-      .regex(/^\d{4}-\d{2}-\d{2}$/)
+      .refine(isCalendarDate, "Use a valid calendar date (YYYY-MM-DD).")
       .optional(),
   })
   .strict();

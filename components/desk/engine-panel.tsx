@@ -79,6 +79,7 @@ export function EnginePanel({
   onExport,
   onDownloadPayload,
   rawVisible,
+  stale,
 }: {
   result: TriageResult;
   tab: Tab;
@@ -87,6 +88,7 @@ export function EnginePanel({
   onExport: () => void;
   onDownloadPayload: () => void;
   rawVisible: boolean;
+  stale: boolean;
 }) {
   const { t } = useI18n();
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -326,7 +328,7 @@ export function EnginePanel({
               </span>
               <button
                 className="small-button"
-                onClick={() => onCopy(JSON.stringify(result.payload, null, 2))}
+                disabled={stale} onClick={() => onCopy(JSON.stringify(result.payload, null, 2))}
               >
                 <Copy size={13} /> {t("engine.copyJson")}
               </button>
@@ -335,7 +337,7 @@ export function EnginePanel({
             <div className="json-bottom-note">
               <CircleHelp size={14} /> {t("engine.jsonNote")}
             </div>
-            <button className="payload-link" onClick={onDownloadPayload}>
+            <button className="payload-link" disabled={stale} onClick={onDownloadPayload}>
               <Braces size={15} /> {t("engine.downloadPayload")}{" "}
               <ArrowUpRight size={14} />
             </button>
@@ -378,7 +380,7 @@ export function EnginePanel({
                 <p>{t("provenance.disclaimerBody")}</p>
               </div>
             </div>
-            <button className="payload-link" onClick={onExport}>
+            <button className="payload-link" disabled={stale} onClick={onExport}>
               <ArrowUpRight size={15} /> {t("provenance.export")}
             </button>
           </>

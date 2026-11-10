@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   X,
 } from "lucide-react";
+import { requestTriage, TriageClientError } from "../lib/triage-client.ts";
 import { useI18n } from "../lib/i18n/provider.tsx";
 import { useUrlView } from "../lib/nav.ts";
 import {
@@ -43,7 +44,8 @@ export default function Page() {
   );
   const [selected, setSelected] = useState(0);
   const [tab, setTab] = useState<Tab>("overview");
-  const [loading, setLoading] = useState(false);
+  const loading = state.status === "running";
+  const [apiKey, setApiKey] = useState("");
   const [notice, setNotice] = useState("");
   const [mix, setMix] = useState(55);
   const [stage, setStage] = useState(0);
@@ -83,45 +85,19 @@ export default function Page() {
     requestRef.current?.abort();
     const controller = new AbortController();
     requestRef.current = controller;
-    setLoading(true);
-    dispatch({ type: "run/start" });
-    const submitted = state.input.message;
+    const requestId = crypto.randomUUID();
+    const input = { ...state.input };
+    dispatch({ type: "run/start", requestId, input });
     try {
-      const response = await fetch("/api/triage", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(state.input),
-        signal: controller.signal,
-      });
-      const body = (await response.json()) as {
-        payload?: unknown;
-        error?: { code?: string; message?: string; request_id?: string };
-      };
-      if (!response.ok)
-        throw new Error(
-          body.error?.message ?? t("error.unavailable"),
-        );
+      const result = await requestTriage(input, { signal: controller.signal, apiKey });
       if (!controller.signal.aborted) {
-        dispatch({
-          type: "run/success",
-          result: body as never,
-          submitted,
-        });
+        dispatch({ type: "run/success", requestId, result });
         setTab("overview");
       }
     } catch (error) {
-      if (!controller.signal.aborted)
-        dispatch({
-          type: "run/error",
-          message:
-            error instanceof Error
-              ? error.message
-              : t("error.connection"),
-        });
-    } finally {
-      if (!controller.signal.aborted) setLoading(false);
+      if (!controller.signal.aborted) dispatch({ type: "run/error", requestId, message: error instanceof TriageClientError ? error.code : "network" });
     }
-  }, [state.input, t]);
+  }, [state.input, apiKey]);
 
   const copy = useCallback(async (text: string) => {
     try {
@@ -193,6 +169,7 @@ export default function Page() {
           </div>
           <button
             className="button secondary heading-action"
+            disabled={view === "desk" && (isStale(state) || loading)}
             onClick={
               view === "desk"
                 ? exportTrace
@@ -221,6 +198,7 @@ export default function Page() {
 
         {view === "desk" && (
           <>
+            {(stale || loading) && <div className="stale-banner" role="status"><ShieldCheck size={19}/><div><strong>{t(loading ? "desk.runningTitle" : "desk.staleTitle")}</strong><p>{t(loading ? "desk.runningBody" : "desk.staleBody")}</p></div><button className="button primary" disabled={loading} onClick={() => void run()}>{t(loading ? "composer.running" : "composer.run")}<ArrowRight size={15}/></button></div>}
             <div className="workflow-strip">
               {(
                 [
@@ -255,9 +233,12 @@ export default function Page() {
                 rawMessage={state.submittedMessage}
                 result={state.result}
                 stale={stale}
-                hasRun={state.status !== "dirty"}
+                hasRun={state.hasRun}
                 loading={loading}
-                error={state.error ?? ""}
+                error={state.error ? t(({ unauthorized: "error.unauthorized", rate_limited: "error.rateLimited", timeout: "error.timeout", invalid_input: "error.invalidInput", payload_too_large: "error.tooLarge", invalid_response: "error.invalidResponse", network: "error.connection", unavailable: "error.unavailable" } as const)[state.error as "network"] ?? "error.unavailable") : ""}
+                authRequired={state.error === "unauthorized"}
+                apiKey={apiKey}
+                onApiKey={setApiKey}
                 masked={state.masked}
                 revealed={state.revealed}
                 onSelect={choose}
@@ -265,19 +246,20 @@ export default function Page() {
                 onRun={() => void run()}
                 onRetry={() => void run()}
                 onReset={() => choose(selected)}
-                onCopy={(text) => void copy(text)}
+                onCopy={(text) => { if (!isStale(state) && !loading) void copy(text); }}
                 onTogglePrivacy={() => dispatch({ type: "privacy/toggle" })}
               />
               <EnginePanel
                 result={state.result}
                 tab={tab}
                 onTab={setTab}
-                onCopy={(text) => void copy(text)}
+                onCopy={(text) => { if (!isStale(state) && !loading) void copy(text); }}
                 onExport={exportTrace}
                 onDownloadPayload={() =>
                   download(state.result.payload, "suraksha-triage.json")
                 }
                 rawVisible={state.revealed}
+                stale={stale || loading}
               />
             </div>
             <div className="experiment-teaser">

@@ -26,6 +26,7 @@ export function IntakePanel({
   error,
   masked,
   revealed,
+  authRequired, apiKey, onApiKey,
   onSelect,
   onInput,
   onRun,
@@ -45,6 +46,7 @@ export function IntakePanel({
   error: string;
   masked: boolean;
   revealed: boolean;
+  authRequired: boolean; apiKey: string; onApiKey: (key: string) => void;
   onSelect: (index: number) => void;
   onInput: (patch: Partial<TriageInput>) => void;
   onRun: () => void;
@@ -95,6 +97,19 @@ export function IntakePanel({
           {scenario.description[locale]}
         </div>
       </div>
+      <Composer
+        input={input}
+        loading={loading}
+        error={error}
+        authRequired={authRequired}
+        apiKey={apiKey}
+        onApiKey={onApiKey}
+        locale={locale}
+        onInput={onInput}
+        onRun={onRun}
+        onRetry={onRetry}
+        onReset={onReset}
+      />
       <div className="conversation">
         <div className="conversation-date">
           <span />
@@ -144,6 +159,7 @@ export function IntakePanel({
           <span className="draft-tag">{t("intake.forReview")}</span>
           <button
             className="icon-button"
+            disabled={stale || loading}
             aria-label={t("intake.copyReply")}
             onClick={() => onCopy(result.reply.text)}
           >
@@ -171,16 +187,7 @@ export function IntakePanel({
           </div>
         </div>
       </div>
-      <Composer
-        input={input}
-        loading={loading}
-        error={error}
-        locale={locale}
-        onInput={onInput}
-        onRun={onRun}
-        onRetry={onRetry}
-        onReset={onReset}
-      />
+
     </section>
   );
 }

@@ -23,6 +23,7 @@ export function Composer({
   onRun,
   onRetry,
   onReset,
+  authRequired, apiKey, onApiKey,
 }: {
   input: TriageInput;
   loading: boolean;
@@ -32,6 +33,7 @@ export function Composer({
   onRun: () => void;
   onRetry: () => void;
   onReset: () => void;
+  authRequired: boolean; apiKey: string; onApiKey: (key: string) => void;
 }) {
   const { t } = useI18n();
   const [advanced, setAdvanced] = useState(false);
@@ -73,6 +75,7 @@ export function Composer({
 
   return (
     <div className="composer">
+      {authRequired && <label className="api-key-field">{t("composer.apiKey")}<input type="password" value={apiKey} autoComplete="off" spellCheck={false} onChange={e => onApiKey(e.target.value)} /><small>{t("composer.apiKeyHint")}</small></label>}
       <div className="composer-heading">
         <label htmlFor="message">{t("composer.heading")}</label>
         <button onClick={onReset}>
@@ -105,7 +108,7 @@ export function Composer({
         <label className="language-select">
           <Globe2 size={14} />
           <select
-            aria-label={t("nav.interfaceLanguage")}
+            aria-label={t("composer.replyLanguage")}
             value={input.language ?? "auto"}
             onChange={(e) =>
               onInput({

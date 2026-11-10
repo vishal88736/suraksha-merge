@@ -9,6 +9,20 @@
 import { DEFAULT_UI_LOCALE, type UiLocale } from "./locales.ts";
 
 const en = {
+  "desk.staleTitle": "Your inputs changed. Refresh the decision.",
+  "desk.staleBody": "The visible draft and policy assessment describe the previous inputs. Run triage before copying or exporting.",
+  "desk.runningTitle": "Checking the message and its evidence…",
+  "desk.runningBody": "Your previous result remains visible while the new assessment is prepared.",
+  "composer.apiKey": "Service API key",
+  "composer.apiKeyHint": "Used only for this request session. Never stored or included in exports.",
+  "composer.replyLanguage": "Customer reply language",
+  "error.unauthorized": "This service requires an API key. Enter it below, then retry.",
+  "error.rateLimited": "Too many requests. Wait a minute, then retry.",
+  "error.timeout": "The request timed out. Your message is still here; please retry.",
+  "error.invalidInput": "Check your message and operator context, then try again.",
+  "error.tooLarge": "The message is too large. Keep it under 12,000 characters.",
+  "error.invalidResponse": "The service returned an incomplete response. Please retry.",
+
   "nav.brandHome": "SurakshaDesk home",
   "nav.brandTagline": "CLARITY. CARE. CONFIDENCE.",
   "nav.workspace": "Research workspace",
@@ -304,6 +318,20 @@ const en = {
 export type MessageKey = keyof typeof en;
 
 const hi: Record<MessageKey, string> = {
+  "desk.staleTitle": "जानकारी बदल गई है। निर्णय फिर से जाँचें।",
+  "desk.staleBody": "दिख रहा उत्तर और नीति आकलन पिछली जानकारी का है। कॉपी या निर्यात से पहले ट्रायेज फिर चलाएँ।",
+  "desk.runningTitle": "संदेश और उसके प्रमाण जाँचे जा रहे हैं…",
+  "desk.runningBody": "नया आकलन तैयार होने तक पिछला परिणाम दिख रहा है।",
+  "composer.apiKey": "सेवा की API कुंजी",
+  "composer.apiKeyHint": "केवल इस सत्र के अनुरोध में उपयोग होगी। इसे सहेजा या निर्यात नहीं किया जाता।",
+  "composer.replyLanguage": "ग्राहक के उत्तर की भाषा",
+  "error.unauthorized": "इस सेवा के लिए API कुंजी आवश्यक है। नीचे कुंजी भरें और पुनः प्रयास करें।",
+  "error.rateLimited": "बहुत अधिक अनुरोध हुए। एक मिनट बाद पुनः प्रयास करें।",
+  "error.timeout": "अनुरोध की समय-सीमा समाप्त हुई। आपका संदेश सुरक्षित है; फिर प्रयास करें।",
+  "error.invalidInput": "संदेश और ऑपरेटर की जानकारी जाँचकर पुनः प्रयास करें।",
+  "error.tooLarge": "संदेश बहुत बड़ा है। इसे 12,000 अक्षरों से कम रखें।",
+  "error.invalidResponse": "सेवा का उत्तर अधूरा है। पुनः प्रयास करें।",
+
   "nav.brandHome": "सुरक्षा डेस्क होम",
   "nav.brandTagline": "स्पष्टता। देखभाल। विश्वास।",
   "nav.workspace": "शोध कार्यक्षेत्र",
