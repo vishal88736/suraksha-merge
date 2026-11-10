@@ -12,7 +12,7 @@ import {
   ShieldCheck,
   X,
 } from "lucide-react";
-import { requestTriage, TriageClientError } from "../lib/triage-client.ts";
+import { requestTriage, TriageClientError, type ClientErrorCode } from "../lib/triage-client.ts";
 import { useI18n } from "../lib/i18n/provider.tsx";
 import { useUrlView } from "../lib/nav.ts";
 import {
@@ -31,6 +31,10 @@ import { PipelineView } from "../components/views/pipeline-view.tsx";
 import { BenchmarksView } from "../components/views/benchmarks-view.tsx";
 import { PolicyView } from "../components/views/policy-view.tsx";
 import { Landing } from "../components/landing.tsx";
+
+import type { MessageKey } from "../lib/i18n/catalog.ts";
+
+const ERROR_KEYS: Record<ClientErrorCode, MessageKey> = { unauthorized: "error.unauthorized", rate_limited: "error.rateLimited", timeout: "error.timeout", invalid_input: "error.invalidInput", payload_too_large: "error.tooLarge", invalid_response: "error.invalidResponse", network: "error.connection", unavailable: "error.unavailable" };
 
 type Tab = "overview" | "json" | "provenance";
 
@@ -235,7 +239,7 @@ export default function Page() {
                 stale={stale}
                 hasRun={state.hasRun}
                 loading={loading}
-                error={state.error ? t(({ unauthorized: "error.unauthorized", rate_limited: "error.rateLimited", timeout: "error.timeout", invalid_input: "error.invalidInput", payload_too_large: "error.tooLarge", invalid_response: "error.invalidResponse", network: "error.connection", unavailable: "error.unavailable" } as const)[state.error as "network"] ?? "error.unavailable") : ""}
+                error={state.error ? t(ERROR_KEYS[state.error as ClientErrorCode] ?? "error.unavailable") : ""}
                 authRequired={state.error === "unauthorized"}
                 apiKey={apiKey}
                 onApiKey={setApiKey}

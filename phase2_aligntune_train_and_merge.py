@@ -59,7 +59,7 @@ def materialize_base(source, base_identity):
     """Load remote weights from the same immutable revision recorded in provenance."""
     if Path(source).is_dir():return str(Path(source).resolve())
     from huggingface_hub import snapshot_download
-    return snapshot_download(repo_id=str(source), revision=base_identity["base_revision"], allow_patterns=["*.json","*.safetensors","*.model","*.txt","*.tiktoken"])
+    return snapshot_download(repo_id=str(source), revision=base_identity["base_revision"], allow_patterns=["*.json","*.safetensors","*.model","*.txt","*.tiktoken","*.jinja"])
 
 def resolve_shared_base(args):
     """An adapted vocabulary is optional; when selected it must exist explicitly."""

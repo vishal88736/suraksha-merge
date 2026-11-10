@@ -207,6 +207,10 @@ export function Composer({
             />
           </label>
           <label>
+            {t("context.transactionDate")}
+            <input type="date" value={input.transaction_date ?? ""} aria-describedby="context-note" onChange={(event) => onInput({ transaction_date: event.target.value || undefined })} />
+          </label>
+          <label>
             {t("context.elapsed")}
             <input
               type="number"

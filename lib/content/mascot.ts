@@ -64,7 +64,7 @@ const HINTS: MascotHint[] = [
     title: { en: "Find the labelled UTR", hi: "लेबल वाला UTR ढूँढें" },
     body: {
       en: "A unique, labelled transaction reference is not available. Ask the customer for the UTR or RRN written on the receipt.",
-      hi: "संख्या मिली पर लेबल नहीं था, इसलिए उसे संभावित पहचान मानकर छिपा दिया गया है। ग्राहक से रसीद पर लिखा UTR या RRN माँगें।",
+      hi: "एक विशिष्ट, लेबल वाला लेनदेन संदर्भ उपलब्ध नहीं है। ग्राहक से बैंक रसीद या ऐप पर लिखा UTR या RRN माँगें।",
     },
   },
   {

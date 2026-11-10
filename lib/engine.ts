@@ -146,7 +146,7 @@ export function redactPII(message: string) {
       const start = match.index! + (group ? match[0].lastIndexOf(value) : 0);
       const end = start + value.length;
       if (overlaps(start, end)) continue;
-      if (type === "UNLABELLED_ID" && money.some(a => start >= a.start && end <= a.end)) continue;
+      if ((type === "UNLABELLED_ID" || type === "PHONE") && money.some(a => start >= a.start && end <= a.end)) continue;
       spans.push({ start, end, type, replacement: placeholder });
     }
   };

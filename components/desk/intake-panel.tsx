@@ -37,7 +37,7 @@ export function IntakePanel({
 }: {
   selected: number;
   input: TriageInput;
-  /** The raw message that produced the result. Never sent to the server. */
+  /** The submitted message for the temporary local reveal; never included in trace exports. */
   rawMessage: string;
   result: TriageResult;
   stale: boolean;
