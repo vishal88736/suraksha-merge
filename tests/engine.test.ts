@@ -316,3 +316,11 @@ test("redaction stays linear on a long unpunctuated token", () => {
   assert.ok(elapsed < 50, `redaction took ${elapsed.toFixed(1)}ms`);
   assert.ok(r.sanitized.includes("[EMAIL_REDACTED]") === false);
 });
+
+test("calendar dates are real, including leap years",()=>{
+ for(const transaction_date of ["2026-02-29","2026-04-31","2026-13-01","2026-00-01","2026-01-00","1899-12-31"])assert.throws(()=>triage({message:"hi",transaction_date}));
+ assert.doesNotThrow(()=>triage({message:"hi",transaction_date:"2024-02-29"}));
+});
+test("leading whitespace does not corrupt source offsets",()=>{
+ const message="   Unauthorised Rs.100 UTR 431289014421";const result=triage({message});const anchor=result.privacy.anchors[0]!;assert.equal(message.slice(anchor.start,anchor.end),result.payload.utr_number);assert.equal(result.audit.utr_grounded,true);
+});
