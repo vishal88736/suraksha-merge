@@ -27,7 +27,7 @@ export const COLLECT_REQUEST_SIGNALS =
 
 /** Money left without the customer's consent. */
 export const FRAUD_SIGNALS =
-  /\b(?:fraud|fraudster|scam|scammer|cheat(?:ed|ing)?|phish(?:ing)?|hacked|compromised|unauthori[sz]ed|stolen|framed|impersonat\w*)\b|not\s*me\b|did\s*not\s*(?:make|authori[sz]e)|bina\s*permission|अनधिकृत/i;
+  /\b(?:fraud|fraudster|scam(?:mer|mers|med|ming)?|cheat(?:ed|ing)?|phish(?:ing)?|hacked|compromised|unauthori[sz]ed|stolen|framed|impersonat\w*)\b|not\s*me\b|did\s*not\s*(?:make|authori[sz]e)|bina\s*permission|अनधिकृत/i;
 
 /** The customer states that they sent the money themselves, by mistake. */
 export const WRONG_TRANSFER_SIGNALS =
@@ -57,11 +57,19 @@ export function isFraudCategory(category: string): boolean {
   return FRAUD_CATEGORIES.includes(category as Category);
 }
 
+function positive(text: string, signal: RegExp): boolean {
+  for (const match of text.matchAll(new RegExp(signal.source, signal.flags.replace("g", "") + "g"))) {
+    const prefix = text.slice(Math.max(0, match.index! - 35), match.index!);
+    if (!/\b(?:no|not|never|isn[’']?t|wasn[’']?t)\s+(?:(?:a|an|any)\s+)?$/i.test(prefix)) return true;
+  }
+  return false;
+}
+
 export function classify(text: string): Category {
-  if (REMOTE_ACCESS_SIGNALS.test(text)) return "REMOTE_ACCESS_SCAM";
-  if (COLLECT_REQUEST_SIGNALS.test(text)) return "COLLECT_REQUEST_SCAM";
+  if (positive(text, REMOTE_ACCESS_SIGNALS)) return "REMOTE_ACCESS_SCAM";
+  if (positive(text, COLLECT_REQUEST_SIGNALS)) return "COLLECT_REQUEST_SCAM";
   // Fraud evidence outranks any benign reading of the same sentence.
-  if (FRAUD_SIGNALS.test(text)) return "UNAUTHORIZED_ACCOUNT_TAKEOVER";
+  if (positive(text, FRAUD_SIGNALS)) return "UNAUTHORIZED_ACCOUNT_TAKEOVER";
   // A voluntary transfer needs the customer's own statement of intent.
   if (
     WRONG_TRANSFER_SIGNALS.test(text) &&

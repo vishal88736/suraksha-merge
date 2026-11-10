@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { asciiDigits, findAmounts } from "./numbers.ts";
 import { POLICY_VERSION } from "./policy.ts";
 import { REPLY_TEMPLATES, fill } from "./i18n/replies.ts";
 import { detectLanguage } from "./rules/language.ts";
@@ -131,18 +132,21 @@ const disqualifyingContext =
   /(?:aadha+a?r|aadhar|adhar|आधार|uidai|a\/c|acct|account|customer|mobile|phone|dob|pan|voter|licen[cs]e|passport|employee)\s*(?:no\.?|number|num|id|detail)?\s*(?:is|of)?\s*[:#=-]?\s*$/i;
 
 export function redactPII(message: string) {
+  const scan = asciiDigits(message);
+  const money = findAmounts(scan).hits;
   const spans: Span[] = [];
   const anchors: Span[] = [];
   const overlaps = (start: number, end: number) =>
     spans.some((x) => start < x.end && end > x.start) ||
     anchors.some((x) => start < x.end && end > x.start);
   const add = (regex: RegExp, type: string, placeholder: string, group = 0) => {
-    for (const match of message.matchAll(regex)) {
+    for (const match of scan.matchAll(regex)) {
       const value = match[group];
       if (!value) continue;
       const start = match.index! + (group ? match[0].lastIndexOf(value) : 0);
       const end = start + value.length;
       if (overlaps(start, end)) continue;
+      if (type === "UNLABELLED_ID" && money.some(a => start >= a.start && end <= a.end)) continue;
       spans.push({ start, end, type, replacement: placeholder });
     }
   };
@@ -162,34 +166,37 @@ export function redactPII(message: string) {
   );
   add(/\b[A-Z]{5}\d{4}[A-Z]\b/gi, "PAN", "[PAN_REDACTED]");
   add(/\b\d{4}[ -]\d{4}[ -]\d{4}\b/g, "SENSITIVE_ID", "[ID_REDACTED]");
+  add(/\b(?:otp|pin|cvv|passcode|password)\s*(?:is)?\s*[:#=-]?\s*(\d{3,8})\b/gi, "AUTH_SECRET", "[AUTH_REDACTED]", 1);
+  // Scan address tokens once. Numeric local parts must be masked as a whole
+  // before generic phone/ID rules can claim part of an email or VPA.
+  for (const token of scan.matchAll(/\S+/g)) {
+    for (let at = token[0].indexOf("@"); at >= 0; at = token[0].indexOf("@", at+1)) {
+      let left=at, right=at+1;
+      while(left>0 && /[\p{L}\p{N}_.+%-]/u.test(token[0][left-1]!)) left--;
+      while(right<token[0].length && /[\p{L}\p{N}_.-]/u.test(token[0][right]!)) right++;
+      while(right>at+1 && /[.,-]/.test(token[0][right-1]!)) right--;
+      if(left===at || right===at+1) continue;
+      const start=token.index!+left, end=token.index!+right;
+      if(!overlaps(start,end)) spans.push({start,end,type:token[0].slice(at+1,right).includes(".")?"EMAIL":"VPA",replacement:token[0].slice(at+1,right).includes(".")?"[EMAIL_REDACTED]":"[VPA_REDACTED]"});
+    }
+  }
   // Anchors are the only values kept verbatim, and only when a labelled
   // transaction reference survives the identity rules and the context check.
-  for (const match of message.matchAll(utrPattern)) {
+  for (const match of scan.matchAll(utrPattern)) {
     const value = match[1];
     const start = match.index! + match[0].lastIndexOf(value);
     const end = start + value.length;
     if (overlaps(start, end)) continue;
-    const prefix = message.slice(Math.max(0, match.index! - 60), match.index!);
+    const prefix = scan.slice(Math.max(0, match.index! - 60), match.index!);
     if (disqualifyingContext.test(prefix)) continue;
     anchors.push({ start, end, type: "UTR", replacement: value });
   }
   add(/(?<!\d)(?:\+91[ -]?)?[6-9]\d{9}(?!\d)/g, "PHONE", "[PHONE_REDACTED]");
   // Any remaining long digit run is an unidentified identifier, not a reference.
   add(/\b\d{8,}\b/g, "UNLABELLED_ID", "[ID_REDACTED]");
-  // Bounded runs keep these linear: an unbounded [\w.+-]+ backtracks quadratically.
-  add(
-    /(?<![\w.+-])[\w.+-]{1,64}@[a-zA-Z][\w.-]{0,64}\.[a-zA-Z]{2,}\b/g,
-    "EMAIL",
-    "[EMAIL_REDACTED]",
-  );
-  add(
-    /(?<![\w.+-])[\w.+-]{1,64}@[a-zA-Z][\w.-]{0,64}\b/g,
-    "VPA",
-    "[VPA_REDACTED]",
-  );
   const selected = [...spans].sort((a, b) => a.start - b.start);
   let sanitized = message;
-  for (const span of [...selected].reverse())
+  for (const span of [...selected, ...anchors].sort((a,b) => b.start-a.start))
     sanitized =
       sanitized.slice(0, span.start) +
       span.replacement +
@@ -321,21 +328,10 @@ export function triage(raw: TriageInput) {
       end: a.end,
     });
   }
-  const amounts = [
-    ...text.matchAll(
-      // The currency token must not be the tail of a word: "hours 30" and
-      // "customers 5000" are prose, not transaction amounts.
-      /(?<![\p{L}\p{N}])(?:₹|rs\.?|inr)\s*([0-9]+(?:,[0-9]{2,3})*(?:\.[0-9]{1,2})?)(?![\d]|[.,]\d)/giu,
-    ),
-  ];
-  const uniqueAmounts = [
-    ...new Set(
-      amounts
-        .map((m) => Number(m[1].replaceAll(",", "")))
-        .filter((n) => n > 0 && Number.isFinite(n)),
-    ),
-  ];
-  const amount = uniqueAmounts.length === 1 ? uniqueAmounts[0] : null;
+  const amountScan = findAmounts(input.message);
+  const uniqueAmounts = [...new Set(amountScan.hits.map(hit => hit.value))];
+  const amount = !amountScan.invalid && uniqueAmounts.length === 1 ? uniqueAmounts[0] : null;
+  if (amountScan.invalid) warnings.push("An amount has an invalid format or precision; confirm it from the transaction receipt.");
   if (uniqueAmounts.length > 1)
     warnings.push("Conflicting amounts found; human confirmation is required.");
   if (amount)
@@ -343,11 +339,14 @@ export function triage(raw: TriageInput) {
       field: "amount_inr",
       value: amount,
       source: "customer_message",
+      start: amountScan.hits.find(hit => hit.value === amount)?.start,
+      end: amountScan.hits.find(hit => hit.value === amount)?.end,
     });
-  const inferredDelay = text.match(/\b(\d+)\s*working\s*days?\b/i);
-  const days =
-    input.reporting_delay_working_days ??
-    (inferredDelay ? Number(inferredDelay[1]) : null);
+  const delayHints = [...asciiDigits(text).matchAll(/\b(\d+)\s*working\s*days?\b/gi)].map(m => Number(m[1]));
+  const validHints = [...new Set(delayHints.filter(n => Number.isSafeInteger(n) && n >= 0 && n <= 3650))];
+  const delayConflict = validHints.length > 1 || delayHints.some(n => !Number.isSafeInteger(n) || n > 3650) || (input.reporting_delay_working_days != null && validHints.length === 1 && validHints[0] !== input.reporting_delay_working_days);
+  const days = delayConflict ? null : input.reporting_delay_working_days ?? validHints[0] ?? null;
+  if(delayConflict) warnings.push("Reporting-delay evidence conflicts or is out of range; bank verification is required.");
   if (days !== null)
     evidence.push({
       field: "reporting_delay_working_days",
@@ -400,6 +399,11 @@ export function triage(raw: TriageInput) {
     actions.push("HUMAN_REVIEW");
   } else {
     actions.push("REQUEST_TRANSACTION_DETAILS", "HUMAN_REVIEW");
+  }
+  if (delayConflict && isFraud(category)) tier = "PENDING_VERIFICATION";
+  for (const field of ["responsibility", "account_tier", "elapsed_calendar_days", "transaction_date"] as const) {
+    const value = input[field];
+    if (value != null && value !== "unknown") evidence.push({ field, value, source: "operator_context" });
   }
   const postPolicy =
     input.transaction_date != null && input.transaction_date >= "2027-01-01";
@@ -467,7 +471,7 @@ export function triage(raw: TriageInput) {
     utr === null
       ? null
       : utrAnchor !== undefined &&
-          input.message.slice(utrAnchor.start, utrAnchor.end) === utr &&
+          asciiDigits(input.message.slice(utrAnchor.start, utrAnchor.end)) === utr &&
           /^\d{12}$/.test(utr);
   return {
     payload,
@@ -491,6 +495,7 @@ export function triage(raw: TriageInput) {
         "npci-redressal",
         "i4c-report",
         "rbi-ios-2026",
+        ...(postPolicy ? ["rbi-amendment-2027"] : []),
       ],
     },
   };
