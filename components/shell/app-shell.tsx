@@ -140,6 +140,7 @@ export function AppShell({
       </aside>
       <div className="main-shell">
         <header className="topbar">
+          <button className="mobile-brand" onClick={() => onView("home")} aria-label={t("nav.brandHome")}><ShieldCheck size={23}/><span>suraksha<strong>desk</strong></span></button>
           <div className="breadcrumb">
             {t("nav.breadcrumbRoot")} <ChevronRight size={13} />
             <strong>{current ? t(current.key) : ""}</strong>

@@ -6,7 +6,7 @@
  * like everything else.
  */
 import type { LocalizedText } from "../i18n/locales.ts";
-import type { TriageState } from "../triage-reducer.ts";
+import { isStale, type TriageState } from "../triage-reducer.ts";
 
 export type MascotMood = "idle" | "listening" | "thinking" | "found" | "warning";
 
@@ -19,6 +19,9 @@ export type MascotHint = {
 
 /** Hints in priority order; the first match wins. */
 const HINTS: MascotHint[] = [
+  { id: "checking", mood: "thinking", title: { en: "Checking the evidence", hi: "प्रमाण जाँचे जा रहे हैं" }, body: { en: "The new assessment is running. Keep the previous draft for reference until the result is ready.", hi: "नया आकलन जारी है। परिणाम आने तक पिछले उत्तर को केवल संदर्भ मानें।" } },
+  { id: "retry", mood: "warning", title: { en: "Your message is still here", hi: "आपका संदेश यहीं है" }, body: { en: "The request did not finish. Check the message below, then retry; the last result has not been replaced.", hi: "अनुरोध पूरा नहीं हुआ। नीचे संदेश जाँचकर पुनः प्रयास करें; पिछला परिणाम बदला नहीं गया है।" } },
+
   {
     id: "fraud",
     mood: "warning",
@@ -60,7 +63,7 @@ const HINTS: MascotHint[] = [
     mood: "thinking",
     title: { en: "Find the labelled UTR", hi: "लेबल वाला UTR ढूँढें" },
     body: {
-      en: "The number was found but not labelled, so it is masked as a possible identity. Ask the customer for the UTR or RRN written on the receipt.",
+      en: "A unique, labelled transaction reference is not available. Ask the customer for the UTR or RRN written on the receipt.",
       hi: "संख्या मिली पर लेबल नहीं था, इसलिए उसे संभावित पहचान मानकर छिपा दिया गया है। ग्राहक से रसीद पर लिखा UTR या RRN माँगें।",
     },
   },
@@ -113,6 +116,9 @@ export function mascotHintFor(
 ): MascotHint {
   const byId = (id: string) => HINTS.find((hint) => hint.id === id)!;
   if (options.listening) return byId("start");
+  if (options.running || state.status === "running") return byId("checking");
+  if (isStale(state)) return byId("editing");
+  if (state.status === "error") return byId("retry");
   const category = state.result.payload.dispute_category;
   if (category === "COLLECT_REQUEST_SCAM" || category === "REMOTE_ACCESS_SCAM")
     return byId("fraud");

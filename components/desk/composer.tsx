@@ -65,7 +65,7 @@ export function Composer({
         ? t("composer.voiceDenied")
         : dictation.status === "empty"
           ? t("composer.voiceEmpty")
-          : "";
+          : dictation.status === "error" ? t("composer.voiceError") : "";
 
   // A browser that cannot dictate still needs the operator context to hand.
   const contextOpen =
@@ -104,6 +104,7 @@ export function Composer({
       <p id="message-hint" className="composer-hint">
         {t("composer.languageHint")}
       </p>
+      <div className="composer-meta"><span>{t("composer.shortcut")}</span><span aria-live="off">{input.message.length.toLocaleString()} / 12,000</span></div>
       <div className="composer-controls">
         <label className="language-select">
           <Globe2 size={14} />
@@ -118,7 +119,7 @@ export function Composer({
           >
             {REPLY_LANGUAGE_OPTIONS.map((option) => (
               <option value={option.code} key={option.code}>
-                {option.label}
+                {option.code === "auto" ? t("composer.autoDetect") : option.label}
               </option>
             ))}
           </select>

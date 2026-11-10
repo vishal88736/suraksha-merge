@@ -120,6 +120,7 @@ export function IntakePanel({
               : t("intake.scenarioPreview")}
           <span />
         </div>
+        <details className="source-details"><summary><LockKeyhole size={14}/>{t("intake.sourceMessage")}<ChevronDown size={14}/></summary>
         <div className="message-label">
           <span className="customer-avatar">C</span>
           <strong>{t("intake.customer")}</strong>
@@ -151,6 +152,7 @@ export function IntakePanel({
             </button>
           </div>
         </div>
+        </details>
         <div className="message-label assistant-label">
           <span className="assistant-avatar">
             <ShieldCheck size={16} />

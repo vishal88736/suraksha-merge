@@ -2,6 +2,7 @@
 import {
   createContext,
   useCallback,
+  useEffect,
   useContext,
   useMemo,
   useSyncExternalStore,
@@ -27,12 +28,14 @@ const CHANGE_EVENT = "suraksha:locale-change";
 /**
  * The locale lives in localStorage and is read through
  * useSyncExternalStore, so the server-rendered markup and the first client
- * render agree and the stored preference is applied without a flash.
+ * render agree; the browser then applies the URL or stored preference.
  */
 function subscribe(onChange: () => void) {
+  window.addEventListener("popstate", onChange);
   window.addEventListener("storage", onChange);
   window.addEventListener(CHANGE_EVENT, onChange);
   return () => {
+    window.removeEventListener("popstate", onChange);
     window.removeEventListener("storage", onChange);
     window.removeEventListener(CHANGE_EVENT, onChange);
   };
@@ -59,6 +62,8 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     getSnapshot,
     getServerSnapshot,
   );
+
+  useEffect(() => { document.documentElement.lang = locale; }, [locale]);
 
   const setLocale = useCallback((next: UiLocale) => {
     try {

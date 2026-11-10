@@ -9,6 +9,12 @@
 import { DEFAULT_UI_LOCALE, type UiLocale } from "./locales.ts";
 
 const en = {
+  "intake.sourceMessage": "View analyzed customer message",
+  "composer.shortcut": "Ctrl / ⌘ + Enter to run",
+  "composer.transactionDate": "Transaction date",
+  "composer.autoDetect": "Auto-detect language",
+  "composer.voiceError": "Voice recognition could not finish. Please retry or type your message.",
+
   "desk.staleTitle": "Your inputs changed. Refresh the decision.",
   "desk.staleBody": "The visible draft and policy assessment describe the previous inputs. Run triage before copying or exporting.",
   "desk.runningTitle": "Checking the message and its evidence…",
@@ -318,6 +324,12 @@ const en = {
 export type MessageKey = keyof typeof en;
 
 const hi: Record<MessageKey, string> = {
+  "intake.sourceMessage": "जाँचा गया ग्राहक संदेश देखें",
+  "composer.shortcut": "चलाने के लिए Ctrl / ⌘ + Enter",
+  "composer.transactionDate": "लेनदेन की तारीख़",
+  "composer.autoDetect": "भाषा स्वतः पहचानें",
+  "composer.voiceError": "आवाज़ की पहचान पूरी नहीं हुई। पुनः प्रयास करें या संदेश लिखें।",
+
   "desk.staleTitle": "जानकारी बदल गई है। निर्णय फिर से जाँचें।",
   "desk.staleBody": "दिख रहा उत्तर और नीति आकलन पिछली जानकारी का है। कॉपी या निर्यात से पहले ट्रायेज फिर चलाएँ।",
   "desk.runningTitle": "संदेश और उसके प्रमाण जाँचे जा रहे हैं…",
