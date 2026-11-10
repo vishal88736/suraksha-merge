@@ -110,32 +110,35 @@ export type Evidence = {
   start?: number;
   end?: number;
 };
+// A transaction reference is only trusted when the label in front of it names a
+// transaction. Identity keywords that label the number itself disqualify it.
 const utrPattern =
-  /\b(?:UTR|RRN|UPI\s+(?:ref(?:erence)?|transaction\s+id)|ref(?:erence)?(?:\s*(?:no\.?|number))?)\s*[:#=-]?\s*(\d{12})\b/gi;
+  /\b(?:UPI[\s._-]*(?:ref(?:erence)?|transaction[\s._-]*id|txn[\s._-]*id)|(?:txn|transaction)[\s._-]*id|UTR|RRN|ref(?:erence)?(?:\s*(?:no\.?|number|id))?)\s*[:#=-]?\s*(\d{12})\b/gi;
+// Checked against the text immediately preceding the label. The keyword must be
+// the token that labels the number, not merely a word in the same sentence.
+const disqualifyingContext =
+  /(?:aadha+a?r|aadhar|adhar|आधार|uidai|a\/c|acct|account|customer|mobile|phone|dob|pan|voter|licen[cs]e|passport|employee)\s*(?:no\.?|number|num|id|detail)?\s*(?:is|of)?\s*[:#=-]?\s*$/i;
 
 export function redactPII(message: string) {
-  const anchors: Span[] = [];
-  for (const match of message.matchAll(utrPattern)) {
-    const value = match[1];
-    const start = match.index! + match[0].lastIndexOf(value);
-    const prefix = message.slice(Math.max(0, match.index! - 24), start);
-    if (
-      !/(?:aadha+a?r|aadhar|आधार|account|a\/c|acct)[\s\S]{0,24}$/i.test(prefix)
-    )
-      anchors.push({ start, end: start + 12, type: "UTR", replacement: value });
-  }
   const spans: Span[] = [];
+  const anchors: Span[] = [];
+  const overlaps = (start: number, end: number) =>
+    spans.some((x) => start < x.end && end > x.start) ||
+    anchors.some((x) => start < x.end && end > x.start);
   const add = (regex: RegExp, type: string, placeholder: string, group = 0) => {
     for (const match of message.matchAll(regex)) {
       const value = match[group];
+      if (!value) continue;
       const start = match.index! + (group ? match[0].lastIndexOf(value) : 0);
       const end = start + value.length;
-      if (anchors.some((a) => start < a.end && end > a.start)) continue;
+      if (overlaps(start, end)) continue;
       spans.push({ start, end, type, replacement: placeholder });
     }
   };
+  // Identity rules claim their spans first: a transaction reference may never
+  // cover a value that an identity rule already owns.
   add(
-    /\b(?:aadha+a?r|aadhar|आधार)\s*(?:no\.?|number)?\s*[:#=-]?\s*(\d{4}[ -]?\d{4}[ -]?\d{4})\b/gi,
+    /\b(?:aadha+a?r|aadhar|adhar|आधार)\s*(?:no\.?|number)?\s*[:#=-]?\s*(\d{4}[ -]?\d{4}[ -]?\d{4})\b/gi,
     "AADHAAR",
     "[AADHAAR_REDACTED]",
     1,
@@ -148,19 +151,32 @@ export function redactPII(message: string) {
   );
   add(/\b[A-Z]{5}\d{4}[A-Z]\b/gi, "PAN", "[PAN_REDACTED]");
   add(/\b\d{4}[ -]\d{4}[ -]\d{4}\b/g, "SENSITIVE_ID", "[ID_REDACTED]");
-  add(/\b\d{12}\b/g, "UNLABELLED_ID", "[ID_REDACTED]");
-  add(/(?<!\d)(?:\+91[ -]?)?[6-9]\d{9}(?!\d)/g, "PHONE", "[PHONE_REDACTED]");
-  add(/[\w.+-]+@[a-zA-Z][\w.-]*\.[a-zA-Z]{2,}\b/g, "EMAIL", "[EMAIL_REDACTED]");
-  add(/[\w.+-]+@[a-zA-Z][\w.-]*\b/g, "VPA", "[VPA_REDACTED]");
-  // Longer sensitive spans win; original values never enter the returned trace.
-  const selected: Span[] = [];
-  for (const span of spans.sort(
-    (a, b) => b.end - b.start - (a.end - a.start),
-  )) {
-    if (!selected.some((s) => span.start < s.end && span.end > s.start))
-      selected.push(span);
+  // Anchors are the only values kept verbatim, and only when a labelled
+  // transaction reference survives the identity rules and the context check.
+  for (const match of message.matchAll(utrPattern)) {
+    const value = match[1];
+    const start = match.index! + match[0].lastIndexOf(value);
+    const end = start + value.length;
+    if (overlaps(start, end)) continue;
+    const prefix = message.slice(Math.max(0, match.index! - 60), match.index!);
+    if (disqualifyingContext.test(prefix)) continue;
+    anchors.push({ start, end, type: "UTR", replacement: value });
   }
-  selected.sort((a, b) => a.start - b.start);
+  add(/(?<!\d)(?:\+91[ -]?)?[6-9]\d{9}(?!\d)/g, "PHONE", "[PHONE_REDACTED]");
+  // Any remaining long digit run is an unidentified identifier, not a reference.
+  add(/\b\d{8,}\b/g, "UNLABELLED_ID", "[ID_REDACTED]");
+  // Bounded runs keep these linear: an unbounded [\w.+-]+ backtracks quadratically.
+  add(
+    /(?<![\w.+-])[\w.+-]{1,64}@[a-zA-Z][\w.-]{0,64}\.[a-zA-Z]{2,}\b/g,
+    "EMAIL",
+    "[EMAIL_REDACTED]",
+  );
+  add(
+    /(?<![\w.+-])[\w.+-]{1,64}@[a-zA-Z][\w.-]{0,64}\b/g,
+    "VPA",
+    "[VPA_REDACTED]",
+  );
+  const selected = [...spans].sort((a, b) => a.start - b.start);
   let sanitized = message;
   for (const span of [...selected].reverse())
     sanitized =
@@ -196,27 +212,30 @@ function languageOf(text: string): Payload["detected_language"] {
     return "hinglish";
   return "english";
 }
+// Explicit evidence that money left without the customer's consent.
+const fraudEvidence =
+  /\b(?:fraud|fraudster|scam|scammer|cheat(?:ed|ing)?|phish(?:ing)?|hacked|compromised|unauthori[sz]ed|unauthorised|stolen|framed|impersonat\w*)\b|not\s*me\b|did\s*not\s*(?:make|authori[sz]e)|bina\s*permission|अनधिकृत/i;
+// A collect request needs a market signal. Scanning a QR is how customers
+// describe ordinary merchant payments, so it never signals fraud on its own.
+const collectRequest =
+  /collect\s*request|advance\s*(?:payment|amount)|(?:olx|facebook|instagram|amazon|buyer|seller|receive\s*money|request\s*money)[\s\S]{0,180}\bqr\b|\bqr\b[\s\S]{0,120}\b(?:scam|fraud|fraudster|cheat|phish|advance\s*payment)\b/i;
+
 function classify(text: string): Payload["dispute_category"] {
+  if (/anydesk|\.apk\b|remote\s*access|screen[ -]?shar|teamviewer/i.test(text))
+    return "REMOTE_ACCESS_SCAM";
+  if (collectRequest.test(text)) return "COLLECT_REQUEST_SCAM";
+  // Fraud evidence outranks any benign reading of the same sentence.
+  if (fraudEvidence.test(text)) return "UNAUTHORIZED_ACCOUNT_TAKEOVER";
+  // A voluntary transfer needs the customer's own statement of intent.
   if (
     /wrong\s*(?:vpa|upi|person|account)|galat\s*(?:vpa|upi|account)|chukichya/i.test(
+      text,
+    ) &&
+    /\b(?:voluntarily|by\s*(?:mistake|accident)|my\s*mistake|galti\s*se|wrong\s*(?:vpa|upi|account))\b/i.test(
       text,
     )
   )
     return "VOLUNTARY_WRONG_VPA_TRANSFER";
-  if (/anydesk|\.apk\b|remote\s*access|screen[ -]?shar|teamviewer/i.test(text))
-    return "REMOTE_ACCESS_SCAM";
-  if (
-    /collect\s*request|(?:olx|buyer|receive\s*money)[\s\S]{0,180}\bqr\b|qr[\s\S]{0,100}(?:scam|scan)/i.test(
-      text,
-    )
-  )
-    return "COLLECT_REQUEST_SCAM";
-  if (
-    /unauthori[sz]ed|account\s*takeover|did\s*not\s*(?:make|authori[sz]e)|not\s*me|bina\s*permission|अनधिकृत/i.test(
-      text,
-    )
-  )
-    return "UNAUTHORIZED_ACCOUNT_TAKEOVER";
   const failure =
     /not\s*(?:credited|received)|stuck|pending|failed|nahi\s*(?:mila|pahuncha)|illa|debitaachu|confirmation|unconfirmed/i.test(
       text,
@@ -228,8 +247,10 @@ function classify(text: string): Payload["dispute_category"] {
   return "NEEDS_INFORMATION";
 }
 export function policyCheck(reply: string, payload: Payload) {
+  // Keep the window and the language coverage in step with research/common.py
+  // so the runtime gate and the training gate never disagree about a reply.
   const guarantees =
-    /(?:refund|reversal|chargeback)[\s\S]{0,30}(?:guaranteed|approved|100%)|(?:guarantee|promise)[\s\S]{0,30}(?:refund|reversal|chargeback)|(?:pakka|paka|100%)[\s\S]{0,30}(?:wapas|refund)|(?:ticket|dispute)[\s\S]{0,20}(?:filed|logged|registered)|(?:darj\s*kar\s*(?:diya|liya))/i;
+    /(?:refund|reversal|chargeback)[\s\S]{0,40}(?:guaranteed|approved|100%)|(?:guarantee|promise)[\s\S]{0,40}(?:refund|reversal|chargeback)|(?:pakka|paka|100%)[\s\S]{0,40}(?:wapas|refund)|(?:ticket|dispute)[\s\S]{0,25}(?:filed|logged|registered)|darj\s*kar\s*(?:diya|liya)|रिफंड[\s\S]{0,20}(?:गारंटी|मंजूर)|பணம்[\s\S]{0,20}உறுதி/i;
   const fraud = isFraud(payload.dispute_category);
   return {
     no_unauthorized_promises: !guarantees.test(reply),
@@ -254,7 +275,7 @@ function draftReply(
     deadline_days: number | null;
     estimated_compensation_inr: number | null;
   },
-  warnings: string[],
+  needsPolicyRevalidation: boolean,
 ) {
   const intro = {
     hinglish:
@@ -288,10 +309,12 @@ function draftReply(
   else if (sla.deadline_days)
     steps = [
       `${regional ? "Bank/PSP se transaction status verify karein" : "Ask the bank/PSP to verify the transaction status"}${p.utr_number ? ` (UTR ${p.utr_number})` : ""}.`,
-      `For a confirmed ${sla.deadline_days === 1 ? "UPI transfer not credited to the beneficiary" : "UPI merchant-confirmation failure"}, RBI specifies reversal by T+${sla.deadline_days} calendar ${sla.deadline_days === 1 ? "day" : "days"}. Compensation is ₹100/day beyond T+${sla.deadline_days}.`,
+      `For a confirmed ${p.dispute_category === "P2P_BENEFICIARY_NOT_CREDITED" ? "UPI transfer not credited to the beneficiary" : "UPI merchant-confirmation failure"}, RBI specifies reversal by T+${sla.deadline_days} calendar ${sla.deadline_days === 1 ? "day" : "days"}. Compensation is ₹100/day beyond T+${sla.deadline_days}.`,
       sla.estimated_compensation_inr === null
         ? "The transaction date/status is needed to assess any delay compensation."
-        : `Estimated delay compensation: ₹${sla.estimated_compensation_inr}; the bank must verify dates and reversal status.`,
+        : sla.estimated_compensation_inr === 0
+          ? `No delay compensation is indicated yet: the T+${sla.deadline_days} deadline has not been passed.`
+          : `Estimated delay compensation: ₹${sla.estimated_compensation_inr}; the bank must verify the dates and reversal status before paying it.`,
       "Raise a complaint in the PSP app/bank and keep its acknowledgement. This draft has not filed a dispute.",
     ];
   else if (p.dispute_category === "VOLUNTARY_WRONG_VPA_TRANSFER")
@@ -311,7 +334,7 @@ function draftReply(
     steps.push(
       "Please find the labelled 12-digit UTR/RRN in your receipt; an unlabelled 12-digit number may be a sensitive ID.",
     );
-  if (warnings.some((w) => w.includes("2027")))
+  if (needsPolicyRevalidation)
     steps.push(
       "This transaction date needs review against the newer RBI liability framework.",
     );
@@ -356,7 +379,9 @@ export function triage(raw: TriageInput) {
   }
   const amounts = [
     ...text.matchAll(
-      /(?:₹|rs\.?|inr)\s*([0-9]+(?:,[0-9]{2,3})*(?:\.[0-9]{1,2})?)(?![\d]|[.,]\d)/gi,
+      // The currency token must not be the tail of a word: "hours 30" and
+      // "customers 5000" are prose, not transaction amounts.
+      /(?<![\p{L}\p{N}])(?:₹|rs\.?|inr)\s*([0-9]+(?:,[0-9]{2,3})*(?:\.[0-9]{1,2})?)(?![\d]|[.,]\d)/giu,
     ),
   ];
   const uniqueAmounts = [
@@ -434,7 +459,9 @@ export function triage(raw: TriageInput) {
   }
   const postPolicy =
     input.transaction_date != null && input.transaction_date >= "2027-01-01";
-  if (postPolicy && !deadline) {
+  if (postPolicy) {
+    // The amendment changes the liability rules, so no tier survives unverified
+    // for a transaction dated on or after the effective date.
     tier = "PENDING_VERIFICATION";
     warnings.push(
       "Transactions from 1 January 2027 require policy revalidation under the upcoming RBI amendment.",
@@ -459,23 +486,45 @@ export function triage(raw: TriageInput) {
           ? "MEDIUM"
           : "LOW",
   });
-  const caps = { bsbd: 5000, regular: 10000, other: 25000 };
+  const caps = { unknown: null, bsbd: 5000, regular: 10000, other: 25000 } as const;
+  const tierCap = caps[input.account_tier];
   const liabilityCap =
-    tier === "LIMITED_LIABILITY_ELIGIBLE" && input.account_tier !== "unknown"
-      ? Math.min(amount ?? Infinity, caps[input.account_tier])
+    tier === "LIMITED_LIABILITY_ELIGIBLE" && tierCap !== null
+      ? amount !== null
+        ? Math.min(amount, tierCap)
+        : tierCap
       : null;
   const sla = {
     deadline_days: deadline,
-    day_basis: deadline ? "calendar" : ("working" as "calendar" | "working"),
+    deadline_day_basis: deadline ? ("calendar" as const) : null,
+    reporting_delay_day_basis: "working" as const,
     elapsed_calendar_days: input.elapsed_calendar_days ?? null,
     estimated_compensation_inr:
       deadline && input.elapsed_calendar_days != null
         ? Math.max(0, input.elapsed_calendar_days - deadline) * 100
         : null,
     liability_cap_inr: liabilityCap,
+    liability_cap_basis:
+      liabilityCap === null
+        ? (null as null)
+        : amount !== null
+          ? ("amount_and_cap" as const)
+          : ("cap_only" as const),
+    policy_revalidation_required: postPolicy,
   };
-  const reply = draftReply(payload, sla, warnings);
+  const reply = draftReply(payload, sla, postPolicy);
   const policy = policyCheck(reply.text, payload);
+  // Ground the reference in the source message itself, not in the set it came
+  // from: the recorded offsets must actually contain the claimed UTR.
+  const utrAnchor = utr
+    ? privacy.anchors.find((a) => a.replacement === utr)
+    : undefined;
+  const utrGrounded =
+    utr === null
+      ? null
+      : utrAnchor !== undefined &&
+          input.message.slice(utrAnchor.start, utrAnchor.end) === utr &&
+          /^\d{12}$/.test(utr);
   return {
     payload,
     reply,
@@ -487,7 +536,7 @@ export function triage(raw: TriageInput) {
       policy_version: POLICY_VERSION,
       mode: "deterministic_preview" as const,
       schema_valid: true,
-      utr_grounded: utr ? refs.includes(utr) : null,
+      utr_grounded: utrGrounded,
       ...policy,
       pii_backend: privacy.backend,
       external_actions_taken: false,

@@ -200,3 +200,119 @@ test("sentence punctuation does not hide a conflicting amount", () => {
     null,
   );
 });
+
+test("a merchant QR scan is not a collect-request scam", () => {
+  const r = triage({
+    message:
+      "Paid by QR scan at the shop, Rs.500 was debited but the merchant did not get it and the order failed. UTR 431289014421",
+  });
+  assert.equal(r.payload.dispute_category, "P2M_CONFIRMATION_FAILURE");
+  assert.equal(r.sla.deadline_days, 5);
+  assert.ok(!r.payload.mandatory_actions.includes("CALL_1930"));
+});
+
+test("a QR code alone never signals a scam", () => {
+  const r = triage({
+    message:
+      "QR scan failed at BigBasket store, Rs.849 debited, order not confirmed, money stuck. UTR 431289014421",
+  });
+  assert.equal(r.payload.dispute_category, "P2M_CONFIRMATION_FAILURE");
+  assert.equal(r.sla.deadline_days, 5);
+});
+
+test("fraud evidence outranks a wrong-account mention", () => {
+  const r = triage({
+    message:
+      "Someone hacked my UPI and pushed money to a wrong account. UTR 431289014421",
+  });
+  assert.equal(r.payload.dispute_category, "UNAUTHORIZED_ACCOUNT_TAKEOVER");
+  assert.ok(r.payload.mandatory_actions.includes("CALL_1930"));
+  assert.ok(r.payload.mandatory_actions.includes("REPORT_CYBERCRIME"));
+});
+
+test("prose numbers never become transaction amounts", () => {
+  const r = triage({
+    message:
+      "Rs.2000 debited from my account 2 hours 30 minutes ago. UTR 431289014421",
+  });
+  assert.equal(r.payload.amount_inr, 2000);
+});
+
+test("a word ending in rs is not a currency token", () => {
+  const r = triage({
+    message: "Rs.500 debited for 3 customers 5000 orders. UTR 431289014421",
+  });
+  assert.equal(r.payload.amount_inr, 500);
+});
+
+test("identity keywords at any distance block the reference", () => {
+  for (const message of [
+    "Adhar ref 123456789012",
+    "Aadhaar of the good old customer ref no 123456789012",
+    "UIDAI ref 123456789012",
+    "a/c ref 123456789012",
+  ]) {
+    const r = redactPII(message);
+    assert.ok(!r.sanitized.includes("123456789012"), message);
+    assert.equal(r.anchors.length, 0, message);
+  }
+});
+
+test("a labelled transaction reference still survives", () => {
+  const r = redactPII("UPI Ref No 431289014421 and RRN 512345678901");
+  assert.match(r.sanitized, /431289014421/);
+  assert.match(r.sanitized, /512345678901/);
+});
+
+test("unlabelled long digit runs are masked", () => {
+  const r = redactPII("My ID is 1234567890 and email x@y.com");
+  assert.ok(!r.sanitized.includes("1234567890"));
+});
+
+test("post-2027 technical transactions require revalidation", () => {
+  const r = triage({
+    message:
+      "UPI transfer Rs.1500 debited beneficiary not credited UTR 431289014421",
+    transaction_date: "2027-01-01",
+    elapsed_calendar_days: 2,
+  });
+  assert.equal(r.payload.rbi_liability_tier, "PENDING_VERIFICATION");
+  assert.equal(r.sla.policy_revalidation_required, true);
+  assert.ok(r.warnings.some((w) => w.includes("2027")));
+});
+
+test("utr_grounded reflects the source message, not the anchor set", () => {
+  const r = triage({ message: fraud });
+  assert.equal(r.audit.utr_grounded, true);
+  assert.equal(r.payload.utr_number, "431289014421");
+});
+
+test("no delay compensation is quoted before the deadline", () => {
+  const r = triage({
+    message:
+      "UPI transfer Rs.1500 debited beneficiary not credited UTR 431289014421",
+    elapsed_calendar_days: 1,
+  });
+  assert.equal(r.sla.estimated_compensation_inr, 0);
+  assert.match(r.reply.text, /No delay compensation is indicated yet/);
+});
+
+test("the liability cap states its basis when the amount is unknown", () => {
+  const r = triage({
+    message: "Unauthorised debit UTR 431289014421, please help",
+    responsibility: "third_party",
+    reporting_delay_working_days: 4,
+    account_tier: "bsbd",
+  });
+  assert.equal(r.payload.amount_inr, null);
+  assert.equal(r.sla.liability_cap_inr, 5000);
+  assert.equal(r.sla.liability_cap_basis, "cap_only");
+});
+
+test("redaction stays linear on a long unpunctuated token", () => {
+  const started = performance.now();
+  const r = redactPII("a".repeat(12000));
+  const elapsed = performance.now() - started;
+  assert.ok(elapsed < 50, `redaction took ${elapsed.toFixed(1)}ms`);
+  assert.ok(r.sanitized.includes("[EMAIL_REDACTED]") === false);
+});
