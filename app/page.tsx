@@ -286,9 +286,13 @@ export default function Desk() {
         body: JSON.stringify(input),
         signal: controller.signal,
       });
-      const body = (await response.json()) as TriageResult & { error?: string };
+      const body = (await response.json()) as TriageResult & {
+        error?: { code?: string; message?: string; request_id?: string };
+      };
       if (!response.ok)
-        throw new Error(body.error || "Triage is unavailable. Try again.");
+        throw new Error(
+          body.error?.message ?? "Triage is unavailable. Try again.",
+        );
       if (!controller.signal.aborted) {
         setResult(body);
         setSubmittedMessage(input.message);
