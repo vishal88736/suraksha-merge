@@ -30,10 +30,11 @@ def package_versions():
             out[name] = "not_installed"
     return out
 
-def identity(model_name):
+def identity(model_name, revision=None):
     from transformers import AutoConfig, AutoTokenizer
-    tok = AutoTokenizer.from_pretrained(model_name, trust_remote_code=False)
-    config = AutoConfig.from_pretrained(model_name, trust_remote_code=False)
+    config = AutoConfig.from_pretrained(model_name, revision=revision, trust_remote_code=False)
+    resolved_revision = getattr(config, "_commit_hash", None) if not Path(model_name).is_dir() else None
+    tok = AutoTokenizer.from_pretrained(model_name, revision=resolved_revision, trust_remote_code=False)
     # Include actual local model bytes for adapted bases and an immutable HF
     # revision for downloaded bases. A matching path/name alone is insufficient.
     model_path = Path(model_name)
@@ -52,7 +53,13 @@ def identity(model_name):
     revision = getattr(config, "_commit_hash", None)
     if not weight_hashes and not revision:
         raise ValueError("Could not resolve an immutable shared-base revision")
-    return {"base_model": model_name, "base_revision": revision, "base_weights": weight_hashes, "tokenizer_sha256": digest(tok.get_vocab()), "tokenizer_size": len(tok), "target_modules": TARGET_MODULES, "rank": 32, "alpha": 64}
+    return {"base_model": "local-checkpoint" if model_path.is_dir() else model_name, "base_revision": revision, "base_weights": weight_hashes, "tokenizer_sha256": digest(tok.get_vocab()), "tokenizer_size": len(tok), "target_modules": TARGET_MODULES, "rank": 32, "alpha": 64}
+
+def materialize_base(source, base_identity):
+    """Load remote weights from the same immutable revision recorded in provenance."""
+    if Path(source).is_dir():return str(Path(source).resolve())
+    from huggingface_hub import snapshot_download
+    return snapshot_download(repo_id=str(source), revision=base_identity["base_revision"], allow_patterns=["*.json","*.safetensors","*.model","*.txt","*.tiktoken"])
 
 def resolve_shared_base(args):
     """An adapted vocabulary is optional; when selected it must exist explicitly."""
@@ -116,11 +123,12 @@ def train(args):
     torch = require_gpu(args.allow_cpu)
     from aligntune.core.backend_factory import create_rl_trainer, create_sft_trainer
     shared_base = resolve_shared_base(args)
-    shared_identity = identity(str(shared_base))
+    shared_identity = identity(str(shared_base), getattr(args, "revision", None))
+    model_path = materialize_base(shared_base, shared_identity)
     output = args.output / args.stage
     if output.exists() and ((output / "adapter_model.safetensors").exists() or any(output.glob("checkpoint-*"))):
         raise ValueError("This output already contains checkpoints; choose a fresh --output to preserve prior runs")
-    common = dict(model_name=str(shared_base), backend="trl", output_dir=str(args.output / args.stage), num_epochs=1, max_steps=args.max_steps, batch_size=1, learning_rate=5e-6, max_seq_length=2048, seed=SEED, use_peft=True, lora_r=32, lora_alpha=64, lora_target_modules=TARGET_MODULES, gradient_accumulation_steps=2, trust_remote_code=False, bf16=torch.cuda.is_available() and torch.cuda.is_bf16_supported(), fp16=torch.cuda.is_available() and not torch.cuda.is_bf16_supported())
+    common = dict(model_name=model_path, backend="trl", output_dir=str(args.output / args.stage), num_epochs=1, max_steps=args.max_steps, batch_size=1, learning_rate=5e-6, max_seq_length=2048, seed=SEED, use_peft=True, lora_r=32, lora_alpha=64, lora_target_modules=TARGET_MODULES, gradient_accumulation_steps=2, trust_remote_code=False, bf16=torch.cuda.is_available() and torch.cuda.is_bf16_supported(), fp16=torch.cuda.is_available() and not torch.cuda.is_bf16_supported())
     if args.stage == "schema":
         register_reward()
         trainer = create_rl_trainer(**common, dataset_name=str(args.data / "train/rlvr.jsonl"), algorithm="drgrpo", reward_functions=["suraksha_schema_exact"], field_mappings={"prompt": "prompt", "answer": "answer"}, preserve_columns=["answer", "ground_truth_json"], num_generations=2, max_prompt_length=1536, max_completion_length=512)
@@ -207,14 +215,16 @@ def merge(args):
     manifests = [item[1] for item in resolved]
     if manifests[0]["identity"] != manifests[1]["identity"]:
         raise ValueError("Adapters differ in base revision/weights, tokenizer, rank, alpha or target modules")
-    if manifests[0]["identity"] != identity(str(shared_base)):
+    revision = manifests[0]["identity"].get("base_revision")
+    if manifests[0]["identity"] != identity(str(shared_base), revision):
         raise ValueError("Selected base is not the shared base used by both specialists")
     if [m["stage"] for m in manifests] != ["schema", "empathy"]:
         raise ValueError("Expected schema and empathy specialist adapters, in that order")
     # The tokenizer must come from the adapted base, not the original one.
-    tokenizer = AutoTokenizer.from_pretrained(str(shared_base), trust_remote_code=False)
+    model_path = materialize_base(shared_base, manifests[0]["identity"])
+    tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=False)
     dtype = torch.bfloat16 if torch.cuda.is_available() and torch.cuda.is_bf16_supported() else torch.float32
-    base = AutoModelForCausalLM.from_pretrained(str(shared_base), torch_dtype=dtype, trust_remote_code=False)
+    base = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=dtype, trust_remote_code=False)
     assert_tokenizer_matches_model(tokenizer, base)
     model = PeftModel.from_pretrained(base, str(adapters[0]), adapter_name="schema")
     model.load_adapter(str(adapters[1]), adapter_name="empathy")
@@ -232,6 +242,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--stage", choices=STAGES, default="plan")
     parser.add_argument("--base", default=BASE_MODEL)
+    parser.add_argument("--revision", help="Optional immutable Hugging Face revision; resolved and pinned before weight loading")
     parser.add_argument("--shared-base", type=Path, default=None, help="Optional adapted base shared by both specialists; omit to keep the original vocabulary")
     parser.add_argument("--data", type=Path, default=ROOT / "data/generated")
     parser.add_argument("--output", type=Path, default=ROOT / "checkpoints")

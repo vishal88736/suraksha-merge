@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 /**
  * Dictation through the browser speech recogniser.
@@ -78,8 +78,14 @@ export function useDictation(options: {
   const [interim, setInterim] = useState("");
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const finalRef = useRef<string>("");
-  const supported =
-    typeof window !== "undefined" && getRecognitionCtor() !== null;
+  const supported = useSyncExternalStore(() => () => {}, () => getRecognitionCtor() !== null, () => false);
+  const onFinalRef = useRef(onFinal);
+  onFinalRef.current = onFinal;
+  const detach = useCallback(() => {
+    const current = recognitionRef.current; recognitionRef.current = null;
+    if (current) { current.onresult = null; current.onend = null; current.onerror = null; current.abort(); }
+    finalRef.current = "";
+  }, []);
 
   const stop = useCallback(() => {
     recognitionRef.current?.stop();
@@ -91,6 +97,7 @@ export function useDictation(options: {
       setStatus("unsupported");
       return;
     }
+    detach();
     const recognition = new Ctor();
     recognition.lang = language;
     recognition.continuous = false;
@@ -99,6 +106,7 @@ export function useDictation(options: {
     finalRef.current = "";
 
     recognition.onresult = (event) => {
+      if (recognitionRef.current !== recognition) return;
       let live = "";
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const result = event.results[i];
@@ -116,12 +124,13 @@ export function useDictation(options: {
       else setStatus("error");
     };
     recognition.onend = () => {
+      if (recognitionRef.current !== recognition) return;
       const transcript = finalRef.current.trim();
       recognitionRef.current = null;
       setInterim("");
       if (transcript) {
         setStatus("idle");
-        onFinal(transcript);
+        onFinalRef.current(transcript);
         return;
       }
       setStatus((current) =>
@@ -137,20 +146,18 @@ export function useDictation(options: {
       recognitionRef.current = null;
       setStatus("error");
     }
-  }, [language, onFinal]);
+  }, [language, detach]);
 
   // Restart on a language change so the next utterance uses the new tag.
   useEffect(() => {
-    recognitionRef.current?.abort();
-    recognitionRef.current = null;
-  }, [language]);
+    detach(); setStatus("idle"); setInterim("");
+  }, [language, detach]);
 
   useEffect(
     () => () => {
-      recognitionRef.current?.abort();
-      recognitionRef.current = null;
+      detach();
     },
-    [],
+    [detach],
   );
 
   return { status, interim, supported, start, stop };
