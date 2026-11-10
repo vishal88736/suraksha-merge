@@ -14,6 +14,7 @@ export const UI_LOCALES = [
     dir: "ltr",
     label: "English",
     nativeLabel: "English",
+    speech: "en-IN",
   },
   {
     code: "hi",
@@ -21,6 +22,7 @@ export const UI_LOCALES = [
     dir: "ltr",
     label: "Hindi",
     nativeLabel: "हिन्दी",
+    speech: "hi-IN",
   },
 ] as const;
 
@@ -94,4 +96,14 @@ export function isReplyLanguage(value: unknown): value is ReplyLanguage {
     typeof value === "string" &&
     REPLY_LANGUAGES.some((language) => language.code === value)
   );
+}
+
+/**
+ * A block of prose that exists in every interface locale. Content modules use
+ * this instead of hardcoding a single language.
+ */
+export type LocalizedText = Record<UiLocale, string>;
+
+export function pick(text: LocalizedText, locale: UiLocale): string {
+  return text[locale] ?? text[DEFAULT_UI_LOCALE];
 }

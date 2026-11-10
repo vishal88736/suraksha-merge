@@ -894,9 +894,8 @@ main {
   stroke-width: 1.5;
 }
 .payload-version {
-  margin-left: auto;
   font-size: 7px;
-  color: #a4ac96;
+  color: #4a6b7a;
   font-family: var(--font-mono);
 }
 .output-content {
@@ -3128,7 +3127,7 @@ td .pill {
 /* Reference direction: ice blue, ink, cyan and lavender. */
 :root {
   --ink: #121619;
-  --muted: #6b7d83;
+  --muted: #56686e;
   --line: #e0eaec;
   --bg: #f2fafc;
 }
@@ -3247,7 +3246,7 @@ td .pill {
 .pill.soft {
   background: #f1f6f8;
   border-color: #e1ebee;
-  color: #647e8b;
+  color: #4a626d;
 }
 .pill.green-pill {
   background: #e7f5fc;
@@ -3392,7 +3391,7 @@ td .pill {
   border-color: #89cae8;
 }
 .payload-version {
-  color: #829ba8;
+  color: #4a6b7a;
 }
 .liability {
   background: #f4eefc;
@@ -3506,7 +3505,7 @@ td .pill {
   color: #6d8b9c;
 }
 .check-label {
-  color: #5b8ba4;
+  color: #3d6d86;
   border-color: #cee4f0;
   background: #eef9fe;
 }
@@ -3539,19 +3538,19 @@ td .pill {
 .json-code {
   background: #f2f9fc;
   border-color: #dbe9ef;
-  color: #7a9aaa;
+  color: #3d6478;
 }
 .line-no {
   color: #a1beca;
 }
 .json-key {
-  color: #3f7997;
+  color: #2f6280;
 }
 .json-value {
-  color: #8963a5;
+  color: #6b4686;
 }
 .json-literal {
-  color: #599ab5;
+  color: #2f6b85;
 }
 .json-toolbar {
   color: #5d91aa;
@@ -4987,4 +4986,287 @@ td:first-child {
     font-size: 5px;
     letter-spacing: 0.7px;
   }
+}
+
+/* ---------------------------------------------------------------------------
+   SurakshaDesk extensions
+   Interface language, the mascot guide, voice input and the accessibility
+   affordances that the desk relies on.
+   --------------------------------------------------------------------------- */
+
+/* A visually hidden label that still reaches assistive technology. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* The first focusable element on the page. */
+.skip-link {
+  position: absolute;
+  top: -60px;
+  left: 12px;
+  z-index: 100;
+  padding: 10px 16px;
+  border-radius: 6px;
+  background: #123243;
+  color: #eaf6fb;
+  font-size: 12px;
+  text-decoration: none;
+  transition: top 0.15s ease;
+}
+.skip-link:focus {
+  top: 12px;
+}
+
+/* Interface language switcher in the top bar. */
+.language-switcher {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #47667a;
+}
+.language-switcher select {
+  appearance: none;
+  background: transparent;
+  border: 1px solid #d7e6ee;
+  border-radius: 6px;
+  padding: 4px 20px 4px 9px;
+  font-size: 10px;
+  color: #47667a;
+  cursor: pointer;
+}
+.language-switcher select:focus-visible {
+  outline: 2px solid #1c5e7a;
+  outline-offset: 2px;
+}
+.language-switcher svg {
+  position: absolute;
+  right: 6px;
+  pointer-events: none;
+}
+
+/* Tabs and the schema version now share one row. */
+.engine-tabs-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+  padding-right: 21px;
+}
+.engine-tabs-row .engine-tabs {
+  border-bottom: none;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+}
+.engine-tabs-row .payload-version {
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* The focus ring must clear WCAG 1.4.11 on every control. */
+.composer textarea:focus,
+.composer textarea:focus-visible {
+  border-color: #82bad3;
+  outline: 2px solid #1c5e7a;
+  outline-offset: 2px;
+}
+
+/* The desk mascot. */
+.mascot {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin: 16px 0;
+  padding: 14px 16px;
+  border: 1px solid #dbe9ef;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #f5fbfd 0%, #eef7fb 100%);
+}
+.mascot-figure {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+}
+.mascot-bubble {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.mascot-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.mascot-meta strong {
+  font-family: Manrope, sans-serif;
+  font-size: 12px;
+  color: #1f4a63;
+}
+.mascot-mood {
+  font-size: 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #4a6b7a;
+}
+.mascot-bubble p {
+  font-size: 11px;
+  line-height: 1.7;
+  color: #33566b;
+  margin: 0;
+}
+.mascot-dismiss {
+  margin-top: 8px;
+  font-size: 9px;
+  color: #4a6b7a;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.mascot[data-mood="warning"] {
+  border-color: #f0dfc0;
+  background: linear-gradient(180deg, #fdfaf2 0%, #f8f2e4 100%);
+}
+.mascot[data-mood="warning"] .mascot-meta strong {
+  color: #8a6b2c;
+}
+.mascot[data-mood="warning"] .mascot-bubble p {
+  color: #6d5a35;
+}
+.mascot[data-mood="found"] {
+  border-color: #d9ead8;
+  background: linear-gradient(180deg, #f4faf3 0%, #eaf6ec 100%);
+}
+.mascot[data-mood="found"] .mascot-meta strong {
+  color: #3f6a44;
+}
+.mascot[data-mood="found"] .mascot-bubble p {
+  color: #3c5a41;
+}
+.mascot[data-mood="listening"] .mascot-figure {
+  animation: mascot-listen 1.4s ease-in-out infinite;
+}
+@keyframes mascot-listen {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+/* Voice input. */
+.button.ghost {
+  background: transparent;
+  border: 1px solid #d7e6ee;
+  color: #47667a;
+}
+.button.ghost:hover {
+  background: #edf8fd;
+}
+.button.ghost.listening {
+  border-color: #7fb9cf;
+  background: #e6f4fa;
+  color: #1f5e7c;
+}
+.dictation-live {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 11px;
+  border: 1px dashed #9cc6d8;
+  border-radius: 6px;
+  background: #f1f9fc;
+  font-size: 10px;
+  color: #2f6280;
+}
+.dictation-note {
+  margin-top: 8px;
+  font-size: 9px;
+  color: #6a5330;
+}
+.composer-hint {
+  margin: 6px 0 0;
+  font-size: 8px;
+  color: #56686e;
+}
+
+/* The workflow strip now wraps each step so separators stay in flow. */
+.workflow-step-wrap {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.workflow-strip > .workflow-step-wrap > svg {
+  margin: 0;
+}
+
+/* A warning that the raw source is currently on screen. */
+.privacy-warning {
+  margin-top: 5px;
+  font-size: 8px;
+  color: #8a5b1f;
+}
+
+/* The pending-verification state needs its own colour. */
+.liability.amber {
+  background: #fdf6e6;
+  border-color: #f0dfb8;
+  color: #9a7534;
+}
+.liability.amber .liability-symbol {
+  background: #f6e9cd;
+  border-color: #ecd9ac;
+  color: #b18b45;
+}
+.liability.amber strong {
+  color: #8d6a2c;
+}
+.liability.amber p,
+.liability.amber .eyebrow {
+  color: #8c7647;
+}
+
+/* The toast region is always mounted so announcements are heard. */
+.toast-region {
+  position: relative;
+  z-index: 50;
+}
+
+/* Route error and not-found surfaces. */
+.error-boundary {
+  max-width: 520px;
+  margin: 80px auto;
+  padding: 32px;
+  border: 1px solid #dbe9ef;
+  border-radius: 12px;
+  background: #f7fbfd;
+  text-align: left;
+}
+.error-boundary h1 {
+  font-family: Manrope, sans-serif;
+  font-size: 20px;
+  color: #1f4a63;
+  margin: 0 0 12px;
+}
+.error-boundary p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #4a6b7a;
+  margin: 0 0 18px;
+}
+.error-boundary-digest {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #6c8796;
 }

@@ -34,12 +34,12 @@ function failure(
  */
 async function readBody(
   request: Request,
-): Promise<{ text: string } | { error: "too_large" }> {
+): Promise<{ ok: true; text: string } | { ok: false; reason: "too_large" }> {
   const declared = Number(request.headers.get("content-length"));
   if (Number.isFinite(declared) && declared > MAX_BODY_BYTES)
-    return { error: "too_large" };
+    return { ok: false, reason: "too_large" };
   const reader = request.body?.getReader();
-  if (!reader) return { text: "" };
+  if (!reader) return { ok: true, text: "" };
   const chunks: Uint8Array[] = [];
   let total = 0;
   while (true) {
@@ -49,12 +49,12 @@ async function readBody(
     total += value.byteLength;
     if (total > MAX_BODY_BYTES) {
       await reader.cancel().catch(() => {});
-      return { error: "too_large" };
+      return { ok: false, reason: "too_large" };
     }
     chunks.push(value);
   }
   const text = new TextDecoder().decode(concat(chunks, total));
-  return { text };
+  return { ok: true, text };
 }
 
 function concat(chunks: Uint8Array[], total: number): Uint8Array {
@@ -81,7 +81,7 @@ export async function POST(request: Request) {
   let raw: string;
   try {
     const body = await readBody(request);
-    if (body.error === "too_large")
+    if (!body.ok)
       return failure(
         "payload_too_large",
         "Message too large.",

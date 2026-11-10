@@ -1,25 +1,25 @@
 "use client";
+import Link from "next/link";
 import {
-  ArrowDown,
   ArrowRight,
   ArrowUpRight,
   Braces,
-  Check,
   Fingerprint,
   FolderLock,
-  GitMerge,
   ShieldCheck,
-  Sparkles,
   Star,
 } from "lucide-react";
+import { useI18n } from "../lib/i18n/provider.tsx";
+
 type Destination = "desk" | "pipeline" | "benchmarks" | "policy";
-function SecurityIllustration() {
+
+function SecurityIllustration({ label }: { label: string }) {
   return (
     <svg
       className="security-illustration"
       viewBox="0 0 680 590"
       role="img"
-      aria-label="Illustration of a customer protected by a lock and source-grounded transaction records"
+      aria-label={label}
     >
       <defs>
         <linearGradient id="pink-edge" x1="0" y1="0" x2="0" y2="1">
@@ -119,51 +119,33 @@ function SecurityIllustration() {
       <path d="M467 548h196" stroke="#252b35" strokeWidth="1.4" />
       <path d="M655 548q3-38-13-56-11-12-18-16 2 30 17 39" fill="#e4e6e3" />
       <path d="M649 546q7-27 5-47" fill="none" stroke="#fff" />
-      <g transform="translate(96 407)">
-        <rect width="154" height="49" rx="8" fill="#fff" stroke="#d6eaed" />
-        <circle cx="24" cy="24" r="13" fill="#b9eaff" />
-        <path
-          d="m17 25 5 5 10-12"
-          fill="none"
-          stroke="#151b20"
-          strokeWidth="1.7"
-        />
-        <text
-          x="48"
-          y="22"
-          fontFamily="sans-serif"
-          fontSize="9"
-          fontWeight="700"
-          fill="#181e24"
-        >
-          EVIDENCE, FIRST.
-        </text>
-        <text x="48" y="35" fontFamily="sans-serif" fontSize="7" fill="#7b8588">
-          Every field has a source.
-        </text>
-      </g>
     </svg>
   );
 }
+
 export function Landing({
   onNavigate,
 }: {
   onNavigate: (view: Destination) => void;
 }) {
+  const { t } = useI18n();
+
   return (
     <div className="landing">
       <header className="landing-nav">
-        <a className="landing-logo" href="/" aria-label="SurakshaDesk home">
+        <Link className="landing-logo" href="/" aria-label={t("nav.brandHome")}>
           <span className="gradient-dot" />
           SURAKSHA<span>DESK</span>
-        </a>
-        <nav aria-label="Landing navigation">
+        </Link>
+        <nav aria-label={t("landing.home")}>
           <a className="selected" href="#home">
-            HOME
+            {t("landing.home")}
           </a>
-          <button onClick={() => onNavigate("pipeline")}>HOW IT WORKS</button>
-          <a href="#features">FEATURES</a>
-          <a href="#questions">FAQ</a>
+          <button onClick={() => onNavigate("pipeline")}>
+            {t("landing.howItWorks")}
+          </button>
+          <a href="#features">{t("landing.features")}</a>
+          <a href="#questions">{t("landing.faq")}</a>
         </nav>
         <div className="landing-nav-actions">
           <a
@@ -171,10 +153,10 @@ export function Landing({
             target="_blank"
             rel="noreferrer"
           >
-            GITHUB <ArrowUpRight size={12} />
+            {t("landing.github")} <ArrowUpRight size={12} />
           </a>
           <button onClick={() => onNavigate("desk")}>
-            OPEN DESK <ArrowRight size={14} />
+            {t("landing.openDesk")} <ArrowRight size={14} />
           </button>
         </div>
       </header>
@@ -185,10 +167,10 @@ export function Landing({
           preserveAspectRatio="none"
           aria-hidden="true"
         >
-          {[0, 1, 2, 3, 4, 5].map((i) => (
+          {[0, 1, 2, 3, 4, 5].map((index) => (
             <path
-              key={i}
-              d={`M-100 ${160 + i * 72} C 140 ${-20 + i * 72}, 390 ${-20 + i * 72}, 585 ${220 + i * 72} S 1050 ${800 + i * 38}, 1540 ${580 + i * 48}`}
+              key={index}
+              d={`M-100 ${160 + index * 72} C 140 ${-20 + index * 72}, 390 ${-20 + index * 72}, 585 ${220 + index * 72} S 1050 ${800 + index * 38}, 1540 ${580 + index * 48}`}
               fill="none"
               stroke="#d3e3e4"
               strokeWidth=".8"
@@ -199,47 +181,47 @@ export function Landing({
           <div className="hero-copy">
             <span className="next-level">
               <ShieldCheck size={16} />
-              <span>SURAKSHA-MERGE</span>
+              <span>{t("landing.heroEyebrow")}</span>
             </span>
             <h1 id="hero-title">
-              YOUR PAYMENT
+              {t("landing.heroTitleLine1")}
               <br />
               <span>
-                SECURITY{" "}
+                {t("landing.heroTitleLine2")}{" "}
                 <span className="fingerprint-pill">
                   <Fingerprint strokeWidth={1.6} />
                 </span>
               </span>
             </h1>
             <p className="hero-description">
-              NOISY MESSAGES. CLEAR NEXT STEPS.
+              {t("landing.heroDescriptionLine1")}
               <br />
-              FRAUD TRIAGE WITH EVIDENCE — AND EMPATHY.
+              {t("landing.heroDescriptionLine2")}
             </p>
             <button className="hero-cta" onClick={() => onNavigate("desk")}>
-              EXPLORE THE DESK <ArrowRight size={29} strokeWidth={1.2} />
+              {t("landing.heroCta")} <ArrowRight size={29} strokeWidth={1.2} />
             </button>
             <div className="hero-mode">
               <span />
-              WORKING RULE-BASED PREVIEW{" "}
-              <span className="mode-separator">/</span> NO TRAINED MODEL YET
+              {t("landing.heroMode")}{" "}
+              <span className="mode-separator">/</span> {t("landing.heroModeDivider")}
             </div>
             <div className="unique-features" id="features">
-              <h2>SECURITY, WITH A HUMAN SIDE</h2>
+              <h2>{t("landing.featuresTitle")}</h2>
               <div className="feature-tiles">
                 <button onClick={() => onNavigate("desk")}>
                   <span className="feature-square cyan-square">
                     <Fingerprint size={65} strokeWidth={1.5} />
                   </span>
-                  <strong>PRIVATE BY DESIGN</strong>
-                  <small>Context-aware PII masking</small>
+                  <strong>{t("landing.feature1Title")}</strong>
+                  <small>{t("landing.feature1Body")}</small>
                 </button>
                 <button onClick={() => onNavigate("pipeline")}>
                   <span className="feature-square grey-square">
                     <FolderLock size={64} strokeWidth={1.5} />
                   </span>
-                  <strong>BUILT ON EVIDENCE</strong>
-                  <small>Traceable structured triage</small>
+                  <strong>{t("landing.feature2Title")}</strong>
+                  <small>{t("landing.feature2Body")}</small>
                 </button>
                 <button onClick={() => onNavigate("benchmarks")}>
                   <span className="feature-square lavender-square">
@@ -247,14 +229,14 @@ export function Landing({
                       <Star size={40} strokeWidth={1.7} />
                     </span>
                   </span>
-                  <strong>CARE IN EVERY REPLY</strong>
-                  <small>Empathetic customer drafts</small>
+                  <strong>{t("landing.feature3Title")}</strong>
+                  <small>{t("landing.feature3Body")}</small>
                 </button>
               </div>
             </div>
           </div>
           <div className="hero-art">
-            <SecurityIllustration />
+            <SecurityIllustration label={t("landing.illustrationLabel")} />
             <div className="art-caption">
               <span className="caption-stars">
                 <ShieldCheck size={17} />
@@ -262,11 +244,11 @@ export function Landing({
                 <Braces size={17} />
               </span>
               <div>
-                <strong>ONE MESSAGE. A CLEARER NEXT STEP.</strong>
-                <span>CuratorKIT → AlignTune → AuditKIT</span>
+                <strong>{t("landing.artTitle")}</strong>
+                <span>{t("landing.artCaption")}</span>
               </div>
               <button
-                aria-label="Explore how the pipeline works"
+                aria-label={t("landing.artButton")}
                 onClick={() => onNavigate("pipeline")}
               >
                 <ArrowUpRight size={22} />
@@ -276,95 +258,82 @@ export function Landing({
         </section>
         <section className="landing-explainer">
           <div>
-            <span className="landing-kicker">THE SURAKSHA APPROACH / 01</span>
+            <span className="landing-kicker">
+              {t("landing.approachKicker")}
+            </span>
             <h2>
-              LESS PANIC.
+              {t("landing.approachTitleLine1")}
               <br />
-              MORE CLARITY.
+              {t("landing.approachTitleLine2")}
             </h2>
           </div>
           <div>
-            <p>
-              A collect-request scam. A payment that never arrived. A customer
-              who needs help in their own words.
-            </p>
-            <p>
-              SurakshaDesk brings the message, the transaction evidence and the
-              next steps into one reviewable workspace. Explore the live
-              preview, then follow the research pipeline behind it.
-            </p>
+            <p>{t("landing.approachBody1")}</p>
+            <p>{t("landing.approachBody2")}</p>
             <button
               className="text-link"
               onClick={() => onNavigate("pipeline")}
             >
-              FOLLOW THE PIPELINE <ArrowRight size={19} />
+              {t("landing.followPipeline")} <ArrowRight size={19} />
             </button>
           </div>
         </section>
         <section className="landing-faq" id="questions">
           <div>
-            <span className="landing-kicker">A LITTLE MORE CONTEXT / 02</span>
+            <span className="landing-kicker">
+              {t("landing.contextKicker")}
+            </span>
             <h2>
-              GOOD QUESTIONS.
+              {t("landing.faqTitleLine1")}
               <br />
-              STRAIGHT ANSWERS.
+              {t("landing.faqTitleLine2")}
             </h2>
           </div>
           <div className="faq-items">
             <details>
               <summary>
-                Is this a trained fraud detection model?<span>+</span>
+                {t("landing.faq1Question")}
+                <span>+</span>
               </summary>
-              <p>
-                The current desk uses deterministic extraction, policy rules and
-                reply templates. Specialist training and model merging are
-                research workflows; no trained checkpoint is connected yet.
-              </p>
+              <p>{t("landing.faq1Answer")}</p>
             </details>
             <details>
               <summary>
-                Does this file a dispute or approve a refund?<span>+</span>
+                {t("landing.faq2Question")}
+                <span>+</span>
               </summary>
-              <p>
-                The desk prepares a draft for review. It has no bank or NPCI
-                connection and takes no external action. Actual disputes must be
-                raised through the bank or PSP app.
-              </p>
+              <p>{t("landing.faq2Answer")}</p>
             </details>
             <details>
               <summary>
-                Where do the policy rules come from?<span>+</span>
+                {t("landing.faq3Question")}
+                <span>+</span>
               </summary>
               <p>
-                Versioned RBI and NPCI sources inform the internal policy.
-                Eligibility depends on verified facts and the applicable
-                framework.{" "}
+                {t("landing.faq3Answer")}{" "}
                 <button onClick={() => onNavigate("policy")}>
-                  Read the policy library ↗
+                  {t("landing.policyLink")}
                 </button>
               </p>
             </details>
             <details>
               <summary>
-                Can I inspect the source and evaluation plan?<span>+</span>
+                {t("landing.faq4Question")}
+                <span>+</span>
               </summary>
-              <p>
-                Yes. The project is public on GitHub. The benchmark lab lists
-                all six planned checkpoints and keeps their scores blank until
-                measured runs exist.
-              </p>
+              <p>{t("landing.faq4Answer")}</p>
             </details>
           </div>
         </section>
       </main>
       <footer className="landing-footer">
-        <a href="/" className="landing-logo">
+        <Link href="/" className="landing-logo">
           <span className="gradient-dot" />
           SURAKSHA<span>DESK</span>
-        </a>
-        <span>THOUGHTFUL TRIAGE. TRACEABLE DECISIONS.</span>
+        </Link>
+        <span>{t("landing.footerTagline")}</span>
         <button onClick={() => onNavigate("desk")}>
-          OPEN THE WORKSPACE <ArrowUpRight size={15} />
+          {t("landing.openWorkspace")} <ArrowUpRight size={15} />
         </button>
       </footer>
     </div>

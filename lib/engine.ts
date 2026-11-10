@@ -1,5 +1,8 @@
 import { z } from "zod";
-import { OMBUDSMAN_NOTE, POLICY_VERSION } from "./policy.ts";
+import { POLICY_VERSION } from "./policy.ts";
+import { REPLY_TEMPLATES, fill } from "./i18n/replies.ts";
+import { detectLanguage } from "./rules/language.ts";
+import { classify, isFraudCategory } from "./rules/classification.ts";
 
 export const CATEGORIES = [
   "P2M_CONFIRMATION_FAILURE",
@@ -191,61 +194,6 @@ export function redactPII(message: string) {
   };
 }
 
-function languageOf(text: string): Payload["detected_language"] {
-  if (/[\u0900-\u097f]/u.test(text))
-    return /(?:माझे|मला|पैसे|झाले)/u.test(text)
-      ? "marathi_english"
-      : "hindi_devanagari";
-  if (
-    /\b(enna|panam|anna|aachu|illa|pann|enakku|irukku|kasu|vandhu|poiduchu|debitaachu)\b/i.test(
-      text,
-    )
-  )
-    return "tanglish";
-  if (/\b(majhe|mala|zale|aahe|madat|pahije|gele)\b/i.test(text))
-    return "marathi_english";
-  if (
-    /\b(bhai|bhaiya|paise|paisa|gaye|mera|mere|kya|nahi|jaldi|kat|hua|madad|frod|wapas|hai)\b/i.test(
-      text,
-    )
-  )
-    return "hinglish";
-  return "english";
-}
-// Explicit evidence that money left without the customer's consent.
-const fraudEvidence =
-  /\b(?:fraud|fraudster|scam|scammer|cheat(?:ed|ing)?|phish(?:ing)?|hacked|compromised|unauthori[sz]ed|unauthorised|stolen|framed|impersonat\w*)\b|not\s*me\b|did\s*not\s*(?:make|authori[sz]e)|bina\s*permission|अनधिकृत/i;
-// A collect request needs a market signal. Scanning a QR is how customers
-// describe ordinary merchant payments, so it never signals fraud on its own.
-const collectRequest =
-  /collect\s*request|advance\s*(?:payment|amount)|(?:olx|facebook|instagram|amazon|buyer|seller|receive\s*money|request\s*money)[\s\S]{0,180}\bqr\b|\bqr\b[\s\S]{0,120}\b(?:scam|fraud|fraudster|cheat|phish|advance\s*payment)\b/i;
-
-function classify(text: string): Payload["dispute_category"] {
-  if (/anydesk|\.apk\b|remote\s*access|screen[ -]?shar|teamviewer/i.test(text))
-    return "REMOTE_ACCESS_SCAM";
-  if (collectRequest.test(text)) return "COLLECT_REQUEST_SCAM";
-  // Fraud evidence outranks any benign reading of the same sentence.
-  if (fraudEvidence.test(text)) return "UNAUTHORIZED_ACCOUNT_TAKEOVER";
-  // A voluntary transfer needs the customer's own statement of intent.
-  if (
-    /wrong\s*(?:vpa|upi|person|account)|galat\s*(?:vpa|upi|account)|chukichya/i.test(
-      text,
-    ) &&
-    /\b(?:voluntarily|by\s*(?:mistake|accident)|my\s*mistake|galti\s*se|wrong\s*(?:vpa|upi|account))\b/i.test(
-      text,
-    )
-  )
-    return "VOLUNTARY_WRONG_VPA_TRANSFER";
-  const failure =
-    /not\s*(?:credited|received)|stuck|pending|failed|nahi\s*(?:mila|pahuncha)|illa|debitaachu|confirmation|unconfirmed/i.test(
-      text,
-    );
-  if (failure && /merchant|swiggy|zomato|shop|store|p2m/i.test(text))
-    return "P2M_CONFIRMATION_FAILURE";
-  if (failure && /transfer|friend|p2p|beneficiary/i.test(text))
-    return "P2P_BENEFICIARY_NOT_CREDITED";
-  return "NEEDS_INFORMATION";
-}
 export function policyCheck(reply: string, payload: Payload) {
   // Keep the window and the language coverage in step with research/common.py
   // so the runtime gate and the training gate never disagree about a reply.
@@ -261,12 +209,9 @@ export function policyCheck(reply: string, payload: Payload) {
         /bank/i.test(reply)),
   };
 }
+// Explicit evidence that money left without the customer's consent.
 export function isFraud(category: string) {
-  return [
-    "COLLECT_REQUEST_SCAM",
-    "REMOTE_ACCESS_SCAM",
-    "UNAUTHORIZED_ACCOUNT_TAKEOVER",
-  ].includes(category);
+  return isFraudCategory(category);
 }
 
 function draftReply(
@@ -277,75 +222,66 @@ function draftReply(
   },
   needsPolicyRevalidation: boolean,
 ) {
-  const intro = {
-    hinglish:
-      "Samajh sakte hain, paise katna kaafi stressful hai. Aaiye, ek-ek step lete hain.",
-    tanglish:
-      "Panam debit aana romba tension-a irukkum, puriyudhu. Namma step-by-step paarkalaam.",
-    marathi_english:
-      "Paise gelyamule tension aala asel, samajta. Aapan ek-ek step gheu.",
-    hindi_devanagari:
-      "पैसे कटने से परेशानी होना स्वाभाविक है। हम एक-एक कदम समझते हैं।",
-    english:
-      "I understand how worrying this is. Let’s take this one step at a time.",
-  }[p.detected_language];
+  // The reply is assembled from a template bundle, never from literals in
+  // the engine. The bundle is chosen by the detected language, so a customer
+  // always reads the answer in the language they wrote in.
+  const templates = REPLY_TEMPLATES[p.detected_language];
   const fraud = isFraud(p.dispute_category);
-  const regional = p.detected_language === "hinglish";
+  const deadline = sla.deadline_days;
+  const dayUnit =
+    deadline === 1 ? templates.dayUnit.one : templates.dayUnit.many;
+  const category =
+    p.dispute_category === "P2P_BENEFICIARY_NOT_CREDITED"
+      ? templates.category.p2p
+      : templates.category.p2m;
   let steps: string[];
   if (fraud)
-    steps = regional
-      ? [
-          "Abhi bank/PSP ko fraud report karein aur UPI/payment channel secure ya block karne ko kahein. Kisi ko PIN/OTP na dein.",
-          "Turant 1930 par call karein aur cybercrime.gov.in par complaint dein. SMS aur screenshots sambhaal kar rakhein.",
-          `PSP app mein transaction ${p.utr_number ? `UTR ${p.utr_number} ` : ""}par dispute raise karein; bank ka acknowledgement lein.`,
-          "Refund ya zero liability abhi confirm nahi hai; bank ko facts, authorisation aur reporting window verify karna hoga.",
-        ]
-      : [
-          "Contact your bank/PSP immediately to report the fraud and secure or block the payment channel. Never share a PIN or OTP.",
-          "Call 1930 immediately and report at cybercrime.gov.in. Preserve the SMS, screenshots and bank acknowledgement.",
-          `Raise a dispute in the PSP app for ${p.utr_number ? `UTR ${p.utr_number}` : "the transaction"} and notify your bank.`,
-          "A refund or zero liability cannot be confirmed here. The bank must verify authorisation, responsibility and the reporting window.",
-        ];
-  else if (sla.deadline_days)
     steps = [
-      `${regional ? "Bank/PSP se transaction status verify karein" : "Ask the bank/PSP to verify the transaction status"}${p.utr_number ? ` (UTR ${p.utr_number})` : ""}.`,
-      `For a confirmed ${p.dispute_category === "P2P_BENEFICIARY_NOT_CREDITED" ? "UPI transfer not credited to the beneficiary" : "UPI merchant-confirmation failure"}, RBI specifies reversal by T+${sla.deadline_days} calendar ${sla.deadline_days === 1 ? "day" : "days"}. Compensation is ₹100/day beyond T+${sla.deadline_days}.`,
+      templates.fraud.report,
+      templates.fraud.cybercrime,
+      p.utr_number
+        ? fill(templates.fraud.dispute, { utr: p.utr_number })
+        : templates.fraud.disputeNoUtr,
+      templates.fraud.noGuarantee,
+    ];
+  else if (deadline)
+    steps = [
+      p.utr_number
+        ? fill(templates.technical.verify, { utr: p.utr_number })
+        : templates.technical.verifyNoUtr,
+      fill(templates.technical.tat, {
+        category,
+        deadline,
+        dayUnit,
+      }),
       sla.estimated_compensation_inr === null
-        ? "The transaction date/status is needed to assess any delay compensation."
+        ? templates.technical.compensationUnknown
         : sla.estimated_compensation_inr === 0
-          ? `No delay compensation is indicated yet: the T+${sla.deadline_days} deadline has not been passed.`
-          : `Estimated delay compensation: ₹${sla.estimated_compensation_inr}; the bank must verify the dates and reversal status before paying it.`,
-      "Raise a complaint in the PSP app/bank and keep its acknowledgement. This draft has not filed a dispute.",
+          ? fill(templates.technical.compensationNone, { deadline })
+          : fill(templates.technical.compensationEstimate, {
+              compensation: sla.estimated_compensation_inr,
+            }),
+      templates.technical.complain,
     ];
   else if (p.dispute_category === "VOLUNTARY_WRONG_VPA_TRANSFER")
     steps = [
-      regional
-        ? "Bank/PSP ko turant batayein aur wrong-beneficiary recovery request karein."
-        : "Notify your bank/PSP immediately and request wrong-beneficiary recovery.",
-      "A voluntary transfer to the wrong VPA has no automatic refund guarantee. Recovery depends on bank review and the recipient’s cooperation or applicable process.",
-      "Keep the transaction receipt and acknowledgement. Never pay a recovery fee or share a PIN/OTP.",
+      templates.voluntary.notify,
+      templates.voluntary.noGuarantee,
+      templates.voluntary.keep,
     ];
-  else
-    steps = [
-      "Please share the transaction type, amount, date/status and labelled 12-digit UTR/RRN from the receipt. Do not share Aadhaar, account numbers, PINs or OTPs.",
-      "If you suspect fraud, contact your bank/PSP and call 1930 immediately.",
-    ];
+  else steps = [...templates.generic];
   if (!p.utr_number && p.dispute_category !== "NEEDS_INFORMATION")
-    steps.push(
-      "Please find the labelled 12-digit UTR/RRN in your receipt; an unlabelled 12-digit number may be a sensitive ID.",
-    );
-  if (needsPolicyRevalidation)
-    steps.push(
-      "This transaction date needs review against the newer RBI liability framework.",
-    );
+    steps.push(templates.askForUtr);
+  if (needsPolicyRevalidation) steps.push(templates.policyRevalidation);
+  const escalation = templates.escalation;
   return {
-    introduction: intro,
+    introduction: templates.intro,
     steps,
-    escalation: OMBUDSMAN_NOTE,
+    escalation,
     text: [
-      intro,
+      templates.intro,
       ...steps.map((s, i) => `${i + 1}. ${s}`),
-      OMBUDSMAN_NOTE,
+      escalation,
     ].join("\n\n"),
   };
 }
@@ -476,7 +412,7 @@ export function triage(raw: TriageInput) {
     rbi_liability_tier: tier,
     mandatory_actions: actions,
     detected_language:
-      input.language === "auto" ? languageOf(text) : input.language,
+      input.language === "auto" ? detectLanguage(text) : input.language,
     panic_severity:
       /!!|please\s*help|jaldi|panic|bachao|madad|urgent|90,000|90000|help me/i.test(
         text,
