@@ -89,3 +89,9 @@ This creates explicitly labelled valid/unsafe **fixtures**, executes actual Audi
 ## Before a model-backed release
 
 Collect a consented, independently annotated corpus; review each regional language; freeze a substantial held-out test set; run all six checkpoints and adversarial families; evaluate semantic guarantees and over-refusal with blinded human review; measure latency and cost on named hardware; and approve the bank-specific reason-code mapping and applicable policy version. A working demo, successful tests and source-checked training commands do not substitute for those measurements.
+
+## Artifact integrity
+
+Remote base configuration, tokenizer and weights are loaded from the same resolved immutable Hugging Face revision. `--revision` can select the desired revision before resolution. Local bases are fingerprinted from weight bytes and vocabulary, so moving a checkpoint directory does not change its identity. Specialist manifests record adapter configuration and weight hashes; merge and inference reject modified or mismatched artifacts and resolve checkpoint-only saves explicitly.
+
+Recorded inference produces a matching manifest with benchmark and prediction hashes. Evaluation requires that manifest by default. `--allow-unverified-predictions` is an explicit inspection escape hatch and cannot establish model-quality claims. Reordering prediction flags does not change the named `base` comparison. Empty or modified curated datasets are rejected before training.

@@ -34,22 +34,31 @@ The current default policy is `IN-UPI-2026-11-09`. No customer chats are persist
 
 ## Where things live
 
-| Path | What it holds |
-| --- | --- |
-| `lib/i18n/` | Locale registry, message catalog, reply templates, the React provider |
-| `lib/content/` | Pipeline stages, demo scenarios and the mascot's hints |
-| `lib/rules/` | Language detection and dispute classification signals |
-| `lib/engine.ts` | The rule engine: redaction, extraction, tiers, SLA |
-| `lib/triage-reducer.ts` | The desk's single source of truth |
-| `components/` | The shell, the desk, the views and the mascot |
+| Path                    | What it holds                                                         |
+| ----------------------- | --------------------------------------------------------------------- |
+| `lib/i18n/`             | Locale registry, message catalog, reply templates, the React provider |
+| `lib/content/`          | Pipeline stages, demo scenarios and the mascot's hints                |
+| `lib/rules/`            | Language detection and dispute classification signals                 |
+| `lib/engine.ts`         | The rule engine: redaction, extraction, tiers, SLA                    |
+| `lib/triage-reducer.ts` | The desk's single source of truth                                     |
+| `components/`           | The shell, the desk, the views and the mascot                         |
 
+## API behavior
+
+`POST /api/triage` accepts one `application/json` object with a non-empty message of at most 12,000 UTF-16 characters and documented optional operator context. Duplicate keys, extra fields, impossible calendar dates, malformed UTF-8, non-finite numbers and oversized bodies fail safely. Error responses have a stable `error.code`, a request ID and `Cache-Control: no-store`.
+
+Set `TRIAGE_API_KEY` in the Worker environment to require `x-api-key`. When configured, the desk asks for it after a 401 and retains it only in component memory. It is never put in the URL, browser storage or exported traces. The request limiter is best-effort per Worker isolate; forwarded client headers cannot create arbitrary identities. Messages are processed without application persistence, and internal exceptions log only an error code and request ID.
+
+The desk invalidates results whenever message, date, language or operator context changes. Copy and export stay disabled until the current input has an assessment. Request cancellation and older responses cannot overwrite a newer scenario. The previous result remains available for reference after an error.
+
+See [the verification record](docs/VERIFICATION.md) for tested paths, the built-Worker HTTP check and outstanding validation.
 
 ## Research commands
 
 ```bash
 python3 phase1_curatorkit_pipeline.py --demo
 python3 phase2_aligntune_train_and_merge.py --stage plan
-python3 -m unittest research.test_pipeline -v
+python3 -m unittest discover -s research -p "test_*.py" -v
 ```
 
 See [the research runbook](docs/RESEARCH.md) for optional toolkit installation, GPU training, shared tokenizer/embedding adaptation, all six baselines, actual checkpoint inference and paired-bootstrap evaluation. No trained checkpoints or claimed benchmark percentages are bundled.

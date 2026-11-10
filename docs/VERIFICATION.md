@@ -1,20 +1,31 @@
 # Verification record
 
-Implementation check on 9 November 2026.
+Implementation check on 10 November 2026. These are local implementation and fixture checks; current GitHub Actions status is recorded separately by the commit's Actions run.
 
-| Surface | Observed result | Scope |
-| --- | --- | --- |
-| TypeScript | Pass | `npm run check` |
-| Engine regressions | 24 passed | Policy, identity masking, numerical conflicts, input bounds and coercion cases |
-| Research regressions | 10 passed | Strict JSON reward, split isolation, grounded golds, privacy and paired-bootstrap mechanics |
-| Production build | Pass | Vinext Worker app; not browser visual validation |
-| HTTP preview | 200 | Landing HTML, health endpoint and actual merchant-failure triage request |
-| CuratorKIT 0.1.21 | Pass | Real schema/clean/exact-dedup/Alpaca export over 20 sanitized training records |
-| AuditKIT 1.1.6 | Pass | Real custom scorers over five valid and five unsafe fixtures, explicitly labelled `SCORER_FIXTURE_VERIFICATION` |
-| GitHub CI | First two milestones passed | Check the current Actions run for subsequent commits |
-| GPU/model training | Not run | NVIDIA driver unavailable; no model weights downloaded |
-| Presidio | Not run | Optional integration requires the configured NLP model |
-| Browser visual/interaction review | Unverified | CUA inventory returned no browser surfaces |
-| Bank/NPCI action | None | Decision-support draft only |
+| Surface                           | Observed result            | Scope                                                                                                                                        |
+| --------------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| TypeScript                        | Pass                       | `npm run check`                                                                                                                              |
+| App regressions                   | 87 passed                  | API, financial-policy rules, exact amounts, contextual PII, locale coverage, client contracts, request races and stale-result handling       |
+| Research regressions              | 24 passed                  | Curation, strict rewards, split isolation, paired bootstrap, checkpoint resolution, hashes, dataset paths and pinned revision loading        |
+| Dependency audit                  | Zero known vulnerabilities | `npm audit`; production and development dependency graph at the verification date                                                            |
+| Production build                  | Pass                       | Vinext 1.4.4 / Vite 8 / React 19.3 Worker build                                                                                              |
+| Built Worker HTTP integration     | 12 checks passed           | 40 synthetic HTTP requests; HTML routes, health, key enforcement, rate limit, Indic budget, PII, malformed JSON, dates and size/media limits |
+| CuratorKIT 0.1.21                 | Pass                       | Actual schema/clean/exact-dedup/Alpaca export over 20 sanitized training records                                                             |
+| AuditKIT 1.1.6                    | Pass                       | Actual custom scorers over five valid and five unsafe fixtures, labelled `SCORER_FIXTURE_VERIFICATION`                                       |
+| GPU/model training                | Not run                    | NVIDIA driver unavailable; no model weights downloaded                                                                                       |
+| Presidio                          | Not run                    | Optional integration needs the configured NLP model                                                                                          |
+| Browser visual/interaction review | Unverified                 | Browser-control tools are unavailable in this session; successful HTML responses do not establish browser behavior                           |
+| Bank/NPCI action                  | None                       | Decision-support draft only                                                                                                                  |
 
-No measured six-checkpoint model comparison, regional-language human empathy study, inference-cost result, or production compliance certification is claimed. Source-pinned GPU commands still need execution and validation on the training host.
+The HTTP check is repeatable against a fresh local built Worker. Its burst check deliberately uses the local rate budget. CI starts an isolated Worker before running it:
+
+```bash
+npm run build
+npm run start -- --port 8791 --var TRIAGE_API_KEY:local-smoke-fixture-only
+# In another terminal; this value is a synthetic test key:
+TRIAGE_SMOKE_API_KEY=local-smoke-fixture-only node scripts/smoke-http.mjs http://127.0.0.1:8791
+```
+
+The rate limiter is bounded and local to a Worker isolate. Distributed quota enforcement and operational bank integrations remain deployment decisions. The runtime redactor covers tested contextual patterns; it is not a general guarantee of detecting every identity format.
+
+No measured six-checkpoint model comparison, regional-language human empathy study, inference-cost result or production compliance certification is claimed. Source-pinned GPU commands still need execution and validation on the training host.
