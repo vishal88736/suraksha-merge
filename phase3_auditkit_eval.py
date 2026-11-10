@@ -93,7 +93,7 @@ def auditkit_evaluate(samples, predictions):
     result = ak.evaluate([ak.Sample(input=s["input"], target=s["target"]) for s in samples], model=lambda prompts: [lookup[p] for p in prompts], scorers=[schema, fields, unsafe])
     return {"version": importlib.metadata.version("auditkit"), "summary": result.summary()}
 
-def evaluate(benchmark, named_predictions, output, use_auditkit=False, fixture_mode=False):
+def evaluate(benchmark, named_predictions, output, use_auditkit=False, fixture_mode=False, args_baseline=None):
     samples = read_jsonl(benchmark)
     if not samples:
         raise ValueError("Empty benchmark")
@@ -110,8 +110,11 @@ def evaluate(benchmark, named_predictions, output, use_auditkit=False, fixture_m
         if use_auditkit:
             runs[label]["auditkit"] = auditkit_evaluate(samples, predictions)
     labels = list(runs)
-    comparisons = [{"left": labels[0], "right": label, **paired_bootstrap(samples, per_case[labels[0]], per_case[label])} for label in labels[1:]]
-    report = {"created_at": datetime.now(timezone.utc).isoformat(), "mode": "SCORER_FIXTURE_VERIFICATION" if fixture_mode else "recorded_predictions", "model_quality_claim_permitted": not fixture_mode, "benchmark_sha256": digest(Path(benchmark).read_bytes()), "all_six_checkpoints_present": set(labels) == set(CHECKPOINTS), "runs": runs, "comparisons": comparisons, "limitations": ["Pattern checks are not semantic safety certification.", "ChrF is reference overlap, not an empathy score.", "Bootstrap intervals do not remove dataset or annotation bias.", "No inference cost is inferred without measured hardware and pricing."]}
+    # Pin the baseline instead of inheriting the order of the command line:
+    # reordering the flags must not silently re-baseline every delta.
+    baseline = args_baseline if args_baseline in runs else labels[0]
+    comparisons = [{"left": baseline, "right": label, **paired_bootstrap(samples, per_case[baseline], per_case[label])} for label in labels if label != baseline]
+    report = {"created_at": datetime.now(timezone.utc).isoformat(), "mode": "SCORER_FIXTURE_VERIFICATION" if fixture_mode else "recorded_predictions", "model_quality_claim_permitted": not fixture_mode, "baseline": baseline, "benchmark_sha256": digest(Path(benchmark).read_bytes()), "all_six_checkpoints_present": set(labels) == set(CHECKPOINTS), "runs": runs, "comparisons": comparisons, "limitations": ["Pattern checks are not semantic safety certification.", "ChrF is reference overlap, not an empathy score.", "Bootstrap intervals do not remove dataset or annotation bias.", "No inference cost is inferred without measured hardware and pricing."]}
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, indent=2, ensure_ascii=False, allow_nan=False)+"\n")
@@ -124,6 +127,7 @@ def main():
     parser.add_argument("--output", type=Path, default=ROOT / "artifacts/evaluation.json")
     parser.add_argument("--auditkit", action="store_true")
     parser.add_argument("--fixture-mode", action="store_true", help="Mark a scorer-only verification; do not report it as model quality")
+    parser.add_argument("--baseline", default="Base Qwen2.5-3B", help="The checkpoint every delta is measured against")
     args = parser.parse_args()
     named = {}
     for spec in args.predictions:
@@ -131,7 +135,7 @@ def main():
         if label in named:
             parser.error("Duplicate checkpoint label")
         named[label] = Path(path)
-    report = evaluate(args.benchmark, named, args.output, args.auditkit, args.fixture_mode)
+    report = evaluate(args.benchmark, named, args.output, args.auditkit, args.fixture_mode, args.baseline)
     print(json.dumps({"mode": report["mode"], "runs": {label: data["means"] for label, data in report["runs"].items()}, "output": str(args.output)}, indent=2))
 if __name__ == "__main__":
     main()

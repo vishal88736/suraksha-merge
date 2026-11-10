@@ -7,9 +7,10 @@ import argparse
 import importlib.metadata
 import json
 import re
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from research.common import ROOT, digest, engine_batch, no_guarantee, prompt_for, read_jsonl, required_rails, schema_valid, write_jsonl
+from research.common import ROOT, digest, engine_batch, no_guarantee, payload_matches, prompt_for, read_jsonl, required_rails, schema_valid, write_jsonl
 
 def presidio_scrub(text):
     """Run Presidio after contextual masking; protect only labelled UTRs."""
@@ -18,7 +19,8 @@ def presidio_scrub(text):
     from presidio_anonymizer.entities import OperatorConfig
     anchors = {}
     def protect(match):
-        token = f"REFANCHOR{chr(65+len(anchors))}TOKEN"
+        # A numbered token, so the placeholder survives past 26 anchors.
+        token = f"REFANCHOR{len(anchors)}TOKEN"
         anchors[token] = match.group(1)
         return match.group(0).replace(match.group(1), token)
     protected = re.sub(r"\b(?:UTR|RRN|ref(?:erence)?(?:\s*(?:no\.?|number))?)\s*[:#=-]?\s*(\d{12})\b", protect, text, flags=re.I)
@@ -27,7 +29,7 @@ def presidio_scrub(text):
     wanted = [e for e in ["PHONE_NUMBER", "EMAIL_ADDRESS", "PERSON", "LOCATION", "CREDIT_CARD", "IBAN_CODE", "IN_AADHAAR", "IN_PAN"] if e in supported]
     entities = analyzer.analyze(text=protected, language="en", entities=wanted)
     # Placeholder anchors cannot be removed by a generic recognizer.
-    protected_spans = [m.span() for m in re.finditer(r"REFANCHOR[A-Z]TOKEN", protected)]
+    protected_spans = [m.span() for m in re.finditer(r"REFANCHOR\d+TOKEN", protected)]
     entities = [e for e in entities if not any(e.start < b and e.end > a for a, b in protected_spans)]
     result = AnonymizerEngine().anonymize(text=protected, analyzer_results=entities, operators={"DEFAULT": OperatorConfig("replace", {"new_value": "[PII_REDACTED]"})}).text
     for key, value in anchors.items():
@@ -70,7 +72,7 @@ def curate(rows, output, use_presidio=False, use_curatorkit=False):
         failures = []
         if not schema_valid(payload):
             failures.append("schema_invalid")
-        if trace["payload"] != payload:
+        if not payload_matches(trace["payload"], payload):
             failures.append("bootstrap_target_disagrees_with_independent_engine_check")
         if payload.get("utr_number") and payload["utr_number"] not in sanitized:
             failures.append("utr_not_grounded")
@@ -113,7 +115,10 @@ def curate(rows, output, use_presidio=False, use_curatorkit=False):
         from curatorkit import Curator, CuratorConfig
         Curator(CuratorConfig(dataset=str((output / "train/sft.jsonl").resolve()), clean=True, dedup="exact", export_formats=["alpaca"], output_dir=str(output / "curatorkit"))).run()
         toolkit = importlib.metadata.version("curatorkit")
-    manifest = {"created_at": datetime.now(timezone.utc).isoformat(), "accepted": len(accepted), "rejected": len(rejected), "bootstrap_only": not all(p["human_reviewed"] for p in accepted) or not accepted, "pii_backend": "contextual_regex+presidio" if use_presidio else "contextual_regex", "curatorkit": toolkit, "gate_backend": "local_schema_numeric_and_policy_patterns", "scenario_group_splits": group_splits, "split_counts": {s: {k: len(v) for k, v in d.items()} for s, d in exports.items()}, "files": {str(p.relative_to(output)): digest(p.read_bytes()) for p in sorted(output.rglob("*.jsonl"))}}
+    manifest = {"created_at": datetime.now(timezone.utc).isoformat(), "accepted": len(accepted), "rejected": len(rejected), "empty_dataset": not accepted, "bootstrap_only": not all(p["human_reviewed"] for p in accepted) or not accepted, "pii_backend": "contextual_regex+presidio" if use_presidio else "contextual_regex", "curatorkit": toolkit, "gate_backend": "local_schema_numeric_and_policy_patterns", "scenario_group_splits": group_splits, "split_counts": {s: {k: len(v) for k, v in d.items()} for s, d in exports.items()}, "files": {str(p.relative_to(output)): digest(p.read_bytes()) for p in sorted(output.rglob("*.jsonl"))}}
+    if not accepted:
+        # An empty dataset is valid but must never look like a healthy run.
+        print("WARNING: no sample passed the curation gates; the dataset is empty. Inspect rejected.jsonl.", file=sys.stderr)
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     (output / "dataset_card.md").write_text("# Suraksha bootstrap data\n\nSynthetic seed records. Not representative, independently annotated or sufficient for production training. Rule-derived customer drafts require regional-language human review. Scenario groups are isolated across splits. No LLM synthesis, semantic HallucinationGate or RewardRefiner was run in local mode. Repaired pairs are explicitly labelled template replacements.\n")
     return manifest

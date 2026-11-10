@@ -57,6 +57,26 @@ def schema_valid(p):
             and all(isinstance(a, str) and a in ACTIONS for a in p["mandatory_actions"])
             and p["detected_language"] in LANGUAGES and p["panic_severity"] in {"LOW", "MEDIUM", "HIGH_CRITICAL"})
 
+def payload_matches(actual, target):
+    """Compare two triage payloads.
+
+    mandatory_actions is a set of obligations, not a sequence: the engine
+    appends REQUEST_UTR last, so an order-sensitive comparison would reject
+    every sample the moment the action order changes.
+    """
+    if not isinstance(actual, dict) or not isinstance(target, dict):
+        return False
+    if set(actual) != set(target):
+        return False
+    for key in target:
+        if key == "mandatory_actions":
+            if set(actual[key]) != set(target[key]):
+                return False
+        elif actual[key] != target[key]:
+            return False
+    return True
+
+
 def engine_batch(inputs):
     result = subprocess.run(["node", "scripts/triage.mjs"], input="".join(json.dumps(row, ensure_ascii=False) + "\n" for row in inputs), capture_output=True, text=True, cwd=ROOT, check=False)
     if result.returncode:
