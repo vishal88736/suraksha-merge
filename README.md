@@ -4,6 +4,10 @@ A polyglot UPI fraud and dispute triage research project. It includes a working 
 
 **Current mode:** rules and response templates. No trained model, no bank/NPCI integration, no disputes filed, no refunds approved. The original proposal's benchmark numbers are unmeasured targets, not results. Merging is a hypothesis to evaluate, not a guarantee of eliminating interference.
 
+## Project guide
+
+Read the [complete project and code guide](docs/PROJECT_GUIDE.md) for the architecture, directory map, backend and UI walkthroughs, research workflow, commands and source index. An [editable Word version](docs/SurakshaMerge_Project_and_Code_Guide.docx) is also included. The guide identifies its source snapshot explicitly.
+
 ## Run
 
 Requires Node 22.18+ (Node 24+ recommended).
