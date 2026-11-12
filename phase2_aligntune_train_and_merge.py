@@ -87,7 +87,7 @@ def check_data(args):
         raise FileNotFoundError("Run phase1_curatorkit_pipeline.py first")
     manifest = json.loads(manifest_path.read_text())
     if manifest.get("bootstrap_only", True) and not args.allow_bootstrap_data:
-        raise ValueError("Bundled seeds are unreviewed bootstrap data. Supply human-reviewed data, or explicitly pass --allow-bootstrap-data for a smoke run.")
+        raise ValueError("This dataset contains unreviewed synthetic or silver annotations. Supply reviewed data, or explicitly pass --allow-bootstrap-data for a smoke run.")
     for name, expected in manifest["files"].items():
         path = safe_dataset_file(args.data, name)
         if not path.is_file() or digest(path.read_bytes()) != expected:

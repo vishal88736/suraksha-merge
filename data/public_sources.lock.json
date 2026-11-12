@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "banking77",
+      "provider": "hf_dataset",
+      "repository": "PolyAI/banking77",
+      "revision": "1846984189f2bc0ac51c6fc3a600fa9e1714e0c6",
+      "license": "cc-by-4.0",
+      "role": "auxiliary_only",
+      "format": "parquet",
+      "columns": [
+        "text",
+        "label"
+      ],
+      "metadata_files": [
+        "README.md"
+      ],
+      "files": [
+        "data/train-00000-of-00001.parquet",
+        "data/test-00000-of-00001.parquet"
+      ],
+      "reason": "Banking intent labels do not establish a UPI payment rail or eight-field dispute gold; retain for inspection only.",
+      "max_file_bytes": 33554432,
+      "attribution_url": "https://huggingface.co/datasets/PolyAI/banking77",
+      "files_sha256": {
+        "data/train-00000-of-00001.parquet": "8dc89b87a188509c42cce5a086e8f7c1ff4a225bdd9ae3f23e6cdfa5806e363a",
+        "data/test-00000-of-00001.parquet": "1f40f777c33f0edfa6c530ff84fe2878db6490838c12d22d036f626948905341"
+      },
+      "metadata_sha256": {
+        "README.md": "f3786a5327fd6533c7c0ff3ff654e20ee3d1261d2fa41667381f59a2e42364e1"
+      }
+    },
+    {
+      "id": "indicjevbench",
+      "provider": "hf_dataset",
+      "repository": "cmul8-hf/IndicJevBench",
+      "revision": "9cb880ef1c20c94d930d90b8e40d01819b5fa037",
+      "license": "cc-by-4.0",
+      "role": "evaluation_only",
+      "format": "jsonl",
+      "columns": [
+        "id",
+        "family",
+        "lang",
+        "state",
+        "question",
+        "expected",
+        "license"
+      ],
+      "metadata_files": [
+        "README.md",
+        "manifest.json"
+      ],
+      "files": [
+        "v1/fintech_banking77.jsonl",
+        "v1/hinglish_lid.jsonl",
+        "v1/synthetic_enterprise.jsonl"
+      ],
+      "skipped_files": {
+        "v1/intent_massive.jsonl": "General MASSIVE intents unrelated to UPI; no reason to download 40 MB."
+      },
+      "reason": "Published frozen test benchmark, including translated BANKING77; never enter training or validation.",
+      "max_file_bytes": 33554432,
+      "attribution_url": "https://huggingface.co/datasets/cmul8-hf/IndicJevBench",
+      "files_sha256": {
+        "v1/fintech_banking77.jsonl": "5be7319a0fba54a129e3adadd291636185c3e88c3ec476bbacef30239410fa10",
+        "v1/hinglish_lid.jsonl": "b416452fb960cd41f61c55ca497f6719d7d5bf608ab44d2609758489393a1fad",
+        "v1/synthetic_enterprise.jsonl": "2a2a9d1700f9563159181c6e05ef2f5102494d9a9ddb04d86fc5305eeed53e9b"
+      },
+      "metadata_sha256": {
+        "README.md": "b3ef5951ec86b94db6e0b66d28ca5250415eb2c36fc504332824394ec50bd49f",
+        "manifest.json": "4ba1bc8866ae55a74f7993db18138d551f879b0e5005afc1dc4c68034f94e1a2"
+      }
+    },
+    {
+      "id": "cucom",
+      "provider": "github",
+      "repository": "vakyansh/cucom",
+      "revision": "60b9a7f9670e2176330b0576e232be4ec5a7fe19",
+      "license": "apache-2.0",
+      "role": "training_candidates",
+      "format": "zip_jsonl",
+      "columns": [
+        "id",
+        "turns"
+      ],
+      "metadata_files": [
+        "README.md",
+        "banking/README.md",
+        "LICENSE"
+      ],
+      "files": [
+        "banking/banking_v_0_1.jsonl.zip"
+      ],
+      "skipped_files": {
+        "ecommerce/ecommerce_v_0_1.jsonl.zip": "Out-of-domain ecommerce conversations.",
+        "sample.jsonl": "Redundant sample, not a separate corpus."
+      },
+      "reason": "Synthetic multilingual support conversations. Select explicit UPI user reports; never trust assistant action/refund claims or assume human review.",
+      "max_file_bytes": 33554432,
+      "attribution_url": "https://github.com/vakyansh/cucom",
+      "files_sha256": {
+        "banking/banking_v_0_1.jsonl.zip": "b71b5124d3b681df4afca1441b41c6f0614c119802c63c0d70715251ad22c1c9"
+      },
+      "metadata_sha256": {
+        "README.md": "dba275ee8aba050795c3412298381123cf77f79ace34eb03e59734334bbb9be6",
+        "banking/README.md": "5101231a3015434828534c77d2f158af0ba8a9de346cfc56338c1e159648390d",
+        "LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+      }
+    },
+    {
+      "id": "scam_ham_india",
+      "provider": "hf_dataset",
+      "repository": "anmolshrivastav/scam-ham-india",
+      "revision": "09afd479908c443e46be2629185ba8cd1de8abb8",
+      "license": "apache-2.0",
+      "role": "training_candidates",
+      "format": "csv",
+      "columns": [
+        "text",
+        "label"
+      ],
+      "metadata_files": [
+        "README.md"
+      ],
+      "files": [
+        "scam_hum_india.csv"
+      ],
+      "reason": "Mixed real/synthetic binary SMS labels; scam is not a completed unauthorized UPI loss. Select only explicit customer dispute evidence.",
+      "max_file_bytes": 33554432,
+      "attribution_url": "https://huggingface.co/datasets/anmolshrivastav/scam-ham-india",
+      "files_sha256": {
+        "scam_hum_india.csv": "b1d78936cc18c0251d2f865f7ce190e9caccbb0164489624ba7507bc80303901"
+      },
+      "metadata_sha256": {
+        "README.md": "aa2c66b5b1a805a8f1a0dd254d2c1d7b8d0af5c1a3a509ae7d02c3a708ab3955"
+      }
+    },
+    {
+      "id": "chakravyuh_bench",
+      "provider": "hf_space",
+      "repository": "ujjwalpardeshi/chakravyuh",
+      "revision": "21968356f74a59ef29ddc274aba3ebc1ac321c6e",
+      "license": "cc-by-4.0",
+      "role": "evaluation_only",
+      "format": "jsonl",
+      "columns": [
+        "id",
+        "source",
+        "attack_sequence",
+        "ground_truth",
+        "metadata",
+        "split"
+      ],
+      "metadata_files": [
+        "DATASET_CARD.md",
+        "data/chakravyuh-bench-v0/README.md",
+        "data/chakravyuh-bench-v0/schema.json",
+        "LICENSE"
+      ],
+      "files": [
+        "data/chakravyuh-bench-v0/scenarios.jsonl"
+      ],
+      "reason": "Explicit test-only reconstructed fraud benchmark. Dataset card CC-BY-4.0 governs data; Space code MIT is not substituted for it.",
+      "max_file_bytes": 33554432,
+      "attribution_url": "https://huggingface.co/spaces/ujjwalpardeshi/chakravyuh",
+      "files_sha256": {
+        "data/chakravyuh-bench-v0/scenarios.jsonl": "9644a745fc6707e08cec10b56634d4f9962d9a9cb9a04bd1431ac6ea53f1923f"
+      },
+      "metadata_sha256": {
+        "DATASET_CARD.md": "5c18d52dfe3233fb1d9c69316b3cef239ca1e8a225a1131b7de83bf7811d622e",
+        "data/chakravyuh-bench-v0/README.md": "20bbe2e2707d64d63f0eca90dc4420e2bf620e5d297812f91f3cb811eca4c40a",
+        "data/chakravyuh-bench-v0/schema.json": "ecdd4365c79ba6fa9228d2cf5029821b7cd0132162b195a442d33239750f70cb",
+        "LICENSE": "4745bcdff75bca12a040dd3108273bf3633de2621cfa21c4570d7eeaba1adf7b"
+      }
+    }
+  ]
+}

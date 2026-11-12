@@ -1,4 +1,6 @@
 import { triage } from "../lib/engine.ts";
+// Decode incrementally: a pipe chunk can end inside an Indic UTF-8 character.
+process.stdin.setEncoding("utf8");
 let input = "";
 for await (const chunk of process.stdin) input += chunk;
 try {

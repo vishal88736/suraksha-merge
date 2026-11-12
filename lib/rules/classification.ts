@@ -39,14 +39,14 @@ export const VOLUNTARY_INTENT_SIGNALS =
 
 /** The transaction did not complete as expected. */
 export const TECHNICAL_FAILURE_SIGNALS =
-  /not\s*(?:credited|received)|stuck|pending|failed|nahi\s*(?:mila|pahuncha)|illa|debitaachu|confirmation|unconfirmed/i;
+  /not\s*(?:credited|received)|stuck|pending|failed|nahi\s*(?:mila|pahuncha)|mila\s*nahi|illa|debitaachu|confirmation|unconfirmed/i;
 
 /** Merchant or acquiring context. */
 export const MERCHANT_SIGNALS =
   /merchant|swiggy|zomato|shop|store|p2m|bigbasket/i;
 
 /** Peer-to-peer transfer context. */
-export const P2P_SIGNALS = /transfer|friend|p2p|beneficiary/i;
+export const P2P_SIGNALS = /transfer|friend|p2p|beneficiary|recipient/i;
 
 export const FRAUD_CATEGORIES: readonly Category[] = [
   "COLLECT_REQUEST_SCAM",

@@ -1,0 +1,3 @@
+# Public-source preparation only: no GPU libraries or NLP models.
+curatorkit @ git+https://github.com/Lexsi-Labs/CuratorKIT.git@cee1aed21d14992f650c5dfe09094b9625d0ce87
+pyarrow==26.0.1

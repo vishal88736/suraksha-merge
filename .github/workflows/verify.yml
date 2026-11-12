@@ -17,6 +17,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install pinned CuratorKIT for real integration tests
+        run: python -m pip install --disable-pip-version-check "curatorkit @ git+https://github.com/Lexsi-Labs/CuratorKIT.git@cee1aed21d14992f650c5dfe09094b9625d0ce87"
       - run: python -m unittest discover -s research -p "test_*.py" -v
       - run: npm run build
       - name: Verify built Worker over HTTP

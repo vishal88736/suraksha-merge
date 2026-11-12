@@ -395,3 +395,9 @@ test("large currency amounts are not mistaken for telephone numbers", () => {
   assert.ok(result.privacy.sanitized.includes("Rs 9876543210.50"));
   assert.ok(result.privacy.sanitized.includes("Call [PHONE_REDACTED]"));
 });
+
+test("a debited UPI transfer whose recipient ko mila nahi remains a P2P failure", () => {
+  const result = triage({message: "UPI transaction kiya tha, paisa debited aur recipient ko mila nahi", language: "hinglish"});
+  assert.equal(result.payload.dispute_category, "P2P_BENEFICIARY_NOT_CREDITED");
+  assert.equal(result.payload.rbi_liability_tier, "TECHNICAL_T_PLUS_1");
+});

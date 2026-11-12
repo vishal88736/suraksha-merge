@@ -54,3 +54,10 @@ data/private/
 artifacts/
 .env
 !.env.example
+
+# Original public downloads and derived corpora remain local
+/data/raw/
+/data/processed/
+/data/benchmarks_external/
+.venv-training/
+.~lock.*#
