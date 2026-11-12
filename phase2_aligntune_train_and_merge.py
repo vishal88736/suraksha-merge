@@ -73,13 +73,14 @@ def resolve_shared_base(args):
 
 def assert_tokenizer_matches_model(tokenizer, model):
     """The tokenizer and the embedding matrix must agree on the vocabulary."""
-    rows = int(model.get_input_embeddings().weight.shape[0])
-    if len(tokenizer) != rows:
-        raise ValueError(
-            f"Tokenizer and model disagree on the vocabulary size: "
-            f"tokenizer has {len(tokenizer)} entries, the embedding matrix has {rows} rows. "
-            "A merged model with mismatched ids decodes into the wrong tokens."
-        )
+    ids=list(tokenizer.get_vocab().values()) if hasattr(tokenizer,'get_vocab') else list(range(len(tokenizer)))
+    for embedding in (model.get_input_embeddings(), model.get_output_embeddings()):
+        if embedding is None: continue
+        rows=int(embedding.weight.shape[0])
+        if not ids or min(ids)<0 or max(ids)>=rows:
+            raise ValueError('Tokenizer IDs exceed model embedding dimensions')
+    # Qwen pads embedding rows beyond tokenizer vocabulary; exact length equality
+    # incorrectly rejects this supported base model.
 
 def check_data(args):
     manifest_path = args.data / "manifest.json"
@@ -100,6 +101,20 @@ def check_data(args):
             raise ValueError(f"Training split {kind} is missing or empty")
     return manifest
 
+def validate_smoke_options(args):
+    if args.allow_bootstrap_data:
+        if not getattr(args,'smoke_test',False) or args.max_steps!=1:
+            raise ValueError('Bootstrap override is restricted to an explicit one-step --smoke-test')
+        manifest=json.loads((args.data/'manifest.json').read_text())
+        rows=read_jsonl(args.data/'unified.jsonl')
+        if not manifest.get('smoke_test_only') or not 1<=len(rows)<=2 or any(r['origin']!='synthetic' for r in rows):
+            raise ValueError('Smoke run requires dedicated tiny synthetic-only fixture data')
+        destination=args.output.resolve()
+        if not destination.is_relative_to((ROOT/'artifacts/smoke-test').resolve()):
+            raise ValueError('Smoke outputs must remain under artifacts/smoke-test')
+    elif getattr(args,'smoke_test',False):
+        raise ValueError('Synthetic smoke testing requires --allow-bootstrap-data')
+
 def register_reward():
     from aligntune.rewards.core import RewardConfig, RewardFunction, RewardType
     from aligntune.rewards.registry import RewardRegistry
@@ -119,6 +134,7 @@ def read_manifest(adapter):
 
 
 def train(args):
+    validate_smoke_options(args)
     check_data(args)
     torch = require_gpu(args.allow_cpu)
     from aligntune.core.backend_factory import create_rl_trainer, create_sft_trainer
@@ -145,7 +161,7 @@ def train(args):
     adapter = next((p for p in candidates if (p / "adapter_config.json").exists() and (p / "adapter_model.safetensors").exists()), None)
     if adapter is None:
         raise RuntimeError("Trainer returned without a saved LoRA adapter. Inspect its output before continuing.")
-    manifest = {"identity": shared_identity, "dataset_manifest_sha256": digest((args.data / "manifest.json").read_bytes()), "algorithm": "drgrpo" if args.stage == "schema" else "dpo" if args.stage == "empathy" else "sft", "versions": package_versions(), "stage": args.stage, "seed": SEED, "bootstrap_smoke_run": args.allow_bootstrap_data, "adapter_path": str(adapter.resolve())}
+    manifest = {"identity": shared_identity, "dataset_manifest_sha256": digest((args.data / "manifest.json").read_bytes()), "algorithm": "drgrpo" if args.stage == "schema" else "dpo" if args.stage == "empathy" else "sft", "versions": package_versions(), "stage": args.stage, "seed": SEED, "bootstrap_smoke_run": args.allow_bootstrap_data, "smoke_test_only": getattr(args,"smoke_test",False), "adapter_path": str(adapter.resolve())}
     write_manifest(adapter, output, manifest)
     print(json.dumps(manifest, indent=2))
 
@@ -215,6 +231,8 @@ def merge(args):
     manifests = [item[1] for item in resolved]
     if manifests[0]["identity"] != manifests[1]["identity"]:
         raise ValueError("Adapters differ in base revision/weights, tokenizer, rank, alpha or target modules")
+    if any(m.get("smoke_test_only") or m.get("bootstrap_smoke_run") for m in manifests):
+        raise ValueError("Synthetic smoke adapters cannot be merged as final artifacts")
     revision = manifests[0]["identity"].get("base_revision")
     if manifests[0]["identity"] != identity(str(shared_base), revision):
         raise ValueError("Selected base is not the shared base used by both specialists")
@@ -251,6 +269,7 @@ def main():
     parser.add_argument("--schema-weight", type=float, default=0.55)
     parser.add_argument("--max-steps", type=int, default=100)
     parser.add_argument("--allow-bootstrap-data", action="store_true")
+    parser.add_argument("--smoke-test", action="store_true", help="One-step synthetic fixture training, isolated under artifacts/smoke-test")
     parser.add_argument("--allow-cpu", action="store_true")
     args = parser.parse_args()
     if not 0 <= args.schema_weight <= 1 or args.max_steps < 1:
@@ -258,8 +277,10 @@ def main():
     if args.stage == "plan":
         print(json.dumps({"executed": False, "base": args.base, "shared_base": str(args.shared_base) if args.shared_base else args.base, "stages": STAGES[1:], "versions": package_versions(), "shared_vocabulary_required": True, "default_tokenizer": "unchanged until adapt-tokenizer is explicitly run", "weights": [args.schema_weight, round(1-args.schema_weight, 6)], "measured_results": None}, indent=2))
     elif args.stage == "merge":
+        if args.allow_bootstrap_data: parser.error("Merge requires reviewed data")
         merge(args)
     elif args.stage == "adapt-tokenizer":
+        if args.allow_bootstrap_data: parser.error("Tokenizer adaptation requires reviewed data")
         adapt_tokenizer(args)
     else:
         train(args)

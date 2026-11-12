@@ -92,3 +92,5 @@ See [the research runbook](docs/RESEARCH.md) for optional toolkit installation, 
 Primary sources and review dates are tracked in [lib/policy.ts](lib/policy.ts). Internal category names are an application taxonomy, not an official UDIR submission contract or regulatory certification. A bank-approved mapping and compliance review are necessary before operational use.
 
 No customer messages are persisted by the app. Exported traces contain masked text; contextual UTRs remain personal transaction references and require controlled handling for real data. Use synthetic scenarios for demonstrations.
+
+See the [human review and training preparation runbook](docs/HUMAN_REVIEW_AND_TRAINING.md) for the pending review CLI, held-out evaluation gate, Qwen tokenizer checks and isolated AlignTune smoke procedure.

@@ -53,7 +53,7 @@ python3 phase2_aligntune_train_and_merge.py --stage plan
 .venv-training/bin/python phase2_aligntune_train_and_merge.py --stage merge --schema-weight 0.55
 ```
 
-For an intentionally small bootstrap smoke run, explicitly add `--allow-bootstrap-data --max-steps 1`. A smoke run is not a trained product. `--allow-cpu` is an explicit override for small experiments, never an automatic fallback for a full 3B training run. The current machine's NVIDIA driver is unavailable, so GPU training has not been executed.
+For an intentionally small synthetic smoke run, follow [the review and training preparation runbook](HUMAN_REVIEW_AND_TRAINING.md). The override now requires a dedicated two-case fixture dataset, `--allow-bootstrap-data --smoke-test --max-steps 1`, and isolated artifact output. A smoke run is not a trained product. `--allow-cpu` is an explicit override for small experiments, never an automatic fallback for a full 3B training run. The current machine's NVIDIA driver is unavailable, so GPU training has not been executed.
 
 The supported AlignTune backend factory uses `dataset_name`, `algorithm="drgrpo"`, flattened LoRA parameters and `create_rl_trainer(..., algorithm="dpo")`. The implementation uses the registry's actual custom-reward factory contract, not the proposal's illustrative decorator. Schema reward requires a reference and scores all fields. Malformed JSON, duplicate keys, extra fields, non-finite values and incorrect critical fields cannot earn a high score.
 
@@ -101,3 +101,5 @@ Collect a consented, independently annotated corpus; review each regional langua
 Remote base configuration, tokenizer and weights are loaded from the same resolved immutable Hugging Face revision. `--revision` can select the desired revision before resolution. Local bases are fingerprinted from weight bytes and vocabulary, so moving a checkpoint directory does not change its identity. Specialist manifests record adapter configuration and weight hashes; merge and inference reject modified or mismatched artifacts and resolve checkpoint-only saves explicitly.
 
 Recorded inference produces a matching manifest with benchmark and prediction hashes. Evaluation requires that manifest by default. `--allow-unverified-predictions` is an explicit inspection escape hatch and cannot establish model-quality claims. Reordering prediction flags does not change the named `base` comparison. Empty or modified curated datasets are rejected before training.
+
+Human annotation decisions, held-out evaluation preparation, CPU token measurements, environment checks and safe smoke commands are documented in [HUMAN_REVIEW_AND_TRAINING.md](HUMAN_REVIEW_AND_TRAINING.md). Actual review and GPU trainer execution remain external dependencies.

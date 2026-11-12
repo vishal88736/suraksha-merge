@@ -1,0 +1,2 @@
+# CPU tokenizer inspection only; full AlignTune dependencies remain separate.
+tokenizers==0.22.2
