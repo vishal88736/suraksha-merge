@@ -29,3 +29,9 @@ TRIAGE_SMOKE_API_KEY=local-smoke-fixture-only node scripts/smoke-http.mjs http:/
 The rate limiter is bounded and local to a Worker isolate. Distributed quota enforcement and operational bank integrations remain deployment decisions. The runtime redactor covers tested contextual patterns; it is not a general guarantee of detecting every identity format.
 
 No measured six-checkpoint model comparison, regional-language human empathy study, inference-cost result or production compliance certification is claimed. Source-pinned GPU commands still need execution and validation on the training host.
+
+## Public-source curation, 12 November 2026
+
+The [data-curation record](DATA_CURATION.md) covers the current run. Downloaded eight pinned payload files (36,868 rows); ran actual CuratorKIT normalization, schema, exact/MinHash deduplication, Alpaca and DPO exports; retained 934 unreviewed cases with grouped 758/84/92 splits. Independent artifact checks cover schema, provenance, masking idempotence, numeric grounding, preference patterns and split/benchmark exclusion. All 19 core JSONL files were byte-identical on a cached rerun; toolkit/run timestamps are excluded.
+
+Current local checks: 45 Python regressions (including actual CuratorKIT tests), 89 application regressions, TypeScript and production build passed. The public-data workflow does not execute AuditKIT scorer fixtures, model benchmarking or AlignTune training. No Presidio NLP model or target tokenizer was run. Human review count remains zero, and default training is blocked. Earlier fixture observations above retain their original date and scope.

@@ -31,9 +31,15 @@ The bundled 18 synthetic seeds are **bootstrap fixtures**, not a production trai
 
 The local pipeline validates the complete schema, checks numeric evidence against the message, masks identities in messages and candidate replies, deduplicates exact normalized messages, and produces same-task DPO pairs. Unsupported references, duplicate IDs and family leakage fail closed. A recovery record explicitly says when a rule template replaced an unsafe candidate. It is not labelled an LLM RewardRefiner run. The default scrubber is contextual regex; `--presidio` runs the real Presidio analyzer/anonymizer after that pass and protects only context-labelled UTR anchors. No blanket 12-digit allowlist is used.
 
-`--use-curatorkit` calls the actual `Curator(CuratorConfig(...)).run()` API for a second schema/clean/dedup/export pass over the sanitized, locally gated training data. It does not imply that a semantic HallucinationGate, LLM judge, synthetic-generation provider or adaptive LLM recovery ran. Those require a configured generator/judge and independent review. No live provider was called during implementation.
+`--use-curatorkit` calls the actual `Curator(CuratorConfig(...)).run()` API to normalize and deduplicate masked candidates before the existing local gates. Actual toolkit survivors feed the exports. A final schema/Alpaca pass validates SFT training records and the real DPO exporter handles preference pairs. It does not imply that a semantic HallucinationGate, LLM judge, synthetic-generation provider or adaptive LLM recovery ran. Those require a configured generator/judge and independent review. No live provider was called during implementation.
 
 Outputs under ignored `data/generated*/` include per-split `rlvr.jsonl`, `dpo.jsonl`, `sft.jsonl`, `uncurated_sft.jsonl`, `benchmark.jsonl`, rejection/recovery logs, checksums and a dataset card. The uncurated SFT control still masks PII and uses the same split; it intentionally includes labelled unsafe synthetic responses. Use authorised data and mark `human_reviewed` only after actual review.
+
+### Acquired public sources
+
+The [public-data runbook](DATA_CURATION.md) documents the executed acquisition/curation run: five inspected sources, 36,868 downloaded rows, 934 accepted unreviewed UPI cases and 11,655 separately reserved external benchmark records. Install `requirements-public-data.txt` for this CPU-only workflow; run `scripts/prepare_public_data.py --stage all` and `scripts/validate_prepared_data.py`. No NLP model, trainer or model benchmark runs as part of those commands.
+
+Outputs use ignored `data/raw/`, `data/processed/upi-v1/` and `data/benchmarks_external/upi-v1/`. New public silver labels and authored synthetic targets are not engine-verified ground truth. For later approved training, select this corpus explicitly with `--data data/processed/upi-v1`; the existing default review guard stays active. Default training and inference commands below still use the bundled seed output at `data/generated` unless a dataset path is supplied.
 
 ## Phase 2: train and merge
 

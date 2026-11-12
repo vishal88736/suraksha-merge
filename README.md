@@ -29,7 +29,7 @@ Open the Local URL printed by Vite. `npm test` runs financial-policy and privacy
 - Live `/api/triage` and `/api/health` endpoints, masked trace export and copy/download controls.
 - Interactive four-stage architecture explorer and offline merge-weight configuration.
 - Versioned policy library and a six-checkpoint benchmark lab that leaves unmeasured scores blank.
-- Eighteen synthetic seed cases, isolated scenario-family splits, curation manifests and same-task preference pairs.
+- Eighteen regression seeds plus a reproducible public-source curation pipeline: 934 unreviewed UPI examples, grouped splits, RLVR/DPO/SFT exports and separate external benchmarks.
 - Source-checked AlignTune training and exact weighted-delta merge commands; optional actual CuratorKIT, Presidio and AuditKIT integrations.
 
 Nothing in the interface is hardcoded: every string lives in a typed message catalog or in a content module, and every reply line is a template filled with placeholders. A missing translation is a type error rather than a blank label.
@@ -64,6 +64,17 @@ python3 phase1_curatorkit_pipeline.py --demo
 python3 phase2_aligntune_train_and_merge.py --stage plan
 python3 -m unittest discover -s research -p "test_*.py" -v
 ```
+
+To acquire and curate the pinned public datasets (Python 3.12+, real CuratorKIT; no training):
+
+```bash
+uv venv --python 3.12 .venv
+uv pip install --python .venv/bin/python -r requirements-public-data.txt
+.venv/bin/python scripts/prepare_public_data.py --stage all
+.venv/bin/python scripts/validate_prepared_data.py
+```
+
+See [the public-data runbook](docs/DATA_CURATION.md) for inspected sources, exclusions, actual distributions and code paths. The 934-case corpus is format-compatible with AlignTune; all annotations are unreviewed, so default training remains blocked. Downloads and generated datasets stay outside Git.
 
 See [the research runbook](docs/RESEARCH.md) for optional toolkit installation, GPU training, shared tokenizer/embedding adaptation, all six baselines, actual checkpoint inference and paired-bootstrap evaluation. No trained checkpoints or claimed benchmark percentages are bundled.
 
