@@ -22,9 +22,9 @@ class CompletionWindowDPOTests(unittest.TestCase):
         completion[1, 7:10] = 1
         self.inputs = {"input_ids": ids, "attention_mask": attention, "completion_mask": completion}
         from trl.trainer.dpo_trainer import DPOTrainer
-        saved = (DPOTrainer._compute_loss, DPOTrainer.compute_ref_log_probs)
+        saved = (DPOTrainer._compute_loss, DPOTrainer.compute_ref_log_probs, DPOTrainer.__init__)
         def restore():
-            DPOTrainer._compute_loss, DPOTrainer.compute_ref_log_probs = saved
+            DPOTrainer._compute_loss, DPOTrainer.compute_ref_log_probs, DPOTrainer.__init__ = saved
             DPOTrainer._suraksha_completion_logits = False
         self.addCleanup(restore)
 
@@ -47,6 +47,17 @@ class CompletionWindowDPOTests(unittest.TestCase):
         actual = DPOTrainer.compute_ref_log_probs(self.fake_trainer(), self.inputs)
         for e, a in zip(expected, actual, strict=True):
             torch.testing.assert_close(a, e, rtol=1e-5, atol=1e-5)
+
+    def test_frozen_weights_return_to_bf16_but_trainable_stay_fp32(self):
+        import torch
+        from research.dpo_completion_logits import frozen_to_bf16
+        model = self.model.float()
+        model.model.layers[0].self_attn.q_proj.weight.requires_grad_(True)
+        for name, param in model.named_parameters():
+            if "layers.0.self_attn.q_proj.weight" not in name: param.requires_grad_(False)
+        self.assertGreater(frozen_to_bf16(model), 0)
+        self.assertEqual(model.model.layers[0].self_attn.q_proj.weight.dtype, torch.float32)
+        self.assertEqual(model.model.embed_tokens.weight.dtype, torch.bfloat16)
 
     def test_policy_forward_sees_whole_sequence_with_truncated_logits(self):
         from trl.trainer.dpo_trainer import DPOTrainer
