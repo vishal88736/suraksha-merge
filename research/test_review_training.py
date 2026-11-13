@@ -214,10 +214,15 @@ class TrainingChecks(unittest.TestCase):
    self.assertEqual(read_jsonl(data/'out2.jsonl'),[{'prompt':'P','completion':'{"a":1}','provenance':{}}])
  def test_pilot_grpo_requires_a_verified_pilot_merge(self):
   from phase2_aligntune_train_and_merge import PILOT_ROOT,weight_digests
-  with tempfile.TemporaryDirectory(dir=PILOT_ROOT.parent) as tmp:
+  # artifacts/ is gitignored, so it does not exist on a fresh CI checkout.
+  created_root=not PILOT_ROOT.exists()
+  with tempfile.TemporaryDirectory() as tmp:
    data=Path(tmp)/'data';data.mkdir();(data/'manifest.json').write_text(json.dumps({'bootstrap_only':True}))
    base=PILOT_ROOT/('test-merge-'+Path(tmp).name);base.mkdir(parents=True)
-   self.addCleanup(lambda:__import__('shutil').rmtree(base,ignore_errors=True))
+   def cleanup():
+    __import__('shutil').rmtree(base,ignore_errors=True)
+    if created_root:__import__('shutil').rmtree(PILOT_ROOT.parent,ignore_errors=True)
+   self.addCleanup(cleanup)
    (base/'model.safetensors').write_bytes(b'fixture')
    args=SimpleNamespace(stage='schema',unreviewed_pilot=True,allow_bootstrap_data=True,smoke_test=False,data=data,output=PILOT_ROOT/'grpo-x',shared_base=None)
    with self.assertRaises(ValueError):validate_smoke_options(args) # no base
