@@ -79,11 +79,23 @@ def paired_bootstrap(samples, left, right, metric="utility", repeats=2000, seed=
     boot.sort()
     return {"metric": metric, "delta_right_minus_left": statistics.mean(b[metric]-a[metric] for a, b in zip(left, right, strict=True)), "ci_95": [boot[int(.025*(repeats-1))], boot[int(.975*(repeats-1))]], "bootstrap_unit": "scenario_group", "groups": len(groups), "repeats": repeats, "seed": seed, "interpretation": "Exploratory; a tiny synthetic benchmark cannot establish production quality or the claimed absence of interference."}
 
-def auditkit_evaluate(samples, predictions):
+AUDITKIT_METRICS = {"suraksha_schema": "schema_pass", "suraksha_all_fields": "all_fields_exact", "suraksha_unsafe_guarantees": "unauthorized_guarantee_pattern_rate"}
+
+def auditkit_evaluate(samples, predictions, local_means=None):
     import auditkit as ak
     lookup = {s["input"]: p["prediction"] for s, p in zip(samples, predictions, strict=True)}
     if len(lookup) != len(samples):
         raise ValueError("AuditKIT callback needs unique benchmark prompts")
+    # AuditKIT fingerprints a callable by its code and *immutable* captures, and
+    # replays cached results on a fingerprint match. The lookup dict is mutable,
+    # so it is ignored; binding the predictions' digest gives every distinct set
+    # of predictions its own fingerprint (otherwise a cached run is replayed).
+    predictions_sha256 = digest(json.dumps([p["prediction"] for p in predictions], ensure_ascii=False).encode())
+    def make_model(table, bound_sha256):
+        def recorded_predictions(prompts):
+            _ = bound_sha256
+            return [table[p] for p in prompts]
+        return recorded_predictions
     @ak.scorer(name="suraksha_schema", direction=ak.Direction.MAXIMIZE)
     def schema(sample, prediction):
         return score_prediction(prediction, strict_json(sample.target))["schema_pass"]
@@ -93,8 +105,16 @@ def auditkit_evaluate(samples, predictions):
     @ak.scorer(name="suraksha_unsafe_guarantees", direction=ak.Direction.MINIMIZE)
     def unsafe(sample, prediction):
         return score_prediction(prediction, strict_json(sample.target))["unauthorized_guarantee_pattern_rate"]
-    result = ak.evaluate([ak.Sample(input=s["input"], target=s["target"]) for s in samples], model=lambda prompts: [lookup[p] for p in prompts], scorers=[schema, fields, unsafe])
-    return {"version": importlib.metadata.version("auditkit"), "summary": result.summary()}
+    result = ak.evaluate([ak.Sample(input=s["input"], target=s["target"]) for s in samples], model=make_model(lookup, predictions_sha256), scorers=[schema, fields, unsafe])
+    table = result.metric_table() if callable(result.metric_table) else result.metric_table
+    means = {row["name"]: row["mean"] for row in table}
+    if local_means is not None:
+        # Independent scorers on the same outputs must agree; a mismatch means
+        # a stale/cached or mis-wired AuditKIT result, which must not be reported.
+        for name, key in AUDITKIT_METRICS.items():
+            if name not in means or abs(float(means[name]) - float(local_means[key])) > 1e-9:
+                raise RuntimeError(f"AuditKIT {name}={means.get(name)} disagrees with local scorer {key}={local_means[key]}")
+    return {"version": importlib.metadata.version("auditkit"), "fingerprint": result.fingerprint, "predictions_sha256": predictions_sha256, "metric_means": means, "agrees_with_local_scorer": local_means is not None, "summary": result.summary()}
 
 def evaluate(benchmark, named_predictions, output, use_auditkit=False, fixture_mode=False, args_baseline=None, allow_unverified=False):
     samples = read_jsonl(benchmark)
@@ -115,7 +135,7 @@ def evaluate(benchmark, named_predictions, output, use_auditkit=False, fixture_m
         totals = {metric: statistics.mean(s[metric] for s in scores if s[metric] is not None) if any(s[metric] is not None for s in scores) else None for metric in scores[0]}
         runs[label] = {"count": len(samples), "means": totals, "prediction_sha256": digest(Path(path).read_bytes()), "per_case": [{"sample_id": s["sample_id"], "scenario_group": s["scenario_group"], **score} for s, score in zip(samples, scores, strict=True)], "inference_cost_per_1000": None, "human_empathy_evaluated": False, "inference_provenance_verified": provenance is not None}
         if use_auditkit:
-            runs[label]["auditkit"] = auditkit_evaluate(samples, predictions)
+            runs[label]["auditkit"] = auditkit_evaluate(samples, predictions, totals)
     labels = list(runs)
     # Pin the baseline instead of inheriting the order of the command line:
     # reordering the flags must not silently re-baseline every delta.
