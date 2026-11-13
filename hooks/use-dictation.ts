@@ -90,7 +90,10 @@ export function useDictation(options: {
     () => false,
   );
   const onFinalRef = useRef(onFinal);
-  onFinalRef.current = onFinal;
+  // Keep the latest callback without writing a ref during render.
+  useEffect(() => {
+    onFinalRef.current = onFinal;
+  }, [onFinal]);
   const detach = useCallback(() => {
     const current = recognitionRef.current;
     recognitionRef.current = null;
@@ -166,10 +169,16 @@ export function useDictation(options: {
   }, [language, detach]);
 
   // Restart on a language change so the next utterance uses the new tag.
-  useEffect(() => {
-    detach();
+  // Visible state is reset during render (React's pattern for prop-driven
+  // resets); the effect only releases the recognizer.
+  const [activeLanguage, setActiveLanguage] = useState(language);
+  if (activeLanguage !== language) {
+    setActiveLanguage(language);
     setStatus("idle");
     setInterim("");
+  }
+  useEffect(() => {
+    detach();
   }, [language, detach]);
 
   useEffect(

@@ -131,6 +131,19 @@ def load_model(args):
         kwargs["dtype"] = torch.bfloat16
     model = AutoModelForCausalLM.from_pretrained(model_path, **kwargs)
     adapter_path, adapter_sha, pilot = None, None, False
+    display_model, display_revision = args.model, base_identity["base_revision"]
+    merge_report = Path(args.model) / "suraksha_pilot_merge.json"
+    if Path(args.model).is_dir() and merge_report.is_file():
+        # A pilot SFT adapter merged into the base: fine-tuned, unreviewed.
+        merge = json.loads(merge_report.read_text())
+        if not args.allow_pilot_adapter:
+            raise SystemExit("This is a merged unreviewed-pilot model: pass --allow-pilot-adapter to serve it as a labelled pilot.")
+        if merge.get("merged_weights") != base_identity["base_weights"]:
+            raise SystemExit("Merged pilot weights differ from their merge record.")
+        pilot = True
+        display_model = f"{merge['base_model']} + merged pilot SFT"
+        display_revision = merge["base_revision"]
+        adapter_path, adapter_sha = merge["adapter"], merge["adapter_sha256"]
     if args.adapter:
         from peft import PeftModel
         adapter, manifest = resolve_adapter(args.adapter)
@@ -140,15 +153,16 @@ def load_model(args):
                 raise SystemExit(f"Adapter was trained on a different base ({key} mismatch).")
         if (manifest.get("training_outcome") or {}).get("parameters_updated") is not True:
             raise SystemExit("Adapter has no verified optimizer update; refusing to serve it as fine-tuned.")
-        pilot = bool(manifest.get("unreviewed_pilot"))
-        if pilot and not args.allow_pilot_adapter:
+        adapter_pilot = bool(manifest.get("unreviewed_pilot"))
+        if adapter_pilot and not args.allow_pilot_adapter:
             raise SystemExit("Unreviewed-pilot adapter: pass --allow-pilot-adapter to serve it as a labelled pilot.")
-        if not pilot and (manifest.get("smoke_test_only") or manifest.get("bootstrap_smoke_run")) and not args.allow_smoke_adapter:
+        pilot = pilot or adapter_pilot  # a pilot merged base keeps the label
+        if not adapter_pilot and (manifest.get("smoke_test_only") or manifest.get("bootstrap_smoke_run")) and not args.allow_smoke_adapter:
             raise SystemExit("Smoke-test adapters are not for serving; pass --allow-smoke-adapter for a labelled experiment.")
         model = PeftModel.from_pretrained(model, str(adapter))
         adapter_path, adapter_sha = str(adapter), manifest["artifacts"]["adapter_model.safetensors"]
     model.eval()
-    info = {"base_model": args.model, "base_revision": base_identity["base_revision"],
+    info = {"base_model": display_model, "base_revision": display_revision,
         "adapter": adapter_path, "adapter_sha256": adapter_sha, "quantization": args.quantization,
         "fine_tuned": adapter_path is not None, "unreviewed_pilot": pilot, "max_new_tokens": args.max_new_tokens, "do_sample": False}
 

@@ -157,7 +157,9 @@ def main():
         import tempfile
         with tempfile.TemporaryDirectory() as tmp:
             materialize_reviewed(a.queue,a.decisions,tmp)
-            result=next(r for name in ('reviewed','rejected','unreviewed') for r in read_jsonl(Path(tmp)/(name+'.jsonl')) if r['review_id']==a.review_id)
+            result=next((r for name in ('reviewed','rejected','unreviewed') for r in read_jsonl(Path(tmp)/(name+'.jsonl')) if r['review_id']==a.review_id),None)
+        if result is None:
+            raise SystemExit(f"Unknown review id {a.review_id!r}. IDs look like 'syn-2-0-4-1'; list them with: .venv/bin/python -I -c \"import json;[print(json.loads(l)['review_id']) for l in open('data/review/annotation_queue.jsonl')]\"")
     elif a.cmd=='decide': result=record_decision(a.queue,a.decisions,a.review_id,a.reviewer,a.action,corrections=json.loads(a.corrections.read_text()) if a.corrections else None,fields=a.confirmed_fields,notes=a.notes,attest=a.attest_human_review)
     elif a.cmd=='export-curation': result=export_curation(a.queue,a.decisions,a.output)
     elif a.cmd=='export': result=materialize_reviewed(a.queue,a.decisions,a.output)

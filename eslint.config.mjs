@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     ".sites-runtime/**",
     "outputs/**",
     "work/**",
+    // Python virtualenvs vendor third-party JS (e.g. notebook assets).
+    ".venv/**",
+    ".venv-training/**",
   ]),
   {
     files: ["components/ui/**/*.{ts,tsx}", "hooks/use-mobile.ts"],
