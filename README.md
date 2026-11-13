@@ -2,7 +2,7 @@
 
 A polyglot UPI fraud and dispute triage research project. It includes a working SurakshaDesk console, an interactive pipeline explorer, provenance-gated curation, specialist-training and merging entry points, and recorded-prediction evaluation.
 
-**Current mode:** rules and response templates. No trained model, no bank/NPCI integration, no disputes filed, no refunds approved. The original proposal's benchmark numbers are unmeasured targets, not results. Merging is a hypothesis to evaluate, not a guarantee of eliminating interference.
+**Current mode:** rules and response templates, with optional local *model first, rules fallback* serving (see [docs/MODEL_SERVING.md](docs/MODEL_SERVING.md)). The base model currently fails strict JSON validation, so rules answer every request. No trained model, no bank/NPCI integration, no disputes filed, no refunds approved. The original proposal's benchmark numbers are unmeasured targets, not results. Merging is a hypothesis to evaluate, not a guarantee of eliminating interference.
 
 ## Project guide
 

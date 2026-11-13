@@ -1,11 +1,16 @@
 import { POLICY_VERSION } from "../../../lib/policy";
-export function GET() {
+import { getModelConfig } from "../../../lib/model-config";
+import { modelHealth } from "../../../lib/model-health";
+export async function GET() {
+  const model = await modelHealth(getModelConfig());
   return Response.json(
     {
       status: "ok",
-      engine: "deterministic_preview",
+      engine: model.model_reachable
+        ? "model_first_rules_fallback"
+        : "deterministic_preview",
       policy_version: POLICY_VERSION,
-      trained_model_connected: false,
+      ...model,
       bank_integration_connected: false,
       persists_customer_messages: false,
     },

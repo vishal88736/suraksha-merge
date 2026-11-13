@@ -337,7 +337,28 @@ function draftReply(
   };
 }
 
-export function triage(raw: TriageInput) {
+export type ModelInfo = {
+  base_model: string;
+  base_revision: string;
+  adapter: string | null;
+  adapter_sha256: string | null;
+  quantization: string;
+};
+/** How the structured payload was produced. Rules always run first. */
+export type ModelAudit =
+  | { status: "not_configured" }
+  | { status: "used"; model: ModelInfo; latency_ms: number }
+  | {
+      status: "fallback";
+      reasons: string[];
+      model: ModelInfo | null;
+      latency_ms: number | null;
+    };
+
+export function triage(
+  raw: TriageInput,
+  options: { payload?: Payload; model?: ModelAudit } = {},
+) {
   const start = performance.now();
   const input = inputSchema.parse(raw);
   const privacy = redactPII(input.message);
@@ -478,7 +499,7 @@ export function triage(raw: TriageInput) {
     );
   }
   if (!utr) actions.push("REQUEST_UTR");
-  const payload = payloadSchema.parse({
+  const rulesPayload = payloadSchema.parse({
     utr_number: utr,
     dispute_category: category,
     amount_inr: amount,
@@ -496,6 +517,46 @@ export function triage(raw: TriageInput) {
           ? "MEDIUM"
           : "LOW",
   });
+  // A validated model payload replaces the rules payload. Every value derived
+  // below comes from the payload actually returned, never from rules state.
+  const payload = options.payload
+    ? payloadSchema.parse(options.payload)
+    : rulesPayload;
+  if (options.payload) {
+    for (const field of ["utr_number", "amount_inr"] as const) {
+      const at = evidence.findIndex((e) => e.field === field);
+      if (at >= 0) evidence.splice(at, 1);
+    }
+    const anchor = privacy.anchors.find(
+      (a) => a.replacement === payload.utr_number,
+    );
+    if (payload.utr_number && anchor)
+      evidence.push({
+        field: "utr_number",
+        value: payload.utr_number,
+        source: "customer_message",
+        start: anchor.start,
+        end: anchor.end,
+      });
+    const hit = amountScan.hits.find((h) => h.value === payload.amount_inr);
+    if (payload.amount_inr !== null && hit)
+      evidence.push({
+        field: "amount_inr",
+        value: payload.amount_inr,
+        source: "customer_message",
+        start: hit.start,
+        end: hit.end,
+      });
+  }
+  const finalDeadline =
+    payload.dispute_category === "P2M_CONFIRMATION_FAILURE"
+      ? 5
+      : payload.dispute_category === "P2P_BENEFICIARY_NOT_CREDITED"
+        ? 1
+        : null;
+  const finalTier = payload.rbi_liability_tier;
+  const finalAmount = payload.amount_inr;
+  const finalUtr = payload.utr_number;
   const caps = {
     unknown: null,
     bsbd: 5000,
@@ -504,25 +565,25 @@ export function triage(raw: TriageInput) {
   } as const;
   const tierCap = caps[input.account_tier];
   const liabilityCap =
-    tier === "LIMITED_LIABILITY_ELIGIBLE" && tierCap !== null
-      ? amount !== null
-        ? Math.min(amount, tierCap)
+    finalTier === "LIMITED_LIABILITY_ELIGIBLE" && tierCap !== null
+      ? finalAmount !== null
+        ? Math.min(finalAmount, tierCap)
         : tierCap
       : null;
   const sla = {
-    deadline_days: deadline,
-    deadline_day_basis: deadline ? ("calendar" as const) : null,
+    deadline_days: finalDeadline,
+    deadline_day_basis: finalDeadline ? ("calendar" as const) : null,
     reporting_delay_day_basis: "working" as const,
     elapsed_calendar_days: input.elapsed_calendar_days ?? null,
     estimated_compensation_inr:
-      deadline && input.elapsed_calendar_days != null
-        ? Math.max(0, input.elapsed_calendar_days - deadline) * 100
+      finalDeadline && input.elapsed_calendar_days != null
+        ? Math.max(0, input.elapsed_calendar_days - finalDeadline) * 100
         : null,
     liability_cap_inr: liabilityCap,
     liability_cap_basis:
       liabilityCap === null
         ? (null as null)
-        : amount !== null
+        : finalAmount !== null
           ? ("amount_and_cap" as const)
           : ("cap_only" as const),
     policy_revalidation_required: postPolicy,
@@ -531,16 +592,16 @@ export function triage(raw: TriageInput) {
   const policy = policyCheck(reply.text, payload);
   // Ground the reference in the source message itself, not in the set it came
   // from: the recorded offsets must actually contain the claimed UTR.
-  const utrAnchor = utr
-    ? privacy.anchors.find((a) => a.replacement === utr)
+  const utrAnchor = finalUtr
+    ? privacy.anchors.find((a) => a.replacement === finalUtr)
     : undefined;
   const utrGrounded =
-    utr === null
+    finalUtr === null
       ? null
       : utrAnchor !== undefined &&
         asciiDigits(input.message.slice(utrAnchor.start, utrAnchor.end)) ===
-          utr &&
-        /^\d{12}$/.test(utr);
+          finalUtr &&
+        /^\d{12}$/.test(finalUtr);
   return {
     payload,
     reply,
@@ -550,7 +611,10 @@ export function triage(raw: TriageInput) {
     sla,
     audit: {
       policy_version: POLICY_VERSION,
-      mode: "deterministic_preview" as const,
+      mode: options.model?.status === "used"
+        ? ("model_validated" as const)
+        : ("deterministic_preview" as const),
+      model: options.model ?? ({ status: "not_configured" } as ModelAudit),
       schema_valid: true,
       utr_grounded: utrGrounded,
       ...policy,

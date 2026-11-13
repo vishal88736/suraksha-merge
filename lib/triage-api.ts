@@ -1,10 +1,11 @@
 import {
   inputSchema,
-  triage,
   type TriageInput,
   type TriageResult,
 } from "./engine.ts";
 import { parseStrictJson } from "./strict-json.ts";
+import { getModelConfig } from "./model-config.ts";
+import { triageWithModel } from "./model-triage.ts";
 import {
   apiError,
   BodyReadError,
@@ -16,7 +17,7 @@ import {
 /** The injectable engine permits genuine failure-path checks without altering production globals. */
 export function createTriageHandler(
   options: {
-    engine?: (input: TriageInput) => TriageResult;
+    engine?: (input: TriageInput) => TriageResult | Promise<TriageResult>;
     timeoutMs?: number;
     log?: (event: Record<string, string>) => void;
   } = {},
@@ -96,7 +97,10 @@ export function createTriageHandler(
       );
     }
     try {
-      const result = (options.engine ?? triage)(parsed.data);
+      const engine =
+        options.engine ??
+        ((input: TriageInput) => triageWithModel(input, getModelConfig()));
+      const result = await engine(parsed.data);
       return Response.json(result, {
         headers: { ...NO_STORE, "x-request-id": id },
       });

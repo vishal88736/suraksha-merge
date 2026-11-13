@@ -168,6 +168,21 @@ export function EnginePanel({
         </div>
         <span className="payload-version">{t("engine.schemaVersion")}</span>
       </div>
+      <p className="engine-source" data-status={result.audit.model.status}>
+        {result.audit.model.status === "used"
+          ? t("engine.sourceModel", {
+              model: result.audit.model.model.base_model,
+              variant: result.audit.model.model.adapter
+                ? t("engine.variantAdapter")
+                : t("engine.variantBase"),
+              ms: Math.round(result.audit.model.latency_ms),
+            })
+          : result.audit.model.status === "fallback"
+            ? t("engine.sourceFallback", {
+                reasons: result.audit.model.reasons.join(", "),
+              })
+            : t("engine.sourceRules")}
+      </p>
       <div
         id="output-panel"
         role="tabpanel"
@@ -259,7 +274,11 @@ export function EnginePanel({
               <h3>
                 <FileCheck2 size={14} /> {t("checks.heading")}
               </h3>
-              <span className="subtle-label">{t("checks.deterministic")}</span>
+              <span className="subtle-label">
+                {result.audit.mode === "model_validated"
+                  ? t("checks.modelValidated")
+                  : t("checks.deterministic")}
+              </span>
             </div>
             <div className="guardrail-list">
               {[

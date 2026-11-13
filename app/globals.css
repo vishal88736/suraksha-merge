@@ -1171,6 +1171,18 @@ main {
   font-size: 10px;
   color: #607380;
 }
+.engine-source {
+  margin: 0;
+  padding: 8px 22px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #567388;
+  border-bottom: 1px solid rgba(86, 115, 136, 0.15);
+  overflow-wrap: anywhere;
+}
+.engine-source[data-status="fallback"] {
+  color: #8a5a12;
+}
 .output-content {
   padding: 22px;
 }

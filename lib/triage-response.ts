@@ -6,6 +6,13 @@ const span = z.object({
   type: z.string(),
   replacement: z.string(),
 });
+const modelInfo = z.object({
+  base_model: z.string(),
+  base_revision: z.string(),
+  adapter: z.string().nullable(),
+  adapter_sha256: z.string().nullable(),
+  quantization: z.string(),
+});
 /** Validate what the UI consumes rather than casting arbitrary responses to never. */
 export const triageResponseSchema = z.object({
   payload: payloadSchema,
@@ -43,7 +50,21 @@ export const triageResponseSchema = z.object({
   }),
   audit: z.object({
     policy_version: z.string(),
-    mode: z.literal("deterministic_preview"),
+    mode: z.enum(["deterministic_preview", "model_validated"]),
+    model: z.discriminatedUnion("status", [
+      z.object({ status: z.literal("not_configured") }),
+      z.object({
+        status: z.literal("used"),
+        model: modelInfo,
+        latency_ms: z.number().finite().nonnegative(),
+      }),
+      z.object({
+        status: z.literal("fallback"),
+        reasons: z.array(z.string()),
+        model: modelInfo.nullable(),
+        latency_ms: z.number().finite().nonnegative().nullable(),
+      }),
+    ]),
     schema_valid: z.literal(true),
     utr_grounded: z.boolean().nullable(),
     no_unauthorized_promises: z.boolean(),

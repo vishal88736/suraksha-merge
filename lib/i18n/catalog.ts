@@ -152,6 +152,13 @@ const en = {
   "engine.jsonNote":
     "This is an internal triage contract. An approved mapping is needed before submitting to a bank or NPCI.",
   "engine.noStorage": "No messages stored",
+  "engine.sourceRules": "Payload source: rules engine (no model configured)",
+  "engine.sourceModel":
+    "Payload source: {model} ({variant}) · passed strict validation · {ms} ms",
+  "engine.sourceFallback":
+    "Payload source: rules engine · model output rejected: {reasons}",
+  "engine.variantBase": "base model, not fine-tuned",
+  "engine.variantAdapter": "fine-tuned adapter",
 
   "liability.timeline": "REVERSAL TIMELINE",
   "liability.assessment": "LIABILITY ASSESSMENT",
@@ -182,6 +189,7 @@ const en = {
 
   "checks.heading": "Verification checks",
   "checks.deterministic": "DETERMINISTIC",
+  "checks.modelValidated": "MODEL · VALIDATED",
   "checks.schema": "Strict JSON schema",
   "checks.schemaDetail": "All required fields and types validated",
   "checks.provenance": "Transaction provenance",
@@ -474,6 +482,13 @@ const hi: Record<MessageKey, string> = {
   "engine.jsonNote":
     "यह एक आंतरिक ट्रायेज अनुबंध है। बैंक या NPCI को भेजने से पहले स्वीकृत मैपिंग आवश्यक है।",
   "engine.noStorage": "कोई संदेश संग्रहित नहीं होता",
+  "engine.sourceRules": "पेलोड स्रोत: नियम इंजन (कोई मॉडल कॉन्फ़िगर नहीं)",
+  "engine.sourceModel":
+    "पेलोड स्रोत: {model} ({variant}) · सख़्त सत्यापन पास · {ms} ms",
+  "engine.sourceFallback":
+    "पेलोड स्रोत: नियम इंजन · मॉडल आउटपुट अस्वीकृत: {reasons}",
+  "engine.variantBase": "बेस मॉडल, फ़ाइन-ट्यून नहीं",
+  "engine.variantAdapter": "फ़ाइन-ट्यून एडेप्टर",
 
   "liability.timeline": "उलटी समय-सीमा",
   "liability.assessment": "दायित्व आकलन",
@@ -502,6 +517,7 @@ const hi: Record<MessageKey, string> = {
 
   "checks.heading": "सत्यापन जाँच",
   "checks.deterministic": "नियतात्मक",
+  "checks.modelValidated": "मॉडल · सत्यापित",
   "checks.schema": "कठोर JSON स्कीमा",
   "checks.schemaDetail": "सभी आवश्यक फ़ील्ड और प्रकार सत्यापित",
   "checks.provenance": "लेनदेन प्रमाण",
