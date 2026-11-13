@@ -78,7 +78,7 @@ export const REPLY_LANGUAGES = [
     label: "Marathi–English",
     nativeLabel: "मराठी–English",
     speech: "mr-IN",
-    script: "devanagari",
+    script: "latin",
   },
 ] as const;
 

@@ -205,56 +205,56 @@ export const REPLY_TEMPLATES: Record<ReplyLanguage, ReplyTemplates> = {
 
   marathi_english: {
     intro:
-      "पैसे गेल्यामुळे तणाव आला असेल, समजतो. आपण एक-एक पायरी घेऊ.",
+      "Paise gelyamule tension aala asel, samajta. Aapan ek-ek step ghenyaat yeu.",
     fraud: {
       report:
-        "लगेच बँक/PSP ला fraud report करा आणि UPI/payment channel secure किंवा block करा. PIN/OTP कोणालाही देऊ नका.",
+        "Lagech bank/PSP la fraud report kara ani UPI/payment channel secure kiva block karayla sanga. PIN/OTP konalahi deu naka.",
       cybercrime:
-        "लगेच 1930 वर call करा आणि cybercrime.gov.in वर तक्रार नोंदवा. SMS, screenshots आणि bank चा acknowledgement जतन करा.",
+        "Lagech 1930 var call kara ani cybercrime.gov.in var takrar nondva. SMS, screenshots ani bank cha acknowledgement japun theva.",
       dispute:
-        "PSP app मध्ये UTR {utr} च्या transaction वर dispute raise करा आणि bank ला कळवा.",
+        "PSP app madhye UTR {utr} chya transaction var dispute raise kara ani bank la kalva.",
       disputeNoUtr:
-        "PSP app मध्ये या transaction वर dispute raise करा आणि bank ला कळवा.",
+        "PSP app madhye ya transaction var dispute raise kara ani bank la kalva.",
       noGuarantee:
-        "Refund किंवा zero liability आता confirm नाही; bank ला facts, authorisation आणि reporting window तपासावे लागेल.",
+        "Refund kiva zero liability aata confirm nahi; bank la facts, authorisation ani reporting window tapasave lagel.",
     },
     technical: {
       verify:
-        "बँक/PSP कडून transaction status verify करून घ्या (UTR {utr}).",
-      verifyNoUtr: "बँक/PSP कडून transaction status verify करून घ्या.",
-      tat: "{category} निश्चित झाल्यास, RBI ने reversal T+{deadline} calendar {dayUnit} पर्यंतचा कालावधी सांगितला आहे. T+{deadline} नंतर ₹100/day compensation.",
+        "Bank/PSP kadun transaction status verify karun ghya (UTR {utr}).",
+      verifyNoUtr: "Bank/PSP kadun transaction status verify karun ghya.",
+      tat: "{category} confirm zalyas, RBI ne reversal sathi T+{deadline} calendar {dayUnit} paryantcha kalavadhi sangitla aahe. T+{deadline} nantar ₹100/day compensation.",
       compensationUnknown:
-        "Delay compensation ठरवण्यासाठी transaction ची date/status आवश्यक आहे.",
+        "Delay compensation tharavnyasathi transaction chi date/status lagel.",
       compensationNone:
-        "अद्याप delay compensation लागू होत नाही: T+{deadline} deadline अद्याप पलीका नाही.",
+        "Ajun delay compensation lagu hot nahi: T+{deadline} chi deadline ajun ulatleli nahi.",
       compensationEstimate:
-        "Estimated delay compensation: ₹{compensation}; dates आणि reversal status bank ला verify करावे लागेल, त्यानंतरच payment होईल.",
+        "Estimated delay compensation: ₹{compensation}; dates ani reversal status bank verify karel, tyanantarch payment hoil.",
       complain:
-        "PSP app/bank मध्ये complaint करा आणि त्याचा acknowledgement जतन करा. हा draft dispute file करत नाही.",
+        "PSP app/bank madhye complaint kara ani tyacha acknowledgement japun theva. Ha draft dispute file karat nahi.",
     },
     voluntary: {
       notify:
-        "लगेच bank/PSP ला कळवा आणि wrong-beneficiary recovery ची विनंती करा.",
+        "Lagech bank/PSP la kalva ani wrong-beneficiary recovery chi request kara.",
       noGuarantee:
-        "चुकूनच VPA ला पैसे पाठवल्यास आपोआप refund ची हमी नाही. Recovery bank च्या तपासणीवर आणि receiver च्या सहकार्यावर अवलंबून आहे.",
+        "Chukichya VPA la swatah pathavlelya paishancha automatic refund guarantee nahi. Recovery bank review ani receiver chya sahakaryavar avalambun aahe.",
       keep:
-        "Transaction receipt आणि acknowledgement जतन करा. Recovery fee कधीही देऊ नका आणि PIN/OTP शेअर करू नका.",
+        "Transaction receipt ani acknowledgement japun theva. Recovery fee kadhihi deu naka ani PIN/OTP share karu naka.",
     },
     generic: [
-      "Transaction type, amount, date/status आणि receipt मधील labelled 12-digit UTR/RRN पाठवा. Aadhaar, account number, PIN किंवा OTP शेअर करू नका.",
-      "Fraud शंका वाटल्यास लगेच bank/PSP ला संपर्क साधा आणि 1930 वर call करा.",
+      "Transaction type, amount, date/status ani receipt madhla labelled 12-digit UTR/RRN pathva. Aadhaar, account number, PIN kiva OTP share karu naka.",
+      "Fraud chi shanka asel tar lagech bank/PSP shi samparka kara ani 1930 var call kara.",
     ],
     askForUtr:
-      "Receipt मध्ये labelled 12-digit UTR/RRN शोधा; label नसलेला 12-digit number एखादा sensitive ID असू शकतो.",
+      "Receipt madhye labelled 12-digit UTR/RRN shodha; label naslela 12-digit number ekhada sensitive ID asu shakto.",
     policyRevalidation:
-      "या transaction च्या date चा नव्या RBI liability framework शी पुन्हा विचार करावा लागेल.",
+      "Ya transaction chi date navya RBI liability framework pramane punha tapasavi lagel.",
     escalation:
-      "प्रथम तुमच्या bank/PSP ला complaint करा आणि त्याचा acknowledgement जतन करा. उत्तरावर समाधान नाही झाल्यास, किंवा 30 दिवसांनी उत्तर मिळाले नाही (किंवा RBI/NPCI/card-network चा लागू कालावधी जो अधिक असेल), cms.rbi.org.in वर eligibility तपासा.",
+      "Aadhi tumchya bank/PSP la complaint kara ani tyacha acknowledgement japun theva. Uttarane samadhan nahi zale, kiva 30 divsat uttar nahi aale (kiva RBI/NPCI/card-network cha lagu kalavadhi jo jast asel), tar cms.rbi.org.in var eligibility tapasa.",
     category: {
       p2m: "UPI merchant-confirmation failure",
-      p2p: "UPI transfer beneficiary ला credit झाले नाही",
+      p2p: "UPI transfer beneficiary la credit zala nahi",
     },
-    dayUnit: { one: "दिवस", many: "दिवस" },
+    dayUnit: { one: "divas", many: "divas" },
   },
 
   hindi_devanagari: {
