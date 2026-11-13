@@ -172,9 +172,11 @@ export function EnginePanel({
         {result.audit.model.status === "used"
           ? t("engine.sourceModel", {
               model: result.audit.model.model.base_model,
-              variant: result.audit.model.model.adapter
-                ? t("engine.variantAdapter")
-                : t("engine.variantBase"),
+              variant: result.audit.model.model.unreviewed_pilot
+                ? t("engine.variantPilot")
+                : result.audit.model.model.adapter
+                  ? t("engine.variantAdapter")
+                  : t("engine.variantBase"),
               ms: Math.round(result.audit.model.latency_ms),
             })
           : result.audit.model.status === "fallback"

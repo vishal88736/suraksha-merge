@@ -12,6 +12,7 @@ const modelInfo = z.object({
   adapter: z.string().nullable(),
   adapter_sha256: z.string().nullable(),
   quantization: z.string(),
+  unreviewed_pilot: z.boolean(),
 });
 /** Validate what the UI consumes rather than casting arbitrary responses to never. */
 export const triageResponseSchema = z.object({

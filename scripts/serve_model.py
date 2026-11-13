@@ -106,7 +106,7 @@ def make_handler(generate, info: dict, token: str | None):
                 return self._send(500, {"error": "generation_failed"})
             self._send(200, {"raw": text, "latency_ms": round((time.perf_counter() - started) * 1000, 1),
                 "input_tokens": input_tokens, "output_tokens": output_tokens,
-                "model": {k: info[k] for k in ("base_model", "base_revision", "adapter", "adapter_sha256", "quantization")}})
+                "model": {k: info[k] for k in ("base_model", "base_revision", "adapter", "adapter_sha256", "quantization", "unreviewed_pilot")}})
 
     return Handler
 
@@ -130,7 +130,7 @@ def load_model(args):
     else:
         kwargs["dtype"] = torch.bfloat16
     model = AutoModelForCausalLM.from_pretrained(model_path, **kwargs)
-    adapter_path, adapter_sha = None, None
+    adapter_path, adapter_sha, pilot = None, None, False
     if args.adapter:
         from peft import PeftModel
         adapter, manifest = resolve_adapter(args.adapter)
@@ -140,14 +140,17 @@ def load_model(args):
                 raise SystemExit(f"Adapter was trained on a different base ({key} mismatch).")
         if (manifest.get("training_outcome") or {}).get("parameters_updated") is not True:
             raise SystemExit("Adapter has no verified optimizer update; refusing to serve it as fine-tuned.")
-        if (manifest.get("smoke_test_only") or manifest.get("bootstrap_smoke_run")) and not args.allow_smoke_adapter:
+        pilot = bool(manifest.get("unreviewed_pilot"))
+        if pilot and not args.allow_pilot_adapter:
+            raise SystemExit("Unreviewed-pilot adapter: pass --allow-pilot-adapter to serve it as a labelled pilot.")
+        if not pilot and (manifest.get("smoke_test_only") or manifest.get("bootstrap_smoke_run")) and not args.allow_smoke_adapter:
             raise SystemExit("Smoke-test adapters are not for serving; pass --allow-smoke-adapter for a labelled experiment.")
         model = PeftModel.from_pretrained(model, str(adapter))
         adapter_path, adapter_sha = str(adapter), manifest["artifacts"]["adapter_model.safetensors"]
     model.eval()
     info = {"base_model": args.model, "base_revision": base_identity["base_revision"],
         "adapter": adapter_path, "adapter_sha256": adapter_sha, "quantization": args.quantization,
-        "fine_tuned": adapter_path is not None, "max_new_tokens": args.max_new_tokens, "do_sample": False}
+        "fine_tuned": adapter_path is not None, "unreviewed_pilot": pilot, "max_new_tokens": args.max_new_tokens, "do_sample": False}
 
     def generate(prompt):
         rendered = tokenizer.apply_chat_template([{"role": "user", "content": prompt}], tokenize=False, add_generation_prompt=True)
@@ -167,6 +170,7 @@ def main():
     parser.add_argument("--revision", default=PINNED_REVISION)
     parser.add_argument("--adapter", type=Path)
     parser.add_argument("--allow-smoke-adapter", action="store_true")
+    parser.add_argument("--allow-pilot-adapter", action="store_true", help="Serve an unreviewed-pilot adapter, labelled as such")
     parser.add_argument("--quantization", choices=["nf4", "bf16"], default="nf4")
     parser.add_argument("--max-new-tokens", type=int, default=256)
     parser.add_argument("--host", default="127.0.0.1")

@@ -27,6 +27,7 @@ const serverResponse = z.object({
       .regex(/^[0-9a-f]{64}$/)
       .nullable(),
     quantization: z.string().max(50),
+    unreviewed_pilot: z.boolean().default(false),
   }),
 });
 

@@ -16,6 +16,7 @@ const MODEL = {
   adapter: null,
   adapter_sha256: null,
   quantization: "nf4",
+  unreviewed_pilot: false,
 };
 const GOOD = {
   utr_number: "431289014421",
@@ -195,6 +196,9 @@ test("health distinguishes a base model from a fine-tuned one", async () => {
   assert.equal(base.model_reachable, true);
   assert.equal(base.trained_model_connected, false);
   assert.equal((await modelHealth(CONFIG, serve(true))).trained_model_connected, true);
+  const pilot = (async () =>
+    Response.json({ status: "ok", model: { ...MODEL, fine_tuned: true, unreviewed_pilot: true } })) as typeof fetch;
+  assert.equal((await modelHealth(CONFIG, pilot)).trained_model_connected, false);
   const down = (async () => {
     throw new TypeError("fetch failed");
   }) as typeof fetch;

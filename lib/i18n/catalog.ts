@@ -159,6 +159,7 @@ const en = {
     "Payload source: rules engine · model output rejected: {reasons}",
   "engine.variantBase": "base model, not fine-tuned",
   "engine.variantAdapter": "fine-tuned adapter",
+  "engine.variantPilot": "UNREVIEWED PILOT adapter, synthetic data, not for real decisions",
 
   "liability.timeline": "REVERSAL TIMELINE",
   "liability.assessment": "LIABILITY ASSESSMENT",
@@ -489,6 +490,7 @@ const hi: Record<MessageKey, string> = {
     "पेलोड स्रोत: नियम इंजन · मॉडल आउटपुट अस्वीकृत: {reasons}",
   "engine.variantBase": "बेस मॉडल, फ़ाइन-ट्यून नहीं",
   "engine.variantAdapter": "फ़ाइन-ट्यून एडेप्टर",
+  "engine.variantPilot": "असमीक्षित पायलट एडेप्टर, सिंथेटिक डेटा, वास्तविक निर्णयों के लिए नहीं",
 
   "liability.timeline": "उलटी समय-सीमा",
   "liability.assessment": "दायित्व आकलन",

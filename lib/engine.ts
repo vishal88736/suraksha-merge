@@ -343,6 +343,7 @@ export type ModelInfo = {
   adapter: string | null;
   adapter_sha256: string | null;
   quantization: string;
+  unreviewed_pilot: boolean;
 };
 /** How the structured payload was produced. Rules always run first. */
 export type ModelAudit =

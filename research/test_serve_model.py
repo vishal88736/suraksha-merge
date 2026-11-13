@@ -8,7 +8,7 @@ from research.common import ROOT, read_jsonl
 from scripts.serve_model import make_handler, parse_request, schema_prompt
 
 INFO = {"base_model": "Qwen/Qwen2.5-3B-Instruct", "base_revision": "a" * 40, "adapter": None,
-    "adapter_sha256": None, "quantization": "nf4", "fine_tuned": False}
+    "adapter_sha256": None, "quantization": "nf4", "fine_tuned": False, "unreviewed_pilot": False}
 CORPUS = ROOT / "data/processed/upi-v1/train/rlvr.jsonl"
 
 

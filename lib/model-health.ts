@@ -13,6 +13,7 @@ const health = z.object({
       .nullable(),
     quantization: z.string().max(50),
     fine_tuned: z.boolean(),
+    unreviewed_pilot: z.boolean().default(false),
   }),
 });
 
@@ -38,7 +39,9 @@ export async function modelHealth(
       model_endpoint_configured: true,
       model_reachable: response.ok,
       model: body.model,
-      trained_model_connected: response.ok && body.model.fine_tuned,
+      // An unreviewed pilot adapter is fine-tuned, but not a reviewed trained model.
+      trained_model_connected:
+        response.ok && body.model.fine_tuned && !body.model.unreviewed_pilot,
     };
   } catch {
     return {

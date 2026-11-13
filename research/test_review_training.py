@@ -190,4 +190,26 @@ class TrainingChecks(unittest.TestCase):
    with self.assertRaises(ValueError):chat_formatted_dataset(src,Path(tmp)/'out.jsonl','dpo')
    write_jsonl(src,[{'prompt':'P','chosen':'c','rejected':'r'}])
    with self.assertRaises(ValueError):chat_formatted_dataset(src,Path(tmp)/'out.jsonl','dpo') # tokenizer required
+ def test_unreviewed_pilot_is_gated_labelled_and_sft_stays_raw(self):
+  from phase2_aligntune_train_and_merge import chat_formatted_dataset,PILOT_ROOT
+  with tempfile.TemporaryDirectory() as tmp:
+   data=Path(tmp);(data/'manifest.json').write_text(json.dumps({'bootstrap_only':True}))
+   ok=SimpleNamespace(stage='curated-sft',unreviewed_pilot=True,allow_bootstrap_data=True,smoke_test=False,data=data,output=PILOT_ROOT/'run-x',max_steps=50,allow_cpu=False,profile='laptop-6gb')
+   validate_smoke_options(ok)
+   for change in ({'stage':'schema'},{'allow_bootstrap_data':False},{'smoke_test':True},{'output':ROOT/'checkpoints'}):
+    with self.assertRaises(ValueError):validate_smoke_options(SimpleNamespace(**{**vars(ok),**change}))
+   (data/'manifest.json').write_text(json.dumps({'smoke_test_only':True}))
+   with self.assertRaises(ValueError):validate_smoke_options(ok)
+   fake=SimpleNamespace(cuda=SimpleNamespace(is_available=lambda:True,is_bf16_supported=lambda:True))
+   common,_=training_settings(ok,fake)
+   self.assertEqual((common['lora_r'],common['lora_alpha'],common['learning_rate'],common['max_seq_length']),(16,32,1e-4,1280))
+   with self.assertRaises(ValueError):training_settings(SimpleNamespace(**{**vars(ok),'unreviewed_pilot':False}),fake)
+   src=data/'sft.jsonl';write_jsonl(src,[{'instruction':'Do X','input':'','output':'{}','provenance':{'a':1}}])
+   tok=SimpleNamespace(eos_token='<|im_end|>',chat_template='t')
+   info=chat_formatted_dataset(src,data/'out.jsonl','sft',tok)
+   self.assertEqual(read_jsonl(data/'out.jsonl'),[{'prompt':'Do X','completion':'{}','provenance':{'a':1}}])
+   self.assertEqual(info['format'],'messages_rendered_by_trl_assistant_only_loss')
+   src2=data/'rlvr.jsonl';write_jsonl(src2,[{'prompt':'P','answer':'{"a":1}','ground_truth_json':{'a':1},'provenance':{}}])
+   chat_formatted_dataset(src2,data/'out2.jsonl','schema_sft',tok)
+   self.assertEqual(read_jsonl(data/'out2.jsonl'),[{'prompt':'P','completion':'{"a":1}','provenance':{}}])
 if __name__=='__main__':unittest.main()

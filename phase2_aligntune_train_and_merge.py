@@ -78,7 +78,7 @@ def pin_materialized_weights(base_identity, model_path):
         raise ValueError('Materialized base weights differ from the recorded identity')
     return {**base_identity,'base_weights':hashes}
 
-CHAT_FORMATTED={'rlvr':('prompt',),'dpo':('prompt','chosen','rejected')}
+CHAT_FORMATTED={'rlvr':('prompt',),'dpo':('prompt','chosen','rejected'),'sft':('instruction','output'),'uncurated_sft':('instruction','output'),'schema_sft':('prompt','answer')}
 
 def chat_formatted_dataset(source, destination, kind, tokenizer=None):
     """Train on the same chat-rendered user turn used at inference.
@@ -97,8 +97,8 @@ def chat_formatted_dataset(source, destination, kind, tokenizer=None):
     rows=read_jsonl(source)
     if not rows:
         raise ValueError(f'Training split {kind} is empty')
-    if kind=='dpo' and tokenizer is None:
-        raise ValueError('DPO chat formatting requires the pinned tokenizer')
+    if kind!='rlvr' and tokenizer is None:
+        raise ValueError('Chat formatting requires the pinned tokenizer')
     prepared=[]
     for row in rows:
         row=dict(row)
@@ -106,13 +106,29 @@ def chat_formatted_dataset(source, destination, kind, tokenizer=None):
             value=row.get(field)
             if not isinstance(value,str) or not value.strip():
                 raise ValueError(f'{kind} field {field} must be a non-empty string')
+        if kind=='schema_sft':
+            # Pilot: the schema task only (the website's use), prompt -> JSON answer.
+            row['completion']=row.pop('answer')
+            row.pop('ground_truth_json',None)
+            prepared.append(row)
+            continue
+        if kind in ('sft','uncurated_sft'):
+            # AlignTune turns prompt/completion into user/assistant messages and
+            # TRL renders them with the chat template (identical to inference);
+            # assistant_only_loss restricts the loss to the answer and <|im_end|>.
+            # The prompt therefore stays raw here; rendering it would double-template.
+            row['prompt']=row.pop('instruction')+(('\n'+row['input']) if row.get('input') else '')
+            row.pop('input',None)
+            row['completion']=row.pop('output')
+            prepared.append(row)
+            continue
         message=[{'role':'user','content':row['prompt']}]
         row['prompt']=message if kind=='rlvr' else tokenizer.apply_chat_template(message,tokenize=False,add_generation_prompt=True)
         prepared.append(row)
     write_jsonl(destination,prepared)
-    info={'format':'chat_messages' if kind=='rlvr' else 'chat_template_rendered_prompt','source':str(Path(source).resolve()),
+    info={'format':'chat_messages' if kind=='rlvr' else 'chat_template_rendered_prompt' if kind=='dpo' else 'messages_rendered_by_trl_assistant_only_loss','source':str(Path(source).resolve()),
         'source_sha256':file_digest(source),'prepared':str(Path(destination).resolve()),'prepared_sha256':file_digest(destination)}
-    if kind=='dpo':
+    if kind!='rlvr':
         info.update(eos_token=tokenizer.eos_token,chat_template_sha256=digest(tokenizer.chat_template))
     return info
 
@@ -188,7 +204,20 @@ def check_data(args):
             raise ValueError(f"Training split {kind} is missing or empty")
     return manifest
 
+PILOT_ROOT=ROOT/'artifacts/pilot'
+
 def validate_smoke_options(args):
+    if getattr(args,'unreviewed_pilot',False):
+        # Explicitly labelled research pilot on the unreviewed synthetic corpus.
+        # Its adapters can never be merged, promoted or served as fine-tuned.
+        if args.stage!='curated-sft' or not args.allow_bootstrap_data or getattr(args,'smoke_test',False):
+            raise ValueError('--unreviewed-pilot supports curated-sft with --allow-bootstrap-data only, and not with --smoke-test')
+        manifest=json.loads((args.data/'manifest.json').read_text())
+        if manifest.get('smoke_test_only'):
+            raise ValueError('The pilot trains on the processed corpus, not the smoke fixtures')
+        if not args.output.resolve().is_relative_to(PILOT_ROOT.resolve()):
+            raise ValueError('Pilot outputs must remain under artifacts/pilot')
+        return
     if args.allow_bootstrap_data:
         if not getattr(args,'smoke_test',False) or args.max_steps!=1:
             raise ValueError('Bootstrap override is restricted to an explicit one-step --smoke-test')
@@ -205,9 +234,12 @@ def validate_smoke_options(args):
 def training_settings(args, torch):
     """Shared specialist settings; laptop profile is experimental smoke-only."""
     laptop=getattr(args, 'profile', 'default')=='laptop-6gb'
+    pilot=getattr(args,'unreviewed_pilot',False)
     if laptop:
-        if not getattr(args,'smoke_test',False) or not args.allow_bootstrap_data or args.max_steps!=1 or args.stage not in {'schema','empathy'}:
-            raise ValueError('laptop-6gb is restricted to one-step synthetic schema/empathy smoke tests')
+        smoke_ok=getattr(args,'smoke_test',False) and args.allow_bootstrap_data and args.max_steps==1 and args.stage in {'schema','empathy'}
+        pilot_ok=pilot and args.allow_bootstrap_data and args.stage=='curated-sft'
+        if not (smoke_ok or pilot_ok):
+            raise ValueError('laptop-6gb is restricted to one-step synthetic schema/empathy smoke tests or the labelled curated-sft pilot')
         if args.allow_cpu or not torch.cuda.is_available():
             raise ValueError('laptop-6gb requires CUDA; no CPU fallback')
     bf16=torch.cuda.is_available() and torch.cuda.is_bf16_supported()
@@ -217,6 +249,11 @@ def training_settings(args, torch):
         lora_target_modules=['q_proj','v_proj'] if laptop else TARGET_MODULES,
         gradient_accumulation_steps=2,trust_remote_code=False,
         bf16=bf16,fp16=torch.cuda.is_available() and not bf16)
+    if laptop and pilot:
+        # LoRA SFT needs a far larger step than RL fine-tuning; adapt all
+        # projections so the pilot measures a meaningful adapter.
+        common.update(learning_rate=1e-4,max_seq_length=1280,lora_r=16,lora_alpha=32,
+            lora_target_modules=TARGET_MODULES,gradient_accumulation_steps=8)
     if laptop:
         common.update(quantization={'load_in_4bit':True,'bnb_4bit_quant_type':'nf4',
             'bnb_4bit_use_double_quant':True,'bnb_4bit_compute_dtype':'bfloat16' if bf16 else 'float16'},
@@ -225,7 +262,7 @@ def training_settings(args, torch):
             gradient_checkpointing_kwargs={'use_reentrant':False},
             optimizer='adamw_bnb_8bit',optim='adamw_bnb_8bit',optimizer_type='adamw_bnb_8bit',
             rollout_backend='hf',use_vllm=False,use_cache=False,
-            logging_steps=1,save_steps=1,save_interval=1,save_total_limit=1,
+            logging_steps=5 if pilot else 1,save_steps=50 if pilot else 1,save_interval=50 if pilot else 1,save_total_limit=2 if pilot else 1,
             eval_strategy='no',report_to='none',loggers=[],caching_enabled=False,
             cache_dir=str(args.output/'cache'))
     specific={}
@@ -291,11 +328,13 @@ def train(args):
         shared_identity=pin_materialized_weights(shared_identity,model_path)
     if args.stage=='schema': register_reward()
     kind='rlvr' if args.stage=='schema' else 'dpo' if args.stage=='empathy' else 'sft' if args.stage=='curated-sft' else 'uncurated_sft'
-    dataset_path=args.data/'train'/(kind+'.jsonl')
+    if getattr(args,'unreviewed_pilot',False):
+        kind='schema_sft' # longest schema example is 1,124 tokens; dual SFT (1,623) does not fit 6 GB
+    dataset_path=args.data/'train'/(('rlvr' if kind=='schema_sft' else kind)+'.jsonl')
     training_data={'format':'source','source':str(dataset_path.resolve()),'source_sha256':file_digest(dataset_path)} if dataset_path.is_file() else None
     if kind in CHAT_FORMATTED:
         tokenizer=None
-        if kind=='dpo':
+        if kind!='rlvr':
             from transformers import AutoTokenizer
             local=Path(str(model_path)).is_dir()
             tokenizer=AutoTokenizer.from_pretrained(model_path,revision=None if local else getattr(args,'revision',None),trust_remote_code=False)
@@ -305,14 +344,26 @@ def train(args):
     if args.stage in {'schema','empathy'}:
         trainer=create_rl_trainer(**factory_kwargs,**specific)
     else:
-        trainer=create_sft_trainer(**factory_kwargs,field_mappings={'instruction':'instruction','input':'input','output':'output'})
+        trainer=create_sft_trainer(**factory_kwargs,assistant_only_loss=True,field_mappings={'prompt':'prompt','completion':'completion'})
+        if getattr(args,'unreviewed_pilot',False):
+            # TRL 1.7.1 chunked_nll: identical NLL, but lm_head runs only on
+            # unmasked tokens in chunks (no full-vocabulary logits). Valid since
+            # lm_head carries no LoRA. AlignTune's validator predates it and
+            # accepts only nll/dft, so it is set after construction.
+            trainer.config.train.loss_type='chunked_nll'
     if getattr(args,'profile','default')=='laptop-6gb':
         trainer.config.model.attn_implementation='sdpa'
         # Pinned DPO backend reads optimizer_type; its dataclass stores optimizer.
         # Keep both aliases explicit instead of silently reverting to AdamW fp32.
         trainer.config.train.optimizer_type=common['optimizer_type']
         actual=trainer.config.model
-        if actual.quantization!=common['quantization'] or actual.lora_r!=8 or actual.lora_alpha!=16 or actual.lora_target_modules!=['q_proj','v_proj'] or not actual.gradient_checkpointing or trainer.config.train.max_length!=1280:
+        peft=getattr(actual,'peft',None)
+        if peft is not None: # SFT config layout
+            retained=(peft.rank,peft.alpha,list(peft.target_modules),actual.max_seq_length)
+            if trainer.config.train.assistant_only_loss is not True or (getattr(args,'unreviewed_pilot',False) and trainer.config.train.loss_type!='chunked_nll'): raise ValueError('AlignTune did not retain assistant-only chunked SFT loss')
+        else:
+            retained=(actual.lora_r,actual.lora_alpha,actual.lora_target_modules,trainer.config.train.max_length)
+        if actual.quantization!=common['quantization'] or retained!=(common['lora_r'],common['lora_alpha'],common['lora_target_modules'],common['max_seq_length']) or not actual.gradient_checkpointing:
             raise ValueError('AlignTune did not retain the requested QLoRA configuration')
         if args.stage=='empathy':
             extra=getattr(trainer.config.train,'extra_params',None) or {}
@@ -352,7 +403,7 @@ def train(args):
     adapter = next((p for p in candidates if (p / "adapter_config.json").exists() and (p / "adapter_model.safetensors").exists()), None)
     if adapter is None:
         raise RuntimeError("Trainer returned without a saved LoRA adapter. Inspect its output before continuing.")
-    manifest = {"identity": shared_identity, "dataset_manifest_sha256": digest((args.data / "manifest.json").read_bytes()), "algorithm": "drgrpo" if args.stage == "schema" else "dpo" if args.stage == "empathy" else "sft", "versions": package_versions(), "stage": args.stage, "seed": SEED, "profile": getattr(args,"profile","default"), "training_settings": common, "peak_cuda_allocated_bytes": torch.cuda.max_memory_allocated() if laptop else None, "peak_cuda_reserved_bytes": torch.cuda.max_memory_reserved() if laptop else None, "bootstrap_smoke_run": args.allow_bootstrap_data, "smoke_test_only": getattr(args,"smoke_test",False), "adapter_path": str(adapter.resolve()), "training_data": training_data}
+    manifest = {"identity": shared_identity, "dataset_manifest_sha256": digest((args.data / "manifest.json").read_bytes()), "algorithm": "drgrpo" if args.stage == "schema" else "dpo" if args.stage == "empathy" else "sft", "versions": package_versions(), "stage": args.stage, "seed": SEED, "profile": getattr(args,"profile","default"), "training_settings": common, "peak_cuda_allocated_bytes": torch.cuda.max_memory_allocated() if laptop else None, "peak_cuda_reserved_bytes": torch.cuda.max_memory_reserved() if laptop else None, "bootstrap_smoke_run": args.allow_bootstrap_data, "smoke_test_only": getattr(args,"smoke_test",False), "unreviewed_pilot": getattr(args,"unreviewed_pilot",False), "adapter_path": str(adapter.resolve()), "training_data": training_data}
     manifest["training_outcome"] = training_outcome(output, adapter)
     write_manifest(adapter, output, manifest)
     print(json.dumps(manifest, indent=2))
@@ -425,7 +476,7 @@ def merge(args):
     manifests = [item[1] for item in resolved]
     if manifests[0]["identity"] != manifests[1]["identity"]:
         raise ValueError("Adapters differ in base revision/weights, tokenizer, rank, alpha or target modules")
-    if any(m.get("smoke_test_only") or m.get("bootstrap_smoke_run") for m in manifests):
+    if any(m.get("smoke_test_only") or m.get("bootstrap_smoke_run") or m.get("unreviewed_pilot") for m in manifests):
         raise ValueError("Synthetic smoke adapters cannot be merged as final artifacts")
     if any((m.get("training_outcome") or {}).get("parameters_updated") is not True for m in manifests):
         raise ValueError("Both adapters must have a verified, applied optimizer update")
@@ -469,14 +520,15 @@ def main():
     parser.add_argument("--smoke-test", action="store_true", help="One-step synthetic fixture training, isolated under artifacts/smoke-test")
     parser.add_argument("--allow-cpu", action="store_true")
     parser.add_argument("--profile", choices=["default","laptop-6gb"], default="default")
+    parser.add_argument("--unreviewed-pilot", action="store_true", help="Labelled curated-sft pilot on the unreviewed synthetic corpus; outputs under artifacts/pilot, never mergeable")
     parser.add_argument("--check-config", action="store_true", help="Instantiate AlignTune configuration/rewards only; no weights or training")
     args = parser.parse_args()
     if not 0 <= args.schema_weight <= 1 or args.max_steps < 1:
         parser.error("Weights must be between 0 and 1; steps must be positive")
-    if args.profile=="laptop-6gb" and args.stage not in {"schema","empathy"}:
+    if args.profile=="laptop-6gb" and args.stage not in {"schema","empathy"} and not (args.unreviewed_pilot and args.stage=="curated-sft"):
         parser.error("laptop-6gb supports schema/empathy smoke tests only")
-    if args.check_config and args.stage not in {"schema","empathy"}:
-        parser.error("--check-config supports schema/empathy only")
+    if args.check_config and args.stage not in {"schema","empathy"} and not (args.unreviewed_pilot and args.stage=="curated-sft"):
+        parser.error("--check-config supports schema/empathy, or the curated-sft pilot")
     if args.stage == "plan":
         print(json.dumps({"executed": False, "base": args.base, "shared_base": str(args.shared_base) if args.shared_base else args.base, "stages": STAGES[1:], "versions": package_versions(), "shared_vocabulary_required": True, "default_tokenizer": "unchanged until adapt-tokenizer is explicitly run", "weights": [args.schema_weight, round(1-args.schema_weight, 6)], "measured_results": None}, indent=2))
     elif args.stage == "merge":
