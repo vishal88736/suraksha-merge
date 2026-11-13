@@ -12,7 +12,7 @@ Implementation executed on 12 November 2026. No model has been trained or evalua
 - Published tokenizer maximum ID 151,664 fits the configured 151,936 embedding rows. Padding above tokenizer vocabulary is valid. Actual input/output weight tensors have not been loaded.
 - `nvidia-smi` currently detects an RTX 4050 Laptop GPU with 6,141 MiB total VRAM (5,851 MiB free during the probe). PyTorch, Transformers, AlignTune, PEFT, TRL, Accelerate and safetensors are not installed in the current curation environment.
 - CUDA via PyTorch, live AlignTune factory/reward registration, actual embeddings and real training/checkpoint saving: **BLOCKED**. Driver visibility alone does not establish CUDA training readiness.
-- Planning estimates for unquantized bf16 LoRA: 5.76 GiB base weights alone; approximately 24–48 GiB for DR-GRPO and 16–32 GiB for DPO, depending on activations, generation/reference storage and optimizer implementation. These are estimates, not measured peaks. This 6 GB GPU is unsuitable for the current configuration. Quantization/offloading are not configured or validated.
+- Planning estimates for unquantized bf16 LoRA: 5.76 GiB base weights alone; approximately 24–48 GiB for DR-GRPO and 16–32 GiB for DPO, depending on activations, generation/reference storage and optimizer implementation. These are estimates, not measured peaks. This 6 GB GPU is unsuitable for the current configuration. The default profile is unquantized. A later experimental NF4 smoke profile is documented in [LAPTOP_SMOKE.md](LAPTOP_SMOKE.md); actual model allocation remains unverified.
 
 ## Human review CLI
 
@@ -163,3 +163,5 @@ Use a fresh output for each run. Both commands require a working CUDA runtime by
 6. Start `--stage schema` (DR-GRPO) and `--stage empathy` (DPO) with `--data data/processed/upi-reviewed-v1`, the same immutable base revision and a fresh checkpoint output; omit both bootstrap/smoke flags. Inspect the default review guard and dataset hashes before launching.
 
 No real checkpoint, inference result, model accuracy, empathy score or measured training-memory peak is claimed by this implementation.
+
+For the installed RTX 4050 environment and an isolated four-bit training attempt, use [the laptop NF4 smoke commands](LAPTOP_SMOKE.md). Full training and evaluation review gates remain unchanged.

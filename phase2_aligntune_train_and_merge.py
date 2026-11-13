@@ -115,6 +115,44 @@ def validate_smoke_options(args):
     elif getattr(args,'smoke_test',False):
         raise ValueError('Synthetic smoke testing requires --allow-bootstrap-data')
 
+def training_settings(args, torch):
+    """Shared specialist settings; laptop profile is experimental smoke-only."""
+    laptop=getattr(args, 'profile', 'default')=='laptop-6gb'
+    if laptop:
+        if not getattr(args,'smoke_test',False) or not args.allow_bootstrap_data or args.max_steps!=1 or args.stage not in {'schema','empathy'}:
+            raise ValueError('laptop-6gb is restricted to one-step synthetic schema/empathy smoke tests')
+        if args.allow_cpu or not torch.cuda.is_available():
+            raise ValueError('laptop-6gb requires CUDA; no CPU fallback')
+    bf16=torch.cuda.is_available() and torch.cuda.is_bf16_supported()
+    common=dict(backend='trl',num_epochs=1,max_steps=args.max_steps,batch_size=1,
+        learning_rate=5e-6,max_seq_length=1280 if laptop else 2048,seed=SEED,
+        use_peft=True,lora_r=8 if laptop else 32,lora_alpha=16 if laptop else 64,
+        lora_target_modules=['q_proj','v_proj'] if laptop else TARGET_MODULES,
+        gradient_accumulation_steps=2,trust_remote_code=False,
+        bf16=bf16,fp16=torch.cuda.is_available() and not bf16)
+    if laptop:
+        common.update(quantization={'load_in_4bit':True,'bnb_4bit_quant_type':'nf4',
+            'bnb_4bit_use_double_quant':True,'bnb_4bit_compute_dtype':'bfloat16' if bf16 else 'float16'},
+            precision='bf16' if bf16 else 'fp16',device_map={'':0},
+            use_gradient_checkpointing=True,gradient_checkpointing=True,
+            gradient_checkpointing_kwargs={'use_reentrant':False},
+            optimizer='adamw_bnb_8bit',optim='adamw_bnb_8bit',optimizer_type='adamw_bnb_8bit',
+            rollout_backend='hf',use_vllm=False,use_cache=False,
+            logging_steps=1,save_steps=1,save_interval=1,save_total_limit=1,
+            eval_strategy='no',report_to='none',loggers=[],caching_enabled=False,
+            cache_dir=str(args.output/'cache'))
+    specific={}
+    if args.stage=='schema':
+        specific=dict(algorithm='drgrpo',reward_functions=['suraksha_schema_exact'],
+            field_mappings={'prompt':'prompt','answer':'answer'},preserve_columns=['answer','ground_truth_json'],
+            num_generations=2,max_prompt_length=1024 if laptop else 1536,
+            max_completion_length=256 if laptop else 512)
+        if laptop: specific.update(loss_type='dr_grpo',beta=0.0,generation_batch_size=2)
+    elif args.stage=='empathy':
+        specific=dict(algorithm='dpo',beta=.1,field_mappings={'prompt':'prompt','chosen':'chosen','rejected':'rejected'})
+        if laptop: specific.update(max_prompt_length=1024,max_completion_length=256)
+    return common,specific
+
 def register_reward():
     from aligntune.rewards.core import RewardConfig, RewardFunction, RewardType
     from aligntune.rewards.registry import RewardRegistry
@@ -138,22 +176,57 @@ def train(args):
     check_data(args)
     torch = require_gpu(args.allow_cpu)
     from aligntune.core.backend_factory import create_rl_trainer, create_sft_trainer
-    shared_base = resolve_shared_base(args)
-    shared_identity = identity(str(shared_base), getattr(args, "revision", None))
-    model_path = materialize_base(shared_base, shared_identity)
-    output = args.output / args.stage
-    if output.exists() and ((output / "adapter_model.safetensors").exists() or any(output.glob("checkpoint-*"))):
-        raise ValueError("This output already contains checkpoints; choose a fresh --output to preserve prior runs")
-    common = dict(model_name=model_path, backend="trl", output_dir=str(args.output / args.stage), num_epochs=1, max_steps=args.max_steps, batch_size=1, learning_rate=5e-6, max_seq_length=2048, seed=SEED, use_peft=True, lora_r=32, lora_alpha=64, lora_target_modules=TARGET_MODULES, gradient_accumulation_steps=2, trust_remote_code=False, bf16=torch.cuda.is_available() and torch.cuda.is_bf16_supported(), fp16=torch.cuda.is_available() and not torch.cuda.is_bf16_supported())
-    if args.stage == "schema":
-        register_reward()
-        trainer = create_rl_trainer(**common, dataset_name=str(args.data / "train/rlvr.jsonl"), algorithm="drgrpo", reward_functions=["suraksha_schema_exact"], field_mappings={"prompt": "prompt", "answer": "answer"}, preserve_columns=["answer", "ground_truth_json"], num_generations=2, max_prompt_length=1536, max_completion_length=512)
-    elif args.stage == "empathy":
-        trainer = create_rl_trainer(**common, dataset_name=str(args.data / "train/dpo.jsonl"), algorithm="dpo", beta=0.1, field_mappings={"prompt": "prompt", "chosen": "chosen", "rejected": "rejected"})
+    common,specific=training_settings(args,torch)
+    shared_base=resolve_shared_base(args)
+    output=args.output/args.stage
+    if output.exists() and ((output/'adapter_model.safetensors').exists() or any(output.glob('checkpoint-*'))):
+        raise ValueError('This output already contains checkpoints; choose a fresh --output')
+    check_only=getattr(args,'check_config',False)
+    shared_identity=None
+    if check_only:
+        model_path=str(shared_base) # Factory configuration only: no weight materialization.
     else:
-        dataset = "sft" if args.stage == "curated-sft" else "uncurated_sft"
-        trainer = create_sft_trainer(**common, dataset_name=str(args.data / f"train/{dataset}.jsonl"), field_mappings={"instruction": "instruction", "input": "input", "output": "output"})
-    trainer.train()
+        shared_identity=identity(str(shared_base),getattr(args,'revision',None))
+        shared_identity.update(rank=common['lora_r'],alpha=common['lora_alpha'],target_modules=common['lora_target_modules'])
+        model_path=materialize_base(shared_base,shared_identity)
+    if args.stage=='schema': register_reward()
+    kind='rlvr' if args.stage=='schema' else 'dpo' if args.stage=='empathy' else 'sft' if args.stage=='curated-sft' else 'uncurated_sft'
+    factory_kwargs=dict(common,model_name=model_path,output_dir=str(output),dataset_name=str(args.data/'train'/(kind+'.jsonl')))
+    if args.stage in {'schema','empathy'}:
+        trainer=create_rl_trainer(**factory_kwargs,**specific)
+    else:
+        trainer=create_sft_trainer(**factory_kwargs,field_mappings={'instruction':'instruction','input':'input','output':'output'})
+    if getattr(args,'profile','default')=='laptop-6gb':
+        trainer.config.model.attn_implementation='sdpa'
+        # Pinned DPO backend reads optimizer_type; its dataclass stores optimizer.
+        # Keep both aliases explicit instead of silently reverting to AdamW fp32.
+        trainer.config.train.optimizer_type=common['optimizer_type']
+        actual=trainer.config.model
+        if actual.quantization!=common['quantization'] or actual.lora_r!=8 or actual.lora_alpha!=16 or actual.lora_target_modules!=['q_proj','v_proj'] or not actual.gradient_checkpointing or trainer.config.train.max_length!=1280:
+            raise ValueError('AlignTune did not retain the requested QLoRA configuration')
+    if check_only:
+        # Reward setup instantiates the custom registry scorer, without model loading.
+        reward_scores=None
+        if args.stage=='schema':
+            trainer.setup_rewards()
+            row=read_jsonl(args.data/'train/rlvr.jsonl')[0]
+            reward_scores=trainer.prepared_rewards.functions[0](prompts=[row['prompt']],completions=[row['answer']],answer=[row['answer']],ground_truth_json=[row['ground_truth_json']])
+            if reward_scores!=[1.0]: raise ValueError('Actual AlignTune reward bridge failed the exact JSON fixture')
+        report={'status':'PASSED','scope':'actual AlignTune factory/config and custom reward setup; no model weights or optimizer step',
+            'profile':getattr(args,'profile','default'),'stage':args.stage,'settings':common,'algorithm_settings':specific,
+            'trainer_class':type(trainer).__name__,'fixture_reward_scores':reward_scores,'training_started':False,'weights_loaded':False,
+            'memory_fit':'UNVERIFIED until actual one-step execution'}
+        output.mkdir(parents=True,exist_ok=True)
+        (output/'config_check.json').write_text(json.dumps(report,indent=2)+'\n')
+        print(json.dumps(report,indent=2));return
+    laptop=getattr(args,'profile','default')=='laptop-6gb'
+    if laptop: torch.cuda.reset_peak_memory_stats()
+    try:
+        trainer.train()
+    except torch.cuda.OutOfMemoryError:
+        output.mkdir(parents=True,exist_ok=True)
+        (output/'oom_report.json').write_text(json.dumps({'status':'BLOCKED_BY_GPU_MEMORY','profile':getattr(args,'profile','default'),'stage':args.stage,'completed':False,'peak_cuda_allocated_bytes':torch.cuda.max_memory_allocated(),'peak_cuda_reserved_bytes':torch.cuda.max_memory_reserved()},indent=2)+'\n')
+        raise RuntimeError('GPU memory exhausted. This smoke run did not complete; no training-readiness claim is valid. Use a larger GPU or a smaller base in a fresh smoke output directory.') from None
     output = args.output / args.stage
     output.mkdir(parents=True, exist_ok=True)
     # Trainers normally persist their final model. Verify it rather than claim it.
@@ -161,7 +234,7 @@ def train(args):
     adapter = next((p for p in candidates if (p / "adapter_config.json").exists() and (p / "adapter_model.safetensors").exists()), None)
     if adapter is None:
         raise RuntimeError("Trainer returned without a saved LoRA adapter. Inspect its output before continuing.")
-    manifest = {"identity": shared_identity, "dataset_manifest_sha256": digest((args.data / "manifest.json").read_bytes()), "algorithm": "drgrpo" if args.stage == "schema" else "dpo" if args.stage == "empathy" else "sft", "versions": package_versions(), "stage": args.stage, "seed": SEED, "bootstrap_smoke_run": args.allow_bootstrap_data, "smoke_test_only": getattr(args,"smoke_test",False), "adapter_path": str(adapter.resolve())}
+    manifest = {"identity": shared_identity, "dataset_manifest_sha256": digest((args.data / "manifest.json").read_bytes()), "algorithm": "drgrpo" if args.stage == "schema" else "dpo" if args.stage == "empathy" else "sft", "versions": package_versions(), "stage": args.stage, "seed": SEED, "profile": getattr(args,"profile","default"), "training_settings": common, "peak_cuda_allocated_bytes": torch.cuda.max_memory_allocated() if laptop else None, "peak_cuda_reserved_bytes": torch.cuda.max_memory_reserved() if laptop else None, "bootstrap_smoke_run": args.allow_bootstrap_data, "smoke_test_only": getattr(args,"smoke_test",False), "adapter_path": str(adapter.resolve())}
     write_manifest(adapter, output, manifest)
     print(json.dumps(manifest, indent=2))
 
@@ -271,9 +344,15 @@ def main():
     parser.add_argument("--allow-bootstrap-data", action="store_true")
     parser.add_argument("--smoke-test", action="store_true", help="One-step synthetic fixture training, isolated under artifacts/smoke-test")
     parser.add_argument("--allow-cpu", action="store_true")
+    parser.add_argument("--profile", choices=["default","laptop-6gb"], default="default")
+    parser.add_argument("--check-config", action="store_true", help="Instantiate AlignTune configuration/rewards only; no weights or training")
     args = parser.parse_args()
     if not 0 <= args.schema_weight <= 1 or args.max_steps < 1:
         parser.error("Weights must be between 0 and 1; steps must be positive")
+    if args.profile=="laptop-6gb" and args.stage not in {"schema","empathy"}:
+        parser.error("laptop-6gb supports schema/empathy smoke tests only")
+    if args.check_config and args.stage not in {"schema","empathy"}:
+        parser.error("--check-config supports schema/empathy only")
     if args.stage == "plan":
         print(json.dumps({"executed": False, "base": args.base, "shared_base": str(args.shared_base) if args.shared_base else args.base, "stages": STAGES[1:], "versions": package_versions(), "shared_vocabulary_required": True, "default_tokenizer": "unchanged until adapt-tokenizer is explicitly run", "weights": [args.schema_weight, round(1-args.schema_weight, 6)], "measured_results": None}, indent=2))
     elif args.stage == "merge":

@@ -4,7 +4,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 from research.common import ROOT,read_jsonl,write_jsonl
 from research.human_review import build_queue,record_decision,materialize_reviewed,FIELDS,prepare_evaluation,finalize_evaluation
-from phase2_aligntune_train_and_merge import validate_smoke_options,assert_tokenizer_matches_model,train,register_reward
+from phase2_aligntune_train_and_merge import validate_smoke_options,assert_tokenizer_matches_model,train,register_reward,training_settings
 from scripts.check_training_environment import verify_metadata
 
 class ReviewTests(unittest.TestCase):
@@ -89,6 +89,18 @@ class TrainingChecks(unittest.TestCase):
   bad=SimpleNamespace(get_vocab=lambda:{'a':8})
   with self.assertRaises(ValueError):assert_tokenizer_matches_model(bad,model)
   self.assertEqual(verify_metadata({'vocab_size':8},{'model':{'vocab':{'a':0}},'added_tokens':[{'id':3}]})['status'],'PASSED')
+ def test_laptop_profile_is_shared_nf4_and_smoke_only(self):
+  args=SimpleNamespace(profile='laptop-6gb',allow_bootstrap_data=True,smoke_test=True,max_steps=1,stage='schema',allow_cpu=False,output=ROOT/'artifacts/smoke-test/test-profile')
+  torch=SimpleNamespace(cuda=SimpleNamespace(is_available=lambda:True,is_bf16_supported=lambda:True))
+  common,schema=training_settings(args,torch)
+  args.stage='empathy';other,dpo=training_settings(args,torch)
+  self.assertEqual(common,other);self.assertTrue(common['quantization']['load_in_4bit']);self.assertEqual(common['quantization']['bnb_4bit_quant_type'],'nf4');self.assertEqual(common['lora_r'],8);self.assertEqual(common['lora_target_modules'],['q_proj','v_proj']);self.assertEqual(common['max_seq_length'],1280);self.assertEqual(schema['loss_type'],'dr_grpo');self.assertEqual(schema['num_generations'],2);self.assertEqual(dpo['algorithm'],'dpo')
+  args.max_steps=10
+  with self.assertRaises(ValueError):training_settings(args,torch)
+  args.max_steps=1;args.smoke_test=False
+  with self.assertRaises(ValueError):training_settings(args,torch)
+  args.smoke_test=True;args.allow_cpu=True
+  with self.assertRaises(ValueError):training_settings(args,torch)
  def test_bootstrap_cannot_enable_full_training(self):
   args=SimpleNamespace(allow_bootstrap_data=True,smoke_test=False,max_steps=100)
   with self.assertRaises(ValueError):validate_smoke_options(args)
