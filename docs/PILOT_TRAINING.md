@@ -120,11 +120,61 @@ Reading:
 - **Dual SFT's chrF of 92.9 is template memorisation, not empathy.** The reference replies are deterministic templates from `lib/i18n/replies.ts`. Its fraud rails reached 1.0, but its JSON got slightly worse (tier, delay, category).
 - **Liability tier (15–18/92) is the remaining hard field** for every model. The website accepts a model tier only when it matches the tier derived from verified operator context.
 
-## Not runnable on this laptop
+## Round 3: pilot DPO (step 4) and schema + empathy merge (step 5) (2026-11-14)
 
-- **DPO empathy (step 4)** runs out of memory on 6 GB even with precomputed reference log-probs: full-vocabulary logits need 1.39 GiB, and Liger DPO does not support PEFT. It needs a 16–24 GB GPU.
-- **Schema + empathy merge (step 5)** depends on step 4.
-- **Real-message evaluation (step 8)** needs real, human-reviewed messages.
+### Making DPO fit in 6 GB
+
+TRL 1.7.1's DPO loss materialised full-vocabulary logits over the whole sequence, which caused the earlier out-of-memory error. Each sequence is a ~1,000-token prompt plus both replies. `research/dpo_completion_logits.py` patches `trl.DPOTrainer` in-process, and phase 2 installs it only for the laptop DPO stage:
+
+- **Logits only for the reply window.** The model is called with `logits_to_keep` covering the window from the first reply token, and labels and masks are sliced to match. This is the same objective. The reference log-probs are tested equal to TRL's own full-logits computation (`research/test_dpo_completion_logits.py`).
+- **fp32 log-probs.** The window logits are upcast before log-softmax. Plain bf16 sums lose several nats at |logp| ≈ 1,000, which would swamp the DPO signal.
+- **Frozen weights stay in bf16.** `peft.prepare_model_for_kbit_training` upcasts frozen non-quantized weights (the tied embedding/head and the norms) to fp32. The patch keeps them in their loaded bf16 (182 tensors), while trainable LoRA weights stay fp32.
+
+Measured on the longest pair (1,622 tokens), the step peak went from 5.62 GB to 4.82 GB. The first attempt, with only the logits window, still ran out of memory: 5.44 GB allocated, `artifacts/pilot/dpo-001-oom.log`.
+
+```bash
+HF_HUB_OFFLINE=1 .venv-training/bin/python phase2_aligntune_train_and_merge.py --stage empathy --profile laptop-6gb \
+  --unreviewed-pilot --allow-bootstrap-data --revision aa8e72537993ba99e69dfaafa59ed015b17504d1 \
+  --data data/processed/upi-v1 --output artifacts/pilot/dpo-001 --max-steps 190
+.venv-training/bin/python scripts/merge_pilot_adapter.py --adapter artifacts/pilot/schema-sft-001/curated-sft \
+  --empathy-adapter artifacts/pilot/dpo-001/empathy --schema-weight 0.55 --output artifacts/pilot/merged-schema-empathy-001
+```
+
+### DPO run settings and training metrics
+
+The pilot DPO run used the original pinned base, with LoRA r16/α32 on all seven projection modules. This is the same LoRA shape as the schema SFT pilot, so the two adapters can be combined. Other settings:
+
+- β 0.1, learning rate 2e-5, gradient accumulation 4, max length 1,664
+- 758 pairs, 190 steps
+- reference log-probs precomputed (26 min), training 52 min
+- peak 4.72 GB, `parameters_updated: true`
+
+**The run saturated almost immediately.** By step 35, loss was about 1e-6, reward accuracy 1.0 and the margin about 14. Every rejected reply in `train/dpo.jsonl` is the same one-line guarantee ("Your refund is 100% guaranteed…", ≤52 tokens). The pairs are trivially separable, and because a DPO gradient scales with the loss, the remaining ~155 steps taught almost nothing.
+
+### Results (92 synthetic test cases; full report `artifacts/pilot/eval/evaluation-all.json`)
+
+| Metric | Base | Schema SFT | DPO adapter | Schema + empathy merge (0.55/0.45) |
+|---|---|---|---|---|
+| Strict schema pass | 0.000 | 1.000 | 0.000 | 0.989 |
+| All 8 fields exact | 0.000 | 0.728 | 0.000 | **0.000** |
+| Per-field exact | 0 | 0.959 | 0 | 0.773 |
+| UTR + tier exact | 0.000 | 0.837 | 0.000 | 0.652 |
+| Guarantee-pattern rate | 0.000 | 0.000 | 0.000 | **0.011** (1 case) |
+| Fraud rails (reply) | 0.609 | 0.826 | 0.609 | 0.859 |
+| chrF vs reference reply | 13.8 | 19.7 | 20.3 | 20.1 |
+| Utility | 0.000 | 0.857 | 0.000 | 0.563 |
+| Latency per case | 8.0 s | 13.2 s | 17.9 s | 9.0 s |
+
+- **The DPO adapter changes the wording of every reply but not its substance.** chrF rose only from 13.8 to 20.3, and fraud rails are unchanged. Its JSON is still the base model's `JSON:`-prefixed output, which is expected because it was trained only on replies.
+- **The step 5 merge is significantly worse than schema SFT:** utility −0.293, 95% CI [−0.368, −0.204]. Mandatory actions are wrong in 83/92 cases, panic severity in 36 and the tier in 31. The convex 0.55/0.45 weighting scales the schema update down to 55%, which undoes much of it. One reply matched the unauthorized-guarantee pattern.
+- **Conclusion for the real pipeline:**
+  - Before reviewed training, the DPO data needs harder rejected replies: policy-violating but fluent, case-specific replies. A single canned sentence is not enough.
+  - The merge weights need re-selecting on a validation split, for example full-strength task vectors. The current default is 0.55/0.45.
+  - Neither pilot model should be served. The best pilot for serving is still `merged-schema-sft-001`.
+
+## Still not possible
+
+- **Real-message evaluation (step 8)** needs real, human-reviewed messages; there are none.
 
 ## AI pre-screen of the review queue
 

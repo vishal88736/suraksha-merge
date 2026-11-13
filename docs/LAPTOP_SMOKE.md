@@ -68,6 +68,8 @@ All runs: Qwen2.5-3B-Instruct @ `aa8e7253…`, NF4 + double quant, bf16 compute,
 | `laptop-nf4-002` | empathy (DPO) | **OOM** in policy forward (1.39 GiB full-vocab logits) | 4.86 GB / 5.41 GB |
 | `laptop-nf4-003` | empathy (DPO, precomputed reference log-probs) | Reference precompute succeeded; **OOM** in policy forward (needs 1.39 GiB, 1.07 GiB free) | 4.94 GB / 5.51 GB |
 
+Update (2026-11-14): DPO now fits. `research/dpo_completion_logits.py` computes logits only for the completion window, upcasts them to fp32 for log-probs, and keeps frozen weights in bf16. The pilot DPO run peaked at 4.72 GB; see docs/PILOT_TRAINING.md (round 3).
+
 What this establishes: NF4 Qwen 3B loads, generates GRPO rollouts, scores them with the real reward, runs the GRPO trainer step and saves an adapter within ~4.2 GB on this GPU. It does **not** establish an applied optimizer update for either stage, and DPO at these sequence lengths (~1,229 tokens per side) does not fit in 6 GB.
 
 ### Fixes from these runs
