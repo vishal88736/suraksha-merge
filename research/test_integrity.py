@@ -16,27 +16,35 @@ class IntegrityTests(unittest.TestCase):
         self.rows=read_jsonl(ROOT/'data/seeds/synthetic_cases.jsonl')
         self.target=self.rows[0]['target']
     def test_remote_weights_and_tokenizer_share_the_resolved_revision(self):
-        token_calls=[]
+        calls=[];sha='a'*40
         class Config:
             @staticmethod
             def from_pretrained(source, **kwargs):
-                self.assertEqual(kwargs["revision"], "requested-branch")
-                return SimpleNamespace(_commit_hash="immutable-fixture-revision")
+                calls.append(('config',kwargs));return SimpleNamespace() # Transformers 5: no private hash.
         class Tokenizer:
             def __len__(self):return 2
-            def get_vocab(self):return {"a":0,"b":1}
+            def get_vocab(self):return {'a':0,'b':1}
             @staticmethod
             def from_pretrained(source, **kwargs):
-                token_calls.append(kwargs)
-                return Tokenizer()
-        hub=SimpleNamespace(snapshot_download=lambda **kwargs: kwargs)
-        with patch.dict("sys.modules", {"transformers":SimpleNamespace(AutoConfig=Config, AutoTokenizer=Tokenizer), "huggingface_hub":hub}):
-            ident=identity("org/fixture-only", "requested-branch")
-            loaded=materialize_base("org/fixture-only", ident)
-        self.assertEqual(token_calls[0]["revision"], "immutable-fixture-revision")
-        self.assertFalse(token_calls[0]["trust_remote_code"])
-        self.assertEqual(loaded["revision"], "immutable-fixture-revision")
-        self.assertIn("*.jinja", loaded["allow_patterns"])
+                calls.append(('tokenizer',kwargs));return Tokenizer()
+        class API:
+            def model_info(self,**kwargs):
+                calls.append(('api',kwargs));return SimpleNamespace(sha=sha)
+        hub=SimpleNamespace(HfApi=API,snapshot_download=lambda **kwargs:kwargs)
+        with patch.dict('sys.modules',{'transformers':SimpleNamespace(AutoConfig=Config,AutoTokenizer=Tokenizer),'huggingface_hub':hub}):
+            ident=identity('org/fixture-only','requested-branch');loaded=materialize_base('org/fixture-only',ident)
+            self.assertEqual(calls[0],('api',{'repo_id':'org/fixture-only','revision':'requested-branch'}))
+            for kind,kwargs in calls[1:]:
+                self.assertEqual(kwargs['revision'],sha);self.assertFalse(kwargs['trust_remote_code'])
+            self.assertEqual(loaded['revision'],sha);self.assertIn('*.jinja',loaded['allow_patterns'])
+            calls.clear();explicit=identity('org/fixture-only',sha)
+            self.assertEqual(explicit['base_revision'],sha)
+            self.assertEqual([kind for kind,_ in calls],['config','tokenizer'])
+            self.assertTrue(all(kw['revision']==sha for _,kw in calls))
+            calls.clear()
+            with patch.object(API,'model_info',return_value=SimpleNamespace(sha='main')):
+                with self.assertRaises(ValueError):identity('org/fixture-only')
+            self.assertFalse(calls) # Never load unpinned model/tokenizer after invalid resolution.
 
     def test_checkpoint_only_outputs_resolve_without_loading_a_model(self):
         with tempfile.TemporaryDirectory() as tmp:

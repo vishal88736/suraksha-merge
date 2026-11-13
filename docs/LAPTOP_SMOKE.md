@@ -50,3 +50,9 @@ After schema completes successfully, attempt the DPO step:
 Use a new run directory for retries after any saved checkpoint. If GPU memory runs out, the script reports an incomplete run in `oom_report.json`; no successful adapter manifest is fabricated. Do not automatically fall back to CPU or silently change the model. Close other GPU workloads, or use a smaller base / larger GPU in a separately labelled experiment. A successful step verifies only that this tiny setup runs and saves an adapter on that host. It does not establish that longer real training or all regional examples fit.
 
 Successful real smoke manifests record the actual shared rank/alpha/modules, NF4 settings and peak CUDA allocated/reserved bytes. The existing checkpoint hash safeguards remain active. No real optimizer step or model evaluation was run during implementation of this profile. Human review remains required before full training.
+
+## Transformers 5 revision compatibility
+
+The identity check resolves and pins the public Hub revision before loading configuration or tokenizer. An explicit 40-character commit is retained directly; floating branches/tags are resolved to a commit through `HfApi.model_info`. It no longer depends on `config._commit_hash`, which is absent in the installed Transformers 5 version. The explicit Qwen revision was verified offline with the actual cached config/tokenizer (151,665 tokenizer entries). No weight loading or training was involved in that check.
+
+If a previous run stopped at the identity check, reuse its output directory because no checkpoint was created. Cached completed downloads are reused. For slow downloads, prefix the training command with `HF_HUB_DOWNLOAD_TIMEOUT=120 HF_HUB_ETAG_TIMEOUT=60`. Do not set `HF_HUB_OFFLINE=1` for the training retry unless all model weights are already cached.

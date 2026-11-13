@@ -31,29 +31,37 @@ def package_versions():
     return out
 
 def identity(model_name, revision=None):
+    """Resolve the public Hub revision before loading config/tokenizer.
+
+    Transformers 5 no longer retains config._commit_hash. A full requested SHA
+    is already immutable; floating refs must be resolved through the Hub API.
+    """
+    import re
     from transformers import AutoConfig, AutoTokenizer
-    config = AutoConfig.from_pretrained(model_name, revision=revision, trust_remote_code=False)
-    resolved_revision = getattr(config, "_commit_hash", None) if not Path(model_name).is_dir() else None
-    tok = AutoTokenizer.from_pretrained(model_name, revision=resolved_revision, trust_remote_code=False)
-    # Include actual local model bytes for adapted bases and an immutable HF
-    # revision for downloaded bases. A matching path/name alone is insufficient.
-    model_path = Path(model_name)
-    weight_hashes = {}
+    model_path=Path(model_name)
+    resolved_revision=None
+    if not model_path.is_dir():
+        if isinstance(revision,str) and re.fullmatch(r'[0-9a-fA-F]{40}',revision):
+            resolved_revision=revision.lower()
+        else:
+            from huggingface_hub import HfApi
+            resolved_revision=HfApi().model_info(repo_id=str(model_name),revision=revision or 'main').sha
+            if not isinstance(resolved_revision,str) or not re.fullmatch(r'[0-9a-fA-F]{40}',resolved_revision):
+                raise ValueError('Hub did not return an immutable model revision')
+            resolved_revision=resolved_revision.lower()
+    AutoConfig.from_pretrained(model_name,revision=resolved_revision,trust_remote_code=False)
+    tok=AutoTokenizer.from_pretrained(model_name,revision=resolved_revision,trust_remote_code=False)
+    weight_hashes={}
     if model_path.is_dir():
-        for pattern in ("*.safetensors", "pytorch_model*.bin"):
+        for pattern in ('*.safetensors','pytorch_model*.bin'):
             for path in sorted(model_path.glob(pattern)):
-                import hashlib
-                h = hashlib.sha256()
-                with path.open("rb") as stream:
-                    for block in iter(lambda: stream.read(8 * 1024 * 1024), b""):
-                        h.update(block)
-                weight_hashes[path.name] = h.hexdigest()
+                weight_hashes[path.name]=file_digest(path)
         if not weight_hashes:
-            raise ValueError("Local shared base has no model weights")
-    revision = getattr(config, "_commit_hash", None)
-    if not weight_hashes and not revision:
-        raise ValueError("Could not resolve an immutable shared-base revision")
-    return {"base_model": "local-checkpoint" if model_path.is_dir() else model_name, "base_revision": revision, "base_weights": weight_hashes, "tokenizer_sha256": digest(tok.get_vocab()), "tokenizer_size": len(tok), "target_modules": TARGET_MODULES, "rank": 32, "alpha": 64}
+            raise ValueError('Local shared base has no model weights')
+    return {'base_model':'local-checkpoint' if model_path.is_dir() else model_name,
+        'base_revision':resolved_revision,'base_weights':weight_hashes,
+        'tokenizer_sha256':digest(tok.get_vocab()),'tokenizer_size':len(tok),
+        'target_modules':TARGET_MODULES,'rank':32,'alpha':64}
 
 def materialize_base(source, base_identity):
     """Load remote weights from the same immutable revision recorded in provenance."""
