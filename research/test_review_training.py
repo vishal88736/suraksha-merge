@@ -212,4 +212,22 @@ class TrainingChecks(unittest.TestCase):
    src2=data/'rlvr.jsonl';write_jsonl(src2,[{'prompt':'P','answer':'{"a":1}','ground_truth_json':{'a':1},'provenance':{}}])
    chat_formatted_dataset(src2,data/'out2.jsonl','schema_sft',tok)
    self.assertEqual(read_jsonl(data/'out2.jsonl'),[{'prompt':'P','completion':'{"a":1}','provenance':{}}])
+ def test_pilot_grpo_requires_a_verified_pilot_merge(self):
+  from phase2_aligntune_train_and_merge import PILOT_ROOT,weight_digests
+  with tempfile.TemporaryDirectory(dir=PILOT_ROOT.parent) as tmp:
+   data=Path(tmp)/'data';data.mkdir();(data/'manifest.json').write_text(json.dumps({'bootstrap_only':True}))
+   base=PILOT_ROOT/('test-merge-'+Path(tmp).name);base.mkdir(parents=True)
+   self.addCleanup(lambda:__import__('shutil').rmtree(base,ignore_errors=True))
+   (base/'model.safetensors').write_bytes(b'fixture')
+   args=SimpleNamespace(stage='schema',unreviewed_pilot=True,allow_bootstrap_data=True,smoke_test=False,data=data,output=PILOT_ROOT/'grpo-x',shared_base=None)
+   with self.assertRaises(ValueError):validate_smoke_options(args) # no base
+   args.shared_base=base
+   with self.assertRaises(ValueError):validate_smoke_options(args) # no merge record
+   (base/'suraksha_pilot_merge.json').write_text(json.dumps({'unreviewed_pilot':True,'merged_weights':weight_digests(base)}))
+   validate_smoke_options(args)
+   (base/'model.safetensors').write_bytes(b'changed')
+   with self.assertRaises(ValueError):validate_smoke_options(args) # weights changed after merge
+   fake=SimpleNamespace(cuda=SimpleNamespace(is_available=lambda:True,is_bf16_supported=lambda:True))
+   common,specific=training_settings(SimpleNamespace(**{**vars(args),'max_steps':150,'allow_cpu':False,'profile':'laptop-6gb','pilot_task':'schema'}),fake)
+   self.assertEqual((common['learning_rate'],specific['num_generations'],specific['generation_batch_size'],common['gradient_accumulation_steps']),(2e-5,4,4,4))
 if __name__=='__main__':unittest.main()
