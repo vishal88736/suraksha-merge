@@ -230,4 +230,17 @@ class TrainingChecks(unittest.TestCase):
    fake=SimpleNamespace(cuda=SimpleNamespace(is_available=lambda:True,is_bf16_supported=lambda:True))
    common,specific=training_settings(SimpleNamespace(**{**vars(args),'max_steps':150,'allow_cpu':False,'profile':'laptop-6gb','pilot_task':'schema'}),fake)
    self.assertEqual((common['learning_rate'],specific['num_generations'],specific['generation_batch_size'],common['gradient_accumulation_steps']),(2e-5,4,4,4))
+ def test_pilot_dpo_shares_the_schema_pilot_base_and_lora_shape(self):
+  from phase2_aligntune_train_and_merge import PILOT_ROOT
+  with tempfile.TemporaryDirectory() as tmp:
+   data=Path(tmp);(data/'manifest.json').write_text(json.dumps({'bootstrap_only':True}))
+   args=SimpleNamespace(stage='empathy',unreviewed_pilot=True,allow_bootstrap_data=True,smoke_test=False,data=data,output=PILOT_ROOT/'dpo-x',shared_base=None,max_steps=190,allow_cpu=False,profile='laptop-6gb',pilot_task='schema')
+   validate_smoke_options(args)
+   with self.assertRaises(ValueError):validate_smoke_options(SimpleNamespace(**{**vars(args),'shared_base':PILOT_ROOT/'merged'}))
+   with self.assertRaises(ValueError):validate_smoke_options(SimpleNamespace(**{**vars(args),'output':Path(tmp)/'out'}))
+   fake=SimpleNamespace(cuda=SimpleNamespace(is_available=lambda:True,is_bf16_supported=lambda:True))
+   common,specific=training_settings(args,fake)
+   sft,_=training_settings(SimpleNamespace(**{**vars(args),'stage':'curated-sft'}),fake)
+   self.assertEqual((common['lora_r'],common['lora_alpha'],common['lora_target_modules']),(sft['lora_r'],sft['lora_alpha'],sft['lora_target_modules']))
+   self.assertEqual((specific['algorithm'],specific['precompute_ref_log_probs'],common['max_seq_length']),('dpo',True,1664))
 if __name__=='__main__':unittest.main()

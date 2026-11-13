@@ -210,8 +210,12 @@ def validate_smoke_options(args):
     if getattr(args,'unreviewed_pilot',False):
         # Explicitly labelled research pilot on the unreviewed synthetic corpus.
         # Its adapters can never be merged, promoted or served as fine-tuned.
-        if args.stage not in {'curated-sft','schema'} or not args.allow_bootstrap_data or getattr(args,'smoke_test',False):
-            raise ValueError('--unreviewed-pilot supports curated-sft or schema with --allow-bootstrap-data only, and not with --smoke-test')
+        if args.stage not in {'curated-sft','schema','empathy'} or not args.allow_bootstrap_data or getattr(args,'smoke_test',False):
+            raise ValueError('--unreviewed-pilot supports curated-sft, schema or empathy with --allow-bootstrap-data only, and not with --smoke-test')
+        if args.stage=='empathy' and getattr(args,'shared_base',None):
+            # The pilot empathy adapter shares the original base with the schema
+            # SFT pilot adapter so the two can be combined (pilot step 5).
+            raise ValueError('Pilot DPO trains on the original pinned base; omit --shared-base')
         if args.stage=='schema':
             # GRPO cold-starts with zero advantage on the base model; the pilot
             # starts from a verified SFT-merged pilot base instead.
@@ -247,7 +251,7 @@ def training_settings(args, torch):
     pilot=getattr(args,'unreviewed_pilot',False)
     if laptop:
         smoke_ok=getattr(args,'smoke_test',False) and args.allow_bootstrap_data and args.max_steps==1 and args.stage in {'schema','empathy'}
-        pilot_ok=pilot and args.allow_bootstrap_data and args.stage in {'curated-sft','schema'}
+        pilot_ok=pilot and args.allow_bootstrap_data and args.stage in {'curated-sft','schema','empathy'}
         if not (smoke_ok or pilot_ok):
             raise ValueError('laptop-6gb is restricted to one-step synthetic schema/empathy smoke tests or the labelled curated-sft pilot')
         if args.allow_cpu or not torch.cuda.is_available():
@@ -262,6 +266,11 @@ def training_settings(args, torch):
     if laptop and pilot and args.stage=='schema':
         # Pilot GRPO: fresh LoRA on the SFT-merged base; RL uses a small step.
         common.update(learning_rate=2e-5,max_seq_length=1280,lora_r=16,lora_alpha=32,
+            lora_target_modules=TARGET_MODULES,gradient_accumulation_steps=4)
+    elif laptop and pilot and args.stage=='empathy':
+        # Pilot DPO: same LoRA shape as the schema SFT pilot (combinable),
+        # sequence budget for the longest prompt + chosen pair (1,606 tokens).
+        common.update(learning_rate=2e-5,max_seq_length=1664,lora_r=16,lora_alpha=32,
             lora_target_modules=TARGET_MODULES,gradient_accumulation_steps=4)
     elif laptop and pilot:
         # LoRA SFT needs a far larger step than RL fine-tuning; adapt all
@@ -300,6 +309,7 @@ def training_settings(args, torch):
             # restores the loaded (disk-backed) rows with identical content.
             specific.update(max_prompt_length=1024,max_completion_length=256,
                 precompute_ref_log_probs=True,precompute_ref_batch_size=1,per_device_eval_batch_size=1,keep_columns=True)
+            if pilot: specific.update(max_prompt_length=1152,max_completion_length=512)
     return common,specific
 
 def register_reward():
@@ -344,6 +354,12 @@ def train(args):
         model_path=materialize_base(shared_base,shared_identity)
         shared_identity=pin_materialized_weights(shared_identity,model_path)
     if args.stage=='schema': register_reward()
+    dpo_patch=None
+    if args.stage=='empathy' and getattr(args,'profile','default')=='laptop-6gb':
+        # TRL computes full-vocabulary logits over the ~1,000-token prompt too;
+        # only completion logits matter (research/dpo_completion_logits.py).
+        from research.dpo_completion_logits import install
+        dpo_patch=install()
     kind='rlvr' if args.stage=='schema' else 'dpo' if args.stage=='empathy' else 'sft' if args.stage=='curated-sft' else 'uncurated_sft'
     if getattr(args,'unreviewed_pilot',False) and args.stage=='curated-sft':
         # schema: train/rlvr.jsonl (longest 1,124 tokens). dual: train/sft.jsonl,
@@ -422,7 +438,7 @@ def train(args):
     adapter = next((p for p in candidates if (p / "adapter_config.json").exists() and (p / "adapter_model.safetensors").exists()), None)
     if adapter is None:
         raise RuntimeError("Trainer returned without a saved LoRA adapter. Inspect its output before continuing.")
-    manifest = {"identity": shared_identity, "dataset_manifest_sha256": digest((args.data / "manifest.json").read_bytes()), "algorithm": "drgrpo" if args.stage == "schema" else "dpo" if args.stage == "empathy" else "sft", "versions": package_versions(), "stage": args.stage, "seed": SEED, "profile": getattr(args,"profile","default"), "training_settings": common, "peak_cuda_allocated_bytes": torch.cuda.max_memory_allocated() if laptop else None, "peak_cuda_reserved_bytes": torch.cuda.max_memory_reserved() if laptop else None, "bootstrap_smoke_run": args.allow_bootstrap_data, "smoke_test_only": getattr(args,"smoke_test",False), "unreviewed_pilot": getattr(args,"unreviewed_pilot",False), "pilot_task": getattr(args,"pilot_task",None) if getattr(args,"unreviewed_pilot",False) else None, "adapter_path": str(adapter.resolve()), "training_data": training_data}
+    manifest = {"identity": shared_identity, "dataset_manifest_sha256": digest((args.data / "manifest.json").read_bytes()), "algorithm": "drgrpo" if args.stage == "schema" else "dpo" if args.stage == "empathy" else "sft", "versions": package_versions(), "stage": args.stage, "seed": SEED, "profile": getattr(args,"profile","default"), "training_settings": common, "peak_cuda_allocated_bytes": torch.cuda.max_memory_allocated() if laptop else None, "peak_cuda_reserved_bytes": torch.cuda.max_memory_reserved() if laptop else None, "bootstrap_smoke_run": args.allow_bootstrap_data, "smoke_test_only": getattr(args,"smoke_test",False), "unreviewed_pilot": getattr(args,"unreviewed_pilot",False), "pilot_task": (getattr(args,"pilot_task",None) if args.stage=="curated-sft" else args.stage) if getattr(args,"unreviewed_pilot",False) else None, "dpo_logits": dpo_patch, "adapter_path": str(adapter.resolve()), "training_data": training_data}
     manifest["training_outcome"] = training_outcome(output, adapter)
     write_manifest(adapter, output, manifest)
     print(json.dumps(manifest, indent=2))
@@ -540,7 +556,7 @@ def main():
     parser.add_argument("--allow-cpu", action="store_true")
     parser.add_argument("--profile", choices=["default","laptop-6gb"], default="default")
     parser.add_argument("--pilot-task", choices=["schema","dual"], default="schema", help="Pilot SFT data: schema answers only, or schema + customer reply records")
-    parser.add_argument("--unreviewed-pilot", action="store_true", help="Labelled curated-sft pilot on the unreviewed synthetic corpus; outputs under artifacts/pilot, never mergeable")
+    parser.add_argument("--unreviewed-pilot", action="store_true", help="Labelled pilot (curated-sft, schema GRPO or empathy DPO) on the unreviewed synthetic corpus; outputs under artifacts/pilot, never promoted")
     parser.add_argument("--check-config", action="store_true", help="Instantiate AlignTune configuration/rewards only; no weights or training")
     args = parser.parse_args()
     if not 0 <= args.schema_weight <= 1 or args.max_steps < 1:
