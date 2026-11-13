@@ -127,18 +127,67 @@ class TrainingChecks(unittest.TestCase):
    def factory(**kwargs):
     calls.append(kwargs)
     def save():
-     out=Path(kwargs['output_dir']);out.mkdir(parents=True);(out/'adapter_config.json').write_text('{}');(out/'adapter_model.safetensors').write_bytes(b'fixture-not-real-weights')
+     out=Path(kwargs['output_dir']);out.mkdir(parents=True,exist_ok=True);(out/'adapter_config.json').write_text('{}');(out/'adapter_model.safetensors').write_bytes(b'fixture-not-real-weights')
     return SimpleNamespace(train=save)
    args=SimpleNamespace(data=root,output=root/'outputs',stage='schema',allow_cpu=True,allow_bootstrap_data=False,smoke_test=False,max_steps=1,base='fixture')
    torch=SimpleNamespace(cuda=SimpleNamespace(is_available=lambda:False))
-   modules={'aligntune.core.backend_factory':SimpleNamespace(create_rl_trainer=factory,create_sft_trainer=factory)}
-   with patch.dict('sys.modules',modules),patch('phase2_aligntune_train_and_merge.check_data'),patch('phase2_aligntune_train_and_merge.require_gpu',return_value=torch),patch('phase2_aligntune_train_and_merge.identity',return_value={'fixture':True}),patch('phase2_aligntune_train_and_merge.materialize_base',return_value='fixture'),patch('phase2_aligntune_train_and_merge.register_reward'):
+   class Tok:
+    eos_token='<|im_end|>';chat_template='fixture-template'
+    @staticmethod
+    def from_pretrained(source,**kwargs):return Tok()
+    def apply_chat_template(self,messages,tokenize,add_generation_prompt):
+     assert not tokenize and add_generation_prompt;return '<|im_start|>user\n'+messages[0]['content']+'<|im_end|>\n<|im_start|>assistant\n'
+   modules={'aligntune.core.backend_factory':SimpleNamespace(create_rl_trainer=factory,create_sft_trainer=factory),'transformers':SimpleNamespace(AutoTokenizer=Tok)}
+   write_jsonl(root/'train/rlvr.jsonl',[{'prompt':'P','answer':'{}','ground_truth_json':'{}'}])
+   write_jsonl(root/'train/dpo.jsonl',[{'prompt':'P','chosen':'good','rejected':'bad'}])
+   outcome={'parameters_updated':True,'trainer_metrics':None,'evidence':'fixture'}
+   with patch.dict('sys.modules',modules),patch('phase2_aligntune_train_and_merge.check_data'),patch('phase2_aligntune_train_and_merge.require_gpu',return_value=torch),patch('phase2_aligntune_train_and_merge.identity',return_value={'fixture':True}),patch('phase2_aligntune_train_and_merge.materialize_base',return_value='fixture'),patch('phase2_aligntune_train_and_merge.pin_materialized_weights',side_effect=lambda ident,path:{**ident,'base_weights':{'w':'h'}}),patch('phase2_aligntune_train_and_merge.training_outcome',return_value=outcome),patch('phase2_aligntune_train_and_merge.register_reward'):
     (root/'manifest.json').write_text('{}')
     for stage in ('schema','empathy'):args.stage=stage;train(args)
+   # Training must see the chat-formatted user turn used at inference.
+   rl=read_jsonl(calls[0]['dataset_name']);dpo=read_jsonl(calls[1]['dataset_name'])
+   self.assertEqual(rl[0]['prompt'],[{'role':'user','content':'P'}]);self.assertEqual(rl[0]['answer'],'{}')
+   # DPO: AlignTune flattens message lists, so the prompt is template-rendered; TRL appends EOS to responses.
+   self.assertEqual(dpo[0]['prompt'],'<|im_start|>user\nP<|im_end|>\n<|im_start|>assistant\n');self.assertEqual((dpo[0]['chosen'],dpo[0]['rejected']),('good','bad'))
+   self.assertEqual(json.loads((root/'outputs/empathy/suraksha_manifest.json').read_text())['training_data']['eos_token'],'<|im_end|>')
+   manifest=json.loads((root/'outputs/schema/suraksha_manifest.json').read_text())
+   self.assertEqual(manifest['identity']['base_weights'],{'w':'h'});self.assertEqual(manifest['training_data']['format'],'chat_messages');self.assertTrue(manifest['training_outcome']['parameters_updated'])
    self.assertEqual([c['algorithm'] for c in calls],['drgrpo','dpo']);self.assertEqual(calls[0]['lora_target_modules'],calls[1]['lora_target_modules']);self.assertEqual(calls[0]['lora_r'],calls[1]['lora_r']);self.assertEqual(calls[1]['field_mappings'],{'prompt':'prompt','chosen':'chosen','rejected':'rejected'})
    self.assertTrue((root/'outputs/schema/suraksha_manifest.json').exists())
    from research.artifacts import resolve_adapter
    resolve_adapter(root/'outputs/empathy')
    (root/'outputs/empathy/adapter_model.safetensors').write_bytes(b'changed')
    with self.assertRaises(ValueError):resolve_adapter(root/'outputs/empathy')
+ @unittest.skipUnless(__import__('importlib.util').util.find_spec('torch') and __import__('importlib.util').util.find_spec('safetensors'),'requires torch+safetensors (.venv-training)')
+ def test_zero_update_is_measured_and_fails_after_preserving_manifest(self):
+  import torch
+  from safetensors.torch import save_file
+  from phase2_aligntune_train_and_merge import training_outcome
+  with tempfile.TemporaryDirectory() as tmp:
+   out=Path(tmp);ckpt=out/'checkpoint-1';ckpt.mkdir()
+   (ckpt/'trainer_state.json').write_text(json.dumps({'log_history':[{'step':1,'loss':0.0,'grad_norm':0.0,'reward':-1.0,'reward_std':0.0}]}))
+   (out/'adapter_config.json').write_text(json.dumps({'init_lora_weights':True}))
+   save_file({'x.lora_A.weight':torch.ones(2,2),'x.lora_B.weight':torch.zeros(2,2)},str(out/'adapter_model.safetensors'))
+   result=training_outcome(out,out)
+   self.assertIs(result['parameters_updated'],False);self.assertEqual(result['trainer_metrics']['grad_norm'],0.0)
+   save_file({'x.lora_A.weight':torch.ones(2,2),'x.lora_B.weight':torch.full((2,2),5e-6)},str(out/'adapter_model.safetensors'))
+   self.assertIs(training_outcome(out,out)['parameters_updated'],True)
+   (out/'adapter_config.json').write_text(json.dumps({'init_lora_weights':'gaussian'}))
+   self.assertIsNone(training_outcome(out,out)['parameters_updated'])
+ def test_materialized_hub_weights_are_hashed_and_mismatch_rejected(self):
+  from phase2_aligntune_train_and_merge import pin_materialized_weights
+  from research.artifacts import file_digest
+  with tempfile.TemporaryDirectory() as tmp:
+   snap=Path(tmp);(snap/'model-00001-of-00001.safetensors').write_bytes(b'fixture-weights')
+   pinned=pin_materialized_weights({'base_revision':'a'*40,'base_weights':{}},snap)
+   self.assertEqual(pinned['base_weights'],{'model-00001-of-00001.safetensors':file_digest(snap/'model-00001-of-00001.safetensors')})
+   with self.assertRaises(ValueError):pin_materialized_weights({'base_weights':{'model-00001-of-00001.safetensors':'0'*64}},snap)
+   with self.assertRaises(ValueError):pin_materialized_weights({'base_weights':{}},snap/'missing')
+ def test_chat_formatting_rejects_non_string_fields(self):
+  from phase2_aligntune_train_and_merge import chat_formatted_dataset
+  with tempfile.TemporaryDirectory() as tmp:
+   src=Path(tmp)/'dpo.jsonl';write_jsonl(src,[{'prompt':'P','chosen':'','rejected':'r'}])
+   with self.assertRaises(ValueError):chat_formatted_dataset(src,Path(tmp)/'out.jsonl','dpo')
+   write_jsonl(src,[{'prompt':'P','chosen':'c','rejected':'r'}])
+   with self.assertRaises(ValueError):chat_formatted_dataset(src,Path(tmp)/'out.jsonl','dpo') # tokenizer required
 if __name__=='__main__':unittest.main()

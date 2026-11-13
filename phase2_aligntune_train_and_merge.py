@@ -7,7 +7,7 @@ import argparse
 import importlib.metadata
 import json
 from pathlib import Path
-from research.common import ROOT, digest, extraction_reward, read_jsonl
+from research.common import ROOT, digest, extraction_reward, read_jsonl, write_jsonl
 from research.artifacts import file_digest, read_adapter_manifest, write_adapter_manifest, resolve_adapter, safe_dataset_file
 
 BASE_MODEL = "Qwen/Qwen2.5-3B-Instruct"
@@ -53,15 +53,94 @@ def identity(model_name, revision=None):
     tok=AutoTokenizer.from_pretrained(model_name,revision=resolved_revision,trust_remote_code=False)
     weight_hashes={}
     if model_path.is_dir():
-        for pattern in ('*.safetensors','pytorch_model*.bin'):
-            for path in sorted(model_path.glob(pattern)):
-                weight_hashes[path.name]=file_digest(path)
+        weight_hashes=weight_digests(model_path)
         if not weight_hashes:
             raise ValueError('Local shared base has no model weights')
     return {'base_model':'local-checkpoint' if model_path.is_dir() else model_name,
         'base_revision':resolved_revision,'base_weights':weight_hashes,
         'tokenizer_sha256':digest(tok.get_vocab()),'tokenizer_size':len(tok),
         'target_modules':TARGET_MODULES,'rank':32,'alpha':64}
+
+def weight_digests(directory):
+    hashes={}
+    for pattern in ('*.safetensors','pytorch_model*.bin'):
+        for path in sorted(Path(directory).glob(pattern)):
+            hashes[path.name]=file_digest(path)
+    return hashes
+
+def pin_materialized_weights(base_identity, model_path):
+    """Record the physical weights actually loaded, including Hub snapshots."""
+    hashes=weight_digests(model_path)
+    if not hashes:
+        raise ValueError('Materialized base has no model weights')
+    recorded=base_identity.get('base_weights')
+    if recorded and recorded!=hashes:
+        raise ValueError('Materialized base weights differ from the recorded identity')
+    return {**base_identity,'base_weights':hashes}
+
+CHAT_FORMATTED={'rlvr':('prompt',),'dpo':('prompt','chosen','rejected')}
+
+def chat_formatted_dataset(source, destination, kind, tokenizer=None):
+    """Train on the same chat-rendered user turn used at inference.
+
+    scripts/generate_predictions.py renders each prompt with the tokenizer chat
+    template. Plain-string rows bypass TRL's template, so an instruct model sees
+    raw text with no assistant turn.
+
+    - rlvr: prompt becomes a user message list; AlignTune preserves it for GRPO
+      and TRL applies the template before generation.
+    - dpo: AlignTune's DPO loader flattens message lists back to plain text, so
+      the prompt is rendered here with the pinned tokenizer's own template
+      (ending in the assistant header). TRL then appends tokenizer.eos_token
+      to chosen/rejected, matching the template's assistant turn.
+    """
+    rows=read_jsonl(source)
+    if not rows:
+        raise ValueError(f'Training split {kind} is empty')
+    if kind=='dpo' and tokenizer is None:
+        raise ValueError('DPO chat formatting requires the pinned tokenizer')
+    prepared=[]
+    for row in rows:
+        row=dict(row)
+        for field in CHAT_FORMATTED[kind]:
+            value=row.get(field)
+            if not isinstance(value,str) or not value.strip():
+                raise ValueError(f'{kind} field {field} must be a non-empty string')
+        message=[{'role':'user','content':row['prompt']}]
+        row['prompt']=message if kind=='rlvr' else tokenizer.apply_chat_template(message,tokenize=False,add_generation_prompt=True)
+        prepared.append(row)
+    write_jsonl(destination,prepared)
+    info={'format':'chat_messages' if kind=='rlvr' else 'chat_template_rendered_prompt','source':str(Path(source).resolve()),
+        'source_sha256':file_digest(source),'prepared':str(Path(destination).resolve()),'prepared_sha256':file_digest(destination)}
+    if kind=='dpo':
+        info.update(eos_token=tokenizer.eos_token,chat_template_sha256=digest(tokenizer.chat_template))
+    return info
+
+def training_outcome(output, adapter):
+    """Measure whether the saved adapter differs from its initialization.
+
+    PEFT initializes LoRA B to zeros, so an all-zero B after training proves no
+    optimizer update was applied (for example, zero GRPO advantage).
+    """
+    metrics=None
+    states=sorted(Path(output).glob('checkpoint-*/trainer_state.json'),key=lambda p:p.stat().st_mtime)
+    if states:
+        history=json.loads(states[-1].read_text()).get('log_history',[])
+        logged=[entry for entry in history if 'loss' in entry or 'grad_norm' in entry]
+        if logged:
+            keep=('step','loss','grad_norm','learning_rate','reward','reward_std','frac_reward_zero_std',
+                'completions/mean_length','completions/clipped_ratio','rewards/chosen','rewards/rejected','rewards/accuracies','rewards/margins')
+            metrics={key:logged[-1][key] for key in keep if key in logged[-1]}
+    config=json.loads((Path(adapter)/'adapter_config.json').read_text())
+    updated=None
+    if config.get('init_lora_weights') is True:
+        from safetensors.torch import load_file
+        tensors=load_file(str(Path(adapter)/'adapter_model.safetensors'))
+        lora_b=[value for key,value in tensors.items() if 'lora_B' in key]
+        if lora_b:
+            updated=any(bool(value.abs().max()>0) for value in lora_b)
+    return {'parameters_updated':updated,'trainer_metrics':metrics,
+        'evidence':'LoRA B is zero-initialized; any nonzero B tensor proves an applied optimizer update' if updated is not None else 'not determinable from adapter initialization'}
 
 def materialize_base(source, base_identity):
     """Load remote weights from the same immutable revision recorded in provenance."""
@@ -158,7 +237,15 @@ def training_settings(args, torch):
         if laptop: specific.update(loss_type='dr_grpo',beta=0.0,generation_batch_size=2)
     elif args.stage=='empathy':
         specific=dict(algorithm='dpo',beta=.1,field_mappings={'prompt':'prompt','chosen':'chosen','rejected':'rejected'})
-        if laptop: specific.update(max_prompt_length=1024,max_completion_length=256)
+        if laptop:
+            # TRL 1.7.1 DPO materializes full-vocabulary logits for every token.
+            # Computing frozen-reference log-probs once, one pair at a time,
+            # avoids a second logits tensor alongside the policy activations.
+            # TRL reads precomputed log-probs back from a fingerprinted cache
+            # file, which only exists for disk-backed datasets; keep_columns
+            # restores the loaded (disk-backed) rows with identical content.
+            specific.update(max_prompt_length=1024,max_completion_length=256,
+                precompute_ref_log_probs=True,precompute_ref_batch_size=1,per_device_eval_batch_size=1,keep_columns=True)
     return common,specific
 
 def register_reward():
@@ -182,6 +269,10 @@ def read_manifest(adapter):
 def train(args):
     validate_smoke_options(args)
     check_data(args)
+    if getattr(args,'profile','default')=='laptop-6gb':
+        # Must precede CUDA initialization; reduces fragmentation on 6 GB GPUs.
+        import os
+        os.environ.setdefault('PYTORCH_CUDA_ALLOC_CONF','expandable_segments:True')
     torch = require_gpu(args.allow_cpu)
     from aligntune.core.backend_factory import create_rl_trainer, create_sft_trainer
     common,specific=training_settings(args,torch)
@@ -197,9 +288,20 @@ def train(args):
         shared_identity=identity(str(shared_base),getattr(args,'revision',None))
         shared_identity.update(rank=common['lora_r'],alpha=common['lora_alpha'],target_modules=common['lora_target_modules'])
         model_path=materialize_base(shared_base,shared_identity)
+        shared_identity=pin_materialized_weights(shared_identity,model_path)
     if args.stage=='schema': register_reward()
     kind='rlvr' if args.stage=='schema' else 'dpo' if args.stage=='empathy' else 'sft' if args.stage=='curated-sft' else 'uncurated_sft'
-    factory_kwargs=dict(common,model_name=model_path,output_dir=str(output),dataset_name=str(args.data/'train'/(kind+'.jsonl')))
+    dataset_path=args.data/'train'/(kind+'.jsonl')
+    training_data={'format':'source','source':str(dataset_path.resolve()),'source_sha256':file_digest(dataset_path)} if dataset_path.is_file() else None
+    if kind in CHAT_FORMATTED:
+        tokenizer=None
+        if kind=='dpo':
+            from transformers import AutoTokenizer
+            local=Path(str(model_path)).is_dir()
+            tokenizer=AutoTokenizer.from_pretrained(model_path,revision=None if local else getattr(args,'revision',None),trust_remote_code=False)
+        training_data=chat_formatted_dataset(dataset_path,output/'prepared'/(kind+'.jsonl'),kind,tokenizer)
+        dataset_path=Path(training_data['prepared'])
+    factory_kwargs=dict(common,model_name=model_path,output_dir=str(output),dataset_name=str(dataset_path))
     if args.stage in {'schema','empathy'}:
         trainer=create_rl_trainer(**factory_kwargs,**specific)
     else:
@@ -212,6 +314,10 @@ def train(args):
         actual=trainer.config.model
         if actual.quantization!=common['quantization'] or actual.lora_r!=8 or actual.lora_alpha!=16 or actual.lora_target_modules!=['q_proj','v_proj'] or not actual.gradient_checkpointing or trainer.config.train.max_length!=1280:
             raise ValueError('AlignTune did not retain the requested QLoRA configuration')
+        if args.stage=='empathy':
+            extra=getattr(trainer.config.train,'extra_params',None) or {}
+            if any(extra.get(key)!=specific[key] for key in ('precompute_ref_log_probs','precompute_ref_batch_size','per_device_eval_batch_size')):
+                raise ValueError('AlignTune did not retain the DPO reference-precompute memory settings')
     if check_only:
         # Reward setup instantiates the custom registry scorer, without model loading.
         reward_scores=None
@@ -220,9 +326,13 @@ def train(args):
             row=read_jsonl(args.data/'train/rlvr.jsonl')[0]
             reward_scores=trainer.prepared_rewards.functions[0](prompts=[row['prompt']],completions=[row['answer']],answer=[row['answer']],ground_truth_json=[row['ground_truth_json']])
             if reward_scores!=[1.0]: raise ValueError('Actual AlignTune reward bridge failed the exact JSON fixture')
+            # Chat-formatted rollouts reach rewards as assistant message lists.
+            chat_scores=trainer.prepared_rewards.functions[0](prompts=[[{'role':'user','content':row['prompt']}]],completions=[[{'role':'assistant','content':row['answer']}]],answer=[row['answer']],ground_truth_json=[row['ground_truth_json']])
+            if chat_scores!=[1.0]: raise ValueError('Actual AlignTune reward bridge failed the chat-formatted JSON fixture')
+            reward_scores={'string':reward_scores,'chat_messages':chat_scores}
         report={'status':'PASSED','scope':'actual AlignTune factory/config and custom reward setup; no model weights or optimizer step',
             'profile':getattr(args,'profile','default'),'stage':args.stage,'settings':common,'algorithm_settings':specific,
-            'trainer_class':type(trainer).__name__,'fixture_reward_scores':reward_scores,'training_started':False,'weights_loaded':False,
+            'trainer_class':type(trainer).__name__,'fixture_reward_scores':reward_scores,'training_data':training_data,'training_started':False,'weights_loaded':False,
             'memory_fit':'UNVERIFIED until actual one-step execution'}
         output.mkdir(parents=True,exist_ok=True)
         (output/'config_check.json').write_text(json.dumps(report,indent=2)+'\n')
@@ -242,9 +352,12 @@ def train(args):
     adapter = next((p for p in candidates if (p / "adapter_config.json").exists() and (p / "adapter_model.safetensors").exists()), None)
     if adapter is None:
         raise RuntimeError("Trainer returned without a saved LoRA adapter. Inspect its output before continuing.")
-    manifest = {"identity": shared_identity, "dataset_manifest_sha256": digest((args.data / "manifest.json").read_bytes()), "algorithm": "drgrpo" if args.stage == "schema" else "dpo" if args.stage == "empathy" else "sft", "versions": package_versions(), "stage": args.stage, "seed": SEED, "profile": getattr(args,"profile","default"), "training_settings": common, "peak_cuda_allocated_bytes": torch.cuda.max_memory_allocated() if laptop else None, "peak_cuda_reserved_bytes": torch.cuda.max_memory_reserved() if laptop else None, "bootstrap_smoke_run": args.allow_bootstrap_data, "smoke_test_only": getattr(args,"smoke_test",False), "adapter_path": str(adapter.resolve())}
+    manifest = {"identity": shared_identity, "dataset_manifest_sha256": digest((args.data / "manifest.json").read_bytes()), "algorithm": "drgrpo" if args.stage == "schema" else "dpo" if args.stage == "empathy" else "sft", "versions": package_versions(), "stage": args.stage, "seed": SEED, "profile": getattr(args,"profile","default"), "training_settings": common, "peak_cuda_allocated_bytes": torch.cuda.max_memory_allocated() if laptop else None, "peak_cuda_reserved_bytes": torch.cuda.max_memory_reserved() if laptop else None, "bootstrap_smoke_run": args.allow_bootstrap_data, "smoke_test_only": getattr(args,"smoke_test",False), "adapter_path": str(adapter.resolve()), "training_data": training_data}
+    manifest["training_outcome"] = training_outcome(output, adapter)
     write_manifest(adapter, output, manifest)
     print(json.dumps(manifest, indent=2))
+    if manifest["training_outcome"]["parameters_updated"] is False:
+        raise RuntimeError("Training executed but the saved adapter equals its initialization (all LoRA B tensors are zero): no optimizer update was applied. See training_outcome.trainer_metrics in the manifest.")
 
 def adapt_tokenizer(args):
     """Adapt one shared embedding base before either specialist is trained."""
@@ -314,13 +427,16 @@ def merge(args):
         raise ValueError("Adapters differ in base revision/weights, tokenizer, rank, alpha or target modules")
     if any(m.get("smoke_test_only") or m.get("bootstrap_smoke_run") for m in manifests):
         raise ValueError("Synthetic smoke adapters cannot be merged as final artifacts")
-    revision = manifests[0]["identity"].get("base_revision")
-    if manifests[0]["identity"] != identity(str(shared_base), revision):
-        raise ValueError("Selected base is not the shared base used by both specialists")
+    if any((m.get("training_outcome") or {}).get("parameters_updated") is not True for m in manifests):
+        raise ValueError("Both adapters must have a verified, applied optimizer update")
     if [m["stage"] for m in manifests] != ["schema", "empathy"]:
         raise ValueError("Expected schema and empathy specialist adapters, in that order")
+    revision = manifests[0]["identity"].get("base_revision")
+    current = identity(str(shared_base), revision)
     # The tokenizer must come from the adapted base, not the original one.
-    model_path = materialize_base(shared_base, manifests[0]["identity"])
+    model_path = materialize_base(shared_base, current)
+    if manifests[0]["identity"] != pin_materialized_weights(current, model_path):
+        raise ValueError("Selected base is not the shared base used by both specialists")
     tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=False)
     dtype = torch.bfloat16 if torch.cuda.is_available() and torch.cuda.is_bf16_supported() else torch.float32
     base = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=dtype, trust_remote_code=False)
