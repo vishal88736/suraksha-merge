@@ -5,6 +5,8 @@ import { readExecutionProfile } from "./execution-profile.mjs";
 const [command, ...args] = process.argv.slice(2);
 if (!["dev", "build"].includes(command)) throw new Error("Expected dev or build.");
 const managedLinux = readExecutionProfile() === "managed-linux";
+// On-device OCR assets are copied from node_modules, not committed.
+await import("./copy-ocr-assets.mjs");
 
 if (managedLinux && command === "build") {
   const result = spawnSync("bash", [

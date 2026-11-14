@@ -22,6 +22,7 @@ import type { TriageInput } from "../../lib/engine.ts";
 import { useDictation } from "../../hooks/use-dictation.ts";
 import { hasReplyTemplates } from "../../lib/i18n/replies.ts";
 import { InputChecklist } from "./input-checklist.tsx";
+import { ScreenshotReader } from "./screenshot-reader.tsx";
 
 const REPLY_LANGUAGE_OPTIONS = [
   { code: "auto", label: "Auto-detect language" },
@@ -186,6 +187,15 @@ export function Composer({
           </select>
         </label>
         <div className="composer-actions">
+          <ScreenshotReader
+            onText={(text) =>
+              onInput({
+                message: input.message.trim()
+                  ? `${input.message.trim()}\n\n${text}`
+                  : text,
+              })
+            }
+          />
           {dictation.supported && (
             <button
               className={`button ghost voice-button ${

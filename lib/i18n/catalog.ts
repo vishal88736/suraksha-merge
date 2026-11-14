@@ -132,6 +132,12 @@ const en = {
     "Dictation uses your browser's speech service, which may send the audio to the browser maker's servers (Chrome sends it to Google). Do not dictate real customer data.",
   "composer.voiceConsentAccept": "Dictate anyway",
   "composer.voiceConsentCancel": "Cancel",
+  "composer.screenshot": "Read screenshot",
+  "composer.screenshotReading": "Reading…",
+  "composer.screenshotHint":
+    "Add the text of a bank SMS or UPI receipt screenshot. It is read on this device; the image is not uploaded.",
+  "composer.screenshotError": "Could not read that image. Use a PNG, JPEG or WebP under 8 MB.",
+  "composer.screenshotEmpty": "No text found in that image.",
   "checklist.title": "What to include",
   "checklist.emptyHint":
     "Paste or type the customer's message. Include what happened, the amount and the 12-digit UTR from the bank SMS.",
@@ -493,6 +499,12 @@ const hi: Record<MessageKey, string> = {
     "डिक्टेशन आपके ब्राउज़र की स्पीच सेवा का उपयोग करता है, जो ऑडियो ब्राउज़र कंपनी के सर्वर पर भेज सकती है (Chrome इसे Google को भेजता है)। असली ग्राहक डेटा न बोलें।",
   "composer.voiceConsentAccept": "फिर भी बोलकर लिखें",
   "composer.voiceConsentCancel": "रद्द करें",
+  "composer.screenshot": "स्क्रीनशॉट पढ़ें",
+  "composer.screenshotReading": "पढ़ रहे हैं…",
+  "composer.screenshotHint":
+    "बैंक SMS या UPI रसीद के स्क्रीनशॉट का टेक्स्ट जोड़ें। इसे इसी डिवाइस पर पढ़ा जाता है; तस्वीर अपलोड नहीं होती।",
+  "composer.screenshotError": "यह तस्वीर पढ़ी नहीं जा सकी। 8 MB से छोटी PNG, JPEG या WebP इस्तेमाल करें।",
+  "composer.screenshotEmpty": "इस तस्वीर में कोई टेक्स्ट नहीं मिला।",
   "checklist.title": "क्या शामिल करें",
   "checklist.emptyHint":
     "ग्राहक का संदेश यहाँ लिखें या पेस्ट करें। क्या हुआ, राशि और बैंक SMS का 12 अंकों वाला UTR शामिल करें।",
