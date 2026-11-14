@@ -63,6 +63,7 @@ const en = {
 
   "topbar.engine": "Rule engine active",
   "topbar.engineModel": "Pilot model · rules fallback",
+  "topbar.engineTrained": "Fine-tuned model · rules fallback",
   "topbar.research": "Research preview",
 
   "common.exportTrace": "Export trace",
@@ -339,7 +340,7 @@ const en = {
   "landing.heroDescriptionLine2": "FRAUD TRIAGE WITH EVIDENCE — AND EMPATHY.",
   "landing.heroCta": "EXPLORE THE DESK",
   "landing.heroMode": "WORKING RULE-BASED PREVIEW",
-  "landing.heroModeDivider": "UNREVIEWED PILOT MODEL ONLY",
+  "landing.heroModeDivider": "RESEARCH MODEL · SYNTHETIC DATA",
   "landing.featuresTitle": "SECURITY, WITH A HUMAN SIDE",
   "landing.feature1Title": "PRIVATE BY DESIGN",
   "landing.feature1Body": "Context-aware PII masking",
@@ -367,7 +368,7 @@ const en = {
   "landing.faqTitleLine2": "STRAIGHT ANSWERS.",
   "landing.faq1Question": "Is this a trained fraud detection model?",
   "landing.faq1Answer":
-    "Not a production model. The desk always runs deterministic extraction, policy rules and reply templates. A fine-tuned Qwen2.5-3B pilot, trained on unreviewed synthetic data, can be connected locally: its output is used only when it passes strict validation and policy gates, and the rules answer otherwise.",
+    "Not a production model. The desk always runs deterministic extraction, policy rules and reply templates. A fine-tuned Qwen2.5-3B, trained on human-reviewed synthetic cases in English, Hindi and Hinglish, can be connected: it reads the facts and the category, the policy rules decide the liability tier, actions and reply language, and the rules answer whenever its output fails a check. It has not been evaluated on real customer messages.",
   "landing.faq2Question": "Does this file a dispute or approve a refund?",
   "landing.faq2Answer":
     "The desk prepares a draft for review. It has no bank or NPCI connection and takes no external action. Actual disputes must be raised through the bank or PSP app.",
@@ -431,6 +432,7 @@ const hi: Record<MessageKey, string> = {
 
   "topbar.engine": "नियम-आधारित इंजन सक्रिय",
   "topbar.engineModel": "पायलट मॉडल · नियम बैकअप",
+  "topbar.engineTrained": "फ़ाइन-ट्यून मॉडल · नियम बैकअप",
   "topbar.research": "शोध पूर्वावलोकन",
 
   "common.exportTrace": "ट्रेस निर्यात करें",
@@ -705,7 +707,7 @@ const hi: Record<MessageKey, string> = {
     "प्रमाण के साथ धोखाधड़ी ट्रायेज — और सहानुभूति।",
   "landing.heroCta": "डेस्क देखें",
   "landing.heroMode": "कार्यशील नियम-आधारित पूर्वावलोकन",
-  "landing.heroModeDivider": "केवल असमीक्षित पायलट मॉडल",
+  "landing.heroModeDivider": "शोध मॉडल · सिंथेटिक डेटा",
   "landing.featuresTitle": "सुरक्षा, मानवीय पक्ष के साथ",
   "landing.feature1Title": "गोपनीयता ही डिज़ाइन",
   "landing.feature1Body": "संदर्भ-आधारित PII मास्किंग",
@@ -733,7 +735,7 @@ const hi: Record<MessageKey, string> = {
   "landing.faqTitleLine2": "सीधे जवाब।",
   "landing.faq1Question": "क्या यह प्रशिक्षित धोखाधड़ी-पहचान मॉडल है?",
   "landing.faq1Answer":
-    "यह प्रोडक्शन मॉडल नहीं है। डेस्क हमेशा नियतात्मक निष्कर्ष, नीति नियम और उत्तर-टेम्पलेट चलाता है। असमीक्षित सिंथेटिक डेटा पर प्रशिक्षित Qwen2.5-3B पायलट स्थानीय रूप से जोड़ा जा सकता है: उसका आउटपुट केवल सख़्त सत्यापन और नीति जाँच पास करने पर उपयोग होता है, अन्यथा नियम उत्तर देते हैं।",
+    "यह प्रोडक्शन मॉडल नहीं है। डेस्क हमेशा नियतात्मक निष्कर्ष, नीति नियम और उत्तर-टेम्पलेट चलाता है। अंग्रेज़ी, हिंदी और हिंग्लिश के मानव-समीक्षित सिंथेटिक मामलों पर फ़ाइन-ट्यून Qwen2.5-3B जोड़ा जा सकता है: वह तथ्य और श्रेणी पढ़ता है, देनदारी श्रेणी, कदम और उत्तर की भाषा नीति नियम तय करते हैं, और उसका आउटपुट किसी जाँच में विफल हो तो नियम उत्तर देते हैं। इसे असली ग्राहक संदेशों पर नहीं परखा गया है।",
   "landing.faq2Question":
     "क्या यह विवाद दर्ज करता है या रिफ़ंड मंज़ूर करता है?",
   "landing.faq2Answer":

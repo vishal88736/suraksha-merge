@@ -51,9 +51,11 @@ export function LanguageSwitcher() {
   );
 }
 
-/** Ask /api/health once whether the local model server is reachable. */
-function useModelReachable(): boolean {
-  const [reachable, setReachable] = useState(false);
+type ModelStatus = "none" | "pilot" | "trained";
+
+/** Ask /api/health once which model, if any, is answering. */
+function useModelStatus(): ModelStatus {
+  const [status, setStatus] = useState<ModelStatus>("none");
   useEffect(() => {
     const controller = new AbortController();
     fetch("/api/health", { signal: controller.signal, cache: "no-store" })
@@ -61,17 +63,24 @@ function useModelReachable(): boolean {
         (response) =>
           (response.ok ? response.json() : null) as Promise<{
             model_reachable?: boolean;
+            trained_model_connected?: boolean;
           } | null>,
       )
-      .then((body: { model_reachable?: boolean } | null) =>
-        setReachable(Boolean(body?.model_reachable)),
+      .then((body) =>
+        setStatus(
+          body?.trained_model_connected
+            ? "trained"
+            : body?.model_reachable
+              ? "pilot"
+              : "none",
+        ),
       )
       .catch(() => {
         // Health is informational; the desk works without it.
       });
     return () => controller.abort();
   }, []);
-  return reachable;
+  return status;
 }
 
 export function AppShell({
@@ -83,7 +92,7 @@ export function AppShell({
   onView: (view: View) => void;
   children: React.ReactNode;
 }) {
-  const modelReachable = useModelReachable();
+  const modelStatus = useModelStatus();
   const { t } = useI18n();
   const current = VIEWS.find((item) => item.id === view);
 
@@ -187,7 +196,13 @@ export function AppShell({
             <span className="topbar-divider" />
             <span className="engine-status">
               <span className="online-dot" />{" "}
-              {t(modelReachable ? "topbar.engineModel" : "topbar.engine")}
+              {t(
+                modelStatus === "trained"
+                  ? "topbar.engineTrained"
+                  : modelStatus === "pilot"
+                    ? "topbar.engineModel"
+                    : "topbar.engine",
+              )}
             </span>
             <span className="topbar-divider" />
             <span className="research-badge">
