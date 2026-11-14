@@ -190,8 +190,16 @@ export function redactPII(message: string) {
   );
   add(/\b[A-Z]{5}\d{4}[A-Z]\b/gi, "PAN", "[PAN_REDACTED]");
   add(/\b\d{4}[ -]\d{4}[ -]\d{4}\b/g, "SENSITIVE_ID", "[ID_REDACTED]");
+  // Credentials are masked whatever their shape: a password is any token,
+  // and OTP/PIN/CVV digits may be spaced or hyphenated ("12 34 56").
   add(
-    /\b(?:otp|pin|cvv|passcode|password)\s*(?:is)?\s*[:#=-]?\s*(\d{3,8})\b/gi,
+    /\b(?:password|passcode|passwd|pwd)\s*(?:is|was)?\s*[:#=-]?\s*(\S{1,64})/gi,
+    "AUTH_SECRET",
+    "[AUTH_REDACTED]",
+    1,
+  );
+  add(
+    /\b(?:otp|upi\s*pin|m-?pin|pin|cvv)\s*(?:is|was|number|no\.?)?\s*[:#=-]?\s*(\d(?:[ -]?\d){2,7})(?![\d])/gi,
     "AUTH_SECRET",
     "[AUTH_REDACTED]",
     1,
@@ -238,7 +246,12 @@ export function redactPII(message: string) {
     if (disqualifyingContext.test(prefix)) continue;
     anchors.push({ start, end, type: "UTR", replacement: value });
   }
-  add(/(?<!\d)(?:\+91[ -]?)?[6-9]\d{9}(?!\d)/g, "PHONE", "[PHONE_REDACTED]");
+  // Indian mobiles, also when grouped as 98765 43210 / 98765-43210 / 987 654 3210.
+  add(
+    /(?<![\d+])(?:\+?91[ -]?|0)?[6-9](?:[ -]?\d){9}(?![\d])/g,
+    "PHONE",
+    "[PHONE_REDACTED]",
+  );
   // Any remaining long digit run is an unidentified identifier, not a reference.
   add(/\b\d{8,}\b/g, "UNLABELLED_ID", "[ID_REDACTED]");
   const selected = [...spans].sort((a, b) => a.start - b.start);
@@ -375,6 +388,7 @@ export type ModelAudit =
       policy_from_rules?: {
         tier?: { model: string; rules: string };
         actions?: { added: string[]; removed: string[] };
+        panic?: { model: string; rules: string };
       };
     }
   | {

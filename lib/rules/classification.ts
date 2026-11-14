@@ -74,6 +74,21 @@ export const MERCHANT_SIGNALS =
 export const P2P_SIGNALS =
   /transfer|friend|p2p|beneficiary|re[cs]e?ipi?ent|rec\w{0,3}ver|payee|other\s*(?:person|party)|\bbande?y?\b/i;
 
+/**
+ * Evidence that money actually left the account. A scam category needs it:
+ * "I installed AnyDesk for work, UPI is fine" is not a remote-access scam.
+ */
+export const LOSS_SIGNALS =
+  /debit|deduct|withdr[ae]w|transferred\s*out|\blost\b|\bgone\b|stolen|disappear|taken|\bcut\b|\bkat|gaye|gayi|nikal|\budd|chale|went\s*out|unauthori[sz]ed|fraud|scam|cheat|₹\s*\d|\brs\.?\s*\d|inr\s*\d|कट|निकल|चले\s*गए|কেটে|కట్/i;
+
+/** The customer says no money left the account: nothing to reverse. */
+export const NO_DEBIT_SIGNALS =
+  /\b(?:before|without)\s+(?:any\s+)?(?:money|amount|funds?|paise|paisa)?\s*(?:was\s+|being\s+|getting\s+|got\s+)?(?:debited|deducted|cut|taken)|\b(?:not|never|no\s+money|nothing)\s+(?:was\s+|got\s+|been\s+|is\s+)?(?:debited|deducted|cut)\b|\bno\s+(?:debit|deduction)\b|\b(?:paise|paisa)\s+(?:nahi|nhi)\s+kat|\bkat[ae]?\s+(?:nahi|nhi)\b|पैसे\s+नहीं\s+कटे/i;
+
+/** The customer says the recipient did get the money. */
+export const RECEIVED_OK_SIGNALS =
+  /\b(?:friend|recipient|receiver|beneficiary|payee|merchant|shop(?:keeper)?|he|she|they)\s+(?:has\s+|have\s+|had\s+)?(?:received|got)\s+(?:my|the|it|money|payment|transfer|amount)|\b(?:paise|paisa|payment)\s+mil\s+(?:gaye|gaya|gya)\b|\bcredited\s+to\s+(?:him|her|them|the\s+recipient)/i;
+
 export const FRAUD_CATEGORIES: readonly Category[] = [
   "COLLECT_REQUEST_SCAM",
   "REMOTE_ACCESS_SCAM",
@@ -100,8 +115,9 @@ function positive(text: string, signal: RegExp): boolean {
 }
 
 export function classify(text: string): Category {
-  if (positive(text, REMOTE_ACCESS_SIGNALS)) return "REMOTE_ACCESS_SCAM";
-  if (positive(text, COLLECT_REQUEST_SIGNALS)) return "COLLECT_REQUEST_SCAM";
+  const loss = LOSS_SIGNALS.test(text);
+  if (positive(text, REMOTE_ACCESS_SIGNALS) && loss) return "REMOTE_ACCESS_SCAM";
+  if (positive(text, COLLECT_REQUEST_SIGNALS) && loss) return "COLLECT_REQUEST_SCAM";
   // Fraud evidence outranks any benign reading of the same sentence.
   if (positive(text, FRAUD_SIGNALS) || native("fraud").test(text))
     return "UNAUTHORIZED_ACCOUNT_TAKEOVER";
@@ -110,10 +126,13 @@ export function classify(text: string): Category {
   const intent =
     VOLUNTARY_INTENT_SIGNALS.test(text) || native("mistake").test(text);
   if (wrong && intent) return "VOLUNTARY_WRONG_VPA_TRANSFER";
+  // A reversal dispute needs money that left and did not arrive.
   const failure =
-    TECHNICAL_FAILURE_SIGNALS.test(text) ||
-    native("failed").test(text) ||
-    native("notReceived").test(text);
+    (TECHNICAL_FAILURE_SIGNALS.test(text) ||
+      native("failed").test(text) ||
+      native("notReceived").test(text)) &&
+    !NO_DEBIT_SIGNALS.test(text) &&
+    !RECEIVED_OK_SIGNALS.test(text);
   if (failure && (MERCHANT_SIGNALS.test(text) || native("merchant").test(text)))
     return "P2M_CONFIRMATION_FAILURE";
   if (failure && (P2P_SIGNALS.test(text) || native("recipient").test(text)))

@@ -48,6 +48,7 @@ const EVIDENCE_TIERS = new Set([
   "CUSTOMER_NEGLIGENCE_REVIEW",
 ]);
 const FRAUD_RAILS = ["CONTACT_BANK_PSP", "CALL_1930", "REPORT_CYBERCRIME"];
+const PANIC_RANK = { LOW: 0, MEDIUM: 1, HIGH_CRITICAL: 2 } as const;
 type PolicyFromRules = NonNullable<
   Extract<ModelAudit, { status: "used" }>["policy_from_rules"]
 >;
@@ -77,6 +78,9 @@ export function validateModelPayload(
   const anchors = new Set(rules.privacy.anchors.map((a) => a.replacement));
   if (p.utr_number !== null && !anchors.has(p.utr_number))
     reasons.push("utr_not_grounded");
+  // Occurring in the message is not enough: with several references the
+  // transaction is ambiguous, and choosing one is a guess.
+  if (p.utr_number !== null && anchors.size > 1) reasons.push("utr_ambiguous");
 
   const amounts = findAmounts(input.message);
   const values = new Set(amounts.hits.map((h) => h.value));
@@ -85,6 +89,7 @@ export function validateModelPayload(
     (amounts.invalid || !values.has(p.amount_inr))
   )
     reasons.push("amount_not_grounded");
+  if (p.amount_inr !== null && values.size > 1) reasons.push("amount_ambiguous");
 
   if (
     p.reporting_delay_working_days !== null &&
@@ -95,6 +100,13 @@ export function validateModelPayload(
 
   if (input.language !== "auto" && p.detected_language !== input.language)
     reasons.push("language_conflicts_with_operator");
+  // The reply is written in the detected language, so it must be the
+  // language the message is actually in.
+  if (
+    input.language === "auto" &&
+    p.detected_language !== rules.payload.detected_language
+  )
+    reasons.push("language_not_grounded");
 
   // The rules' keyword evidence is precise but narrow: on unfamiliar wording
   // they fall back to NEEDS_INFORMATION, and when they do name a category it
@@ -215,10 +227,16 @@ export async function triageWithModel(
   })();
   if (parsed?.success) {
     const policy = triage(raw, { category: parsed.data.dispute_category }).payload;
+    // Urgency may be raised by the model but never lowered below the rules.
+    const panic =
+      PANIC_RANK[parsed.data.panic_severity] >= PANIC_RANK[policy.panic_severity]
+        ? parsed.data.panic_severity
+        : policy.panic_severity;
     const merged = {
       ...parsed.data,
       rbi_liability_tier: policy.rbi_liability_tier,
       mandatory_actions: policy.mandatory_actions,
+      panic_severity: panic,
     };
     const retried = validateModelPayload(JSON.stringify(merged), input, rules);
     if (retried.ok) {
@@ -226,12 +244,14 @@ export async function triageWithModel(
       const added = policy.mandatory_actions.filter((a) => !parsed.data.mandatory_actions.includes(a));
       const removed = parsed.data.mandatory_actions.filter((a) => !policy.mandatory_actions.includes(a));
       const tierChanged = parsed.data.rbi_liability_tier !== policy.rbi_liability_tier;
-      if (tierChanged || added.length || removed.length)
+      const panicRaised = panic !== parsed.data.panic_severity;
+      if (tierChanged || added.length || removed.length || panicRaised)
         policyFromRules = {
           ...(tierChanged
             ? { tier: { model: parsed.data.rbi_liability_tier, rules: policy.rbi_liability_tier } }
             : {}),
           ...(added.length || removed.length ? { actions: { added, removed } } : {}),
+          ...(panicRaised ? { panic: { model: parsed.data.panic_severity, rules: panic } } : {}),
         };
     } else checked = retried;
   }

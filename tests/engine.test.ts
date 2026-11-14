@@ -503,3 +503,30 @@ test("native-script complaints in the most-spoken scheduled languages are classi
   for (const [message, category] of cases)
     assert.equal(triage({ message }).payload.dispute_category, category, message);
 });
+
+test("credentials and grouped phone numbers are masked whatever their shape", () => {
+  for (const [message, leaked] of [
+    ["password is abc123!", "abc123!"],
+    ["phone is 98765 43210", "98765 43210"],
+    ["OTP is 12 34 56", "12 34 56"],
+    ["my upi pin was 4 8 2 1", "4 8 2 1"],
+    ["call +91 98765-43210", "98765-43210"],
+  ] as const) {
+    const sanitized = triage({ message: `₹500 debited, UPI Ref No 612345678901. ${message}` }).privacy.sanitized;
+    assert.ok(!sanitized.includes(leaked), sanitized);
+    assert.ok(sanitized.includes("612345678901"), "the labelled UTR survives");
+  }
+});
+
+test("scam and failure categories need evidence of loss and non-receipt", () => {
+  for (const message of [
+    "I installed AnyDesk for my office work. My UPI is working normally.",
+    "My payment to the shop failed before any money was debited.",
+    "My friend received my transfer, but confirmation SMS is pending.",
+  ])
+    assert.equal(triage({ message }).payload.dispute_category, "NEEDS_INFORMATION", message);
+  assert.equal(
+    triage({ message: "Caller made me install AnyDesk and ₹20,000 was debited." }).payload.dispute_category,
+    "REMOTE_ACCESS_SCAM",
+  );
+});

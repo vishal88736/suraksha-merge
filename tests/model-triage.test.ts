@@ -290,3 +290,38 @@ test("the model may not replace a category the rules found with a different one"
   assert.ok(result.audit.model.status === "fallback" && result.audit.model.reasons.includes("model_contradicts_rules_category"));
   assert.equal(result.payload.dispute_category, "VOLUNTARY_WRONG_VPA_TRANSFER");
 });
+
+test("with several references or amounts the model may not pick one", async () => {
+  const message = "Two debits: ₹500 UTR 612345678901 and ₹700 UTR 612345678902, recipient did not get either transfer.";
+  const rules = triage({ message });
+  assert.equal(rules.payload.utr_number, null);
+  assert.equal(rules.payload.amount_inr, null);
+  const pick = (utr: string | null, amount: number | null) =>
+    validateModelPayload(
+      JSON.stringify({ utr_number: utr, dispute_category: "P2P_BENEFICIARY_NOT_CREDITED", amount_inr: amount, reporting_delay_working_days: null, rbi_liability_tier: "TECHNICAL_T_PLUS_1", mandatory_actions: ["CONTACT_BANK_PSP", "RAISE_APP_DISPUTE", "TRACK_REVERSAL", "REQUEST_UTR"], detected_language: "english", panic_severity: "LOW" }),
+      inputSchema.parse({ message }),
+      rules,
+    );
+  assert.deepEqual(pick("612345678901", null), { ok: false, reasons: ["utr_ambiguous"] });
+  assert.deepEqual(pick(null, 700), { ok: false, reasons: ["amount_ambiguous"] });
+  assert.equal(pick(null, null).ok, true);
+});
+
+test("urgency cannot be lowered and the language must match the message", async () => {
+  const urgent = await triageWithModel(
+    { message: MESSAGE, reporting_delay_working_days: 0 },
+    CONFIG,
+    fakeServer(JSON.stringify({ ...GOOD, reporting_delay_working_days: 0, panic_severity: "LOW" })),
+  );
+  assert.equal(urgent.audit.model.status, "used");
+  assert.equal(urgent.payload.panic_severity, "HIGH_CRITICAL");
+  assert.deepEqual(urgent.audit.model.status === "used" && urgent.audit.model.policy_from_rules?.panic, { model: "LOW", rules: "HIGH_CRITICAL" });
+
+  const wrongLanguage = await triageWithModel(
+    { message: MESSAGE },
+    CONFIG,
+    fakeServer(JSON.stringify({ ...GOOD, detected_language: "tamil" })),
+  );
+  assert.equal(wrongLanguage.audit.model.status, "fallback");
+  assert.ok(wrongLanguage.audit.model.status === "fallback" && wrongLanguage.audit.model.reasons.includes("language_not_grounded"));
+});

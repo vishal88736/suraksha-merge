@@ -66,6 +66,7 @@ export const triageResponseSchema = z.object({
             actions: z
               .object({ added: z.array(z.string()), removed: z.array(z.string()) })
               .optional(),
+            panic: z.object({ model: z.string(), rules: z.string() }).optional(),
           })
           .optional(),
       }),
