@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useI18n } from "../../lib/i18n/provider.tsx";
 import { currency, pretty } from "../../lib/format.ts";
+import { warningMessage } from "../../lib/i18n/warnings.ts";
 import type { TriageResult } from "../../lib/engine.ts";
 import { POLICY_VERSION } from "../../lib/policy.ts";
 import { JsonView } from "./json-view.tsx";
@@ -231,7 +232,7 @@ export function EnginePanel({
               <div>
                 <span>{t("transaction.amount")}</span>
                 <strong className="amount">
-                  {currency(result.payload.amount_inr)}
+                  {result.payload.amount_inr === null ? t("transaction.notIdentified") : currency(result.payload.amount_inr)}
                 </strong>
               </div>
               <div>
@@ -366,9 +367,14 @@ export function EnginePanel({
                 <TriangleAlert size={15} />
                 <div>
                   <strong>{t("checks.humanTitle")}</strong>
-                  {result.warnings.map((warning, index) => (
-                    <p key={index}>{warning}</p>
-                  ))}
+                  {result.warnings.map((warning, index) => {
+                    const localized = warningMessage(warning);
+                    return (
+                      <p key={index}>
+                        {localized ? t(localized.key, localized.vars) : warning}
+                      </p>
+                    );
+                  })}
                 </div>
               </div>
             )}

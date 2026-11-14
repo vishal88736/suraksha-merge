@@ -7,6 +7,11 @@ import {
 import { SCENARIOS } from "./content/scenarios.ts";
 export type TriageStatus = "idle" | "dirty" | "running" | "error";
 export type TriageState = {
+  /**
+   * The message of the sample scenario whose operator details (days elapsed,
+   * responsibility...) are still in the inputs; null once the user owns them.
+   */
+  scenarioMessage: string | null;
   input: TriageInput;
   submittedInput: TriageInput;
   submittedMessage: string;
@@ -59,8 +64,19 @@ export function initialTriageState(): TriageState {
     masked: true,
     revealed: false,
     revealUntil: 0,
+    scenarioMessage: input.message,
   };
 }
+
+/** Operator details that a sample scenario fills in. */
+const SCENARIO_CONTEXT = [
+  "reporting_delay_working_days",
+  "elapsed_calendar_days",
+  "responsibility",
+  "account_tier",
+  "transaction_date",
+] as const;
+
 export const isStale = (state: TriageState) =>
   !inputsMatch(state.input, state.submittedInput);
 export function triageReducer(
@@ -78,17 +94,37 @@ export function triageReducer(
         submittedInput: { ...input },
         submittedMessage: input.message,
         result: triage(input),
+        scenarioMessage: input.message,
       };
     }
     case "input/edit":
     case "input/replace": {
-      const input =
+      let input =
         action.type === "input/edit"
           ? { ...state.input, ...action.patch }
           : { ...action.input };
+      let scenarioMessage = action.type === "input/edit" ? state.scenarioMessage : null;
+      if (action.type === "input/edit" && scenarioMessage !== null) {
+        const patch = action.patch;
+        if (SCENARIO_CONTEXT.some((key) => key in patch)) {
+          // The user is editing the details: they own them now.
+          scenarioMessage = null;
+        } else if (
+          patch.message !== undefined &&
+          !patch.message.startsWith(scenarioMessage.slice(0, 24))
+        ) {
+          // A new message of the user's own: the sample's hidden details
+          // (e.g. "0 days elapsed") must not leak into its assessment.
+          const own = { ...input };
+          for (const key of SCENARIO_CONTEXT) delete own[key];
+          input = own;
+          scenarioMessage = null;
+        }
+      }
       return {
         ...state,
         input,
+        scenarioMessage,
         error: null,
         status:
           state.status === "running"

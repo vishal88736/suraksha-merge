@@ -74,6 +74,16 @@ const bundle: LocaleBundle = {
     "intake.customer": "ꯀꯁ ꯭ ꯇꯃꯔ",
     "intake.draft": "ꯁꯨꯔꯛꯁꯥ ꯗ ꯭ ꯔꯥꯐꯠ",
     "intake.forReview": "ꯔꯤꯚ ꯭ ꯌꯨ ꯇꯧꯅꯕꯒꯤꯗꯃꯛ",
+    "warning.futureDate": "ꯇ ꯭ ꯔꯥꯟꯖꯦꯛꯁꯟꯒꯤ ꯇꯥꯡ ꯑꯁꯤ ꯉꯁꯤꯒꯤ ꯃꯇꯨꯡꯗꯅꯤ; ꯇꯥꯡ ꯑꯗꯨ ꯌꯦꯡꯁꯤꯟꯕꯤꯌꯨ ꯫",
+    "warning.multipleUtr": "ꯇ ꯭ ꯔꯥꯟꯖꯦꯛꯁꯟ ꯔꯤꯐꯔꯦꯟꯁ ꯀꯌꯥ ꯐꯪꯈꯤ; ꯌꯦꯠꯅꯕ ꯑꯣꯏꯕ ꯇ ꯭ ꯔꯥꯟꯖꯦꯛꯁꯟ ꯑꯗꯨ ꯑꯍꯥꯟꯕꯗ ꯈꯟꯕꯤꯌꯨ ꯫",
+    "warning.utrRequired": "ꯇ ꯭ ꯔꯥꯟꯖꯦꯛꯁꯟ ꯑꯗꯨ ꯚꯦꯔꯤꯐꯥꯏ ꯇꯧꯅꯕꯒꯤꯗꯃꯛ 12-ꯗꯤꯖꯤꯠ UTR/RRN ꯍꯥꯏꯅ ꯂꯦꯕꯦꯜ ꯑꯣꯏꯕ ꯑꯃ ꯃꯊꯧ ꯇꯥꯏ ꯫",
+    "warning.amountInvalid": "ꯁꯦꯟꯐꯝ ꯑꯃꯗ ꯑꯔꯥꯟꯕ ꯃꯑꯣꯡ ꯑꯃ ꯂꯩ; ꯇ ꯭ ꯔꯥꯟꯖꯦꯛꯁꯟ ꯔꯤꯁꯤꯞꯇꯒꯤ ꯃꯁꯤ ꯀꯟꯐꯥꯔꯝ ꯇꯧ ꯫",
+    "warning.amountConflict": "ꯌꯦꯠꯅꯕ ꯁꯦꯟꯐꯝꯁꯤꯡ ꯐꯪꯈꯤ; ꯃꯤꯑꯣꯏ ꯑꯃꯅ ꯁꯦꯟꯐꯝ ꯑꯗꯨ ꯁꯣꯏꯗꯅ ꯈꯪꯍꯟꯒꯗꯕꯅꯤ ꯫",
+    "warning.delayConflict": "ꯄꯥꯎ ꯄꯤꯕꯗ ꯂꯦꯞꯈꯤꯕ ꯑꯗꯨ ꯃꯌꯦꯛ ꯁꯦꯡꯗꯦ ꯅꯠꯇ ꯭ ꯔꯒ ꯉꯝꯈꯩꯒꯤ ꯃꯄꯥꯟꯗ ꯂꯩ; ꯕꯦꯡ ꯭ ꯛ ꯑꯗꯨꯅ ꯃꯁꯤ ꯚꯦꯔꯤꯐꯥꯏ ꯇꯧꯒꯗꯕꯅꯤ ꯫",
+    "warning.responsibilityUnverified": "ꯊꯧꯗꯥꯡ ꯂꯧꯕ ꯑꯃꯁꯨꯡ ꯑꯌꯥꯕ ꯄꯤꯕ ꯑꯁꯤ ꯑꯆꯨꯝꯕ ꯈꯪꯗ ꯭ ꯔꯤ ꯫ ꯊꯕꯛ ꯇꯧꯕ ꯅꯨꯃꯤꯠ 3ꯅꯤꯒꯤ ꯃꯅꯨꯡꯗ ꯄꯥꯎꯗꯝꯕꯅ ꯖꯤꯔꯣ ꯂꯥꯏꯕꯂꯤꯇꯤ ꯂꯤꯡꯈꯠꯄ ꯉꯝꯗꯦ ꯫",
+    "warning.policy2027": "ꯏꯪ 2027ꯒꯤ ꯖꯅꯨꯋꯥꯔꯤ 1ꯗꯒꯤ ꯇꯧꯕ ꯇ ꯭ ꯔꯥꯟꯖꯦꯛꯁꯟꯁꯤꯡ ꯑꯁꯤ ꯂꯥꯛꯀꯗꯧꯔꯤꯕ RBI ꯂꯥꯏꯕꯂꯤꯇꯤ ꯑꯦꯃꯦꯟꯗꯃꯦꯟ ꯭ ꯇꯀꯤ ꯃꯈꯥꯗ ꯑꯃꯨꯛ ꯍꯟꯅ ꯌꯦꯡꯁꯤꯟꯕꯤꯕ ꯃꯊꯧ ꯇꯥꯏ ꯫",
+    "warning.noTemplates": "ꯍꯧꯖꯤꯛ ꯐꯥꯎꯕ {language} ꯒꯤ ꯆꯦꯛ ꯇꯧꯔꯕ ꯔꯤꯄ ꯭ ꯂꯥꯏ ꯇꯦꯝꯄ ꯭ ꯂꯦꯠ ꯑꯃꯠꯇ ꯂꯩꯇꯦ; ꯗ ꯭ ꯔꯥꯐꯠ ꯑꯗꯨ ꯏꯪꯂꯤꯁꯇ ꯂꯩ ꯫",
+    "intake.replyIn": "ꯔꯤꯄ ꯭ ꯂꯥꯏ ꯏꯟ ꯇꯧ",
     "intake.machineTranslated": "ꯃꯦꯁꯤꯟ ꯇ ꯭ ꯔꯥꯟꯁꯂꯦꯁꯟ · ꯅꯇꯤꯚ ꯁ ꯭ ꯄꯤꯀꯔ ꯑꯃꯅ ꯔꯤꯚ ꯭ ꯌꯨ ꯇꯧꯕ ꯃꯊꯧ ꯇꯥꯏ",
     "intake.copyReply": "ꯀꯁ ꯭ ꯇꯃꯔꯒꯤ ꯔꯤꯄ ꯭ ꯂꯥꯏ ꯑꯗꯨ ꯀꯣꯄꯤ ꯇꯧ",
     "intake.maskPii": "ꯑꯁꯦꯡꯕ ꯑꯗꯨ ꯃꯇꯝ ꯈꯔꯒꯤ ꯑꯣꯏꯅ ꯎꯠꯂꯛꯎ",
@@ -415,7 +425,7 @@ const bundle: LocaleBundle = {
     "UPI P2P · ₹1,500 · T+2 calendar days":
       "UPI P2P · ₹1,500 · T+2 ꯀꯦꯂꯦꯟꯗꯔꯒꯤ ꯅꯨꯃꯤꯠꯁꯤꯡ",
     "UPI transfer: T+1. Merchant confirmation failure: T+5. T refers to calendar date; compensation is ₹100 per day beyond the applicable deadline.":
-      "UPI ꯊꯥꯗꯣꯛꯄ: T+1 ꯫ ꯃꯔꯆꯦꯟ ꯭ ꯇ ꯀꯟꯐꯔꯃꯦꯁꯟ ꯐꯦꯜ: T+5 ꯫ Tꯅ ꯀꯦꯂꯦꯟꯗꯔꯒꯤ ꯇꯥꯡ ꯑꯗꯨ ꯇꯥꯛꯏ; ꯁꯦꯟꯊꯣꯛ ꯄꯤꯕꯁꯤ ꯆꯠꯅꯔꯤꯕ ꯃꯇꯝ ꯑꯗꯨꯒꯤ ꯃꯊꯛꯇ ꯂꯩꯕ ꯅꯨꯃꯤꯠ ꯈꯨꯗꯤꯡꯒꯤ ₹100 ꯅꯤ ꯫",
+      "UPI ꯊꯥꯗꯣꯛꯄ: T+1 ꯫ ꯃꯔꯆꯦꯟ ꯭ ꯇ ꯀꯟꯐꯔꯃꯦꯁꯟ ꯐꯦꯜ: T+5 ꯫ Tꯅ ꯀꯦꯂꯦꯟꯗꯔꯒꯤ ꯇꯥꯡ ꯇꯥꯛꯏ; ꯁꯦꯟꯊꯣꯛ ꯄꯤꯕꯁꯤ ꯆꯠꯅꯔꯤꯕ ꯃꯇꯝ ꯑꯗꯨꯒꯤ ꯃꯊꯛꯇ ꯂꯩꯕ ꯅꯨꯃꯤꯠ ꯈꯨꯗꯤꯡꯒꯤ ₹100 ꯅꯤ ꯫",
     "Validation sweep · weights selected before held-out test":
       "ꯚꯦꯜꯗꯤꯗꯦꯁꯟ ꯁ ꯭ ꯋꯤꯞ · ꯍꯣꯜꯗ-ꯑꯥꯎꯠ ꯇꯦꯁ ꯭ ꯠ ꯇꯧꯗ ꯭ ꯔꯤꯉꯩ ꯃꯃꯥꯡꯗ ꯈꯟꯒꯠꯂꯕ ꯋꯦꯠꯁꯤꯡ",
     "Voluntary wrong VPA · no automatic reversal":

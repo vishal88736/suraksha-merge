@@ -10,7 +10,14 @@ import {
 import { useI18n } from "../../lib/i18n/provider.tsx";
 import { pretty } from "../../lib/format.ts";
 import { SCENARIOS } from "../../lib/content/scenarios.ts";
-import { pick, replyLanguage } from "../../lib/i18n/locales.ts";
+import { pick, replyLanguage, type ReplyLanguage } from "../../lib/i18n/locales.ts";
+
+/** Romanized and native-script registers of the same language. */
+const REPLY_PAIRS: ReplyLanguage[][] = [
+  ["hinglish", "hindi_devanagari"],
+  ["tanglish", "tamil"],
+  ["marathi_english", "marathi"],
+];
 import { MACHINE_TRANSLATED_REPLIES } from "../../lib/i18n/replies.ts";
 import type { TriageInput, TriageResult } from "../../lib/engine.ts";
 import { MaskedText } from "./masked-text.tsx";
@@ -33,6 +40,7 @@ export function IntakePanel({
   onSelect,
   onInput,
   onRun,
+  onReplyLanguage,
   onRetry,
   onReset,
   onCopy,
@@ -55,6 +63,8 @@ export function IntakePanel({
   onSelect: (index: number) => void;
   onInput: (patch: Partial<TriageInput>) => void;
   onRun: () => void;
+  /** Re-run with the reply in another register of the same language. */
+  onReplyLanguage: (language: ReplyLanguage) => void;
   onRetry: () => void;
   onReset: () => void;
   onCopy: (text: string) => void;
@@ -183,6 +193,27 @@ export function IntakePanel({
             <Copy size={14} />
           </button>
         </div>
+        {(() => {
+          const pair = REPLY_PAIRS.find((p) => p.includes(result.payload.detected_language));
+          if (!pair) return null;
+          return (
+            <div className="reply-switch" role="group" aria-label={t("intake.replyIn")}>
+              <span>{t("intake.replyIn")}</span>
+              {pair.map((code) => (
+                <button
+                  key={code}
+                  type="button"
+                  className={code === result.payload.detected_language ? "active" : ""}
+                  aria-pressed={code === result.payload.detected_language}
+                  disabled={loading || code === result.payload.detected_language}
+                  onClick={() => onReplyLanguage(code)}
+                >
+                  {replyLanguage(code).nativeLabel}
+                </button>
+              ))}
+            </div>
+          );
+        })()}
         <div
           className="assistant-bubble"
           dir={replyLanguage(result.payload.detected_language).dir}

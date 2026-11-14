@@ -74,7 +74,11 @@ def public_target(message,language):
     # assistant claims that a bank has already approved the case.
     refs=set(re.findall(r'\b(?:UTR|RRN|UPI\s*Ref(?:\s*No)?|UPI[/-](?:(?:DR|CR|P2[AMP])[/-])?)\s*[:#=-]?\s*(\d{12})\b',message,re.I))
     amounts=set()
-    for token in re.findall(r'(?<!\w)(?:Rs\.?|INR|₹)\s*([0-9][0-9,]*(?:\.\d{1,2})?)(?!\d)(?!\.\d)',message,re.I):
+    # Mirrors lib/numbers.ts: "₹500", "Rs.500", "INR 500" and "500 rupaye", "200/-" or a currency word in an Indian script.
+    suffix=r'(?:rupaye|rupaiye|rupay|rupees?|rupiya|rupiye|rs\.?(?![^\W\d_])|/-|रुपये|रुपए|रुपया|রুপি|টাকা|ரூபாய்|రూపాయ|ರೂಪಾಯಿ|രൂപ|રૂપિયા|ਰੁਪਏ|روپے|روپیہ|ଟଙ୍କା)(?![^\W\d_])'
+    tokens=re.findall(r'(?<!\w)(?:Rs\.?|INR|₹)\s*([0-9][0-9,]*(?:\.\d{1,2})?)(?!\d)(?!\.\d)',message,re.I)
+    tokens+=re.findall(r'(?<![\w.,])([0-9][0-9,]*(?:\.\d{1,2})?)\s*'+suffix,message,re.I)
+    for token in tokens:
         try:
             number=Decimal(token.replace(',',''))
             if number>0:amounts.add(float(number))

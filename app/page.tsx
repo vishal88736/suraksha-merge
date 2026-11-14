@@ -95,12 +95,13 @@ export default function Page() {
     dispatch({ type: "scenario/select", index });
   }, []);
 
-  const run = useCallback(async () => {
+  const run = useCallback(async (patch?: Partial<typeof state.input>) => {
     requestRef.current?.abort();
     const controller = new AbortController();
     requestRef.current = controller;
     const requestId = crypto.randomUUID();
-    const input = { ...state.input };
+    const input = { ...state.input, ...patch };
+    if (patch) dispatch({ type: "input/edit", patch });
     dispatch({ type: "run/start", requestId, input });
     try {
       const result = await requestTriage(input, {
@@ -299,6 +300,7 @@ export default function Page() {
                 onSelect={choose}
                 onInput={(patch) => dispatch({ type: "input/edit", patch })}
                 onRun={() => void run()}
+                onReplyLanguage={(language) => void run({ language })}
                 onRetry={() => void run()}
                 onReset={() => choose(selected)}
                 onCopy={(text) => {

@@ -103,6 +103,22 @@ const en = {
   "intake.customer": "Customer",
   "intake.draft": "Suraksha draft",
   "intake.forReview": "FOR REVIEW",
+  "warning.futureDate": "The transaction date is after today; check the date.",
+  "warning.multipleUtr":
+    "Several transaction references were found; choose the disputed transaction first.",
+  "warning.utrRequired":
+    "A labelled 12-digit UTR/RRN is needed to verify the transaction.",
+  "warning.amountInvalid":
+    "An amount has an invalid format; confirm it from the transaction receipt.",
+  "warning.amountConflict": "Conflicting amounts were found; a person must confirm the amount.",
+  "warning.delayConflict":
+    "The reporting delay is unclear or out of range; the bank must verify it.",
+  "warning.responsibilityUnverified":
+    "Responsibility and authorisation are unverified. Reporting within 3 working days alone does not establish zero liability.",
+  "warning.policy2027":
+    "Transactions from 1 January 2027 need review under the upcoming RBI liability amendment.",
+  "warning.noTemplates": "No checked reply templates for {language} yet; the draft is in English.",
+  "intake.replyIn": "Reply in",
   "intake.machineTranslated": "MACHINE TRANSLATION · NEEDS REVIEW BY A NATIVE SPEAKER",
   "intake.copyReply": "Copy customer reply",
   "intake.maskPii": "Reveal original briefly",
@@ -472,6 +488,17 @@ const hi: Record<MessageKey, string> = {
   "intake.customer": "ग्राहक",
   "intake.draft": "सुरक्षा ड्राफ़्ट",
   "intake.forReview": "समीक्षा हेतु",
+  "warning.futureDate": "लेनदेन की तारीख आज के बाद की है; तारीख जाँचें।",
+  "warning.multipleUtr": "कई लेनदेन संदर्भ मिले; पहले विवादित लेनदेन चुनें।",
+  "warning.utrRequired": "लेनदेन सत्यापित करने के लिए लेबल वाला 12 अंकों का UTR/RRN चाहिए।",
+  "warning.amountInvalid": "एक राशि का प्रारूप गलत है; लेनदेन रसीद से पुष्टि करें।",
+  "warning.amountConflict": "अलग-अलग राशियाँ मिलीं; किसी व्यक्ति को राशि की पुष्टि करनी होगी।",
+  "warning.delayConflict": "रिपोर्ट करने में देरी स्पष्ट नहीं या सीमा से बाहर है; बैंक को सत्यापित करना होगा।",
+  "warning.responsibilityUnverified":
+    "ज़िम्मेदारी और प्राधिकरण असत्यापित हैं। केवल 3 कार्य दिवस में रिपोर्ट करना शून्य देनदारी साबित नहीं करता।",
+  "warning.policy2027": "1 जनवरी 2027 से होने वाले लेनदेन की आगामी RBI देनदारी संशोधन के तहत समीक्षा आवश्यक है।",
+  "warning.noTemplates": "{language} के लिए जाँचे गए उत्तर टेम्पलेट अभी नहीं हैं; ड्राफ़्ट अंग्रेज़ी में है।",
+  "intake.replyIn": "उत्तर की भाषा",
   "intake.machineTranslated": "मशीन अनुवाद · मूल भाषी समीक्षा आवश्यक",
   "intake.copyReply": "ग्राहक उत्तर कॉपी करें",
   "intake.maskPii": "मूल संदेश कुछ पल दिखाएँ",

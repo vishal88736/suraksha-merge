@@ -4670,3 +4670,26 @@ td strong {
   font-size: 12px;
   color: #8a5a12;
 }
+
+.reply-switch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0 8px;
+  font-size: 12px;
+  color: #5b6b78;
+}
+.reply-switch button {
+  border: 1px solid var(--line, #dce7ed);
+  background: #fff;
+  border-radius: 999px;
+  padding: 3px 10px;
+  font: inherit;
+  cursor: pointer;
+}
+.reply-switch button.active {
+  background: #111b23;
+  border-color: #111b23;
+  color: #fff;
+  cursor: default;
+}

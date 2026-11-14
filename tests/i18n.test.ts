@@ -216,3 +216,19 @@ test("every reply language passes the policy gates on a fraud case", () => {
     assert.ok(result.reply.text.includes("765432109812"), language.code);
   }
 });
+
+test("every engine warning has an interface translation", async () => {
+  const { warningMessage } = await import("../lib/i18n/warnings.ts");
+  const messages = [
+    "UTR 612345678901 and UTR 612345678902, ₹500 and ₹700 debited, recipient not credited",
+    "Rs.12.345 debited",
+    "Caller made me install AnyDesk and ₹2,000 was debited",
+    "Two different delays: reported 2 working days and 9 working days later",
+  ];
+  const seen = new Set<string>();
+  for (const message of messages) for (const w of triage({ message }).warnings) seen.add(w);
+  for (const w of triage({ message: "UPI transfer ₹500 not credited to recipient", transaction_date: "2027-02-01" }).warnings) seen.add(w);
+  for (const w of triage({ message: "UPI transfer ₹500 not credited", language: "bengali" }).warnings) seen.add(w);
+  assert.ok(seen.size >= 5, [...seen].join(" | "));
+  for (const w of seen) assert.ok(warningMessage(w), `untranslated warning: ${w}`);
+});

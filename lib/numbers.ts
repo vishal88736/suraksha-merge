@@ -20,10 +20,18 @@ export function findAmounts(message: string): {
   const text = asciiDigits(message);
   const hits: { value: number; start: number; end: number }[] = [];
   let invalid = false;
-  for (const match of text.matchAll(
-    /(?<![\p{L}\p{N}])(?:₹|rs\.?|inr)\s*([0-9][0-9,.]*)/giu,
-  )) {
+  // "₹500", "Rs.500", "INR 500" and, as customers also write, "500 rupaye",
+  // "10,000 rupees", "200/-" or a currency word in an Indian script.
+  const prefixed = /(?<![\p{L}\p{N}])(?:₹|rs\.?|inr)\s*([0-9][0-9,.]*)/giu;
+  const suffixed =
+    /(?<![\p{L}\p{N}.,])([0-9][0-9,.]*)\s*(?:rupaye|rupaiye|rupay|rupees?|rupiya|rupiye|rs\.?(?![\p{L}])|\/-|रुपये|रुपए|रुपया|রুপি|টাকা|ரூபாய்|రూపాయ|ರೂಪಾಯಿ|രൂപ|રૂપિયા|ਰੁਪਏ|روپے|روپیہ|ଟଙ୍କା)(?![\p{L}\p{M}])/giu;
+  const seen = new Set<number>();
+  for (const pattern of [prefixed, suffixed])
+  for (const match of text.matchAll(pattern)) {
     const token = match[1]!.replace(/[.,]$/, "");
+    const tokenStart = match.index! + match[0].indexOf(match[1]!);
+    if (seen.has(tokenStart)) continue; // "Rs 500 rupees" is one amount
+    seen.add(tokenStart);
     const prefix = text.slice(Math.max(0, match.index! - 45), match.index!);
     if (
       /(?:aadha+a?r|uidai|account|phone|mobile)\s*(?:number|no\.?|is)?\s*[:=-]?\s*$/i.test(
@@ -52,8 +60,7 @@ export function findAmounts(message: string): {
       invalid = true;
       continue;
     }
-    const start = match.index! + match[0].lastIndexOf(match[1]!);
-    hits.push({ value, start, end: start + token.length });
+    hits.push({ value, start: tokenStart, end: tokenStart + token.length });
   }
   return { hits, invalid };
 }
