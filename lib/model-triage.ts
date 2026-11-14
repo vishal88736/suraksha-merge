@@ -96,16 +96,19 @@ export function validateModelPayload(
   if (input.language !== "auto" && p.detected_language !== input.language)
     reasons.push("language_conflicts_with_operator");
 
-  // The rules' keyword evidence is precise: the model may refine it but not
-  // discard it. A vaguer answer, or a missed fraud signal, is not accepted.
+  // The rules' keyword evidence is precise but narrow: on unfamiliar wording
+  // they fall back to NEEDS_INFORMATION, and when they do name a category it
+  // has been right (data/challenge, reviewed benchmark). So the model adds
+  // recall: it may name the category when the rules cannot, but it may not
+  // contradict a category the rules found.
   const rulesCategory = rules.payload.dispute_category;
-  if (
-    p.dispute_category === "NEEDS_INFORMATION" &&
-    rulesCategory !== "NEEDS_INFORMATION"
-  )
-    reasons.push("model_less_specific_than_rules");
-  if (isFraud(rulesCategory) && !isFraud(p.dispute_category))
-    reasons.push("model_misses_fraud_signal");
+  if (rulesCategory !== "NEEDS_INFORMATION" && p.dispute_category !== rulesCategory) {
+    if (p.dispute_category === "NEEDS_INFORMATION")
+      reasons.push("model_less_specific_than_rules");
+    else reasons.push("model_contradicts_rules_category");
+    if (isFraud(rulesCategory) && !isFraud(p.dispute_category))
+      reasons.push("model_misses_fraud_signal");
+  }
 
   const tier = p.rbi_liability_tier;
   const technical = TECHNICAL_TIER[p.dispute_category];

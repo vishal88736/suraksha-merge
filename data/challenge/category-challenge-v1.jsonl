@@ -1,0 +1,42 @@
+{"id":"c01","language":"english","message":"Paid the grocery store via UPI, ₹640 left my account but their machine shows nothing received. Ref No 612345600101","category":"P2M_CONFIRMATION_FAILURE"}
+{"id":"c02","language":"english","message":"Booked a cab, the app says payment unsuccessful yet my bank deducted ₹318. UTR 612345600102","category":"P2M_CONFIRMATION_FAILURE"}
+{"id":"c03","language":"english","message":"Electricity bill payment through UPI got declined but ₹2,140 is gone from savings. UTR 612345600103","category":"P2M_CONFIRMATION_FAILURE"}
+{"id":"c04","language":"english","message":"Sent ₹1,500 to my brother on UPI, it's debited from me but he says nothing came. UTR 612345600104","category":"P2P_BENEFICIARY_NOT_CREDITED"}
+{"id":"c05","language":"english","message":"Transferred rent ₹12,000 to my landlord, my side shows debited, his side shows nothing. Ref No 612345600105","category":"P2P_BENEFICIARY_NOT_CREDITED"}
+{"id":"c06","language":"english","message":"Someone posing as an OLX buyer sent me a QR to 'receive' payment and ₹7,800 got taken instead. UTR 612345600106","category":"COLLECT_REQUEST_SCAM"}
+{"id":"c07","language":"english","message":"A guy asked me to approve a UPI request to get my cashback and ₹3,000 disappeared. UTR 612345600107","category":"COLLECT_REQUEST_SCAM"}
+{"id":"c08","language":"english","message":"Caller from 'bank support' got me to download a screen sharing app, then ₹25,000 went out. UTR 612345600108","category":"REMOTE_ACCESS_SCAM"}
+{"id":"c09","language":"english","message":"They made me install TeamViewer to fix my KYC and money was withdrawn after that. Ref No 612345600109","category":"REMOTE_ACCESS_SCAM"}
+{"id":"c10","language":"english","message":"Woke up to three UPI debits of ₹9,999 I never made. My phone was with me all night. UTR 612345600110","category":"UNAUTHORIZED_ACCOUNT_TAKEOVER"}
+{"id":"c11","language":"english","message":"My SIM stopped working and then ₹40,000 was moved out through UPI without me. UTR 612345600111","category":"UNAUTHORIZED_ACCOUNT_TAKEOVER"}
+{"id":"c12","language":"english","message":"I typed one wrong digit in the UPI ID and ₹4,000 went to a stranger, my own mistake. UTR 612345600112","category":"VOLUNTARY_WRONG_VPA_TRANSFER"}
+{"id":"c13","language":"english","message":"Accidentally paid ₹2,200 to the wrong contact while sending to my friend. UTR 612345600113","category":"VOLUNTARY_WRONG_VPA_TRANSFER"}
+{"id":"c14","language":"english","message":"Something is off with my UPI, can someone check?","category":"NEEDS_INFORMATION"}
+{"id":"c15","language":"english","message":"I see a UPI entry in my statement I don't recognise yet, need help understanding it.","category":"NEEDS_INFORMATION"}
+{"id":"c16","language":"hinglish","message":"Kirane wale ko UPI kiya, mere ₹540 cut ho gaye par uske phone pe payment aaya hi nahi. Ref No 612345600116","category":"P2M_CONFIRMATION_FAILURE"}
+{"id":"c17","language":"hinglish","message":"Petrol pump pe scan karke pay kiya, transaction fail bola lekin ₹1,200 account se gaye. UTR 612345600117","category":"P2M_CONFIRMATION_FAILURE"}
+{"id":"c18","language":"hinglish","message":"Mummy ko ₹3,000 bheje the, mere se kat gaye unke account mein aaye hi nahi. UTR 612345600118","category":"P2P_BENEFICIARY_NOT_CREDITED"}
+{"id":"c19","language":"hinglish","message":"Dost ko ₹800 transfer kiye, mera debit ho gaya uska credit nahi hua. UTR 612345600119","category":"P2P_BENEFICIARY_NOT_CREDITED"}
+{"id":"c20","language":"hinglish","message":"Ek banda bola paise receive karne ke liye request accept karo, accept kiya aur ₹6,500 chale gaye. UTR 612345600120","category":"COLLECT_REQUEST_SCAM"}
+{"id":"c21","language":"hinglish","message":"Facebook marketplace pe buyer ne QR bheja advance ke naam pe, scan kiya to ₹2,000 kat gaye. UTR 612345600121","category":"COLLECT_REQUEST_SCAM"}
+{"id":"c22","language":"hinglish","message":"Bijli wale ka call aaya, ek app daalwaya aur phir ₹15,000 nikal gaye. Ref No 612345600122","category":"REMOTE_ACCESS_SCAM"}
+{"id":"c23","language":"hinglish","message":"Kisi ne mera UPI pin le liya shayad, raat ko ₹18,000 udd gaye mere bina kuch kiye. UTR 612345600123","category":"UNAUTHORIZED_ACCOUNT_TAKEOVER"}
+{"id":"c24","language":"hinglish","message":"Phone chori ho gaya aur usse ₹22,000 UPI se nikale gaye. UTR 612345600124","category":"UNAUTHORIZED_ACCOUNT_TAKEOVER"}
+{"id":"c25","language":"hinglish","message":"Galti se galat UPI ID pe ₹1,100 bhej diye, ab wapas kaise milenge? UTR 612345600125","category":"VOLUNTARY_WRONG_VPA_TRANSFER"}
+{"id":"c26","language":"hinglish","message":"Naam same tha isliye galat bande ko ₹5,000 chale gaye meri galti se. UTR 612345600126","category":"VOLUNTARY_WRONG_VPA_TRANSFER"}
+{"id":"c27","language":"hinglish","message":"UPI mein kuch gadbad lag rahi hai, dekh lo please","category":"NEEDS_INFORMATION"}
+{"id":"c28","language":"hinglish","message":"Statement mein ek entry hai samajh nahi aa rahi, kya hai yeh?","category":"NEEDS_INFORMATION"}
+{"id":"c29","language":"hindi_devanagari","message":"दुकान पर UPI से भुगतान किया, ₹760 कट गए पर दुकानदार को पैसे नहीं मिले। UTR 612345600129","category":"P2M_CONFIRMATION_FAILURE"}
+{"id":"c30","language":"hindi_devanagari","message":"बिजली बिल भरा, भुगतान विफल दिखा लेकिन ₹1,890 खाते से कट गए। UTR 612345600130","category":"P2M_CONFIRMATION_FAILURE"}
+{"id":"c31","language":"hindi_devanagari","message":"भाई को ₹2,500 भेजे, मेरे खाते से कट गए पर उसके खाते में जमा नहीं हुए। UTR 612345600131","category":"P2P_BENEFICIARY_NOT_CREDITED"}
+{"id":"c32","language":"hindi_devanagari","message":"पिताजी को ₹4,000 ट्रांसफर किए, पैसे नहीं मिले उन्हें। UTR 612345600132","category":"P2P_BENEFICIARY_NOT_CREDITED"}
+{"id":"c33","language":"hindi_devanagari","message":"खरीदार ने पैसे भेजने के बहाने QR भेजा, स्कैन करते ही ₹9,000 कट गए। UTR 612345600133","category":"COLLECT_REQUEST_SCAM"}
+{"id":"c34","language":"hindi_devanagari","message":"किसी ने पैसे देने के नाम पर रिक्वेस्ट भेजी, मंज़ूर करते ही ₹3,500 चले गए। UTR 612345600134","category":"COLLECT_REQUEST_SCAM"}
+{"id":"c35","language":"hindi_devanagari","message":"KYC के नाम पर फ़ोन आया, AnyDesk डलवाया और ₹20,000 निकल गए। UTR 612345600135","category":"REMOTE_ACCESS_SCAM"}
+{"id":"c36","language":"hindi_devanagari","message":"कस्टमर केयर बनकर किसी ने स्क्रीन शेयर करवाई, फिर ₹11,000 कट गए। UTR 612345600136","category":"REMOTE_ACCESS_SCAM"}
+{"id":"c37","language":"hindi_devanagari","message":"मेरे खाते से ₹13,000 निकल गए, मैंने कोई लेनदेन नहीं किया। UTR 612345600137","category":"UNAUTHORIZED_ACCOUNT_TAKEOVER"}
+{"id":"c38","language":"hindi_devanagari","message":"मेरा अकाउंट हैक हो गया और ₹30,000 UPI से चले गए। UTR 612345600138","category":"UNAUTHORIZED_ACCOUNT_TAKEOVER"}
+{"id":"c39","language":"hindi_devanagari","message":"गलती से गलत UPI ID पर ₹1,600 भेज दिए। UTR 612345600139","category":"VOLUNTARY_WRONG_VPA_TRANSFER"}
+{"id":"c40","language":"hindi_devanagari","message":"नाम एक जैसा था, गलत व्यक्ति को ₹2,700 भेज दिए मेरी गलती से। UTR 612345600140","category":"VOLUNTARY_WRONG_VPA_TRANSFER"}
+{"id":"c41","language":"hindi_devanagari","message":"UPI में कुछ गड़बड़ लग रही है, कृपया देखें।","category":"NEEDS_INFORMATION"}
+{"id":"c42","language":"hindi_devanagari","message":"खाते में एक एंट्री दिख रही है जो समझ नहीं आ रही।","category":"NEEDS_INFORMATION"}

@@ -246,6 +246,15 @@ Raw model output alone, before the rules step (AuditKIT): reviewed SFT utility 0
 - ⚠️ **Rules-only scores 100% because the benchmark can't tell the two apart.** The curation gate keeps only labels consistent with the engine, and the reviewer confirmed them. A synthetic set built this way can't show the model beating the rules; the model's value is on messy real messages the rules don't understand. **Evaluation on real, human-labelled messages is the next required step.**
 - 🔒 The reviewed model saw fewer training cases than the pilot (550 vs 758) and scores slightly lower on panic severity. All differences are within a handful of cases out of 54.
 
+**Unfamiliar wording (challenge set).** 42 complaints written to differ from the training templates (`data/challenge/`; author-labelled, **not human-reviewed**, so treat these as indicators). Category accuracy:
+
+| Pipeline | Category correct |
+| :--- | ---: |
+| Rules only | 38.1% (16/42) |
+| **Reviewed SFT + rules** | **57.1%** (24/42) |
+
+The rules are precise but narrow: on unfamiliar wording they say "needs information", but when they name a category it has been right. So the model is allowed to add a category only when the rules can't name one, and it can't contradict a category the rules found. The model adds about 19 points of recall. That's real, but not good enough: the next training round needs varied, reviewed phrasings.
+
 <details>
 <summary><b>Round 1: unreviewed pilots on 92 synthetic test cases</b></summary>
 

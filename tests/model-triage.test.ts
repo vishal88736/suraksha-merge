@@ -279,3 +279,14 @@ test("the model may not discard the rules' category evidence", async () => {
   assert.equal(missedFraud.audit.model.status, "fallback");
   assert.ok(missedFraud.audit.model.status === "fallback" && missedFraud.audit.model.reasons.includes("model_misses_fraud_signal"));
 });
+
+test("the model may not replace a category the rules found with a different one", async () => {
+  const result = await triageWithModel(
+    { message: "गलती से गलत UPI ID पर ₹1,600 भेज दिए। UTR 612345600139" },
+    CONFIG,
+    fakeServer(JSON.stringify({ utr_number: "612345600139", dispute_category: "P2P_BENEFICIARY_NOT_CREDITED", amount_inr: 1600, reporting_delay_working_days: null, rbi_liability_tier: "TECHNICAL_T_PLUS_1", mandatory_actions: ["CONTACT_BANK_PSP", "RAISE_APP_DISPUTE", "TRACK_REVERSAL"], detected_language: "hindi_devanagari", panic_severity: "LOW" })),
+  );
+  assert.equal(result.audit.model.status, "fallback");
+  assert.ok(result.audit.model.status === "fallback" && result.audit.model.reasons.includes("model_contradicts_rules_category"));
+  assert.equal(result.payload.dispute_category, "VOLUNTARY_WRONG_VPA_TRANSFER");
+});
