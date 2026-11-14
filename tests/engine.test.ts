@@ -427,3 +427,29 @@ test("an unlabelled 12-digit number is still never taken as a UTR", () => {
     assert.match(result.reply.text, /transaction history|SMS/, message);
   }
 });
+
+test("receiver, payee and merchant phrasings from real complaints are classified", () => {
+  const cases: [string, string][] = [
+    ["paisa kat gaya but reciever ko nahi mila", "P2P_BENEFICIARY_NOT_CREDITED"],
+    ["money deducted but not credited to payee", "P2P_BENEFICIARY_NOT_CREDITED"],
+    ["paisa kat gaya but not recvd by other party!", "P2P_BENEFICIARY_NOT_CREDITED"],
+    ["paise kat gaye par receiver didnt get", "P2P_BENEFICIARY_NOT_CREDITED"],
+    ["Paisa kat gaya but merchant receive nhi hua", "P2M_CONFIRMATION_FAILURE"],
+    ["money got cut but merchant saying he not receive anything", "P2M_CONFIRMATION_FAILURE"],
+    ["paise kat gye UPI se aur maine koi transaction nahi kiya", "UNAUTHORIZED_ACCOUNT_TAKEOVER"],
+    ["meri UPI se paise kat gaye, i did not do this tranjection!!", "UNAUTHORIZED_ACCOUNT_TAKEOVER"],
+    ["paise kat gaye bina mere permission ke!", "UNAUTHORIZED_ACCOUNT_TAKEOVER"],
+    ["mera UPI transaction fail ho gaya", "NEEDS_INFORMATION"],
+    ["paise kat gaye lekin pohcha nahi", "NEEDS_INFORMATION"],
+  ];
+  for (const [message, category] of cases)
+    assert.equal(triage({ message }).payload.dispute_category, category, message);
+});
+
+test("a needs-information reply does not ask again for an amount already given", () => {
+  const withAmount = triage({ message: "UPI payment failed and ₹1,200 debited, what to do?" });
+  assert.equal(withAmount.payload.dispute_category, "NEEDS_INFORMATION");
+  assert.doesNotMatch(withAmount.reply.steps[0], /amount/i);
+  const without = triage({ message: "UPI payment failed, what to do?" });
+  assert.match(without.reply.steps[0], /amount/i);
+});

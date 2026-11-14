@@ -312,7 +312,12 @@ function draftReply(
       templates.voluntary.noGuarantee,
       templates.voluntary.keep,
     ];
-  else steps = [...templates.generic];
+  else
+    steps = [
+      // Do not ask again for an amount the customer already gave.
+      p.amount_inr !== null ? templates.genericAmountKnown : templates.generic[0],
+      ...templates.generic.slice(1),
+    ];
   // Every reply without a UTR says where to find one, including failed
   // payments, which still carry a reference.
   if (!p.utr_number) steps.push(templates.askForUtr);

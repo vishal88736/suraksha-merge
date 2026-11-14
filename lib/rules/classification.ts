@@ -27,7 +27,7 @@ export const COLLECT_REQUEST_SIGNALS =
 
 /** Money left without the customer's consent. */
 export const FRAUD_SIGNALS =
-  /\b(?:fraud|fraudster|scam(?:mer|mers|med|ming)?|cheat(?:ed|ing)?|phish(?:ing)?|hacked|compromised|unauthori[sz]ed|stolen|framed|impersonat\w*)\b|not\s*me\b|did\s*not\s*(?:make|authori[sz]e)|bina\s*permission|अनधिकृत/i;
+  /\b(?:fraud|fraudster|scam(?:mer|mers|med|ming)?|cheat(?:ed|ing)?|phish(?:ing)?|hacked|compromised|unauthori[sz]ed|stolen|framed|impersonat\w*)\b|not\s*me\b|did\s*not\s*(?:make|authori[sz]e|do\s*(?:this|it))|didn[’']?t\s*(?:make|authori[sz]e|do)\s*(?:this|it|any)|bina\s*(?:mere\s*|meri\s*)?permission|without\s*(?:my\s*)?permission|(?:maine|mai\s*ne|main\s*ne)\s*(?:koi|kuch)\s*(?:upi\s*)?(?:transaction|payment)?\s*n(?:a|h)?h?i\s*ki(?:ya)?|अनधिकृत/i;
 
 /** The customer states that they sent the money themselves, by mistake. */
 export const WRONG_TRANSFER_SIGNALS =
@@ -39,14 +39,15 @@ export const VOLUNTARY_INTENT_SIGNALS =
 
 /** The transaction did not complete as expected. */
 export const TECHNICAL_FAILURE_SIGNALS =
-  /not\s*(?:credited|received)|stuck|pending|failed|nahi\s*(?:mila|pahuncha)|mila\s*nahi|illa|debitaachu|confirmation|unconfirmed/i;
+  /not\s*(?:credited|received?|recvd|reached|got)|no\s*got|didn[’']?t\s*(?:get|receive|reach)|did\s*not\s*(?:get|receive|reach)|stuck|pending|failed|n(?:a|ah)?[hi]i?n?\s*(?:mil[ae]|pahunch[ae]|phuch[ae])|mil[ae]\s*n(?:a|h)?(?:h?i|ai)\b|receive\s*n(?:a)?h?i|illa|debitaachu|confirmation|unconfirmed/i;
 
 /** Merchant or acquiring context. */
 export const MERCHANT_SIGNALS =
   /merchant|swiggy|zomato|shop|store|p2m|bigbasket/i;
 
 /** Peer-to-peer transfer context. */
-export const P2P_SIGNALS = /transfer|friend|p2p|beneficiary|recipient/i;
+export const P2P_SIGNALS =
+  /transfer|friend|p2p|beneficiary|re[cs]e?ipi?ent|rec\w{0,3}ver|payee|other\s*(?:person|party)|\bbande?y?\b/i;
 
 export const FRAUD_CATEGORIES: readonly Category[] = [
   "COLLECT_REQUEST_SCAM",
