@@ -4,6 +4,7 @@ import {
   isFraud,
   payloadSchema,
   triage,
+  type ModelAudit,
   type ModelInfo,
   type Payload,
   type TriageInput,
@@ -47,11 +48,9 @@ const EVIDENCE_TIERS = new Set([
   "CUSTOMER_NEGLIGENCE_REVIEW",
 ]);
 const FRAUD_RAILS = ["CONTACT_BANK_PSP", "CALL_1930", "REPORT_CYBERCRIME"];
-const TIER_REASONS = new Set([
-  "tier_requires_policy_revalidation",
-  "tier_inconsistent_with_category",
-  "tier_not_supported_by_operator_context",
-]);
+type PolicyFromRules = NonNullable<
+  Extract<ModelAudit, { status: "used" }>["policy_from_rules"]
+>;
 
 /**
  * Accept a model payload only if it is strict, schema-valid JSON whose facts
@@ -188,28 +187,39 @@ export async function triageWithModel(
   }
   const model: ModelInfo = reply.model;
   let checked = validateModelPayload(reply.raw, input, rules);
-  // The liability tier is a policy decision. When the model's only error is
-  // the tier, the rules decide it for the model's category and the model's
-  // grounded facts are kept; the audit records both tiers.
-  let tierFromRules: { model_tier: string; rules_tier: string } | undefined;
-  if (!checked.ok && checked.reasons.every((r) => TIER_REASONS.has(r))) {
-    const parsed = payloadSchema.safeParse(parseStrictJson(reply.raw.trim()));
-    if (parsed.success) {
-      const rulesTier = triage(raw, { category: parsed.data.dispute_category })
-        .payload.rbi_liability_tier;
-      const retried = validateModelPayload(
-        JSON.stringify({ ...parsed.data, rbi_liability_tier: rulesTier }),
-        input,
-        rules,
-      );
-      if (retried.ok) {
-        checked = retried;
-        tierFromRules = {
-          model_tier: parsed.data.rbi_liability_tier,
-          rules_tier: rulesTier,
-        };
-      }
+  // The model extracts facts; the liability tier and the mandatory actions
+  // are policy decisions. The rules derive both from the model's category and
+  // the operator context, and the merged payload must pass every gate. The
+  // audit records whatever the rules changed.
+  let policyFromRules: PolicyFromRules | undefined;
+  const parsed = (() => {
+    try {
+      return payloadSchema.safeParse(parseStrictJson(reply.raw.trim()));
+    } catch {
+      return null;
     }
+  })();
+  if (parsed?.success) {
+    const policy = triage(raw, { category: parsed.data.dispute_category }).payload;
+    const merged = {
+      ...parsed.data,
+      rbi_liability_tier: policy.rbi_liability_tier,
+      mandatory_actions: policy.mandatory_actions,
+    };
+    const retried = validateModelPayload(JSON.stringify(merged), input, rules);
+    if (retried.ok) {
+      checked = retried;
+      const added = policy.mandatory_actions.filter((a) => !parsed.data.mandatory_actions.includes(a));
+      const removed = parsed.data.mandatory_actions.filter((a) => !policy.mandatory_actions.includes(a));
+      const tierChanged = parsed.data.rbi_liability_tier !== policy.rbi_liability_tier;
+      if (tierChanged || added.length || removed.length)
+        policyFromRules = {
+          ...(tierChanged
+            ? { tier: { model: parsed.data.rbi_liability_tier, rules: policy.rbi_liability_tier } }
+            : {}),
+          ...(added.length || removed.length ? { actions: { added, removed } } : {}),
+        };
+    } else checked = retried;
   }
   if (!checked.ok)
     return triage(raw, {
@@ -226,7 +236,7 @@ export async function triageWithModel(
       status: "used",
       model,
       latency_ms: reply.latency_ms,
-      ...(tierFromRules ? { tier_from_rules: tierFromRules } : {}),
+      ...(policyFromRules ? { policy_from_rules: policyFromRules } : {}),
     },
   });
   // The customer reply is template-built; it must still pass the same gates.

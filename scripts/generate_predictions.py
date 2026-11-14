@@ -12,6 +12,12 @@ from research.common import ROOT, digest, read_jsonl, write_jsonl
 from phase2_aligntune_train_and_merge import identity, materialize_base, pin_materialized_weights
 from research.artifacts import resolve_adapter
 
+def merge_kind(model):
+    """kind recorded by scripts/merge_pilot_adapter.py, or None for a hub model."""
+    report = Path(model) / "suraksha_pilot_merge.json"
+    return json.loads(report.read_text()).get("kind") if report.is_file() else None
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--model", required=True)
@@ -76,7 +82,7 @@ def main():
         if torch.cuda.is_available(): torch.cuda.synchronize()
         records.append({"sample_id": sample["sample_id"], "prediction": parts[0]+"\n---REPLY---\n"+parts[1], "latency_seconds": time.perf_counter()-started, "input_tokens": input_tokens, "output_tokens": output_tokens, "model": args.model, "adapter": str(args.adapter) if args.adapter else None, "generation_calls": 2})
     write_jsonl(args.output, records)
-    manifest = {"benchmark_sha256": digest(args.benchmark.read_bytes()), "predictions_sha256": digest(args.output.read_bytes()), "model": args.model, "identity": model_identity, "hf_revision": model_identity["base_revision"], "quantization": args.quantization, "adapter_unreviewed_pilot": bool(adapter_manifest and adapter_manifest.get("unreviewed_pilot")), "model_unreviewed_pilot_merge": (Path(args.model) / "suraksha_pilot_merge.json").is_file(), "adapter_sha256": adapter_manifest["artifacts"]["adapter_model.safetensors"] if adapter_manifest else None, "adapter": str(args.adapter) if args.adapter else None, "device": str(model.device), "gpu": torch.cuda.get_device_name() if torch.cuda.is_available() else None, "do_sample": False, "max_new_tokens_per_call": args.max_new_tokens, "generation_calls_per_ticket": 2, "repairs_applied": False}
+    manifest = {"benchmark_sha256": digest(args.benchmark.read_bytes()), "predictions_sha256": digest(args.output.read_bytes()), "model": args.model, "identity": model_identity, "hf_revision": model_identity["base_revision"], "quantization": args.quantization, "adapter_unreviewed_pilot": bool(adapter_manifest and adapter_manifest.get("unreviewed_pilot")), "model_unreviewed_pilot_merge": merge_kind(args.model) == "unreviewed_pilot_merged_base", "model_reviewed_merge": merge_kind(args.model) == "reviewed_merged_base", "adapter_sha256": adapter_manifest["artifacts"]["adapter_model.safetensors"] if adapter_manifest else None, "adapter": str(args.adapter) if args.adapter else None, "device": str(model.device), "gpu": torch.cuda.get_device_name() if torch.cuda.is_available() else None, "do_sample": False, "max_new_tokens_per_call": args.max_new_tokens, "generation_calls_per_ticket": 2, "repairs_applied": False}
     args.output.with_suffix(".manifest.json").write_text(json.dumps(manifest,indent=2)+"\n")
     print(json.dumps(manifest, indent=2))
 if __name__ == "__main__": main()

@@ -201,7 +201,7 @@ export function EnginePanel({
                   : t("engine.variantBase"),
               ms: Math.round(result.audit.model.latency_ms),
             }) +
-            (result.audit.model.tier_from_rules
+            (result.audit.model.policy_from_rules
               ? ` · ${t("engine.tierFromRules")}`
               : "")
           : result.audit.model.status === "fallback"

@@ -230,11 +230,26 @@ test("a model whose only error is the liability tier is used, with the tier set 
   );
   assert.equal(result.audit.model.status, "used");
   assert.equal(result.payload.rbi_liability_tier, "PENDING_VERIFICATION");
-  assert.deepEqual(result.audit.model.status === "used" && result.audit.model.tier_from_rules, {
-    model_tier: "ZERO_LIABILITY_ELIGIBLE",
-    rules_tier: "PENDING_VERIFICATION",
+  assert.deepEqual(result.audit.model.status === "used" && result.audit.model.policy_from_rules?.tier, {
+    model: "ZERO_LIABILITY_ELIGIBLE",
+    rules: "PENDING_VERIFICATION",
   });
   assert.equal(triageResponseSchema.safeParse(result).success, true);
+});
+
+test("missing policy actions are supplied by the rules, and the audit says so", async () => {
+  const actions = GOOD.mandatory_actions.filter((a) => a !== "HUMAN_REVIEW");
+  const result = await triageWithModel(
+    { message: MESSAGE, reporting_delay_working_days: 0 },
+    CONFIG,
+    fakeServer(JSON.stringify({ ...GOOD, reporting_delay_working_days: 0, mandatory_actions: actions })),
+  );
+  assert.equal(result.audit.model.status, "used");
+  assert.ok(result.payload.mandatory_actions.includes("HUMAN_REVIEW"));
+  assert.deepEqual(
+    result.audit.model.status === "used" && result.audit.model.policy_from_rules?.actions,
+    { added: ["HUMAN_REVIEW"], removed: [] },
+  );
 });
 
 test("a tier error alongside an ungrounded fact still falls back to rules", async () => {

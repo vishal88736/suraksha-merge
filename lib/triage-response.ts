@@ -60,8 +60,13 @@ export const triageResponseSchema = z.object({
         status: z.literal("used"),
         model: modelInfo,
         latency_ms: z.number().finite().nonnegative(),
-        tier_from_rules: z
-          .object({ model_tier: z.string(), rules_tier: z.string() })
+        policy_from_rules: z
+          .object({
+            tier: z.object({ model: z.string(), rules: z.string() }).optional(),
+            actions: z
+              .object({ added: z.array(z.string()), removed: z.array(z.string()) })
+              .optional(),
+          })
           .optional(),
       }),
       z.object({

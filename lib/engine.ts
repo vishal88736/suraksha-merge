@@ -371,8 +371,11 @@ export type ModelAudit =
       status: "used";
       model: ModelInfo;
       latency_ms: number;
-      /** Set when the policy rules, not the model, decided the liability tier. */
-      tier_from_rules?: { model_tier: string; rules_tier: string };
+      /** What the policy rules changed in the model's tier and actions. */
+      policy_from_rules?: {
+        tier?: { model: string; rules: string };
+        actions?: { added: string[]; removed: string[] };
+      };
     }
   | {
       status: "fallback";
