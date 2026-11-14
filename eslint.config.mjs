@@ -17,6 +17,7 @@ const eslintConfig = defineConfig([
     ".venv-training/**",
     ".venv-i18n/**",
     ".i18n-pylib/**",
+    "public/ocr/**",
   ]),
   {
     files: ["components/ui/**/*.{ts,tsx}", "hooks/use-mobile.ts"],
