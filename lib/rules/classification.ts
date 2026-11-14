@@ -25,13 +25,14 @@ const NATIVE = {
   fraud:
     "জালিয়াতি|প্রতারণা|প্রতারক|হ্যাক|மோசடி|ஹேக்|మోసం|హ్యాక్|फसवणूक|हॅक|છેતરપિંડી|હેક|ವಂಚನೆ|ಮೋಸ|ಹ್ಯಾಕ್|തട്ടിപ്പ്|ഹാക്ക്|ਧੋਖਾਧੜੀ|ਠੱਗੀ|ਹੈਕ|دھوکہ|فراڈ|ہیک|ପ୍ରତାରଣା|ଠକେଇ|धोखाधड़ी|धोखा|ठगी|फ्रॉड|हैक",
   failed:
-    "ব্যর্থ|தோல்வி|విఫల|अयशस्वी|નિષ્ફળ|ವಿಫಲ|പരാജയ|ਫੇਲ੍ਹ|ਅਸਫਲ|ناکام|ବିଫଳ|विफल|असफल|फेल",
+    "ব্যর্থ|தோல்வி|విఫల|अयशस्वी|નિષ્ફળ|ವಿಫಲ|പരാജയ|ਫੇਲ੍ਹ|ਅਸਫਲ|ناکام|ବିଫଳ|विफल|असफल|फेल|अस्वीकार|नहीं हुआ|अटका|अटक गया|बकाया",
   notReceived:
     "পায়নি|পৌঁছায়নি|জমা হয়নি|வரவில்லை|கிடைக்கவில்லை|வரவு வைக்கப்படவில்லை|రాలేదు|అందలేదు|జమ కాలేదు|मिळाले नाही|जमा झाले नाही|પહોંચ્યા નથી|મળ્યા નથી|જમા થયા નથી|ಬಂದಿಲ್ಲ|ತಲುಪಿಲ್ಲ|ಜಮೆ ಆಗಿಲ್ಲ|ലഭിച്ചില്ല|കിട്ടിയില്ല|എത്തിയില്ല|ਨਹੀਂ ਮਿਲੇ|ਨਹੀਂ ਪਹੁੰਚ|نہیں ملے|رقم نہیں ملی|نہیں پہنچ|وصول نہیں|ପାଇନାହାଁନ୍ତି|ପହଞ୍ଚିନାହିଁ|नहीं मिले|पैसे नहीं मिल|रकम नहीं मिल|राशि नहीं मिल|नहीं पहुँच|नहीं पहुंच|जमा नहीं",
   recipient:
-    "প্রাপক|பெறுந|గ్రహీత|प्राप्तकर्त|પ્રાપ્તકર્ત|ಸ್ವೀಕರಿಸುವವ|സ്വീകർത്താവ|ਪ੍ਰਾਪਤਕਰਤ|وصول کنندہ|ପ୍ରାପକ|पाने वाले",
+    "প্রাপক|பெறுந|గ్రహీత|प्राप्तकर्त|પ્રાપ્તકર્ત|ಸ್ವೀಕರಿಸುವವ|സ്വീകർത്താവ|ਪ੍ਰਾਪਤਕਰਤ|وصول کنندہ|ପ୍ରାପକ|पाने वाले|दोस्त|रूममेट|मकान मालिक|ट्रांसफर|उसे पैसे|उसको पैसे",
   merchant:
-    "দোকান|ব্যবসায়ী|கடை|வணிகர்|దుకాణ|వ్యాపారి|दुकान|व्यापारी|દુકાન|વેપારી|ಅಂಗಡಿ|ವ್ಯಾಪಾರಿ|കട|വ്യാപാരി|ਦੁਕਾਨ|ਵਪਾਰੀ|دکان|دکاندار|ଦୋକାନ|ବ୍ୟବସାୟୀ",
+    "দোকান|ব্যবসায়ী|கடை|வணிகர்|దుకాణ|వ్యాపారి|दुकान|व्यापारी|દુકાન|વેપારી|ಅಂಗಡಿ|ವ್ಯಾಪಾರಿ|കട|വ്യാപാരി|ਦੁਕਾਨ|ਵਪਾਰੀ|دکان|دکاندار|ଦୋକାନ|ବ୍ୟବସାୟୀ|बिजली|रिचार्ज|ओला|उबर",
+  purchase: "ऑर्डर|बिल|टिकट|फीस",
   wrong:
     "ভুল|தவறான|తప్పు|चुकीच्या|ખોટા|ತಪ್ಪು|തെറ്റായ|ਗਲਤ|غلط|ଭୁଲ|गलत",
   mistake:
@@ -48,7 +49,7 @@ export const REMOTE_ACCESS_SIGNALS =
  * asking for money by QR. "Scanned the shop QR" is a merchant payment.
  */
 export const COLLECT_REQUEST_SIGNALS =
-  /collect\s*request|advance\s*(?:payment|amount)|\bqr\b[\s\S]{0,60}\b(?:to\s+)?(?:receive|get|accept)\s+(?:the\s+|my\s+)?(?:money|payment|amount|paise)|(?:olx|facebook|instagram|amazon|buyer|seller|receive\s*money|request\s*money)[\s\S]{0,180}\bqr\b|\bqr\b[\s\S]{0,120}\b(?:scam|fraud|fraudster|cheat|phish|advance\s*payment)\b/i;
+  /collect\s*request|advance\s*(?:payment|amount)|\bqr\b[\s\S]{0,60}\b(?:to\s+)?(?:receive|get|accept)\s+(?:the\s+|my\s+)?(?:money|payment|amount|paise)|\bqr\b[\s\S]{0,60}(?:paise|payment)\s+(?:receive|lene|pane)|QR[^।]{0,60}पैसे\s*(?:पाने|लेने)|(?:olx|facebook|instagram|amazon|buyer|seller|receive\s*money|request\s*money)[\s\S]{0,180}\bqr\b|\bqr\b[\s\S]{0,120}\b(?:scam|fraud|fraudster|cheat|phish|advance\s*payment)\b/i;
 
 /** Money left without the customer's consent. */
 export const FRAUD_SIGNALS =
@@ -59,11 +60,11 @@ export const FRAUD_SIGNALS =
  * engineering takeover once money has left ("shared the OTP", "OTP bata diya").
  */
 export const CREDENTIAL_SHARED_SIGNALS =
-  /\b(?:shared?|gave|give|told|tell|read\s*out|provided?)\b[^.!?\n]{0,40}\b(?:otp|upi\s*pin|m-?pin|pin)\b|\b(?:otp|upi\s*pin|pin)\b[^.!?\n]{0,25}\b(?:bata\s*(?:diya|di|dia)|de\s*(?:diya|di|dia)|share\s*(?:kiya|kar\s*diya|ki))/i;
+  /\b(?:shared?|gave|give|told|tell|read\s*out|provided?)\b[^.!?\n]{0,40}\b(?:otp|upi\s*pin|m-?pin|pin)\b|\b(?:otp|upi\s*pin|pin)\b[^.!?\n]{0,25}\b(?:bata\s*(?:diya|di|dia)|de\s*(?:diya|di|dia)|share\s*(?:kiya|kar\s*diya|ki))|(?:OTP|PIN)[^।.!?\n]{0,25}(?:बता\s*दिया|दे\s*दिया|शेयर\s*किया)/i;
 
 /** The customer states that they sent the money themselves, by mistake. */
 export const WRONG_TRANSFER_SIGNALS =
-  /wrong\s*(?:vpa|upi|person|account)|galat\s*(?:vpa|upi|account)|chukichya/i;
+  /wrong\s*(?:vpa|upi|person|account)|galat\s*(?:vpa|upi|account)|chukichya|kisi\s*aur\s*(?:ke|ki|ko)\s*(?:upi|vpa|account|number)|someone\s*else[’']?s\s*(?:upi|vpa|account)/i;
 
 /** First-person intent that the transfer was voluntary. */
 export const VOLUNTARY_INTENT_SIGNALS =
@@ -71,7 +72,7 @@ export const VOLUNTARY_INTENT_SIGNALS =
 
 /** The transaction did not complete as expected. */
 export const TECHNICAL_FAILURE_SIGNALS =
-  /not\s*(?:credited|received?|recvd|reached|got)|no\s*got|didn[’']?t\s*(?:get|receive|reach)|did\s*not\s*(?:get|receive|reach)|stuck|pending|failed|declined|(?:payment|transaction|transfer|order)\s+(?:was\s+|is\s+|got\s+)?unsuccessful|(?:did\s*not|didn[’']?t)\s*go\s*through|not\s*(?:placed|completed|successful|processed)|order\s*(?:failed|cancel+ed)|n(?:a|ah)?[hi]i?n?\s*(?:mil[ae]|pahunch[ae]|phuch[ae])|mil[ae]\s*n(?:a|h)?(?:h?i|ai)\b|receive\s*n(?:a)?h?i|illa|debitaachu|confirmation|unconfirmed/i;
+  /not\s*(?:credited|received?|recvd|reached|got)|no\s*got|didn[’']?t\s*(?:get|receive|reach)|did\s*not\s*(?:get|receive|reach)|stuck|pending|failed|declined|(?:payment|transaction|transfer|order)\s+(?:was\s+|is\s+|got\s+)?unsuccessful|(?:did\s*not|didn[’']?t)\s*go\s*through|not\s*(?:placed|completed|successful|processed)|order\s*(?:failed|cancel+ed)|n(?:a|ah)?[hi]i?n?\s*(?:mil[ae]|pahunch[ae]|phuch[ae])|mil[ae]\s*n(?:a|h)?(?:h?i|ai)\b|receive\s*n(?:a)?h?i|illa|debitaachu|confirmation|unconfirmed|\bunpaid\b|(?:place|complete|successful)\s*nahi\s*hu/i;
 
 /** Merchant or acquiring context. */
 export const MERCHANT_SIGNALS =
@@ -86,7 +87,7 @@ export const PURCHASE_SIGNALS =
 
 /** Peer-to-peer transfer context. */
 export const P2P_SIGNALS =
-  /transfer|friend|p2p|beneficiary|re[cs]e?ipi?ent|rec\w{0,3}ver|payee|other\s*(?:person|party)|\bbande?y?\b/i;
+  /transfer|friend|p2p|beneficiary|re[cs]e?ipi?ent|rec\w{0,3}ver|payee|other\s*(?:person|party)|\bbande?y?\b|roommate|brother|sister|landlord|\bsent\s+(?:him|her)\b|\b(?:he|she)\s+(?:has\s+not|hasn[’']?t|did\s*not|didn[’']?t)\s+(?:received?|got|get)\b|\bdost\b|\busko\b/i;
 
 /**
  * Evidence that money actually left the account. A scam category needs it:
@@ -156,6 +157,6 @@ export function classify(text: string): Category {
     return "P2M_CONFIRMATION_FAILURE";
   if (P2P_SIGNALS.test(text) || native("recipient").test(text))
     return "P2P_BENEFICIARY_NOT_CREDITED";
-  if (PURCHASE_SIGNALS.test(text)) return "P2M_CONFIRMATION_FAILURE";
+  if (PURCHASE_SIGNALS.test(text) || native("purchase").test(text)) return "P2M_CONFIRMATION_FAILURE";
   return "NEEDS_INFORMATION";
 }

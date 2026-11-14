@@ -209,10 +209,10 @@ flowchart LR
     subgraph C ["1 · CuratorKIT"]
       C1["clean · dedup · MinHash<br/>schema & policy gates"]
     end
-    C --> H["👤 2 · Human review<br/><sub>652 corpus + 168 varied-wording<br/>cases, batch sign-off</sub>"]
+    C --> H["👤 2 · Human review<br/><sub>652 corpus + 213 varied-wording<br/>cases, batch sign-off</sub>"]
     H --> T
     subgraph T ["3 · AlignTune"]
-      T1["QLoRA SFT on 765<br/>reviewed cases (6 GB GPU)"]
+      T1["QLoRA SFT on 810<br/>reviewed cases (6 GB GPU)"]
       T2["DR-GRPO · DPO · weighted merge<br/><sub>pilot experiments</sub>"]
     end
     T --> A
@@ -236,6 +236,7 @@ flowchart LR
 
 - **652 corpus cases** were reviewed (every English, Hindi and Hinglish case): 553 accepted, 99 corrected and 4 rejected. Each decision records the reviewer, a timestamp, item hashes and notes.
 - **168 hand-written cases** were added, worded unlike the templates ([`scripts/author_variations.ts`](scripts/author_variations.ts)), and reviewed the same way.
+- **45 more** ([`scripts/author_variations_v2.ts`](scripts/author_variations_v2.ts)) cover what testing the live site with fresh messages found: billers and apps, "order not placed", amounts without ₹, an OTP or PIN given to a caller, a QR scanned "to receive money", a bill split with a friend, plus negatives.
 - Review used an AI pre-audit against the reviewer's checklist, with a human sign-off on each batch table. The rules set along the way are recorded in the notes. Examples: a bank deficiency gives zero liability whatever the reporting delay (RBI 2017 circular, para 6(i)); "receiver didn't get it" means P2P.
 
 ### 3 · AlignTune: training on reviewed data
@@ -243,7 +244,7 @@ flowchart LR
 [`phase2_aligntune_train_and_merge.py`](phase2_aligntune_train_and_merge.py) · [pilot log](docs/PILOT_TRAINING.md)
 
 - **QLoRA SFT** on Qwen2.5-3B-Instruct (NF4, LoRA r16/α32 on all projections, assistant-only chunked loss) on a **6 GB RTX 4050 laptop GPU**.
-- `--reviewed-laptop` trains only on data whose curation manifest marks every row human-reviewed. Round 3 used 765 cases and 87 steps, and was merged into `artifacts/reviewed/merged-schema-sft-002`.
+- `--reviewed-laptop` trains only on data whose curation manifest marks every row human-reviewed. Round 4 used 810 cases and 92 steps, and was merged into `artifacts/reviewed/merged-schema-sft-004`.
 - Pilot experiments on the unreviewed corpus (DR-GRPO, empathy DPO with a memory patch, task-arithmetic merging) are documented. The empathy merge hurt accuracy and isn't used.
 
 ### 4 · AuditKIT and runtime evaluation
@@ -263,13 +264,17 @@ Every row goes through the real runtime path: model, gates, then the policy rule
 | Pipeline | 54 reviewed test cases<br>(all 8 fields exact) | 42 unfamiliar-wording cases<br>(category correct) |
 | :--- | ---: | ---: |
 | Base Qwen2.5-3B (no fine-tuning) | 0 valid outputs → all answered by rules | n/a |
-| Rules only | **100%** | 38.1% |
-| Round 2: SFT on 598 reviewed cases | 90.7% | 59.5% |
-| **Round 3: SFT on 765 reviewed cases incl. varied wording** ⭐ *served* | 96.3% | **73.8%** |
+| Rules only (today's rules) | **100%** | 45.2% |
+| Round 2: SFT on 598 reviewed cases | 90.7% | 59.5%¹ |
+| Round 3: SFT on 765 reviewed cases incl. varied wording | 96.3% | 81.0% |
+| **Round 4: SFT on 810 reviewed cases incl. live-testing cases** ⭐ *served* | **98.1%** | **90.5%** |
+
+<sub>¹ Measured with the rules of that time. Rounds 3 and 4 were both re-measured with today's rules, so they compare directly.</sub>
 
 **How to read this honestly**
 
-- ✅ **Reviewed, varied wording is what improved generalisation.** On wording it never saw, the system goes from 38% (rules alone) to 74%. The two remaining reviewed-test errors are both in panic severity.
+- ✅ **Reviewed, varied wording is what improved generalisation.** On wording it never saw, the system goes from 45% (rules alone) to 91%. The one remaining reviewed-test error is in panic severity.
+- ⚠️ **The rules are still the safety net.** On six fresh messages typed into the live site, every final answer was right, but the model's own answer was accepted for only 2; for the other 4 the rules contradicted it and answered instead.
 - ⚠️ **Rules-only scores 100% on the reviewed test set because those labels were built to agree with the engine.** That set can't show the model beating the rules; the unfamiliar-wording set can.
 - ⚠️ **Model-written replies aren't good enough yet.** A dual-task model (JSON + reply) passed the reply checks for 27 of 52 reviewed-test and 16 of 39 challenge cases, and was less accurate on the JSON (90.7%). Its replies were mostly the templates copied back with new errors, because templates were its training targets. Replies therefore come from reviewed templates unless you opt in.
 - ⚠️ **The challenge set is labelled by the project, not human-reviewed**, and the same author wrote the varied training cases. They were kept dissimilar (trigram Jaccard ≤ 0.6), but some style overlap is possible. **The true measure, evaluation on real human-labelled messages, hasn't been done.**
@@ -340,7 +345,7 @@ You need `.venv-training`, a CUDA GPU with about 6 GB of VRAM, and the trained m
 ```bash
 # 1. serve the model on loopback
 HF_HUB_OFFLINE=1 .venv-training/bin/python scripts/serve_model.py \
-  --model artifacts/reviewed/merged-schema-sft-002
+  --model artifacts/reviewed/merged-schema-sft-004
 
 # 2. point the website at it
 printf 'SURAKSHA_MODEL_URL=http://127.0.0.1:8765\nSURAKSHA_MODEL_TIMEOUT_MS=35000\n' > .dev.vars
@@ -393,14 +398,14 @@ uv pip install --python .venv/bin/python -r requirements-public-data.txt
 .venv/bin/python scripts/prepare_review.py export-curation \
   --languages english hindi_devanagari hinglish --output data/review/reviewed_curation_inputs.jsonl
 .venv/bin/python phase1_curatorkit_pipeline.py --input <reviewed inputs> \
-  --output data/processed/upi-reviewed-v2 --use-curatorkit
+  --output data/processed/upi-reviewed-v3 --use-curatorkit
 
 # 3 · AlignTune: train on reviewed data on a 6 GB GPU, then merge
 HF_HUB_OFFLINE=1 .venv-training/bin/python phase2_aligntune_train_and_merge.py \
   --stage curated-sft --profile laptop-6gb --reviewed-laptop \
-  --data data/processed/upi-reviewed-v2 --output artifacts/reviewed/schema-sft-002 --max-steps 87
+  --data data/processed/upi-reviewed-v3 --output artifacts/reviewed/schema-sft-004 --max-steps 92
 HF_HUB_OFFLINE=1 .venv-training/bin/python scripts/merge_pilot_adapter.py \
-  --adapter artifacts/reviewed/schema-sft-002/curated-sft --output artifacts/reviewed/merged-schema-sft-002
+  --adapter artifacts/reviewed/schema-sft-004/curated-sft --output artifacts/reviewed/merged-schema-sft-004
 
 # 4 · AuditKIT: score recorded predictions
 .venv/bin/python phase3_auditkit_eval.py --help
@@ -490,7 +495,7 @@ Primary sources and review dates are in [`lib/policy.ts`](lib/policy.ts). The ca
 
 - **Research preview.** There is no bank or NPCI integration. It files no disputes, approves no refunds and contacts no one. Don't paste real customer data.
 - **Synthetic data.** The training data combines publisher-declared synthetic public dialogues with locally authored cases.
-- **Human review is partial.** 652 corpus cases plus 168 varied-wording cases were reviewed by one reviewer with an AI pre-audit. Still not done:
+- **Human review is partial.** 652 corpus cases plus 213 varied-wording cases were reviewed by one reviewer with an AI pre-audit. Still not done:
   - native-speaker review of the 278 Tanglish and Marathi–English cases;
   - native-speaker review of the 21 machine-translated languages and the native-script keywords;
   - the independent second review of the 92-case evaluation queue.

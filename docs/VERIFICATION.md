@@ -110,3 +110,26 @@ CPU smoke-data checks passed for two synthetic fixtures. Trainer/reward registra
 | Rules only | 100% | 38.1% |
 | Round 2 (598 reviewed cases) | 90.7% | 59.5% |
 | Round 3 (765 cases) | 96.3% | 73.8% |
+
+## Round 4: cases from live testing, 14 November 2026
+
+**Why.** Fresh messages typed into the running site exposed rules and model gaps: billers and apps ("electricity board", Ola, DTH), "declined" and "order not placed", amounts without a currency mark ("Paid 1,850"), an OTP or PIN given to a caller, a QR scanned "to receive money", and a bill split with a friend read as a merchant payment.
+
+**Rules.** Each gap was fixed in `lib/rules/classification.ts` and `lib/numbers.ts` (mirrored in `research/dataset_quality.py`), with regression tests. The engine still agrees with all 930 reviewed categories and all 820 reviewed amounts. Rules-only challenge accuracy: 38.1% → 45.2%.
+
+**Data.** `scripts/author_variations_v2.ts` wrote 45 cases (16 English, 15 Hinglish, 14 Hindi) for those gaps plus negatives, checked against the challenge set and the first variation set (trigram Jaccard ≤ 0.6). Pre-audited by Claude; vishal signed off on the batch (`data/review/variation_decisions.v2.jsonl`). Writing them exposed further Devanagari and Hinglish keyword gaps, fixed before training. Corpus export also picked up three amount corrections signed off after round 3.
+
+**Curation.** 810 of 811 accepted (`data/processed/upi-reviewed-v3`; one CuratorKIT near-duplicate). The held-out test split is byte-identical to round 3's. `--reviewed-laptop`: 92 steps, train loss 0.046, parameters updated. Merged into `artifacts/reviewed/merged-schema-sft-004`.
+
+**Results, both models under today's gates and rules.**
+
+| Model | Reviewed test, all fields exact | Challenge, category accuracy | Challenge, model answer used |
+|---|---:|---:|---:|
+| Rules only | 100% | 45.2% | n/a |
+| Round 3 (765 cases) | 96.3% | 81.0% | 36 of 42 |
+| Round 4 (810 cases) | 98.1% | 90.5% | 40 of 42 |
+
+Files: `artifacts/reviewed/eval/runtime-004.json`, `challenge-r002-now.txt`, `challenge-r004-now.txt`. Six fresh user-style messages: all final answers correct; the model's own answer was used for 2, the rules overruled it for 4.
+
+**Caveat.** The 45 new cases were written after looking at failures, by the same author as the challenge set. The challenge gain may overstate the improvement on real messages.
+
