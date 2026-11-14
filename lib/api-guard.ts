@@ -37,3 +37,36 @@ export function guardTriageApi(
     );
   return null;
 }
+
+/** A shared quota service, such as a Cloudflare Rate Limiting binding. */
+export type SharedLimiter = {
+  limit(options: { key: string }): Promise<{ success: boolean }>;
+};
+
+/**
+ * Enforce a quota shared across Worker instances when one is configured.
+ * Returns a 429 response, or null to continue. A limiter outage never blocks
+ * triage: the per-instance limiter in guardTriageApi still applies.
+ */
+export async function sharedRateLimit(
+  request: Request,
+  limiter: SharedLimiter | undefined,
+): Promise<Response | null> {
+  if (!limiter) return null;
+  if (new URL(request.url).pathname.replace(/\/+$/, "") !== "/api/triage")
+    return null;
+  if (request.method !== "POST") return null;
+  try {
+    const { success } = await limiter.limit({ key: clientKey(request) });
+    if (success) return null;
+  } catch {
+    return null;
+  }
+  return apiError(
+    "rate_limited",
+    "Too many requests. Please wait and retry.",
+    429,
+    crypto.randomUUID(),
+    { "Retry-After": "60" },
+  );
+}

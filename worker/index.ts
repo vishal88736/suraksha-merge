@@ -1,17 +1,19 @@
 import handler from "vinext/server/fetch-handler";
 import { runWithConnectorBinding } from "../lib/connector-context";
-import { guardTriageApi } from "../lib/api-guard.ts";
+import { guardTriageApi, sharedRateLimit } from "../lib/api-guard.ts";
 import { modelConfigFromEnv, runWithModelConfig } from "../lib/model-config.ts";
 import type { ConnectorBinding } from "../lib/connector-contract.mjs";
 
 const worker = {
-  fetch(
+  async fetch(
     request: Request,
     env: Cloudflare.Env,
     ctx: ExecutionContext<{ CONNECTORS?: ConnectorBinding }>,
   ) {
     const rejected = guardTriageApi(request, { apiKey: env.TRIAGE_API_KEY });
     if (rejected) return rejected;
+    const throttled = await sharedRateLimit(request, env.TRIAGE_RATE_LIMITER);
+    if (throttled) return throttled;
     let binding = ctx.props?.CONNECTORS;
     // Local preview emulates the same request-scoped capability. This branch and
     // the auxiliary service binding are absent from production builds.
