@@ -187,6 +187,8 @@ def main() -> int:
     parser.add_argument("--skip-back", action="store_true", help="skip back-translation (no reply safety check; dev only)")
     parser.add_argument("--accept", nargs="*", default=[], help="lang:reply.path entries accepted after human review")
     parser.add_argument("--no-write", action="store_true")
+    parser.add_argument("--forward-cache", default=str(ROOT / "artifacts/i18n/forward.json"),
+                        help="forward translations are saved here and reused when the source is unchanged")
     args = parser.parse_args()
 
     source = json.loads(Path(args.source).read_text(encoding="utf-8"))
@@ -202,9 +204,19 @@ def main() -> int:
         masked.append((kind, key, text, m, found))
 
     report = json.loads(Path(args.report).read_text()) if Path(args.report).exists() else {}
-    forward = Translator(args.forward_model, args.batch, args.beams)
+    cache_path = Path(args.forward_cache)
+    source_key = json.dumps([m for *_, m, _ in masked], ensure_ascii=False)
+    cache = json.loads(cache_path.read_text(encoding="utf-8")) if cache_path.exists() else {}
+    if cache.get("source") != source_key or cache.get("model") != args.forward_model:
+        cache = {"source": source_key, "model": args.forward_model, "langs": {}}
     results: dict[str, list[dict]] = {}
-    for ui, reply_code, flores in langs:
+    todo = [l for l in langs if l[0] not in cache["langs"]]
+    for ui, *_ in langs:
+        if ui in cache["langs"]:
+            results[ui] = cache["langs"][ui]
+            print(f"{ui}: reused cached forward translations", flush=True)
+    forward = Translator(args.forward_model, args.batch, args.beams) if todo else None
+    for ui, reply_code, flores in todo:
         t0 = time.time()
         outs = forward([m for *_, m, _ in masked], "eng_Latn", flores)
         rows = []
@@ -221,9 +233,17 @@ def main() -> int:
                 if not errors:
                     rows[i].update(text=value, errors=[], retried=True)
         results[ui] = rows
+        cache["langs"][ui] = rows
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        cache_path.write_text(json.dumps(cache, ensure_ascii=False), encoding="utf-8")
         bad = sum(1 for r in rows if r["errors"])
         print(f"{ui}: {len(rows)} strings, {bad} placeholder failures, {time.time() - t0:.0f}s", flush=True)
-    forward.close()
+    if forward:
+        forward.close()
+    # Back-translation errors are recomputed on every run.
+    for rows in results.values():
+        for r in rows:
+            r["errors"] = [e for e in r["errors"] if e not in ("negation_lost", "promise_risk")]
 
     if not args.skip_back:
         import sacrebleu
