@@ -260,3 +260,22 @@ test("a tier error alongside an ungrounded fact still falls back to rules", asyn
   );
   assert.equal(result.audit.model.status, "fallback");
 });
+
+test("the model may not discard the rules' category evidence", async () => {
+  const vague = await triageWithModel(
+    { message: "Swiggy merchant payment ₹849 debited but order failed. UTR 612345678901" },
+    CONFIG,
+    fakeServer(JSON.stringify({ ...GOOD, utr_number: "612345678901", amount_inr: 849, dispute_category: "NEEDS_INFORMATION", rbi_liability_tier: "PENDING_VERIFICATION", mandatory_actions: ["CONTACT_BANK_PSP", "REQUEST_TRANSACTION_DETAILS", "HUMAN_REVIEW"], detected_language: "english", panic_severity: "LOW" })),
+  );
+  assert.equal(vague.audit.model.status, "fallback");
+  assert.ok(vague.audit.model.status === "fallback" && vague.audit.model.reasons.includes("model_less_specific_than_rules"));
+  assert.equal(vague.payload.dispute_category, "P2M_CONFIRMATION_FAILURE");
+
+  const missedFraud = await triageWithModel(
+    { message: MESSAGE },
+    CONFIG,
+    fakeServer(JSON.stringify({ ...GOOD, dispute_category: "P2P_BENEFICIARY_NOT_CREDITED", rbi_liability_tier: "TECHNICAL_T_PLUS_1", mandatory_actions: ["CONTACT_BANK_PSP", "RAISE_APP_DISPUTE", "TRACK_REVERSAL"] })),
+  );
+  assert.equal(missedFraud.audit.model.status, "fallback");
+  assert.ok(missedFraud.audit.model.status === "fallback" && missedFraud.audit.model.reasons.includes("model_misses_fraud_signal"));
+});

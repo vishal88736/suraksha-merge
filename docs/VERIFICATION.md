@@ -75,3 +75,5 @@ CPU smoke-data checks passed for two synthetic fixtures. Trainer/reward registra
 - None of this text is reviewed by native speakers.
 
 **Checks.** 115 application tests, 77 Python tests, TypeScript, lint (0 errors), production build, built-Worker HTTP smoke (12 checks) and a CSP browser check (no violations).
+
+**Live check of the served reviewed model.** On two messages phrased unlike the synthetic data (a Swiggy merchant failure, and a Hinglish "maine koi transaction nahi kiya"), the model answered `NEEDS_INFORMATION`. That passed the gates and overrode the rules' correct P2M and fraud answers. Two gates now stop the model from discarding the rules' evidence: `model_less_specific_than_rules` and `model_misses_fraud_signal`. With these gates, both messages are answered correctly, and a vague message still gets the model's `NEEDS_INFORMATION`. The model's category accuracy on real, varied phrasing is unmeasured.

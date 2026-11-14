@@ -96,6 +96,17 @@ export function validateModelPayload(
   if (input.language !== "auto" && p.detected_language !== input.language)
     reasons.push("language_conflicts_with_operator");
 
+  // The rules' keyword evidence is precise: the model may refine it but not
+  // discard it. A vaguer answer, or a missed fraud signal, is not accepted.
+  const rulesCategory = rules.payload.dispute_category;
+  if (
+    p.dispute_category === "NEEDS_INFORMATION" &&
+    rulesCategory !== "NEEDS_INFORMATION"
+  )
+    reasons.push("model_less_specific_than_rules");
+  if (isFraud(rulesCategory) && !isFraud(p.dispute_category))
+    reasons.push("model_misses_fraud_signal");
+
   const tier = p.rbi_liability_tier;
   const technical = TECHNICAL_TIER[p.dispute_category];
   if (rules.sla.policy_revalidation_required && tier !== "PENDING_VERIFICATION")
