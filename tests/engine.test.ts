@@ -453,3 +453,26 @@ test("a needs-information reply does not ask again for an amount already given",
   const without = triage({ message: "UPI payment failed, what to do?" });
   assert.match(without.reply.steps[0], /amount/i);
 });
+
+test("a transaction date gives the elapsed days, compensation and due date", () => {
+  const result = triage(
+    { message: "Swiggy merchant payment ₹849 debited but order failed. UTR 612345678901", transaction_date: "2026-11-01" },
+    { today: "2026-11-14" },
+  );
+  assert.equal(result.payload.dispute_category, "P2M_CONFIRMATION_FAILURE");
+  assert.equal(result.sla.elapsed_calendar_days, 13);
+  assert.equal(result.sla.elapsed_source, "transaction_date");
+  assert.equal(result.sla.reversal_due_date, "2026-11-06");
+  assert.equal(result.sla.estimated_compensation_inr, 800);
+  assert.ok(result.payload.mandatory_actions.includes("REVIEW_COMPENSATION"));
+  // An operator-supplied day count still wins over the date.
+  const operator = triage(
+    { message: "Swiggy merchant payment ₹849 debited but order failed. UTR 612345678901", transaction_date: "2026-11-01", elapsed_calendar_days: 3 },
+    { today: "2026-11-14" },
+  );
+  assert.equal(operator.sla.elapsed_calendar_days, 3);
+  assert.equal(operator.sla.estimated_compensation_inr, 0);
+  const future = triage({ message: "UPI transfer ₹500 not credited to recipient. UTR 612345678901", transaction_date: "2026-12-01" }, { today: "2026-11-14" });
+  assert.equal(future.sla.elapsed_calendar_days, null);
+  assert.ok(future.warnings.some((w) => w.includes("after today")));
+});

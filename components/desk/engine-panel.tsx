@@ -53,6 +53,25 @@ function Liability({ result }: { result: TriageResult }) {
               ? t("liability.verificationRequired")
               : pretty(tier)}
         </strong>
+        {technical && result.sla.reversal_due_date && (
+          <p className="due-date">
+            {t("liability.dueBy", {
+              date: new Date(
+                `${result.sla.reversal_due_date}T00:00:00Z`,
+              ).toLocaleDateString(undefined, {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+                timeZone: "UTC",
+              }),
+            })}
+            {result.sla.elapsed_calendar_days !== null &&
+              result.sla.elapsed_calendar_days > deadline! &&
+              ` · ${t("liability.overdue", {
+                days: result.sla.elapsed_calendar_days - deadline!,
+              })}`}
+          </p>
+        )}
         <p>
           {technical
             ? t("liability.dailyPenalty", { days: deadline })

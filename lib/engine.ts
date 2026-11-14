@@ -37,6 +37,27 @@ export const ACTIONS = [
   "REVIEW_COMPENSATION",
   "HUMAN_REVIEW",
 ] as const;
+/** Today's calendar date in India (UTC+5:30), as YYYY-MM-DD. */
+export function indiaToday(now = Date.now()): string {
+  return new Date(now + 330 * 60_000).toISOString().slice(0, 10);
+}
+
+function dayNumber(date: string): number {
+  const [y, m, d] = date.split("-").map(Number) as [number, number, number];
+  return Date.UTC(y, m - 1, d) / 86_400_000;
+}
+
+/** Calendar days from `from` to `to` (negative when `from` is later). */
+export function calendarDaysBetween(from: string, to: string): number {
+  return dayNumber(to) - dayNumber(from);
+}
+
+export function addCalendarDays(date: string, days: number): string {
+  return new Date((dayNumber(date) + days) * 86_400_000)
+    .toISOString()
+    .slice(0, 10);
+}
+
 export function isCalendarDate(value: string): boolean {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const [year, month, day] = value.split("-").map(Number) as [
@@ -367,14 +388,34 @@ export function triage(
     model?: ModelAudit;
     /** Evaluate the policy rules as if the message had this category. */
     category?: Payload["dispute_category"];
+    /** Today's calendar date (YYYY-MM-DD, India time); defaults to now. */
+    today?: string;
   } = {},
 ) {
   const start = performance.now();
   const input = inputSchema.parse(raw);
+  // A transaction date is easier to give than a day count: derive the elapsed
+  // calendar days from it unless the operator supplied them.
+  const today = options.today ?? indiaToday();
+  const dateElapsed =
+    input.transaction_date != null
+      ? calendarDaysBetween(input.transaction_date, today)
+      : null;
+  const elapsed =
+    input.elapsed_calendar_days ??
+    (dateElapsed !== null && dateElapsed >= 0 ? dateElapsed : null);
+  const elapsedSource =
+    input.elapsed_calendar_days != null
+      ? ("operator_context" as const)
+      : elapsed !== null
+        ? ("transaction_date" as const)
+        : null;
   const privacy = redactPII(input.message);
   const text = privacy.sanitized;
   const warnings: string[] = [];
   const evidence: Evidence[] = [];
+  if (dateElapsed !== null && dateElapsed < 0)
+    warnings.push("The transaction date is after today; check the date.");
   const refs = [...new Set(privacy.anchors.map((a) => a.replacement))];
   const utr = refs.length === 1 ? refs[0] : null;
   if (refs.length > 1)
@@ -454,10 +495,7 @@ export function triage(
     deadline = category === "P2M_CONFIRMATION_FAILURE" ? 5 : 1;
     tier = deadline === 5 ? "TECHNICAL_T_PLUS_5" : "TECHNICAL_T_PLUS_1";
     actions.push("RAISE_APP_DISPUTE", "TRACK_REVERSAL");
-    if (
-      input.elapsed_calendar_days != null &&
-      input.elapsed_calendar_days > deadline
-    )
+    if (elapsed !== null && elapsed > deadline)
       actions.push("REVIEW_COMPENSATION");
   } else if (isFraud(category)) {
     actions.push(
@@ -584,10 +622,15 @@ export function triage(
     deadline_days: finalDeadline,
     deadline_day_basis: finalDeadline ? ("calendar" as const) : null,
     reporting_delay_day_basis: "working" as const,
-    elapsed_calendar_days: input.elapsed_calendar_days ?? null,
+    elapsed_calendar_days: elapsed,
+    elapsed_source: elapsedSource,
+    reversal_due_date:
+      finalDeadline && input.transaction_date
+        ? addCalendarDays(input.transaction_date, finalDeadline)
+        : null,
     estimated_compensation_inr:
-      finalDeadline && input.elapsed_calendar_days != null
-        ? Math.max(0, input.elapsed_calendar_days - finalDeadline) * 100
+      finalDeadline && elapsed !== null
+        ? Math.max(0, elapsed - finalDeadline) * 100
         : null,
     liability_cap_inr: liabilityCap,
     liability_cap_basis:

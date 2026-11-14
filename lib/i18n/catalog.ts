@@ -200,6 +200,8 @@ const en = {
   "liability.deadline": "T+{days} calendar days",
   "liability.dailyPenalty": "₹100/day beyond T+{days} for a qualifying failure",
   "liability.compensation": "estimated delay compensation",
+  "liability.dueBy": "Reversal due by {date}",
+  "liability.overdue": "{days} days past the deadline",
 
   "transaction.amount": "Disputed amount",
   "transaction.notIdentified": "Not identified",
@@ -554,6 +556,8 @@ const hi: Record<MessageKey, string> = {
   "liability.deadline": "T+{days} कैलेंडर दिन",
   "liability.dailyPenalty": "योग्य विफलता पर T+{days} के बाद ₹100/दिन",
   "liability.compensation": "अनुमानित विलंब मुआवज़ा",
+  "liability.dueBy": "रिवर्सल की अंतिम तिथि {date}",
+  "liability.overdue": "समय-सीमा से {days} दिन ऊपर",
 
   "transaction.amount": "विवादित राशि",
   "transaction.notIdentified": "पहचाना नहीं गया",

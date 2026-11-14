@@ -44,6 +44,8 @@ export const triageResponseSchema = z.object({
     deadline_day_basis: z.literal("calendar").nullable(),
     reporting_delay_day_basis: z.literal("working"),
     elapsed_calendar_days: z.number().int().nonnegative().nullable(),
+    elapsed_source: z.enum(["operator_context", "transaction_date"]).nullable(),
+    reversal_due_date: z.string().nullable(),
     estimated_compensation_inr: z.number().finite().nonnegative().nullable(),
     liability_cap_inr: z.number().finite().nonnegative().nullable(),
     liability_cap_basis: z.enum(["amount_and_cap", "cap_only"]).nullable(),

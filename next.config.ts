@@ -1,5 +1,23 @@
 import type { NextConfig } from "next";
 
+/**
+ * Same-origin everything, plus Google Fonts. Inline scripts and styles are
+ * allowed because the framework hydrates with inline bootstrap scripts.
+ */
+const CSP = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src 'self' https://fonts.gstatic.com data:",
+  "img-src 'self' data: blob:",
+  "connect-src 'self'",
+  "media-src 'self' blob:",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join("; ");
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
@@ -19,6 +37,10 @@ const nextConfig: NextConfig = {
             key: "Permissions-Policy",
             value: "camera=(), geolocation=(), microphone=(self)",
           },
+          // Production only: the dev server's hot reload needs eval and websockets.
+          ...(process.env.NODE_ENV === "production"
+            ? [{ key: "Content-Security-Policy", value: CSP }]
+            : []),
         ],
       },
     ];
