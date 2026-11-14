@@ -71,6 +71,9 @@ function Liability({ result }: { result: TriageResult }) {
   );
 }
 
+const SKIP_REASONS =
+  /^(?:model_timeout|model_unavailable|model_http_\d+|language_outside_model_training)$/;
+
 export function EnginePanel({
   result,
   tab,
@@ -180,9 +183,16 @@ export function EnginePanel({
               ms: Math.round(result.audit.model.latency_ms),
             })
           : result.audit.model.status === "fallback"
-            ? t("engine.sourceFallback", {
-                reasons: result.audit.model.reasons.join(", "),
-              })
+            ? t(
+                // Output that was produced and rejected differs from a model
+                // that was never asked (timeout, outage, untrained language).
+                result.audit.model.reasons.every((r) =>
+                  SKIP_REASONS.test(r),
+                )
+                  ? "engine.sourceSkipped"
+                  : "engine.sourceFallback",
+                { reasons: result.audit.model.reasons.join(", ") },
+              )
             : t("engine.sourceRules")}
       </p>
       <div

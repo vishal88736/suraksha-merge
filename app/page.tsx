@@ -146,7 +146,14 @@ export default function Page() {
         context_note:
           "Operator-supplied responsibility is not verified by the engine.",
         // A stable, machine-readable status field for the audit artifact.
-        training_status: "no_model_checkpoint_connected",
+        training_status:
+          state.result.audit.model.status === "used"
+            ? state.result.audit.model.model.unreviewed_pilot
+              ? "unreviewed_pilot_model_used"
+              : "fine_tuned_model_used"
+            : state.result.audit.model.status === "fallback"
+              ? "rules_fallback"
+              : "no_model_checkpoint_connected",
         stale: isStale(state),
       },
       "suraksha-provenance.json",

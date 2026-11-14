@@ -25,7 +25,10 @@ const REPLY_LANGUAGE_OPTIONS = [
   { code: "auto", label: "Auto-detect language" },
   ...REPLY_LANGUAGES.map((language) => ({
     code: language.code,
-    label: language.label,
+    label:
+      language.nativeLabel === language.label
+        ? language.label
+        : `${language.label} · ${language.nativeLabel}`,
   })),
 ] as const;
 

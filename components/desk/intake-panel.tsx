@@ -10,7 +10,8 @@ import {
 import { useI18n } from "../../lib/i18n/provider.tsx";
 import { pretty } from "../../lib/format.ts";
 import { SCENARIOS } from "../../lib/content/scenarios.ts";
-import { replyLanguage } from "../../lib/i18n/locales.ts";
+import { pick, replyLanguage } from "../../lib/i18n/locales.ts";
+import { MACHINE_TRANSLATED_REPLIES } from "../../lib/i18n/replies.ts";
 import type { TriageInput, TriageResult } from "../../lib/engine.ts";
 import { MaskedText } from "./masked-text.tsx";
 import { Composer } from "./composer.tsx";
@@ -88,7 +89,7 @@ export function IntakePanel({
           >
             {SCENARIOS.map((item, index) => (
               <option value={index} key={item.id}>
-                {item.title[locale]} · {replyLanguage(item.language).label}
+                {pick(item.title, locale)} · {replyLanguage(item.language).label}
               </option>
             ))}
           </select>
@@ -98,7 +99,7 @@ export function IntakePanel({
           <span
             className={`category-dot ${selected === 1 || selected === 5 ? "blue-dot" : ""}`}
           />
-          {scenario.description[locale]}
+          {pick(scenario.description, locale)}
         </div>
       </div>
       <Composer
@@ -168,6 +169,11 @@ export function IntakePanel({
           </span>
           <strong>{t("intake.draft")}</strong>
           <span className="draft-tag">{t("intake.forReview")}</span>
+          {MACHINE_TRANSLATED_REPLIES.has(result.payload.detected_language) && (
+            <span className="draft-tag machine-tag">
+              {t("intake.machineTranslated")}
+            </span>
+          )}
           <button
             className="icon-button"
             disabled={stale || loading}
@@ -177,7 +183,11 @@ export function IntakePanel({
             <Copy size={14} />
           </button>
         </div>
-        <div className="assistant-bubble">
+        <div
+          className="assistant-bubble"
+          dir={replyLanguage(result.payload.detected_language).dir}
+          lang={replyLanguage(result.payload.detected_language).speech}
+        >
           <p className="reply-intro">{result.reply.introduction}</p>
           <ol>
             {result.reply.steps.map((step, index) => (

@@ -1,4 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&display=swap");
+/* Indic and Perso-Arabic scripts for the 22 scheduled languages. Google Fonts
+   serves them with unicode-range, so a script is downloaded only when used. */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600&family=Noto+Sans+Bengali:wght@400;600&family=Noto+Sans+Gujarati:wght@400;600&family=Noto+Sans+Gurmukhi:wght@400;600&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Malayalam:wght@400;600&family=Noto+Sans+Oriya:wght@400;600&family=Noto+Sans+Tamil:wght@400;600&family=Noto+Sans+Telugu:wght@400;600&family=Noto+Sans+Ol+Chiki:wght@400;600&family=Noto+Sans+Meetei+Mayek:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap");
 @import "tailwindcss";
 :root {
   --bg: #f2f8fc;
@@ -10,7 +13,9 @@
   --orange: #a67c3b;
   --cyan: #b2e4fa;
   --lavender: #dbc5f8;
-  --font-sans: "DM Sans", sans-serif;
+  --font-indic: "Noto Sans Devanagari", "Noto Sans Bengali", "Noto Sans Gujarati", "Noto Sans Gurmukhi", "Noto Sans Kannada", "Noto Sans Malayalam", "Noto Sans Oriya", "Noto Sans Tamil", "Noto Sans Telugu", "Noto Sans Ol Chiki", "Noto Sans Meetei Mayek", "Noto Naskh Arabic";
+  --font-sans: "DM Sans", var(--font-indic), sans-serif;
+  --font-display: Manrope, var(--font-indic), sans-serif;
   --font-mono: "DM Mono", monospace;
 }
 * {
@@ -135,7 +140,7 @@ summary {
   display: flex;
   gap: 9px;
   align-items: center;
-  font-family: Manrope, sans-serif;
+  font-family: var(--font-display);
   font-size: 20px;
   font-weight: 800;
   letter-spacing: -1px;
@@ -251,7 +256,7 @@ summary {
   margin-bottom: 10px;
 }
 .sidebar-note strong {
-  font-family: Manrope;
+  font-family: var(--font-display);
   font-size: 12px;
 }
 .sidebar-note p {
@@ -419,7 +424,7 @@ main {
   margin-bottom: 9px;
 }
 .page-heading h1 {
-  font-family: Manrope, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(25px, 2.2vw, 35px);
   font-weight: 750;
   letter-spacing: -1.1px;
@@ -627,7 +632,7 @@ main {
   gap: 11px;
 }
 .panel-heading h2 {
-  font-family: Manrope;
+  font-family: var(--font-display);
   font-size: 16px;
   letter-spacing: -0.3px;
   font-weight: 700;
@@ -1061,6 +1066,14 @@ main {
   border-radius: 3px;
   padding: 3px 5px;
 }
+.machine-tag {
+  color: #8a5a12;
+  background: #fff6e6;
+  border-color: #f3dcb0;
+}
+.assistant-bubble[dir="rtl"] ol li {
+  text-align: right;
+}
 .assistant-bubble {
   background: linear-gradient(145deg, #f8f5fd, #fbf9ff);
   border: 1px solid #e6dcf2;
@@ -1214,7 +1227,7 @@ main {
 }
 .liability strong {
   display: block;
-  font-family: Manrope;
+  font-family: var(--font-display);
   font-size: 14px;
   font-weight: 650;
   color: #83659b;
@@ -1290,7 +1303,7 @@ main {
   display: block;
 }
 .transaction-grid .amount {
-  font-family: Manrope;
+  font-family: var(--font-display);
   font-size: 28px;
   font-weight: 700;
   line-height: 1.2;
@@ -1339,7 +1352,7 @@ main {
   display: flex;
   gap: 6px;
   align-items: center;
-  font-family: Manrope;
+  font-family: var(--font-display);
   font-size: 12px;
   font-weight: 650;
   color: #4f7691;
@@ -1365,7 +1378,7 @@ main {
   padding: 15px 13px;
 }
 .privacy-count {
-  font-family: Manrope;
+  font-family: var(--font-display);
   font-size: 29px;
   font-weight: 550;
   letter-spacing: -1.1px;
@@ -1648,7 +1661,7 @@ main {
   margin-bottom: 7px;
 }
 .experiment-teaser h3 {
-  font-family: Manrope;
+  font-family: var(--font-display);
   font-size: 14px;
   font-weight: 600;
   letter-spacing: -0.2px;
@@ -1743,7 +1756,7 @@ main {
   line-height: 1.8;
 }
 .pipeline-step strong {
-  font-family: Manrope;
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: 13px;
   color: #527492;
@@ -1768,7 +1781,7 @@ main {
   border-radius: 14px;
 }
 .stage-copy h2 {
-  font-family: Manrope;
+  font-family: var(--font-display);
   font-size: 27px;
   font-weight: 700;
   letter-spacing: -0.9px;
@@ -1871,7 +1884,7 @@ main {
 }
 .merge-lab h2,
 .redteam-panel h2 {
-  font-family: Manrope;
+  font-family: var(--font-display);
   font-size: 21px;
   font-weight: 650;
   letter-spacing: -0.6px;
@@ -2041,7 +2054,7 @@ td strong {
   color: #617189;
 }
 .info-card h3 {
-  font-family: Manrope;
+  font-family: var(--font-display);
   font-size: 14px;
   font-weight: 600;
   color: #597291;
@@ -2118,7 +2131,7 @@ td strong {
   line-height: 1.9;
 }
 .policy-card h2 {
-  font-family: Manrope;
+  font-family: var(--font-display);
   font-size: 17px;
   font-weight: 600;
   line-height: 1.65;
@@ -2203,7 +2216,7 @@ td strong {
   background: #faf6ff;
 }
 .mascot-bubble h3 {
-  font-family: Manrope;
+  font-family: var(--font-display);
   font-size: 12px;
   font-weight: 650;
   color: #7f6796;
@@ -2961,7 +2974,7 @@ td strong {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-family: Manrope;
+    font-family: var(--font-display);
     font-size: 16px;
     font-weight: 750;
     letter-spacing: -0.65px;
@@ -3618,7 +3631,7 @@ td strong {
   align-items: center;
   white-space: nowrap;
   gap: 6px;
-  font-family: Manrope;
+  font-family: var(--font-display);
 }
 .landing-logo > span:last-child {
   font-weight: 500;
@@ -3730,7 +3743,7 @@ td strong {
   margin-bottom: 24px;
 }
 .hero-copy h1 {
-  font-family: Manrope, sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(39px, 4.1vw, 61px);
   font-weight: 800;
   line-height: 1.23;
@@ -3812,7 +3825,7 @@ td strong {
 }
 .unique-features h2 {
   font-size: 10px;
-  font-family: Manrope;
+  font-family: var(--font-display);
   font-weight: 750;
   letter-spacing: 1.1px;
   margin-bottom: 17px;
@@ -3944,7 +3957,7 @@ td strong {
 }
 .landing-explainer h2,
 .landing-faq h2 {
-  font-family: Manrope;
+  font-family: var(--font-display);
   font-size: 34px;
   letter-spacing: 1px;
   line-height: 1.3;

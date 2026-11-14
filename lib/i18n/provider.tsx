@@ -5,15 +5,23 @@ import {
   useEffect,
   useContext,
   useMemo,
+  useState,
   useSyncExternalStore,
   type ReactNode,
 } from "react";
 import {
   DEFAULT_UI_LOCALE,
   isUiLocale,
+  uiLocale,
   type UiLocale,
 } from "./locales";
-import { translate, type MessageKey, type MessageVars } from "./catalog";
+import {
+  isLocaleLoaded,
+  loadLocale,
+  translate,
+  type MessageKey,
+  type MessageVars,
+} from "./catalog";
 
 export type I18nValue = {
   locale: UiLocale;
@@ -63,7 +71,23 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     getServerSnapshot,
   );
 
-  useEffect(() => { document.documentElement.lang = locale; }, [locale]);
+  // Generated locales load on demand; the counter re-renders once they arrive.
+  const [, setLoaded] = useState(0);
+  useEffect(() => {
+    const { htmlLang, dir } = uiLocale(locale);
+    document.documentElement.lang = htmlLang;
+    document.documentElement.dir = dir;
+    if (isLocaleLoaded(locale)) return;
+    let active = true;
+    loadLocale(locale)
+      .then(() => active && setLoaded((n) => n + 1))
+      .catch(() => {
+        // A failed chunk leaves the interface in English rather than blank.
+      });
+    return () => {
+      active = false;
+    };
+  }, [locale]);
 
   const setLocale = useCallback((next: UiLocale) => {
     try {
@@ -74,7 +98,6 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     const url = new URL(window.location.href);
     url.searchParams.set("lang", next);
     window.history.replaceState(null, "", url);
-    document.documentElement.lang = next;
     window.dispatchEvent(new Event(CHANGE_EVENT));
   }, []);
 
@@ -84,7 +107,8 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       setLocale,
       t: (key, vars) => translate(locale, key, vars),
     }),
-    [locale, setLocale],
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- loaded re-renders the catalog
+    [locale, setLocale, isLocaleLoaded(locale)],
   );
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;

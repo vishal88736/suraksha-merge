@@ -1,0 +1,10 @@
+# Translation environment for scripts/translate_i18n.py (IndicTrans2).
+# Kept separate: IndicTrans2's model code and IndicTransToolkit need transformers 4.x,
+# while the training environment uses transformers 5.
+torch==2.13.0
+transformers==4.51.3
+sentencepiece==0.2.0
+sacremoses==0.2.0
+indic-nlp-library==0.92
+IndicTransToolkit==1.1.1
+sacrebleu==2.5.1

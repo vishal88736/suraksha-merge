@@ -10,6 +10,7 @@ import {
   type TriageResult,
 } from "./engine.ts";
 import { findAmounts } from "./numbers.ts";
+import { MODEL_LANGUAGES } from "./i18n/locales.ts";
 import { parseStrictJson } from "./strict-json.ts";
 import type { ModelConfig } from "./model-config.ts";
 
@@ -150,6 +151,17 @@ export async function triageWithModel(
   const input = inputSchema.parse(raw);
   const rules = triage(raw);
   if (!config) return rules;
+  // The pilot model was trained on five languages only. For any other
+  // language the rules engine answers, and the reason is shown.
+  if (!MODEL_LANGUAGES.includes(rules.payload.detected_language))
+    return triage(raw, {
+      model: {
+        status: "fallback",
+        reasons: ["language_outside_model_training"],
+        model: null,
+        latency_ms: null,
+      },
+    });
   let reply: z.infer<typeof serverResponse>;
   try {
     reply = await callModel(

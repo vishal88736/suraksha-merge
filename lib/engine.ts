@@ -3,6 +3,7 @@ import { asciiDigits, findAmounts } from "./numbers.ts";
 import { POLICY_VERSION } from "./policy.ts";
 import { REPLY_TEMPLATES, fill } from "./i18n/replies.ts";
 import { detectLanguage } from "./rules/language.ts";
+import { REPLY_LANGUAGE_CODES } from "./i18n/locales.ts";
 import { classify, isFraudCategory } from "./rules/classification.ts";
 
 export const CATEGORIES = [
@@ -78,14 +79,7 @@ export const inputSchema = z
       .enum(["unknown", "bsbd", "regular", "other"])
       .default("unknown"),
     language: z
-      .enum([
-        "auto",
-        "hinglish",
-        "tanglish",
-        "marathi_english",
-        "hindi_devanagari",
-        "english",
-      ])
+      .enum(["auto", ...REPLY_LANGUAGE_CODES])
       .default("auto"),
     transaction_date: z
       .string()
@@ -104,13 +98,7 @@ export const payloadSchema = z
     reporting_delay_working_days: z.number().int().nonnegative().nullable(),
     rbi_liability_tier: z.enum(TIERS),
     mandatory_actions: z.array(z.enum(ACTIONS)).min(1),
-    detected_language: z.enum([
-      "hinglish",
-      "tanglish",
-      "marathi_english",
-      "hindi_devanagari",
-      "english",
-    ]),
+    detected_language: z.enum(REPLY_LANGUAGE_CODES),
     panic_severity: z.enum(["LOW", "MEDIUM", "HIGH_CRITICAL"]),
   })
   .strict();

@@ -7,7 +7,7 @@
 **Suraksha-Merge**: from a panicked, code-mixed message to a verified, policy-safe next step.
 
 [![Status](https://img.shields.io/badge/status-research%20preview-8b5cf6)](#-responsible-use)
-[![Languages](https://img.shields.io/badge/reply%20languages-5-0ea5e9)](#-language-support)
+[![Languages](https://img.shields.io/badge/Indian%20languages-all%2022-0ea5e9)](#-language-support)
 [![Model](https://img.shields.io/badge/model-Qwen2.5--3B%20LoRA%20pilot-111827)](#-results-so-far)
 [![CuratorKIT](https://img.shields.io/badge/data-CuratorKIT-14b8a6)](#1--curatorkit--clean-safe-split-data)
 [![AlignTune](https://img.shields.io/badge/training-AlignTune-6366f1)](#2--aligntune--specialist-training-and-merging)
@@ -70,7 +70,7 @@ When a UPI payment goes wrong, the customer is scared and the person helping the
 
 | Pain point | What SurakshaDesk does |
 | :--- | :--- |
-| Code-mixed, panicked messages | Detects the language and script and **replies in the same language** (5 languages, see below), with a calm tone matched to a panic-severity score |
+| Code-mixed, panicked messages | Detects the language and script and **replies in the same language and script** (all 22 scheduled Indian languages, see below), with a calm tone matched to a panic-severity score |
 | Facts buried in text | Extracts a **strict 8-field JSON**: `utr_number`, `dispute_category`, `amount_inr`, `reporting_delay_working_days`, `rbi_liability_tier`, `mandatory_actions`, `detected_language`, `panic_severity` |
 | Look-alike cases | Classifies into **7 dispute categories** and maps each to its RBI tier: T+1, T+5, conditional fraud liability, bank-policy review, or pending verification |
 | Over-promising | Every draft is **checked for refund guarantees**. Liability stays "pending verification" until a human confirms the facts |
@@ -86,31 +86,69 @@ When a UPI payment goes wrong, the customer is scared and the person helping the
 
 ## 🌐 Language support
 
-### Customer replies: 5 languages
+SurakshaDesk supports **all 22 languages of the Eighth Schedule of the Constitution**, each in its own script, plus English and the romanized registers people actually type in.
 
-| Language | Script | Example customer message | Dictation (speech) |
-| :--- | :--- | :--- | :---: |
-| **English** | Latin | *"I voluntarily sent ₹2,000 to the wrong VPA by mistake…"* | `en-IN` |
-| **Hinglish** (Hindi + English) | Latin | *"Bhaiya please help!! OLX pe sofa bech raha tha. Buyer ne QR bheja…"* | `hi-IN` |
-| **Hindi** | Devanagari | *"मेरे UPI transfer में ₹1500 कट गए, beneficiary not credited…"* | `hi-IN` |
-| **Tanglish** (Tamil + English) | Latin | *"Anna, Swiggy merchant payment Rs.849 debitaachu but confirmation illa…"* | `ta-IN` |
-| **Marathi–English** | Latin | *"Mala madat pahije, KYC sathi AnyDesk.apk install kela…"* | `mr-IN` |
+### Reply drafts and the interface: 22 Indian languages + English
 
-- The reply is drafted in the language **detected from the message**. You can also override it in the composer.
-- Dictated messages are re-detected, so the reply follows the language the customer actually spoke.
-- The training corpus covers all five languages: English 137, Hindi 140, Hinglish 377, Tanglish 140 and Marathi–English 140 accepted cases.
+| Language | Script | Interface | Reply draft | Dictation |
+| :--- | :--- | :---: | :---: | :---: |
+| Assamese · অসমীয়া | Bengali–Assamese | ✅ | ✅ | `as-IN` |
+| Bengali · বাংলা | Bengali | ✅ | ✅ | `bn-IN` |
+| Bodo · बड़ो | Devanagari | ✅ | ✅ | `brx-IN` |
+| Dogri · डोगरी | Devanagari | ✅ | ✅ | `doi-IN` |
+| Gujarati · ગુજરાતી | Gujarati | ✅ | ✅ | `gu-IN` |
+| Hindi · हिन्दी | Devanagari | ✅ ✍️ | ✅ ✍️ | `hi-IN` |
+| Kannada · ಕನ್ನಡ | Kannada | ✅ | ✅ | `kn-IN` |
+| Kashmiri · کٲشُر | Perso-Arabic (RTL) | ✅ | ✅ | `ks-IN` |
+| Konkani · कोंकणी | Devanagari | ✅ | ✅ | `kok-IN` |
+| Maithili · मैथिली | Devanagari | ✅ | ✅ | `mai-IN` |
+| Malayalam · മലയാളം | Malayalam | ✅ | ✅ | `ml-IN` |
+| Manipuri · ꯃꯤꯇꯩꯂꯣꯟ | Meetei Mayek | ✅ | ✅ | `mni-IN` |
+| Marathi · मराठी | Devanagari | ✅ | ✅ | `mr-IN` |
+| Nepali · नेपाली | Devanagari | ✅ | ✅ | `ne-NP` |
+| Odia · ଓଡ଼ିଆ | Odia | ✅ | ✅ | `or-IN` |
+| Punjabi · ਪੰਜਾਬੀ | Gurmukhi | ✅ | ✅ | `pa-IN` |
+| Sanskrit · संस्कृतम् | Devanagari | ✅ | ✅ | `sa-IN` |
+| Santali · ᱥᱟᱱᱛᱟᱲᱤ | Ol Chiki | ✅ | ✅ | `sat-IN` |
+| Sindhi · سنڌي | Perso-Arabic (RTL) | ✅ | ✅ | `sd-IN` |
+| Tamil · தமிழ் | Tamil | ✅ | ✅ | `ta-IN` |
+| Telugu · తెలుగు | Telugu | ✅ | ✅ | `te-IN` |
+| Urdu · اردو | Perso-Arabic (RTL) | ✅ | ✅ | `ur-IN` |
+| English | Latin | ✅ ✍️ | ✅ ✍️ | `en-IN` |
 
-### Interface: English and हिन्दी
+✍️ = written by hand. Every other cell is a **machine translation** by [AI4Bharat IndicTrans2](https://github.com/AI4Bharat/IndicTrans2), and needs native-speaker review before real use. Machine-translated replies are labelled as such in the desk.
 
-The whole interface ships in **English and Hindi**. The language is part of the URL, so a view can be shared in the reader's language. Every string lives in a typed message catalog, so a missing translation is a compile error, not a blank label.
+### Romanized registers (Latin script)
 
----
+| Register | Example customer message | Reply |
+| :--- | :--- | :--- |
+| **Hinglish** | *"Bhaiya please help!! OLX pe sofa bech raha tha. Buyer ne QR bheja…"* | Hinglish ✍️ |
+| **Tanglish** | *"Anna, Swiggy merchant payment Rs.849 debitaachu but confirmation illa…"* | Tanglish ✍️ |
+| **Marathi–English** | *"Mala madat pahije, KYC sathi AnyDesk.apk install kela…"* | Marathi–English ✍️ |
+| Romanized Bengali, Telugu, Kannada, Malayalam, Gujarati, Punjabi | *"amar taka kete geche kintu pelam na"* | Native script |
+
+### How the language is chosen
+
+- **The reply matches the customer.** A message in a native script gets a reply in that script. A romanized Hinglish, Tanglish or Marathi–English message gets a reply in the same romanized register. Other romanized languages get a native-script reply.
+- **Script first, then words.** Unique scripts (Tamil, Telugu, Kannada, Malayalam, Gujarati, Gurmukhi, Odia, Ol Chiki, Meetei Mayek) decide the language directly. Shared scripts are resolved by distinctive letters and words: Assamese ৰ/ৱ vs Bengali, Sindhi and Kashmiri letters vs Urdu, and marker words for Marathi, Nepali, Konkani, Maithili, Bodo, Dogri and Sanskrit vs Hindi.
+- **The operator can override it** from the composer, and dictated messages are re-detected.
+- **Right-to-left** layout is applied for Urdu, Kashmiri and Sindhi, and Noto fonts cover every script, including Ol Chiki and Meetei Mayek.
+- **The fine-tuned model knows 5 of them.** The pilot was trained on English, Hinglish, Hindi, Tanglish and Marathi–English. For any other language, the rules engine answers and the reason (`language_outside_model_training`) is shown.
+
+### How the translations were made and checked
+
+[`scripts/translate_i18n.py`](scripts/translate_i18n.py) translates the interface, the content and the reply templates with IndicTrans2 (`indictrans2-en-indic-1B`), then:
+
+1. Placeholders (`{utr}`, `{deadline}`…) and rail terms (`1930`, `cybercrime.gov.in`, `bank/PSP`, `UTR`, `RBI`…) go through IndicTrans2's own placeholder mechanism and must come back exactly once each.
+2. Every string is **back-translated** to English (`indictrans2-indic-en-1B`) and scored with chrF.
+3. A reply template must **keep every negation** ("cannot", "never", "no…") and must not gain an unnegated "guarantee", "approved" or "100%". A dropped "not" would turn "a refund cannot be confirmed" into a promise.
+4. A string that fails is not used: the interface falls back to English and the reply template falls back to the English sentence. The QA summary is in [`lib/i18n/generated/QA.md`](lib/i18n/generated/QA.md).
 
 ## ⚙️ How it works
 
 ```mermaid
 flowchart LR
-    A["💬 Customer message<br/><sub>any of 5 languages</sub>"] --> B["🪪 Redaction<br/><sub>phone · VPA · Aadhaar masked<br/>UTR kept only with context</sub>"]
+    A["💬 Customer message<br/><sub>22 Indian languages + English</sub>"] --> B["🪪 Redaction<br/><sub>phone · VPA · Aadhaar masked<br/>UTR kept only with context</sub>"]
     B --> C{"🤖 Local model<br/>configured?"}
     C -- yes --> D["Qwen2.5-3B specialist<br/><sub>strict JSON</sub>"]
     D --> E{"✅ Gates<br/><sub>schema · UTR provenance<br/>policy consistency</sub>"}
@@ -352,7 +390,7 @@ Primary sources and review dates are in [`lib/policy.ts`](lib/policy.ts). The ca
 | `app/`, `components/` | The Next (vinext) app on Cloudflare Workers: desk, views, mascot |
 | `lib/engine.ts`, `lib/rules/` | Redaction, extraction, classification, liability tiers, SLA |
 | `lib/policy.ts` | Versioned policy rules and primary sources |
-| `lib/i18n/` | Locale registry, message catalog, reply templates for all 5 languages |
+| `lib/i18n/` | Locale registry, message catalog, hand-written and generated (IndicTrans2) translations for 22 languages |
 | `phase1_curatorkit_pipeline.py` | CuratorKIT curation pipeline |
 | `phase2_aligntune_train_and_merge.py` | AlignTune SFT / DPO / DR-GRPO training and weighted merge |
 | `phase3_auditkit_eval.py` | AuditKIT evaluation with paired bootstrap |

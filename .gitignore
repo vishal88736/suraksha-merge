@@ -62,3 +62,5 @@ artifacts/
 .venv-training/
 .~lock.*#
 /data/review/
+.i18n-pylib/
+.venv-i18n/

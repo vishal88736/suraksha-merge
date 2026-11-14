@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import {
   BookOpen,
   ChevronDown,
@@ -50,6 +51,29 @@ export function LanguageSwitcher() {
   );
 }
 
+/** Ask /api/health once whether the local model server is reachable. */
+function useModelReachable(): boolean {
+  const [reachable, setReachable] = useState(false);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/health", { signal: controller.signal, cache: "no-store" })
+      .then(
+        (response) =>
+          (response.ok ? response.json() : null) as Promise<{
+            model_reachable?: boolean;
+          } | null>,
+      )
+      .then((body: { model_reachable?: boolean } | null) =>
+        setReachable(Boolean(body?.model_reachable)),
+      )
+      .catch(() => {
+        // Health is informational; the desk works without it.
+      });
+    return () => controller.abort();
+  }, []);
+  return reachable;
+}
+
 export function AppShell({
   view,
   onView,
@@ -59,6 +83,7 @@ export function AppShell({
   onView: (view: View) => void;
   children: React.ReactNode;
 }) {
+  const modelReachable = useModelReachable();
   const { t } = useI18n();
   const current = VIEWS.find((item) => item.id === view);
 
@@ -161,7 +186,8 @@ export function AppShell({
             <LanguageSwitcher />
             <span className="topbar-divider" />
             <span className="engine-status">
-              <span className="online-dot" /> {t("topbar.engine")}
+              <span className="online-dot" />{" "}
+              {t(modelReachable ? "topbar.engineModel" : "topbar.engine")}
             </span>
             <span className="topbar-divider" />
             <span className="research-badge">

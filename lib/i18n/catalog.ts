@@ -6,7 +6,10 @@
  * a value for every key, so a missing translation is a type error rather
  * than a blank label in production.
  */
-import { DEFAULT_UI_LOCALE, type UiLocale } from "./locales.ts";
+import {
+  registerContent,
+  type UiLocale,
+} from "./locales.ts";
 
 const en = {
   "intake.sourceMessage": "View analyzed customer message",
@@ -58,6 +61,7 @@ const en = {
   "nav.interfaceLanguage": "Interface language",
 
   "topbar.engine": "Rule engine active",
+  "topbar.engineModel": "Pilot model · rules fallback",
   "topbar.research": "Research preview",
 
   "common.exportTrace": "Export trace",
@@ -97,6 +101,7 @@ const en = {
   "intake.customer": "Customer",
   "intake.draft": "Suraksha draft",
   "intake.forReview": "FOR REVIEW",
+  "intake.machineTranslated": "MACHINE TRANSLATION · NEEDS NATIVE REVIEW",
   "intake.copyReply": "Copy customer reply",
   "intake.maskPii": "Reveal original briefly",
   "intake.revealRaw": "Reveal raw PII",
@@ -157,6 +162,8 @@ const en = {
     "Payload source: {model} ({variant}) · passed strict validation · {ms} ms",
   "engine.sourceFallback":
     "Payload source: rules engine · model output rejected: {reasons}",
+  "engine.sourceSkipped":
+    "Payload source: rules engine · model not used: {reasons}",
   "engine.variantBase": "base model, not fine-tuned",
   "engine.variantAdapter": "fine-tuned adapter",
   "engine.variantPilot": "UNREVIEWED PILOT adapter, synthetic data, not for real decisions",
@@ -298,7 +305,7 @@ const en = {
   "landing.heroDescriptionLine2": "FRAUD TRIAGE WITH EVIDENCE — AND EMPATHY.",
   "landing.heroCta": "EXPLORE THE DESK",
   "landing.heroMode": "WORKING RULE-BASED PREVIEW",
-  "landing.heroModeDivider": "NO TRAINED MODEL YET",
+  "landing.heroModeDivider": "UNREVIEWED PILOT MODEL ONLY",
   "landing.featuresTitle": "SECURITY, WITH A HUMAN SIDE",
   "landing.feature1Title": "PRIVATE BY DESIGN",
   "landing.feature1Body": "Context-aware PII masking",
@@ -326,7 +333,7 @@ const en = {
   "landing.faqTitleLine2": "STRAIGHT ANSWERS.",
   "landing.faq1Question": "Is this a trained fraud detection model?",
   "landing.faq1Answer":
-    "The current desk uses deterministic extraction, policy rules and reply templates. Specialist training and model merging are research workflows; no trained checkpoint is connected yet.",
+    "Not a production model. The desk always runs deterministic extraction, policy rules and reply templates. A fine-tuned Qwen2.5-3B pilot, trained on unreviewed synthetic data, can be connected locally: its output is used only when it passes strict validation and policy gates, and the rules answer otherwise.",
   "landing.faq2Question": "Does this file a dispute or approve a refund?",
   "landing.faq2Answer":
     "The desk prepares a draft for review. It has no bank or NPCI connection and takes no external action. Actual disputes must be raised through the bank or PSP app.",
@@ -389,6 +396,7 @@ const hi: Record<MessageKey, string> = {
   "nav.interfaceLanguage": "इंटरफ़ेस की भाषा",
 
   "topbar.engine": "नियम-आधारित इंजन सक्रिय",
+  "topbar.engineModel": "पायलट मॉडल · नियम बैकअप",
   "topbar.research": "शोध पूर्वावलोकन",
 
   "common.exportTrace": "ट्रेस निर्यात करें",
@@ -428,6 +436,7 @@ const hi: Record<MessageKey, string> = {
   "intake.customer": "ग्राहक",
   "intake.draft": "सुरक्षा ड्राफ़्ट",
   "intake.forReview": "समीक्षा हेतु",
+  "intake.machineTranslated": "मशीन अनुवाद · मूल भाषी समीक्षा आवश्यक",
   "intake.copyReply": "ग्राहक उत्तर कॉपी करें",
   "intake.maskPii": "मूल संदेश कुछ पल दिखाएँ",
   "intake.revealRaw": "मूल संदेश दिखाएँ",
@@ -488,6 +497,8 @@ const hi: Record<MessageKey, string> = {
     "पेलोड स्रोत: {model} ({variant}) · सख़्त सत्यापन पास · {ms} ms",
   "engine.sourceFallback":
     "पेलोड स्रोत: नियम इंजन · मॉडल आउटपुट अस्वीकृत: {reasons}",
+  "engine.sourceSkipped":
+    "पेलोड स्रोत: नियम इंजन · मॉडल उपयोग नहीं हुआ: {reasons}",
   "engine.variantBase": "बेस मॉडल, फ़ाइन-ट्यून नहीं",
   "engine.variantAdapter": "फ़ाइन-ट्यून एडेप्टर",
   "engine.variantPilot": "असमीक्षित पायलट एडेप्टर, सिंथेटिक डेटा, वास्तविक निर्णयों के लिए नहीं",
@@ -627,7 +638,7 @@ const hi: Record<MessageKey, string> = {
     "प्रमाण के साथ धोखाधड़ी ट्रायेज — और सहानुभूति।",
   "landing.heroCta": "डेस्क देखें",
   "landing.heroMode": "कार्यशील नियम-आधारित पूर्वावलोकन",
-  "landing.heroModeDivider": "अभी कोई प्रशिक्षित मॉडल नहीं",
+  "landing.heroModeDivider": "केवल असमीक्षित पायलट मॉडल",
   "landing.featuresTitle": "सुरक्षा, मानवीय पक्ष के साथ",
   "landing.feature1Title": "गोपनीयता ही डिज़ाइन",
   "landing.feature1Body": "संदर्भ-आधारित PII मास्किंग",
@@ -655,7 +666,7 @@ const hi: Record<MessageKey, string> = {
   "landing.faqTitleLine2": "सीधे जवाब।",
   "landing.faq1Question": "क्या यह प्रशिक्षित धोखाधड़ी-पहचान मॉडल है?",
   "landing.faq1Answer":
-    "मौजूदा डेस्क नियतात्मक निष्कर्ष, नीति नियम और उत्तर-टेम्पलेट इस्तेमाल करता है। विशेषज्ञ प्रशिक्षण और मॉडल मर्ज शोध कार्यप्रवाह हैं; अभी कोई प्रशिक्षित चेकपॉइंट जुड़ा नहीं है।",
+    "यह प्रोडक्शन मॉडल नहीं है। डेस्क हमेशा नियतात्मक निष्कर्ष, नीति नियम और उत्तर-टेम्पलेट चलाता है। असमीक्षित सिंथेटिक डेटा पर प्रशिक्षित Qwen2.5-3B पायलट स्थानीय रूप से जोड़ा जा सकता है: उसका आउटपुट केवल सख़्त सत्यापन और नीति जाँच पास करने पर उपयोग होता है, अन्यथा नियम उत्तर देते हैं।",
   "landing.faq2Question":
     "क्या यह विवाद दर्ज करता है या रिफ़ंड मंज़ूर करता है?",
   "landing.faq2Answer":
@@ -671,10 +682,64 @@ const hi: Record<MessageKey, string> = {
   "landing.openWorkspace": "कार्यक्षेत्र खोलें",
 };
 
-export const catalogs: Record<UiLocale, Record<MessageKey, string>> = {
+/**
+ * A generated locale: the interface catalog plus translations of the content
+ * modules' English prose (see lib/i18n/generated/, scripts/translate_i18n.py).
+ */
+export type LocaleBundle = {
+  messages: Record<MessageKey, string>;
+  content: Record<string, string>;
+};
+
+type GeneratedLocale = Exclude<UiLocale, "en" | "hi">;
+
+/** Generated locales load on demand so the bundle carries only English and Hindi. */
+export const LOCALE_LOADERS: Record<
+  GeneratedLocale,
+  () => Promise<{ default: LocaleBundle }>
+> = {
+  as: () => import("./generated/as.ts"),
+  bn: () => import("./generated/bn.ts"),
+  brx: () => import("./generated/brx.ts"),
+  doi: () => import("./generated/doi.ts"),
+  gu: () => import("./generated/gu.ts"),
+  kn: () => import("./generated/kn.ts"),
+  ks: () => import("./generated/ks.ts"),
+  kok: () => import("./generated/kok.ts"),
+  mai: () => import("./generated/mai.ts"),
+  ml: () => import("./generated/ml.ts"),
+  mni: () => import("./generated/mni.ts"),
+  mr: () => import("./generated/mr.ts"),
+  ne: () => import("./generated/ne.ts"),
+  or: () => import("./generated/or.ts"),
+  pa: () => import("./generated/pa.ts"),
+  sa: () => import("./generated/sa.ts"),
+  sat: () => import("./generated/sat.ts"),
+  sd: () => import("./generated/sd.ts"),
+  ta: () => import("./generated/ta.ts"),
+  te: () => import("./generated/te.ts"),
+  ur: () => import("./generated/ur.ts"),
+};
+
+export const catalogs: Partial<Record<UiLocale, Record<MessageKey, string>>> = {
   en,
   hi,
 };
+
+export function isLocaleLoaded(locale: UiLocale): boolean {
+  return Boolean(catalogs[locale]);
+}
+
+/** Load a generated locale's catalog and content table. Idempotent. */
+export async function loadLocale(locale: UiLocale): Promise<void> {
+  if (catalogs[locale]) return;
+  const { default: bundle } = await LOCALE_LOADERS[locale as GeneratedLocale]();
+  catalogs[locale] = bundle.messages;
+  registerContent(locale, bundle.content);
+}
+
+/** The English source catalog, for the translation pipeline. */
+export const SOURCE_CATALOG: Record<MessageKey, string> = en;
 
 export type MessageVars = Record<string, string | number>;
 
@@ -691,7 +756,7 @@ export function translate(
   key: MessageKey,
   vars?: MessageVars,
 ): string {
-  const catalog = catalogs[locale] ?? catalogs[DEFAULT_UI_LOCALE];
-  const template = catalog[key] ?? catalogs[DEFAULT_UI_LOCALE][key];
+  // A locale that is still loading renders in English for a moment.
+  const template = catalogs[locale]?.[key] ?? en[key];
   return interpolate(template, vars);
 }

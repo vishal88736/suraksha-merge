@@ -204,3 +204,20 @@ test("health distinguishes a base model from a fine-tuned one", async () => {
   }) as typeof fetch;
   assert.equal((await modelHealth(CONFIG, down)).model_reachable, false);
 });
+
+test("a language the pilot was not trained on is answered by rules without calling the model", async () => {
+  const seen: unknown[] = [];
+  const result = await triageWithModel(
+    { message: "আমার UPI থেকে ₹500 কেটে গেছে কিন্তু টাকা পৌঁছায়নি। UTR 612345678901" },
+    CONFIG,
+    fakeServer(JSON.stringify(GOOD), seen),
+  );
+  assert.equal(seen.length, 0);
+  assert.equal(result.payload.detected_language, "bengali");
+  assert.deepEqual(result.audit.model, {
+    status: "fallback",
+    reasons: ["language_outside_model_training"],
+    model: null,
+    latency_ms: null,
+  });
+});
