@@ -134,14 +134,16 @@ def load_model(args):
     display_model, display_revision = args.model, base_identity["base_revision"]
     merge_report = Path(args.model) / "suraksha_pilot_merge.json"
     if Path(args.model).is_dir() and merge_report.is_file():
-        # A pilot SFT adapter merged into the base: fine-tuned, unreviewed.
+        # An SFT adapter merged into the base: a labelled pilot, or trained on
+        # human-reviewed data (scripts/merge_pilot_adapter.py records which).
         merge = json.loads(merge_report.read_text())
-        if not args.allow_pilot_adapter:
+        reviewed = merge.get("kind") == "reviewed_merged_base" and merge.get("human_reviewed") is True and not merge.get("unreviewed_pilot")
+        if not reviewed and not args.allow_pilot_adapter:
             raise SystemExit("This is a merged unreviewed-pilot model: pass --allow-pilot-adapter to serve it as a labelled pilot.")
         if merge.get("merged_weights") != base_identity["base_weights"]:
-            raise SystemExit("Merged pilot weights differ from their merge record.")
-        pilot = True
-        display_model = f"{merge['base_model']} + merged pilot SFT"
+            raise SystemExit("Merged weights differ from their merge record.")
+        pilot = not reviewed
+        display_model = f"{merge['base_model']} + merged {'reviewed' if reviewed else 'pilot'} SFT"
         display_revision = merge["base_revision"]
         adapter_path, adapter_sha = merge["adapter"], merge["adapter_sha256"]
     if args.adapter:

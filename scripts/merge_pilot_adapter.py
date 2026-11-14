@@ -40,15 +40,20 @@ def main():
     args = parser.parse_args()
     if not 0 <= args.schema_weight <= 1:
         parser.error("--schema-weight must be between 0 and 1")
-    if not args.output.resolve().is_relative_to((ROOT / "artifacts/pilot").resolve()):
-        parser.error("Pilot merges must stay under artifacts/pilot")
     if args.output.exists() and any(args.output.glob("*.safetensors")):
         parser.error("Output already contains weights; choose a fresh --output")
     adapter, manifest = resolve_adapter(args.adapter)
     resolved = [(adapter, manifest)] + ([resolve_adapter(args.empathy_adapter)] if args.empathy_adapter else [])
+    # A merge is either all labelled pilot or all reviewed-data training; the
+    # label travels with the merged weights and decides how they may be served.
+    reviewed = all(m.get("human_reviewed_training") and not m.get("unreviewed_pilot") for _, m in resolved)
+    pilot = all(m.get("unreviewed_pilot") for _, m in resolved)
+    if not (reviewed or pilot):
+        parser.error("Merge either labelled pilot adapters or reviewed-data adapters, not a mix or smoke adapters")
+    root = ROOT / ("artifacts/reviewed" if reviewed else "artifacts/pilot")
+    if not args.output.resolve().is_relative_to(root.resolve()):
+        parser.error(f"{'Reviewed' if reviewed else 'Pilot'} merges must stay under {root.relative_to(ROOT)}")
     for _, m in resolved:
-        if not m.get("unreviewed_pilot"):
-            parser.error("This script only merges labelled pilot adapters; reviewed adapters use phase2 --stage merge")
         if (m.get("training_outcome") or {}).get("parameters_updated") is not True:
             parser.error("Adapter has no verified optimizer update")
     if args.empathy_adapter:
@@ -85,7 +90,8 @@ def main():
     merged_tokenizer = AutoTokenizer.from_pretrained(args.output, trust_remote_code=False)
     if merged_tokenizer.chat_template != tokenizer.chat_template or digest(merged_tokenizer.get_vocab()) != base_identity["tokenizer_sha256"]:
         raise SystemExit("Merged tokenizer differs from the pinned base tokenizer")
-    report = {"kind": "unreviewed_pilot_merged_base", "unreviewed_pilot": True, "human_reviewed": False,
+    report = {"kind": "reviewed_merged_base" if reviewed else "unreviewed_pilot_merged_base",
+        "unreviewed_pilot": pilot, "human_reviewed": reviewed,
         "base_model": BASE_MODEL, "base_revision": base_identity["base_revision"], "base_weights": base_identity["base_weights"],
         "adapter": str(adapter), "adapter_sha256": manifest["artifacts"]["adapter_model.safetensors"],
         "adapter_pilot_task": manifest.get("pilot_task"),

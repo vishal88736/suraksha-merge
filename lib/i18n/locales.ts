@@ -160,15 +160,14 @@ export const REPLY_LANGUAGE_CODES = REPLY_LANGUAGES.map(
 ) as [ReplyLanguage, ...ReplyLanguage[]];
 
 /**
- * The languages the fine-tuned pilot model was trained on. Any other language
- * is answered by the rules engine (see lib/model-triage.ts); keep this in step
- * with research/common.py:LANGUAGES.
+ * The languages the served model may answer. The model is trained on
+ * human-reviewed English, Hindi and Hinglish; Tanglish and Marathi-English
+ * stay with the rules engine until a native speaker has reviewed their data.
+ * Any other language is answered by the rules engine (lib/model-triage.ts).
  */
 export const MODEL_LANGUAGES: readonly ReplyLanguage[] = [
   "english",
   "hinglish",
-  "tanglish",
-  "marathi_english",
   "hindi_devanagari",
 ];
 
