@@ -179,7 +179,7 @@ test("model endpoint must be loopback http; timeout is bounded", () => {
       SURAKSHA_MODEL_URL: "http://127.0.0.1:8765/",
       SURAKSHA_MODEL_TIMEOUT_MS: "999999",
     }),
-    { url: "http://127.0.0.1:8765", token: undefined, timeoutMs: 15_000 },
+    { url: "http://127.0.0.1:8765", token: undefined, timeoutMs: 35_000 },
   );
   assert.equal(
     runWithModelConfig(CONFIG, () => modelConfigFromEnv({ SURAKSHA_MODEL_URL: "http://localhost:1" })?.url),
@@ -339,7 +339,7 @@ test("a remote model endpoint needs an explicit opt-in, https and a token", () =
   assert.equal(modelConfigFromEnv({ ...remote, SURAKSHA_MODEL_ALLOW_REMOTE: "true", SURAKSHA_MODEL_TOKEN: "" }), undefined);
   assert.equal(modelConfigFromEnv({ ...remote, SURAKSHA_MODEL_ALLOW_REMOTE: "true", SURAKSHA_MODEL_URL: "http://inference.example.org" }), undefined);
   assert.deepEqual(modelConfigFromEnv({ ...remote, SURAKSHA_MODEL_ALLOW_REMOTE: "true" }), {
-    url: "https://inference.example.org", token: "t", timeoutMs: 15_000,
+    url: "https://inference.example.org", token: "t", timeoutMs: 35_000,
   });
 });
 
@@ -360,4 +360,56 @@ test("a category the rules missed is judged by its own policy tier", async () =>
   assert.equal(result.audit.model.status, "used");
   assert.equal(result.payload.dispute_category, "VOLUNTARY_WRONG_VPA_TRANSFER");
   assert.equal(result.payload.rbi_liability_tier, "BANK_POLICY_REVIEW");
+});
+
+test("a model-written reply is used only when it passes every check", async () => {
+  const { validateModelReply } = await import("../lib/model-triage.ts");
+  const payload = { ...GOOD, detected_language: "hinglish" } as Parameters<typeof validateModelReply>[1];
+  const good =
+    "Samajh sakte hain, yeh stressful hai.\n\n1. Abhi bank/PSP ko fraud report karein aur UPI channel block karwayein.\n\n2. Turant 1930 par call karein aur cybercrime.gov.in par complaint karein.\n\n3. PSP app mein UTR 431289014421 par dispute raise karein.\n\nRefund abhi confirm nahi hai; bank verify karega.";
+  const ok = validateModelReply(good, payload, MESSAGE, null);
+  assert.equal(ok.ok, true);
+  assert.equal(ok.ok && ok.reply.steps.length, 3);
+  const bad = (text: string) => { const r = validateModelReply(text, payload, MESSAGE, null); return r.ok ? [] : r.reasons; };
+  assert.ok(bad(good + " Aapka refund 100% guaranteed hai.").includes("reply_promise"));
+  assert.ok(bad(good.replace("1930", "the helpline")).includes("reply_missing_fraud_rails"));
+  assert.ok(bad("I understand. Please contact your bank/PSP, call 1930 and report at cybercrime.gov.in at once, it is serious.").includes("reply_wrong_language"));
+  assert.ok(bad(good + " UTR 999999999999 bhi dekhein.").includes("reply_ungrounded_reference"));
+  assert.ok(bad(good + " ₹75,000 wapas milenge.").includes("reply_ungrounded_amount"));
+  assert.ok(bad(good + " Visit refund-help.com.").includes("reply_unknown_link"));
+  assert.ok(bad(good + " Call 98765 43210.").includes("reply_contact_number"));
+});
+
+test("the desk uses the model's reply when it passes, and the template with reasons when not", async () => {
+  const server = (reply: string) => (async () => Response.json({ raw: JSON.stringify({ ...GOOD, reporting_delay_working_days: 0 }), reply, latency_ms: 900, model: MODEL })) as unknown as typeof fetch;
+  const good = "Samajh sakte hain, yeh stressful hai.\n\n1. Abhi bank/PSP ko fraud report karein.\n\n2. Turant 1930 par call karein aur cybercrime.gov.in par complaint karein.\n\nRefund abhi confirm nahi hai; bank verify karega.";
+  const REPLIES = { ...CONFIG, replies: true };
+  const off = await triageWithModel({ message: MESSAGE, reporting_delay_working_days: 0 }, CONFIG, server(good));
+  assert.notEqual(off.reply.text, good); // off by default: the template writes it
+  const used = await triageWithModel({ message: MESSAGE, reporting_delay_working_days: 0 }, REPLIES, server(good));
+  assert.deepEqual(used.audit.model.status === "used" && used.audit.model.reply, { source: "model" });
+  assert.equal(used.reply.text, good);
+  assert.equal(triageResponseSchema.safeParse(used).success, true);
+  const promised = await triageWithModel({ message: MESSAGE, reporting_delay_working_days: 0 }, REPLIES, server(good + " Refund 100% guaranteed hai."));
+  assert.equal(promised.audit.model.status === "used" && promised.audit.model.reply?.source, "template");
+  assert.ok(!/guaranteed/.test(promised.reply.text));
+  assert.equal(promised.audit.no_unauthorized_promises, true);
+});
+
+test("a model reply with another category's advice is rejected", async () => {
+  const { validateModelReply } = await import("../lib/model-triage.ts");
+  const needsInfo = { ...GOOD, dispute_category: "NEEDS_INFORMATION", utr_number: null, detected_language: "hinglish" } as Parameters<typeof validateModelReply>[1];
+  const wrongVpaAdvice =
+    "Samajh sakte hain.\n\n1. Bank/PSP ko turant batayein aur wrong-beneficiary recovery request karein.\n\n2. Galat VPA par khud bheje hue paise ka automatic refund guarantee nahi hota.";
+  const r = validateModelReply(wrongVpaAdvice, needsInfo, MESSAGE, null);
+  assert.ok(!r.ok && r.reasons.includes("reply_inconsistent_with_category"));
+});
+
+test("a caller who made the customer download an app, then money left, is a remote-access scam", () => {
+  for (const message of [
+    "Madam koi aadmi ne phone karke bola aapka KYC expire ho gaya, ek app download karwaya, ab mere account se ₹23,400 nikal gaye.",
+    "A caller made me download an app for KYC and then ₹9,000 was debited.",
+  ])
+    assert.equal(triage({ message }).payload.dispute_category, "REMOTE_ACCESS_SCAM", message);
+  assert.equal(triage({ message: "I installed AnyDesk for my office work. My UPI is working normally." }).payload.dispute_category, "NEEDS_INFORMATION");
 });

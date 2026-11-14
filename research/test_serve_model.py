@@ -15,9 +15,9 @@ CORPUS = ROOT / "data/processed/upi-v1/train/rlvr.jsonl"
 class ServeModelTests(unittest.TestCase):
     def serve(self, token=None):
         prompts = []
-        def generate(prompt):  # fixture generator, not a model
+        def generate(prompt, max_new_tokens=None):  # fixture generator, not a model
             prompts.append(prompt)
-            return "fixture-output", 10, 2
+            return ("fixture-reply" if "customer support reply" in prompt else "fixture-output"), 10, 2
         server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(generate, INFO, token))
         threading.Thread(target=server.serve_forever, daemon=True).start()
         self.addCleanup(server.server_close)
@@ -38,7 +38,7 @@ class ServeModelTests(unittest.TestCase):
         started = threading.Event()
         release = threading.Event()
         calls = []
-        def slow_generate(prompt):  # fixture: holds the GPU lock until released
+        def slow_generate(prompt, max_new_tokens=None):  # fixture: holds the GPU lock until released
             calls.append(prompt)
             started.set()
             release.wait(5)
@@ -67,6 +67,16 @@ class ServeModelTests(unittest.TestCase):
         # A caller with no budget left is not served either.
         self.assertEqual(self.call(url, {"message": "m"}, {"x-suraksha-deadline-ms": "0"}), (503, {"error": "busy"}))
         self.assertEqual(len(calls), 1)
+
+    def test_reply_is_generated_only_when_asked(self):
+        url, prompts = self.serve()
+        status, body = self.call(url + "/v1/triage", {"message": "₹500 debited, UTR 612345678901"})
+        self.assertEqual((status, body["raw"], body["reply"]), (200, "fixture-output", None))
+        self.assertEqual(len(prompts), 1)
+        status, body = self.call(url + "/v1/triage", {"message": "₹500 debited, UTR 612345678901", "reply": True})
+        self.assertEqual((status, body["raw"], body["reply"]), (200, "fixture-output", "fixture-reply"))
+        self.assertIn("customer support reply", prompts[-1])
+        self.assertEqual(self.call(url + "/v1/triage", {"message": "m", "reply": "yes"})[0], 400)
 
     def test_request_validation(self):
         self.assertEqual(parse_request(b'{"message":"m","context":{"language":"auto"}}'), ("m", {"language": "auto"}))

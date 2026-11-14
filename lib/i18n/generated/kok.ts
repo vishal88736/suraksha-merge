@@ -83,6 +83,8 @@ const bundle: LocaleBundle = {
     "warning.responsibilityUnverified": "जापसालदारकी आनी अधिकृततायेची पडताळणी जावंक ना. फकत 3 कामाचे दिसांनी अहवाल दिल्ल्यान शून्य दायज थारना.",
     "warning.policy2027": "1 जानेवारी 2027 सावन जावपी वेव्हाराचो येवपी RBI दायज दुरुस्ती खाला नियाळ घेवपाची गरज आसा.",
     "warning.noTemplates": "अजून मेरेन {language} खातीर तपासिल्ले जाप टेम्पलेट ना; ड्राफ्ट इंग्लीश भाशेंत आसा.",
+    "intake.replyByModel": "मॉडेलान बरयलां",
+    "intake.replyTemplate": "टॅम्पलेट रिप्लाय · मॉडेलाचो जाप चेकांत अपेशी थारलोः {reasons}",
     "intake.replyIn": "भितर जाप दिवची",
     "intake.machineTranslated": "मशीनी अनुवादाक मूळ वक्त्यान नियाळ घेवपाची गरज आसा",
     "intake.copyReply": "गिरायक जापाची नक्कल कर",

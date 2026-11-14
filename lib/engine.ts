@@ -391,6 +391,8 @@ export type ModelAudit =
         panic?: { model: string; rules: string };
         language?: { model: string; rules: string };
       };
+      /** Who wrote the customer reply, and why a model reply was not used. */
+      reply?: { source: "model" } | { source: "template"; reasons: string[] };
     }
   | {
       status: "fallback";

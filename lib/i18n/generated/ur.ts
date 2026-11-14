@@ -83,6 +83,8 @@ const bundle: LocaleBundle = {
     "warning.responsibilityUnverified": "ذمہ داری اور اختیار کی تصدیق نہیں کی گئی ہے۔ صرف 3 کام کے دنوں کے اندر رپورٹنگ صفر ذمہ داری قائم نہیں کرتی ہے۔",
     "warning.policy2027": "یکم جنوری 2027 سے ہونے والے لین دین پر آنے والی RBI ذمہ داری ترمیم کے تحت نظر ثانی کی ضرورت ہے۔",
     "warning.noTemplates": "{language} کے لیے ابھی تک کوئی چیک شدہ جوابی ٹیمپلیٹس نہیں ہیں ؛ مسودہ انگریزی میں ہے۔",
+    "intake.replyByModel": "ماڈل کی طرف سے لکھا گیا",
+    "intake.replyTemplate": "ٹیمپلیٹ جواب · ماڈل کا جواب ایک چیک میں ناکام رہا: {reasons}",
     "intake.replyIn": "میں جواب دیں",
     "intake.machineTranslated": "مشین ترجمہ · کو مقامی اسپیکر کے ذریعے جائزے کی ضرورت ہے",
     "intake.copyReply": "گاہک کا جواب کاپی کریں",

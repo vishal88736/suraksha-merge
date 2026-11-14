@@ -78,6 +78,12 @@ def public_target(message,language):
     suffix=r'(?:rupaye|rupaiye|rupay|rupees?|rupiya|rupiye|rs\.?(?![^\W\d_])|/-|रुपये|रुपए|रुपया|রুপি|টাকা|ரூபாய்|రూపాయ|ರೂಪಾಯಿ|രൂപ|રૂપિયા|ਰੁਪਏ|روپے|روپیہ|ଟଙ୍କା)(?![^\W\d_])'
     tokens=re.findall(r'(?<!\w)(?:Rs\.?|INR|₹)\s*([0-9][0-9,]*(?:\.\d{1,2})?)(?!\d)(?!\.\d)',message,re.I)
     tokens+=re.findall(r'(?<![\w.,])([0-9][0-9,]*(?:\.\d{1,2})?)\s*'+suffix,message,re.I)
+    # Mirrors the verb-anchored bare amounts in lib/numbers.ts ("Paid 1,850", "3000 bhej diye").
+    shape=r'(?:[1-9]\d{0,6}|[1-9]\d{0,2}(?:,\d{3})+|[1-9]\d?(?:,\d{2})*,\d{3})(?:\.\d{1,2})?'
+    unit=r'(?!\s*(?:times?|days?|hours?|hrs?|mins?|minutes?|months?|years?|weeks?|am|pm|baar|din|ghante|mahine|people|log|digits?|lakhs?|lacs?|k\b|crores?|cr\b|thousand|hundred|hazaa?r|sau\b|%|:))'
+    for a,b in re.findall(r'(?<![^\W\d_])(?:paid|payed|sent|transferred|debited|deducted)\s+(?:of\s+|about\s+|around\s+)?('+shape+r')(?!\d|[,.]\d)'+unit+
+            r'|(?<![\w.,])('+shape+r')(?!\d|[,.]\d)\s+(?:bhej|transfer\s+ki|transfer\s+kiye|pay\s+ki|pay\s+kiye|kat\s+ga|debit\s+ho|(?:got|was|were|has\s+been|have\s+been|is|been)\s+(?:debited|deducted|cut|taken))',message,re.I):
+        tokens.append(a or b)
     for token in tokens:
         try:
             number=Decimal(token.replace(',',''))

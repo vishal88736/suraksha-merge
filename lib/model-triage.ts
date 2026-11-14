@@ -3,6 +3,7 @@ import {
   inputSchema,
   isFraud,
   payloadSchema,
+  policyCheck,
   triage,
   type ModelAudit,
   type ModelInfo,
@@ -10,7 +11,8 @@ import {
   type TriageInput,
   type TriageResult,
 } from "./engine.ts";
-import { findAmounts } from "./numbers.ts";
+import { asciiDigits, findAmounts } from "./numbers.ts";
+import { detectLanguage } from "./rules/language.ts";
 import { MODEL_LANGUAGES } from "./i18n/locales.ts";
 import { parseStrictJson } from "./strict-json.ts";
 import type { ModelConfig } from "./model-config.ts";
@@ -19,6 +21,7 @@ const MAX_RAW_CHARS = 8_000;
 
 const serverResponse = z.object({
   raw: z.string().max(MAX_RAW_CHARS),
+  reply: z.string().max(MAX_RAW_CHARS).nullable().optional(),
   latency_ms: z.number().finite().nonnegative(),
   model: z.object({
     base_model: z.string().max(200),
@@ -150,6 +153,76 @@ export function validateModelPayload(
   return reasons.length ? { ok: false, reasons } : { ok: true, payload: p };
 }
 
+const ALLOWED_DOMAINS = new Set(["cybercrime.gov.in", "cms.rbi.org.in"]);
+
+/**
+ * Check a model-written customer reply. It must keep every promise and rail
+ * rule of the templates, be in the payload's language, and mention no
+ * reference, amount, link or phone number the message does not support.
+ * On success the text is split into the desk's introduction/steps/escalation.
+ */
+export function validateModelReply(
+  text: string,
+  payload: Payload,
+  message: string,
+  compensation: number | null,
+):
+  | { ok: true; reply: { introduction: string; steps: string[]; escalation: string; text: string } }
+  | { ok: false; reasons: string[] } {
+  const reply = text.trim();
+  const reasons: string[] = [];
+  if (reply.length < 40) reasons.push("reply_too_short");
+  if (reply.length > 3000) reasons.push("reply_too_long");
+  const policy = policyCheck(reply, payload);
+  if (!policy.no_unauthorized_promises) reasons.push("reply_promise");
+  if (!policy.fraud_rails_present) reasons.push("reply_missing_fraud_rails");
+  if (detectLanguage(reply) !== payload.detected_language) reasons.push("reply_wrong_language");
+  // The reply must give the advice for this category: its markers present,
+  // another category's markers absent (the markers stay Latin in every language).
+  const category = payload.dispute_category;
+  const technical = category === "P2P_BENEFICIARY_NOT_CREDITED" || category === "P2M_CONFIRMATION_FAILURE";
+  const required =
+    category === "P2P_BENEFICIARY_NOT_CREDITED" ? /T\+1\b/ :
+    category === "P2M_CONFIRMATION_FAILURE" ? /T\+5\b/ :
+    category === "VOLUNTARY_WRONG_VPA_TRANSFER" ? /VPA|wrong-beneficiary/i :
+    category === "NEEDS_INFORMATION" ? /UTR|RRN/ : null;
+  if (
+    (required && !required.test(reply)) ||
+    (!technical && /T\+[15]\b/.test(reply)) ||
+    (category !== "VOLUNTARY_WRONG_VPA_TRANSFER" && /wrong-beneficiary|galat VPA|गलत VPA|wrong VPA/i.test(reply))
+  )
+    reasons.push("reply_inconsistent_with_category");
+  const digits = asciiDigits(reply);
+  for (const ref of digits.match(/(?<!\d)\d{12}(?!\d)/g) ?? [])
+    if (ref !== payload.utr_number) reasons.push("reply_ungrounded_reference");
+  const allowedAmounts = new Set([
+    100,
+    ...(compensation ? [compensation] : []),
+    ...findAmounts(message).hits.map((h) => h.value),
+  ]);
+  if (findAmounts(reply).hits.some((h) => !allowedAmounts.has(h.value)))
+    reasons.push("reply_ungrounded_amount");
+  for (const domain of reply.match(/\b(?:[a-z0-9-]+\.)+(?:in|com|org|net|gov|co|io|app|xyz)\b/gi) ?? [])
+    if (!ALLOWED_DOMAINS.has(domain.toLowerCase())) reasons.push("reply_unknown_link");
+  if (/(?<!\d)(?:\+?91[ -]?)?[6-9](?:[ -]?\d){9}(?!\d)/.test(digits)) reasons.push("reply_contact_number");
+  if (reasons.length) return { ok: false, reasons: [...new Set(reasons)] };
+  // Same layout as the templates: an opening paragraph, numbered steps, and a
+  // closing paragraph.
+  const paragraphs = reply.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+  const isStep = (p: string) => /^\d+[.)]\s/.test(p);
+  const steps = paragraphs.filter(isStep).map((p) => p.replace(/^\d+[.)]\s*/, ""));
+  const prose = paragraphs.filter((p) => !isStep(p));
+  return {
+    ok: true,
+    reply: {
+      introduction: prose[0] ?? "",
+      steps,
+      escalation: prose.length > 1 ? prose.slice(1).join("\n\n") : "",
+      text: reply,
+    },
+  };
+}
+
 /** The model receives the same prompt fields used in training: the redacted message and operator context. */
 function operatorContext(raw: TriageInput) {
   return Object.fromEntries(
@@ -173,7 +246,8 @@ async function callModel(
       // The server drops queued work it could not start before this budget.
       "x-suraksha-deadline-ms": String(config.timeoutMs),
     },
-    body: JSON.stringify({ message: sanitized, context }),
+    // The model writes the customer reply too; it is checked before use.
+    body: JSON.stringify({ message: sanitized, context, reply: Boolean(config.replies) }),
     signal: AbortSignal.timeout(config.timeoutMs),
   });
   if (response.status === 503) throw new Error("model_busy");
@@ -294,7 +368,24 @@ export async function triageWithModel(
       ...(policyFromRules ? { policy_from_rules: policyFromRules } : {}),
     },
   });
-  // The customer reply is template-built; it must still pass the same gates.
+  // The model's own reply replaces the template only if it passes every
+  // check; otherwise the template is used and the reasons are shown.
+  if (!config.replies) return result; // templates write the reply (default)
+  const replyCheck = reply.reply
+    ? validateModelReply(reply.reply, result.payload, input.message, result.sla.estimated_compensation_inr)
+    : { ok: false as const, reasons: ["reply_not_generated"] };
+  if (replyCheck.ok) {
+    const policy = policyCheck(replyCheck.reply.text, result.payload);
+    if (result.audit.model.status === "used") result.audit.model.reply = { source: "model" };
+    return {
+      ...result,
+      reply: replyCheck.reply,
+      audit: { ...result.audit, ...policy },
+    };
+  }
+  if (result.audit.model.status === "used")
+    result.audit.model.reply = { source: "template", reasons: replyCheck.reasons };
+  // The template reply must still pass the same gates.
   if (!result.audit.no_unauthorized_promises || !result.audit.fraud_rails_present)
     return triage(raw, {
       model: {

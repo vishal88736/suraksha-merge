@@ -83,6 +83,8 @@ const bundle: LocaleBundle = {
     "warning.responsibilityUnverified": "ज़िम्मेदारी ते अधिकार असत्यापित न। छड़ा 3 कम्मक दिनें दे अंदर रिपोर्ट करना ज़ीरो देनदारी स्थापत नेईं करदा ऐ।",
     "warning.policy2027": "1 जनवरी 2027 कोला होने आह्ले लैन-देनें गी आगामी RBI देनदारी सधार दे मताबक समीक्षा दी लोड़ ऐ।",
     "warning.noTemplates": "{language} आस्तै अजें तक्कर कोई जांचे दा जवाब टेम्पलेट नेईं ऐ; मसौदा अंग्रेज़ी च ऐ।",
+    "intake.replyByModel": "माडल द्वारा लिखेआ गेआ",
+    "intake.replyTemplate": "नमूना जवाब · माडल दा जवाब इक जांच च असफल रेहाः {reasons}",
     "intake.replyIn": "जवाब देओ",
     "intake.machineTranslated": "मशीनी अनुवाद · गी मूल वक्ता आसेआ समीक्षा दी लोड़ ऐ",
     "intake.copyReply": "गाह्क दे जवाब दी नकल करो",

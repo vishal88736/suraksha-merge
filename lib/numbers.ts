@@ -25,11 +25,23 @@ export function findAmounts(message: string): {
   const prefixed = /(?<![\p{L}\p{N}])(?:₹|rs\.?|inr)\s*([0-9][0-9,.]*)/giu;
   const suffixed =
     /(?<![\p{L}\p{N}.,])([0-9][0-9,.]*)\s*(?:rupaye|rupaiye|rupay|rupees?|rupiya|rupiye|rs\.?(?![\p{L}])|\/-|रुपये|रुपए|रुपया|রুপি|টাকা|ரூபாய்|రూపాయ|ರೂಪಾಯಿ|രൂപ|રૂપિયા|ਰੁਪਏ|روپے|روپیہ|ଟଙ୍କା)(?![\p{L}\p{M}])/giu;
+  // "Paid 1,850 to ...", "sent 500", "3000 bhej diye": a bare number counts
+  // only right after (or, in Hinglish, before) a payment verb, only in a valid
+  // amount shape, and never when a unit follows ("sent 2 times", "paid 3 days ago").
+  const shape = "(?:[1-9]\\d{0,6}|[1-9]\\d{0,2}(?:,\\d{3})+|[1-9]\\d?(?:,\\d{2})*,\\d{3})(?:\\.\\d{1,2})?";
+  const unit =
+    "(?!\\s*(?:times?|days?|hours?|hrs?|mins?|minutes?|months?|years?|weeks?|am|pm|baar|din|ghante|mahine|people|log|digits?|lakhs?|lacs?|k\\b|crores?|cr\\b|thousand|hundred|hazaa?r|sau\\b|%|:))";
+  const verbed = new RegExp(
+    `(?<![\\p{L}])(?:paid|payed|sent|transferred|debited|deducted)\\s+(?:of\\s+|about\\s+|around\\s+)?(${shape})(?![\\p{N}]|[,.]\\p{N})${unit}` +
+      `|(?<![\\p{L}\\p{N}.,])(${shape})(?![\\p{N}]|[,.]\\p{N})\\s+(?:bhej|transfer\\s+ki|transfer\\s+kiye|pay\\s+ki|pay\\s+kiye|kat\\s+ga|debit\\s+ho|(?:got|was|were|has\\s+been|have\\s+been|is|been)\\s+(?:debited|deducted|cut|taken))`,
+    "giu",
+  );
   const seen = new Set<number>();
-  for (const pattern of [prefixed, suffixed])
+  for (const pattern of [prefixed, suffixed, verbed])
   for (const match of text.matchAll(pattern)) {
-    const token = match[1]!.replace(/[.,]$/, "");
-    const tokenStart = match.index! + match[0].indexOf(match[1]!);
+    const raw = (match[1] ?? match[2])!;
+    const token = raw.replace(/[.,]$/, "");
+    const tokenStart = match.index! + match[0].indexOf(raw);
     if (seen.has(tokenStart)) continue; // "Rs 500 rupees" is one amount
     seen.add(tokenStart);
     const prefix = text.slice(Math.max(0, match.index! - 45), match.index!);

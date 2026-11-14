@@ -271,6 +271,7 @@ Every row goes through the real runtime path: model, gates, then the policy rule
 
 - ✅ **Reviewed, varied wording is what improved generalisation.** On wording it never saw, the system goes from 38% (rules alone) to 74%. The two remaining reviewed-test errors are both in panic severity.
 - ⚠️ **Rules-only scores 100% on the reviewed test set because those labels were built to agree with the engine.** That set can't show the model beating the rules; the unfamiliar-wording set can.
+- ⚠️ **Model-written replies aren't good enough yet.** A dual-task model (JSON + reply) passed the reply checks for 27 of 52 reviewed-test and 16 of 39 challenge cases, and was less accurate on the JSON (90.7%). Its replies were mostly the templates copied back with new errors, because templates were its training targets. Replies therefore come from reviewed templates unless you opt in.
 - ⚠️ **The challenge set is labelled by the project, not human-reviewed**, and the same author wrote the varied training cases. They were kept dissimilar (trigram Jaccard ≤ 0.6), but some style overlap is possible. **The true measure, evaluation on real human-labelled messages, hasn't been done.**
 
 <details>
@@ -342,7 +343,7 @@ HF_HUB_OFFLINE=1 .venv-training/bin/python scripts/serve_model.py \
   --model artifacts/reviewed/merged-schema-sft-002
 
 # 2. point the website at it
-printf 'SURAKSHA_MODEL_URL=http://127.0.0.1:8765\nSURAKSHA_MODEL_TIMEOUT_MS=15000\n' > .dev.vars
+printf 'SURAKSHA_MODEL_URL=http://127.0.0.1:8765\nSURAKSHA_MODEL_TIMEOUT_MS=35000\n' > .dev.vars
 npm run dev -- --host 127.0.0.1
 
 # 3. confirm: trained_model_connected should be true
@@ -351,6 +352,7 @@ curl -s http://127.0.0.1:5173/api/health
 
 - **The status bar** shows "Fine-tuned model · rules fallback" when the model is connected.
 - **Under load,** the server lets at most `--max-queue` requests wait (default 2), refuses the rest with `503 busy`, and drops work whose caller has given up. The site then answers with the rules.
+- **Model-written replies (experimental, off by default):** serve `merged-dual-sft-003` and add `SURAKSHA_MODEL_REPLIES=true`. A model reply is shown only if it passes every reply check, otherwise the template is used. Only about half passed, see [docs/MODEL_SERVING.md](docs/MODEL_SERVING.md#model-written-replies-experimental-off-by-default).
 - **For a deployed Worker** to use a hosted model server, set all three: `SURAKSHA_MODEL_ALLOW_REMOTE=true`, an `https://` URL, and `SURAKSHA_MODEL_TOKEN`. Otherwise it stays rules-only.
 
 </details>
@@ -492,6 +494,7 @@ Primary sources and review dates are in [`lib/policy.ts`](lib/policy.ts). The ca
   - native-speaker review of the 278 Tanglish and Marathi–English cases;
   - native-speaker review of the 21 machine-translated languages and the native-script keywords;
   - the independent second review of the 92-case evaluation queue.
+- **Replies are templated by default.** Model-written replies are an opt-in experiment; about half fail the safety and language checks, and those that pass haven't been human-reviewed.
 - **Not evaluated on real messages.** The headline numbers come from synthetic and project-labelled sets.
 - **Privacy.** No customer message is stored, and exported traces are masked. Screenshots are read on the device, and dictation needs an explicit opt-in. A hosted model endpoint would receive redacted transaction details and needs data-protection approval.
 - **Not a certification.** Operational use would need a bank-approved category mapping, a compliance review, real-message evaluation, agent authentication and audit logging.

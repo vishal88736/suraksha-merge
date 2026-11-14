@@ -83,6 +83,8 @@ const bundle: LocaleBundle = {
     "warning.responsibilityUnverified": "ਜ਼ਿੰਮੇਵਾਰੀ ਅਤੇ ਅਧਿਕਾਰ ਦੀ ਤਸਦੀਕ ਨਹੀਂ ਕੀਤੀ ਗਈ ਹੈ। ਸਿਰਫ਼ 3 ਕੰਮਕਾਜੀ ਦਿਨਾਂ ਦੇ ਅੰਦਰ ਰਿਪੋਰਟ ਕਰਨਾ ਜ਼ੀਰੋ ਦੇਣਦਾਰੀ ਸਥਾਪਤ ਨਹੀਂ ਕਰਦਾ ਹੈ।",
     "warning.policy2027": "1 ਜਨਵਰੀ 2027 ਤੋਂ ਲੈਣ-ਦੇਣ ਨੂੰ ਆਉਣ ਵਾਲੀ RBI ਦੇਣਦਾਰੀ ਸੋਧ ਦੇ ਤਹਿਤ ਸਮੀਖਿਆ ਦੀ ਜ਼ਰੂਰਤ ਹੈ।",
     "warning.noTemplates": "{language} ਲਈ ਹਾਲੇ ਤੱਕ ਕੋਈ ਚੈੱਕ ਕੀਤੇ ਜਵਾਬ ਟੈਂਪਲੇਟ ਨਹੀਂ ਹਨ; ਡਰਾਫਟ ਅੰਗਰੇਜ਼ੀ ਵਿੱਚ ਹੈ।",
+    "intake.replyByModel": "ਮਾਡਲ ਦੁਆਰਾ ਲਿਖਿਆ ਗਿਆ",
+    "intake.replyTemplate": "ਨਮੂਨਾ ਜਵਾਬ · ਮਾਡਲ ਦਾ ਜਵਾਬ ਇੱਕ ਚੈੱਕ ਵਿੱਚ ਫੇਲ੍ਹ ਹੋਇਆਃ {reasons}",
     "intake.replyIn": "ਜਵਾਬ ਦਿਓ",
     "intake.machineTranslated": "ਮਸ਼ੀਨ ਅਨੁਵਾਦ · ਨੂੰ ਇੱਕ ਮੂਲ ਬੁਲਾਰੇ ਦੁਆਰਾ ਸਮੀਖਿਆ ਦੀ ਜ਼ਰੂਰਤ ਹੈ",
     "intake.copyReply": "ਗਾਹਕ ਦਾ ਜਵਾਬ ਕਾਪੀ ਕਰੋ",

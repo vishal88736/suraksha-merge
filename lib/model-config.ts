@@ -5,12 +5,16 @@ export type ModelConfig = {
   url: string;
   token?: string;
   timeoutMs: number;
+  /** The model also writes the customer reply (SURAKSHA_MODEL_REPLIES=true). */
+  replies?: boolean;
 };
 
 const configs = new AsyncLocalStorage<ModelConfig | undefined>();
 
-const DEFAULT_TIMEOUT_MS = 15_000;
-export const MAX_TIMEOUT_MS = 15_000;
+const DEFAULT_TIMEOUT_MS = 35_000;
+// Below the browser's 45 s request timeout (lib/triage-client.ts), so the rules
+// fallback always has time to answer. Includes writing the customer reply.
+export const MAX_TIMEOUT_MS = 35_000;
 
 /**
  * Loopback http endpoints are accepted for the local preview. A remote
@@ -22,6 +26,7 @@ export function modelConfigFromEnv(env: {
   SURAKSHA_MODEL_TOKEN?: string;
   SURAKSHA_MODEL_TIMEOUT_MS?: string;
   SURAKSHA_MODEL_ALLOW_REMOTE?: string;
+  SURAKSHA_MODEL_REPLIES?: string;
 }): ModelConfig | undefined {
   const raw = env.SURAKSHA_MODEL_URL?.trim();
   if (!raw) return undefined;
@@ -46,8 +51,11 @@ export function modelConfigFromEnv(env: {
   return {
     url: url.origin,
     token: env.SURAKSHA_MODEL_TOKEN || undefined,
+    // Opt-in: the model also writes the customer reply (checked before use).
+    // Off by default; the reviewed templates write it otherwise.
+    ...(env.SURAKSHA_MODEL_REPLIES === "true" ? { replies: true } : {}),
     timeoutMs:
-      // Capped below the browser's 20 s client timeout, leaving time for the
+      // Capped below the browser's 45 s client timeout, leaving time for the
       // rules fallback to answer when the model is slow or busy.
       Number.isInteger(timeout) && timeout >= 1000 && timeout <= MAX_TIMEOUT_MS
         ? timeout

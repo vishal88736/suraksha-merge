@@ -17,5 +17,7 @@ declare namespace Cloudflare {
     SURAKSHA_MODEL_TIMEOUT_MS?: string;
     /** "true" to allow an https model endpoint with a bearer token. */
     SURAKSHA_MODEL_ALLOW_REMOTE?: string;
+    /** "true": the model also writes the customer reply (checked; off by default). */
+    SURAKSHA_MODEL_REPLIES?: string;
   }
 }

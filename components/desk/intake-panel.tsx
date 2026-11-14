@@ -179,7 +179,18 @@ export function IntakePanel({
           </span>
           <strong>{t("intake.draft")}</strong>
           <span className="draft-tag">{t("intake.forReview")}</span>
-          {MACHINE_TRANSLATED_REPLIES.has(result.payload.detected_language) && (
+          {result.audit.model.status === "used" && result.audit.model.reply && (
+            <span
+              className={`draft-tag ${result.audit.model.reply.source === "model" ? "model-tag" : "machine-tag"}`}
+              title={result.audit.model.reply.source === "template" ? result.audit.model.reply.reasons.join(", ") : undefined}
+            >
+              {result.audit.model.reply.source === "model"
+                ? t("intake.replyByModel")
+                : t("intake.replyTemplate", { reasons: result.audit.model.reply.reasons.join(", ") })}
+            </span>
+          )}
+          {!(result.audit.model.status === "used" && result.audit.model.reply?.source === "model") &&
+            MACHINE_TRANSLATED_REPLIES.has(result.payload.detected_language) && (
             <span className="draft-tag machine-tag">
               {t("intake.machineTranslated")}
             </span>

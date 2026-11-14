@@ -70,6 +70,12 @@ export const triageResponseSchema = z.object({
             language: z.object({ model: z.string(), rules: z.string() }).optional(),
           })
           .optional(),
+        reply: z
+          .union([
+            z.object({ source: z.literal("model") }),
+            z.object({ source: z.literal("template"), reasons: z.array(z.string()) }),
+          ])
+          .optional(),
       }),
       z.object({
         status: z.literal("fallback"),

@@ -530,3 +530,51 @@ test("scam and failure categories need evidence of loss and non-receipt", () => 
     "REMOTE_ACCESS_SCAM",
   );
 });
+
+test("everyday merchant payments that failed are merchant disputes, not scams or wrong transfers", () => {
+  for (const message of [
+    "I tried to pay my credit card bill on the bank app, it showed failed but ₹6,200 is gone.",
+    "Rs 5000 debited for zomato order, order not placed.",
+    "Booked an Ola ride, payment declined but ₹240 debited",
+    "Paid 1,850 to the electricity board through PhonePe yesterday, it says pending, amount gone from account.",
+  ])
+    assert.equal(triage({ message }).payload.dispute_category, "P2M_CONFIRMATION_FAILURE", message);
+  // "bola" (said) is not the taxi app.
+  assert.equal(
+    triage({ message: "Maine dost ko UPI transfer kiya, usne bola paise nahi mile, ₹2,000 kat gaye." }).payload
+      .dispute_category,
+    "P2P_BENEFICIARY_NOT_CREDITED",
+  );
+});
+
+test("a bare amount counts only right after a payment verb and without a unit", () => {
+  const amount = (message: string) => triage({ message }).payload.amount_inr;
+  assert.equal(amount("Paid 1,850 to the electricity board, it is pending."), 1850);
+  assert.equal(amount("I paid 500. Shop says not received."), 500);
+  assert.equal(amount("bhai 3000 bhej diye galti se"), 3000);
+  for (const message of [
+    "Paid 3 days ago, still pending.",
+    "Sent 2 times, both failed.",
+    "Paid 1.5 lakh to the builder, pending.",
+    "Paid 412345678901 is the reference, pending.",
+  ])
+    assert.equal(amount(message), null, message);
+});
+
+test("an OTP given to a caller is a takeover, a QR scanned to receive money is a QR scam", () => {
+  const category = (message: string) => triage({ message }).payload.dispute_category;
+  assert.equal(
+    category("Someone called saying they're from SBI, asked me to share the OTP to stop my card block, after that Rs 24,999 debited."),
+    "UNAUTHORIZED_ACCOUNT_TAKEOVER",
+  );
+  assert.equal(category("caller ne bola KYC update hai, maine OTP bata diya, 8000 kat gaye"), "UNAUTHORIZED_ACCOUNT_TAKEOVER");
+  assert.equal(category("I scanned a QR to receive money for my OLX sale and instead 15000 got debited"), "COLLECT_REQUEST_SCAM");
+  // The bank sending an OTP, or a denied OTP, is not evidence of sharing.
+  assert.notEqual(category("Bank sent OTP, I entered it in the app, payment pending, Rs 700 debited"), "UNAUTHORIZED_ACCOUNT_TAKEOVER");
+  // A generic purchase word gives way to a named person as the recipient.
+  assert.equal(
+    category("I shared the bill with my friend and sent Rs 400, he has not received it"),
+    "P2P_BENEFICIARY_NOT_CREDITED",
+  );
+  assert.equal(triage({ message: "Instead 15000 got debited from my account" }).payload.amount_inr, 15000);
+});

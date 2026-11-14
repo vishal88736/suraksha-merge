@@ -29,12 +29,15 @@ CONTEXT_KEYS = {"reporting_delay_working_days", "elapsed_calendar_days", "respon
     "account_tier", "language", "transaction_date"}
 
 
-def parse_request(body: bytes):
-    """Validate the request; returns (message, context) or raises ValueError."""
+def parse_request(body: bytes, with_options: bool = False):
+    """Validate the request; returns (message, context), or with_options
+    (message, context, reply) where reply asks for a customer reply too."""
     if len(body) > MAX_BODY_BYTES:
         raise ValueError("payload_too_large")
     data = json.loads(body)
-    if not isinstance(data, dict) or set(data) - {"message", "context"}:
+    if not isinstance(data, dict) or set(data) - {"message", "context", "reply"}:
+        raise ValueError("invalid_request")
+    if not isinstance(data.get("reply", False), bool):
         raise ValueError("invalid_request")
     message, context = data.get("message"), data.get("context", {})
     if not isinstance(message, str) or not message.strip() or len(message) > MAX_MESSAGE_CHARS:
@@ -43,12 +46,17 @@ def parse_request(body: bytes):
         raise ValueError("invalid_context")
     if any(not (value is None or isinstance(value, (str, int)) and not isinstance(value, bool)) for value in context.values()):
         raise ValueError("invalid_context")
-    return message, context
+    return (message, context, data.get("reply", False)) if with_options else (message, context)
 
 
 def schema_prompt(message: str, context: dict) -> str:
     """Identical to phase1_curatorkit_pipeline.py's RLVR/SFT schema prompt."""
     return prompt_for(message, context, "schema")
+
+
+def reply_prompt(message: str, context: dict) -> str:
+    """Identical to the reply records in the curated SFT data (task "reply")."""
+    return prompt_for(message, context, "reply")
 
 
 def request_deadline(header: str | None, queue_timeout: float) -> float:
@@ -61,7 +69,7 @@ def request_deadline(header: str | None, queue_timeout: float) -> float:
     return max(0.0, min(budget, queue_timeout))
 
 
-def make_handler(generate, info: dict, token: str | None, max_queue: int = 2, queue_timeout: float = 15.0):
+def make_handler(generate, info: dict, token: str | None, max_queue: int = 2, queue_timeout: float = 35.0, max_reply_tokens: int = 384):
     """generate(prompt) -> (text, input_tokens, output_tokens). Calls are serialized."""
     lock = threading.Lock()
     admission = threading.Lock()
@@ -106,7 +114,7 @@ def make_handler(generate, info: dict, token: str | None, max_queue: int = 2, qu
                 length = int(self.headers.get("content-length") or 0)
                 if length > MAX_BODY_BYTES:
                     raise ValueError("payload_too_large")
-                message, context = parse_request(self.rfile.read(length))
+                message, context, want_reply = parse_request(self.rfile.read(length), with_options=True)
             except (ValueError, json.JSONDecodeError) as error:
                 code = str(error) if str(error) in {"payload_too_large", "invalid_request", "invalid_message", "invalid_context"} else "invalid_json"
                 return self._send(413 if code == "payload_too_large" else 400, {"error": code})
@@ -130,11 +138,17 @@ def make_handler(generate, info: dict, token: str | None, max_queue: int = 2, qu
                 if time.perf_counter() - started >= deadline:
                     return self._send(503, {"error": "busy"})
                 text, input_tokens, output_tokens = generate(schema_prompt(message, context))
+                reply_text = None
+                # The customer reply is a second generation, only when asked for
+                # and only if the caller's budget still allows it.
+                if want_reply and time.perf_counter() - started < deadline:
+                    reply_text, reply_in, reply_out = generate(reply_prompt(message, context), max_new_tokens=max_reply_tokens)
+                    input_tokens, output_tokens = input_tokens + reply_in, output_tokens + reply_out
             except Exception:  # do not echo internals or inputs
                 return self._send(500, {"error": "generation_failed"})
             finally:
                 lock.release()
-            self._send(200, {"raw": text, "latency_ms": round((time.perf_counter() - started) * 1000, 1),
+            self._send(200, {"raw": text, "reply": reply_text, "latency_ms": round((time.perf_counter() - started) * 1000, 1),
                 "input_tokens": input_tokens, "output_tokens": output_tokens,
                 "model": {k: info[k] for k in ("base_model", "base_revision", "adapter", "adapter_sha256", "quantization", "unreviewed_pilot")}})
 
@@ -198,12 +212,12 @@ def load_model(args):
         "adapter": adapter_path, "adapter_sha256": adapter_sha, "quantization": args.quantization,
         "fine_tuned": adapter_path is not None, "unreviewed_pilot": pilot, "max_new_tokens": args.max_new_tokens, "do_sample": False}
 
-    def generate(prompt):
+    def generate(prompt, max_new_tokens=None):
         rendered = tokenizer.apply_chat_template([{"role": "user", "content": prompt}], tokenize=False, add_generation_prompt=True)
         encoded = tokenizer(rendered, return_tensors="pt").to(model.device)
         count = encoded["input_ids"].shape[1]
         with torch.inference_mode():
-            out = model.generate(**encoded, do_sample=False, max_new_tokens=args.max_new_tokens, pad_token_id=tokenizer.eos_token_id)
+            out = model.generate(**encoded, do_sample=False, max_new_tokens=max_new_tokens or args.max_new_tokens, pad_token_id=tokenizer.eos_token_id)
         tokens = out[0, count:]
         return tokenizer.decode(tokens, skip_special_tokens=True), int(count), int(len(tokens))
 
@@ -222,14 +236,15 @@ def main():
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--max-queue", type=int, default=2, help="requests allowed to wait for the GPU; more get 503 busy")
-    parser.add_argument("--queue-timeout", type=float, default=15.0, help="longest a request may wait for the GPU, in seconds")
+    parser.add_argument("--queue-timeout", type=float, default=35.0, help="longest a request may wait for the GPU, in seconds")
+    parser.add_argument("--max-reply-tokens", type=int, default=384, help="length limit for a generated customer reply")
     args = parser.parse_args()
     if args.host not in LOOPBACK:
         parser.error("The model server binds to loopback only.")
     if not 1 <= args.max_new_tokens <= 1024:
         parser.error("--max-new-tokens must be between 1 and 1024")
     generate, info = load_model(args)
-    server = ThreadingHTTPServer((args.host, args.port), make_handler(generate, info, os.environ.get("SURAKSHA_MODEL_TOKEN") or None, args.max_queue, args.queue_timeout))
+    server = ThreadingHTTPServer((args.host, args.port), make_handler(generate, info, os.environ.get("SURAKSHA_MODEL_TOKEN") or None, args.max_queue, args.queue_timeout, args.max_reply_tokens))
     print(json.dumps({"listening": f"http://{args.host}:{args.port}", **info}), flush=True)
     try:
         server.serve_forever()

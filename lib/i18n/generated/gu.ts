@@ -83,6 +83,8 @@ const bundle: LocaleBundle = {
     "warning.responsibilityUnverified": "જવાબદારી અને અધિકૃતતા ચકાસાયેલ નથી. માત્ર 3 કાર્યકારી દિવસની અંદર જાણ કરવાથી શૂન્ય જવાબદારી સ્થાપિત થતી નથી.",
     "warning.policy2027": "1 જાન્યુઆરી 2027થી થનારા વ્યવહારોની આગામી RBI જવાબદારી સુધારા હેઠળ સમીક્ષાની જરૂર છે.",
     "warning.noTemplates": "{language} માટે હજુ સુધી કોઈ ચકાસાયેલ જવાબ નમૂનાઓ નથી; મુસદ્દો અંગ્રેજીમાં છે.",
+    "intake.replyByModel": "મોડલ દ્વારા લખાયેલ",
+    "intake.replyTemplate": "નમૂના જવાબ · નમૂનાનો જવાબ ચેકમાં નિષ્ફળ ગયોઃ {reasons}",
     "intake.replyIn": "જવાબ આપો",
     "intake.machineTranslated": "મશીન અનુવાદને મૂળ વક્તા દ્વારા સમીક્ષાની જરૂર છે",
     "intake.copyReply": "ગ્રાહકના જવાબની નકલ કરો",

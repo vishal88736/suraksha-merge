@@ -41,18 +41,25 @@ const native = (key: keyof typeof NATIVE) => new RegExp(NATIVE[key], "u");
 
 /** Remote-access tooling: the customer installed something on their device. */
 export const REMOTE_ACCESS_SIGNALS =
-  /anydesk|\.apk\b|remote\s*access|screen[ -]?shar|teamviewer|quick\s*support/i;
+  /anydesk|\.apk\b|remote\s*access|screen[ -]?shar|teamviewer|quick\s*support|\bapp\s*(?:download|install)\s*(?:karwa|karva|kara|krwa)\w*|(?:made|asked|told|got)\s+me\s+(?:to\s+)?(?:download|install)|ऐप\s*(?:डाउनलोड|इंस्टॉल)\s*(?:करवा|कराया|करने)|ऐप\s*डलवा/i;
 
 /**
  * A collect request needs a market signal: a platform, a buyer or a seller
  * asking for money by QR. "Scanned the shop QR" is a merchant payment.
  */
 export const COLLECT_REQUEST_SIGNALS =
-  /collect\s*request|advance\s*(?:payment|amount)|(?:olx|facebook|instagram|amazon|buyer|seller|receive\s*money|request\s*money)[\s\S]{0,180}\bqr\b|\bqr\b[\s\S]{0,120}\b(?:scam|fraud|fraudster|cheat|phish|advance\s*payment)\b/i;
+  /collect\s*request|advance\s*(?:payment|amount)|\bqr\b[\s\S]{0,60}\b(?:to\s+)?(?:receive|get|accept)\s+(?:the\s+|my\s+)?(?:money|payment|amount|paise)|(?:olx|facebook|instagram|amazon|buyer|seller|receive\s*money|request\s*money)[\s\S]{0,180}\bqr\b|\bqr\b[\s\S]{0,120}\b(?:scam|fraud|fraudster|cheat|phish|advance\s*payment)\b/i;
 
 /** Money left without the customer's consent. */
 export const FRAUD_SIGNALS =
   /\b(?:fraud|fraudster|scam(?:mer|mers|med|ming)?|cheat(?:ed|ing)?|phish(?:ing)?|hacked|compromised|unauthori[sz]ed|stolen|framed|impersonat\w*)\b|not\s*me\b|did\s*not\s*(?:make|authori[sz]e|do\s*(?:this|it))|didn[’']?t\s*(?:make|authori[sz]e|do)\s*(?:this|it|any)|bina\s*(?:mere\s*|meri\s*)?permission|without\s*(?:my\s*)?permission|(?:maine|mai\s*ne|main\s*ne)\s*(?:koi|kuch)\s*(?:upi\s*)?(?:transaction|payment)?\s*n(?:a|h)?h?i\s*ki(?:ya)?|अनधिकृत/i;
+
+/**
+ * The customer gave a one-time password or PIN to someone else: a social-
+ * engineering takeover once money has left ("shared the OTP", "OTP bata diya").
+ */
+export const CREDENTIAL_SHARED_SIGNALS =
+  /\b(?:shared?|gave|give|told|tell|read\s*out|provided?)\b[^.!?\n]{0,40}\b(?:otp|upi\s*pin|m-?pin|pin)\b|\b(?:otp|upi\s*pin|pin)\b[^.!?\n]{0,25}\b(?:bata\s*(?:diya|di|dia)|de\s*(?:diya|di|dia)|share\s*(?:kiya|kar\s*diya|ki))/i;
 
 /** The customer states that they sent the money themselves, by mistake. */
 export const WRONG_TRANSFER_SIGNALS =
@@ -64,11 +71,18 @@ export const VOLUNTARY_INTENT_SIGNALS =
 
 /** The transaction did not complete as expected. */
 export const TECHNICAL_FAILURE_SIGNALS =
-  /not\s*(?:credited|received?|recvd|reached|got)|no\s*got|didn[’']?t\s*(?:get|receive|reach)|did\s*not\s*(?:get|receive|reach)|stuck|pending|failed|n(?:a|ah)?[hi]i?n?\s*(?:mil[ae]|pahunch[ae]|phuch[ae])|mil[ae]\s*n(?:a|h)?(?:h?i|ai)\b|receive\s*n(?:a)?h?i|illa|debitaachu|confirmation|unconfirmed/i;
+  /not\s*(?:credited|received?|recvd|reached|got)|no\s*got|didn[’']?t\s*(?:get|receive|reach)|did\s*not\s*(?:get|receive|reach)|stuck|pending|failed|declined|(?:payment|transaction|transfer|order)\s+(?:was\s+|is\s+|got\s+)?unsuccessful|(?:did\s*not|didn[’']?t)\s*go\s*through|not\s*(?:placed|completed|successful|processed)|order\s*(?:failed|cancel+ed)|n(?:a|ah)?[hi]i?n?\s*(?:mil[ae]|pahunch[ae]|phuch[ae])|mil[ae]\s*n(?:a|h)?(?:h?i|ai)\b|receive\s*n(?:a)?h?i|illa|debitaachu|confirmation|unconfirmed/i;
 
 /** Merchant or acquiring context. */
 export const MERCHANT_SIGNALS =
-  /merchant|swiggy|zomato|shop|store|p2m|bigbasket/i;
+  /merchant|swiggy|zomato|shop|store|p2m|bigbasket|amazon|flipkart|\buber\b|\bola\b|irctc|dmart|petrol\s*pump|electricity|\bbiller\b|\bdth\b|broadband|\bpremium\b|bijli|gas\s*(?:bill|cylinder|booking)/i;
+
+/**
+ * Generic purchase words. They mean a merchant only when no person is named as
+ * the recipient: "shared the bill with my friend, he has not received it" is P2P.
+ */
+export const PURCHASE_SIGNALS =
+  /\border\b|\bbill\b|recharge|\bfees?\b|ticket|toll|checkout/i;
 
 /** Peer-to-peer transfer context. */
 export const P2P_SIGNALS =
@@ -119,7 +133,11 @@ export function classify(text: string): Category {
   if (positive(text, REMOTE_ACCESS_SIGNALS) && loss) return "REMOTE_ACCESS_SCAM";
   if (positive(text, COLLECT_REQUEST_SIGNALS) && loss) return "COLLECT_REQUEST_SCAM";
   // Fraud evidence outranks any benign reading of the same sentence.
-  if (positive(text, FRAUD_SIGNALS) || native("fraud").test(text))
+  if (
+    positive(text, FRAUD_SIGNALS) ||
+    native("fraud").test(text) ||
+    (loss && positive(text, CREDENTIAL_SHARED_SIGNALS))
+  )
     return "UNAUTHORIZED_ACCOUNT_TAKEOVER";
   // A voluntary transfer needs the customer's own statement of intent.
   const wrong = WRONG_TRANSFER_SIGNALS.test(text) || native("wrong").test(text);
@@ -133,9 +151,11 @@ export function classify(text: string): Category {
       native("notReceived").test(text)) &&
     !NO_DEBIT_SIGNALS.test(text) &&
     !RECEIVED_OK_SIGNALS.test(text);
-  if (failure && (MERCHANT_SIGNALS.test(text) || native("merchant").test(text)))
+  if (!failure) return "NEEDS_INFORMATION";
+  if (MERCHANT_SIGNALS.test(text) || native("merchant").test(text))
     return "P2M_CONFIRMATION_FAILURE";
-  if (failure && (P2P_SIGNALS.test(text) || native("recipient").test(text)))
+  if (P2P_SIGNALS.test(text) || native("recipient").test(text))
     return "P2P_BENEFICIARY_NOT_CREDITED";
+  if (PURCHASE_SIGNALS.test(text)) return "P2M_CONFIRMATION_FAILURE";
   return "NEEDS_INFORMATION";
 }

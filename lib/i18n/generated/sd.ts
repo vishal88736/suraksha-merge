@@ -83,6 +83,8 @@ const bundle: LocaleBundle = {
     "warning.responsibilityUnverified": "ذمیداری ۽ اختیار غیر تصدیق ٿیل آھن اڪیلو 3 ڪم ڪندڙ ڏینھن اندر رپورٽ ڪرڻ صفر ذمیواری قائم نٿو ڪری",
     "warning.policy2027": "1 جنوری 2027 کان ٽرانزیڪشن کی ایندڙ RBI ذمیواری ترمیم تحت جائزو وٺڻ جی ضرورت آھی",
     "warning.noTemplates": "{language} لاء اڃان تائین ڪو چیڪ ٿیل جواب ٽیمپلیٽ نہ آھی ؛ مسودو انگریزی ۾ آھی",
+    "intake.replyByModel": "ماڊل پاران لکیل",
+    "intake.replyTemplate": "TEMPLATE REPLY · ماڊل جو جواب ھڪ چیڪ ۾ ناڪام ٿیو: {reasons}",
     "intake.replyIn": "۾ جواب ڏیو",
     "intake.machineTranslated": "مشینی ترجمو · کی مقامی ڳالھائڻ واری طرفان جائزو وٺڻ جی ضرورت آھی",
     "intake.copyReply": "گراہڪ جی جواب کی نقل ڪریو",

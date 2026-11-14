@@ -118,6 +118,8 @@ const en = {
   "warning.policy2027":
     "Transactions from 1 January 2027 need review under the upcoming RBI liability amendment.",
   "warning.noTemplates": "No checked reply templates for {language} yet; the draft is in English.",
+  "intake.replyByModel": "WRITTEN BY THE MODEL",
+  "intake.replyTemplate": "TEMPLATE REPLY · the model's reply failed a check: {reasons}",
   "intake.replyIn": "Reply in",
   "intake.machineTranslated": "MACHINE TRANSLATION · NEEDS REVIEW BY A NATIVE SPEAKER",
   "intake.copyReply": "Copy customer reply",
@@ -498,6 +500,8 @@ const hi: Record<MessageKey, string> = {
     "ज़िम्मेदारी और प्राधिकरण असत्यापित हैं। केवल 3 कार्य दिवस में रिपोर्ट करना शून्य देनदारी साबित नहीं करता।",
   "warning.policy2027": "1 जनवरी 2027 से होने वाले लेनदेन की आगामी RBI देनदारी संशोधन के तहत समीक्षा आवश्यक है।",
   "warning.noTemplates": "{language} के लिए जाँचे गए उत्तर टेम्पलेट अभी नहीं हैं; ड्राफ़्ट अंग्रेज़ी में है।",
+  "intake.replyByModel": "मॉडल द्वारा लिखा गया",
+  "intake.replyTemplate": "टेम्पलेट उत्तर · मॉडल का उत्तर जाँच में विफल: {reasons}",
   "intake.replyIn": "उत्तर की भाषा",
   "intake.machineTranslated": "मशीन अनुवाद · मूल भाषी समीक्षा आवश्यक",
   "intake.copyReply": "ग्राहक उत्तर कॉपी करें",

@@ -83,6 +83,8 @@ const bundle: LocaleBundle = {
     "warning.responsibilityUnverified": "బాధ్యత మరియు అధికారం ధృవీకరించబడలేదు. కేవలం 3 పని దినాలలో నివేదించడం సున్నా బాధ్యతను స్థాపించదు.",
     "warning.policy2027": "1 జనవరి 2027 నుండి లావాదేవీలు రాబోయే RBI బాధ్యత సవరణ కింద సమీక్ష అవసరం.",
     "warning.noTemplates": "{language} కోసం ఇంకా తనిఖీ చేయబడిన ప్రత్యుత్తరం టెంప్లేట్లు లేవు; ముసాయిదా ఆంగ్లంలో ఉంది.",
+    "intake.replyByModel": "మోడల్ వ్రాసినది",
+    "intake.replyTemplate": "టెంప్లేట్ రిప్లై · నమూనా యొక్క సమాధానం తనిఖీలో విఫలమైందిః {reasons}",
     "intake.replyIn": "సమాధానం ఇవ్వండి",
     "intake.machineTranslated": "యంత్ర అనువాదం · స్థానిక వక్త సమీక్ష అవసరం",
     "intake.copyReply": "వినియోగదారుల జవాబును కాపీ చేయండి",

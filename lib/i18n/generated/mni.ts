@@ -83,6 +83,8 @@ const bundle: LocaleBundle = {
     "warning.responsibilityUnverified": "ꯊꯧꯗꯥꯡ ꯂꯧꯕ ꯑꯃꯁꯨꯡ ꯑꯌꯥꯕ ꯄꯤꯕ ꯑꯁꯤ ꯑꯆꯨꯝꯕ ꯈꯪꯗ ꯭ ꯔꯤ ꯫ ꯊꯕꯛ ꯇꯧꯕ ꯅꯨꯃꯤꯠ 3ꯅꯤꯒꯤ ꯃꯅꯨꯡꯗ ꯄꯥꯎꯗꯝꯕꯅ ꯖꯤꯔꯣ ꯂꯥꯏꯕꯂꯤꯇꯤ ꯂꯤꯡꯈꯠꯄ ꯉꯝꯗꯦ ꯫",
     "warning.policy2027": "ꯏꯪ 2027ꯒꯤ ꯖꯅꯨꯋꯥꯔꯤ 1ꯗꯒꯤ ꯇꯧꯕ ꯇ ꯭ ꯔꯥꯟꯖꯦꯛꯁꯟꯁꯤꯡ ꯑꯁꯤ ꯂꯥꯛꯀꯗꯧꯔꯤꯕ RBI ꯂꯥꯏꯕꯂꯤꯇꯤ ꯑꯦꯃꯦꯟꯗꯃꯦꯟ ꯭ ꯇꯀꯤ ꯃꯈꯥꯗ ꯑꯃꯨꯛ ꯍꯟꯅ ꯌꯦꯡꯁꯤꯟꯕꯤꯕ ꯃꯊꯧ ꯇꯥꯏ ꯫",
     "warning.noTemplates": "ꯍꯧꯖꯤꯛ ꯐꯥꯎꯕ {language} ꯒꯤ ꯆꯦꯛ ꯇꯧꯔꯕ ꯔꯤꯄ ꯭ ꯂꯥꯏ ꯇꯦꯝꯄ ꯭ ꯂꯦꯠ ꯑꯃꯠꯇ ꯂꯩꯇꯦ; ꯗ ꯭ ꯔꯥꯐꯠ ꯑꯗꯨ ꯏꯪꯂꯤꯁꯇ ꯂꯩ ꯫",
+    "intake.replyByModel": "ꯃꯣꯗꯦꯜ ꯑꯗꯨꯅ ꯏꯕ",
+    "intake.replyTemplate": "ꯇꯦꯝꯄ ꯭ ꯂꯦꯠ ꯔꯤꯄ ꯭ ꯂꯥꯏ · ꯃꯣꯗꯦꯜ ꯑꯗꯨꯒꯤ ꯔꯤꯄ ꯭ ꯂꯥꯏ ꯑꯗꯨ ꯆꯦꯛ ꯑꯃ ꯃꯥꯏ ꯄꯥꯛꯄ ꯉꯝꯈꯤꯗꯦ: {reasons}",
     "intake.replyIn": "ꯔꯤꯄ ꯭ ꯂꯥꯏ ꯏꯟ ꯇꯧ",
     "intake.machineTranslated": "ꯃꯦꯁꯤꯟ ꯇ ꯭ ꯔꯥꯟꯁꯂꯦꯁꯟ · ꯅꯇꯤꯚ ꯁ ꯭ ꯄꯤꯀꯔ ꯑꯃꯅ ꯔꯤꯚ ꯭ ꯌꯨ ꯇꯧꯕ ꯃꯊꯧ ꯇꯥꯏ",
     "intake.copyReply": "ꯀꯁ ꯭ ꯇꯃꯔꯒꯤ ꯔꯤꯄ ꯭ ꯂꯥꯏ ꯑꯗꯨ ꯀꯣꯄꯤ ꯇꯧ",
@@ -425,7 +427,7 @@ const bundle: LocaleBundle = {
     "UPI P2P · ₹1,500 · T+2 calendar days":
       "UPI P2P · ₹1,500 · T+2 ꯀꯦꯂꯦꯟꯗꯔꯒꯤ ꯅꯨꯃꯤꯠꯁꯤꯡ",
     "UPI transfer: T+1. Merchant confirmation failure: T+5. T refers to calendar date; compensation is ₹100 per day beyond the applicable deadline.":
-      "UPI ꯊꯥꯗꯣꯛꯄ: T+1 ꯫ ꯃꯔꯆꯦꯟ ꯭ ꯇ ꯀꯟꯐꯔꯃꯦꯁꯟ ꯐꯦꯜ: T+5 ꯫ Tꯅ ꯀꯦꯂꯦꯟꯗꯔꯒꯤ ꯇꯥꯡ ꯇꯥꯛꯏ; ꯁꯦꯟꯊꯣꯛ ꯄꯤꯕꯁꯤ ꯆꯠꯅꯔꯤꯕ ꯃꯇꯝ ꯑꯗꯨꯒꯤ ꯃꯊꯛꯇ ꯂꯩꯕ ꯅꯨꯃꯤꯠ ꯈꯨꯗꯤꯡꯒꯤ ₹100 ꯅꯤ ꯫",
+      "UPI ꯊꯥꯗꯣꯛꯄ: T+1 ꯫ ꯃꯔꯆꯦꯟ ꯭ ꯇ ꯀꯟꯐꯔꯃꯦꯁꯟ ꯐꯦꯜ: T+5 ꯫ Tꯅ ꯀꯦꯂꯦꯟꯗꯔꯒꯤ ꯇꯥꯡ ꯑꯗꯨ ꯇꯥꯛꯏ; ꯁꯦꯟꯊꯣꯛ ꯄꯤꯕꯁꯤ ꯆꯠꯅꯔꯤꯕ ꯃꯇꯝ ꯑꯗꯨꯒꯤ ꯃꯊꯛꯇ ꯂꯩꯕ ꯅꯨꯃꯤꯠ ꯈꯨꯗꯤꯡꯒꯤ ₹100 ꯅꯤ ꯫",
     "Validation sweep · weights selected before held-out test":
       "ꯚꯦꯜꯗꯤꯗꯦꯁꯟ ꯁ ꯭ ꯋꯤꯞ · ꯍꯣꯜꯗ-ꯑꯥꯎꯠ ꯇꯦꯁ ꯭ ꯠ ꯇꯧꯗ ꯭ ꯔꯤꯉꯩ ꯃꯃꯥꯡꯗ ꯈꯟꯒꯠꯂꯕ ꯋꯦꯠꯁꯤꯡ",
     "Voluntary wrong VPA · no automatic reversal":

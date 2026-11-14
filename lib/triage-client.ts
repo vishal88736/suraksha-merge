@@ -43,7 +43,7 @@ export async function requestTriage(
   const timer = setTimeout(() => {
     timedOut = true;
     controller.abort();
-  }, options.timeoutMs ?? 20_000);
+  }, options.timeoutMs ?? 45_000);
   try {
     const response = await (options.fetch ?? fetch)("/api/triage", {
       method: "POST",
@@ -65,7 +65,7 @@ export async function requestTriage(
       throw new TriageClientError("invalid_response", requestId);
     const raw = await readBoundedText(response, {
       maxBytes: 160_000,
-      timeoutMs: options.timeoutMs ?? 20_000,
+      timeoutMs: options.timeoutMs ?? 45_000,
       signal: controller.signal,
     });
     const body = parseStrictJson(raw);

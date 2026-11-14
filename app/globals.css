@@ -4693,3 +4693,9 @@ td strong {
   color: #fff;
   cursor: default;
 }
+
+.model-tag {
+  color: #1f5f8b;
+  background: #eaf5fc;
+  border-color: #c6e3f5;
+}
