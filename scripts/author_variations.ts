@@ -295,7 +295,9 @@ for (const [category, byLang] of Object.entries(TEXT) as [Cat, Record<Lang, stri
         if (delay !== null) input.reporting_delay_working_days = delay;
       }
       if (category === "P2M_CONFIRMATION_FAILURE" || category === "P2P_BENEFICIARY_NOT_CREDITED") {
-        const elapsed = ELAPSED[(k + serial) % 5];
+        // The day count drives compensation, so it must agree with the text.
+        const saysOneDay = /a day|ek din|एक दिन/.test(message);
+        const elapsed = saysOneDay ? 1 : ELAPSED[(k + serial) % 5];
         if (elapsed !== null) input.elapsed_calendar_days = elapsed;
       }
       const result = triage(input, { category });
