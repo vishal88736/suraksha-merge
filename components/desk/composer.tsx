@@ -61,6 +61,25 @@ export function Composer({
 }) {
   const { t } = useI18n();
   const [advanced, setAdvanced] = useState(false);
+  // Browser speech recognition may send audio to the browser vendor's cloud
+  // service, so dictation is opt-in once per session.
+  const [consentAsked, setConsentAsked] = useState(false);
+  const dictationAllowed = () => {
+    try {
+      return window.sessionStorage.getItem("suraksha.dictationConsent") === "yes";
+    } catch {
+      return false;
+    }
+  };
+  const allowDictation = () => {
+    try {
+      window.sessionStorage.setItem("suraksha.dictationConsent", "yes");
+    } catch {
+      // Storage may be blocked; consent then lasts for this click only.
+    }
+    setConsentAsked(false);
+    dictation.start();
+  };
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const dictationTag =
@@ -175,7 +194,9 @@ export function Composer({
               onClick={() =>
                 dictation.status === "listening"
                   ? dictation.stop()
-                  : dictation.start()
+                  : dictationAllowed()
+                    ? dictation.start()
+                    : setConsentAsked(true)
               }
               aria-pressed={dictation.status === "listening"}
             >
@@ -203,6 +224,19 @@ export function Composer({
           </button>
         </div>
       </div>
+      {consentAsked && (
+        <div className="dictation-consent" role="alertdialog" aria-live="polite">
+          <p>{t("composer.voiceConsent")}</p>
+          <div>
+            <button className="button secondary" onClick={() => setConsentAsked(false)}>
+              {t("composer.voiceConsentCancel")}
+            </button>
+            <button className="button primary" onClick={allowDictation}>
+              {t("composer.voiceConsentAccept")}
+            </button>
+          </div>
+        </div>
+      )}
       {dictation.status === "listening" && (
         <div className="dictation-live" role="status">
           <span className="panic-dot" />

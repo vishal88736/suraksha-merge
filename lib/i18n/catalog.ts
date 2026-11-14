@@ -128,6 +128,10 @@ const en = {
   "composer.languageHint":
     "The reply is written in the language detected from your message.",
 
+  "composer.voiceConsent":
+    "Dictation uses your browser's speech service, which may send the audio to the browser maker's servers (Chrome sends it to Google). Do not dictate real customer data.",
+  "composer.voiceConsentAccept": "Dictate anyway",
+  "composer.voiceConsentCancel": "Cancel",
   "checklist.title": "What to include",
   "checklist.emptyHint":
     "Paste or type the customer's message. Include what happened, the amount and the 12-digit UTR from the bank SMS.",
@@ -485,6 +489,10 @@ const hi: Record<MessageKey, string> = {
   "composer.languageHint":
     "उत्तर उसी भाषा में लिखा जाएगा जो आपके संदेश से पहचानी गई।",
 
+  "composer.voiceConsent":
+    "डिक्टेशन आपके ब्राउज़र की स्पीच सेवा का उपयोग करता है, जो ऑडियो ब्राउज़र कंपनी के सर्वर पर भेज सकती है (Chrome इसे Google को भेजता है)। असली ग्राहक डेटा न बोलें।",
+  "composer.voiceConsentAccept": "फिर भी बोलकर लिखें",
+  "composer.voiceConsentCancel": "रद्द करें",
   "checklist.title": "क्या शामिल करें",
   "checklist.emptyHint":
     "ग्राहक का संदेश यहाँ लिखें या पेस्ट करें। क्या हुआ, राशि और बैंक SMS का 12 अंकों वाला UTR शामिल करें।",
