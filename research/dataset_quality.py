@@ -74,7 +74,7 @@ def public_target(message,language):
     # assistant claims that a bank has already approved the case.
     refs=set(re.findall(r'\b(?:UTR|RRN|UPI\s*Ref(?:\s*No)?|UPI[/-](?:(?:DR|CR|P2[AMP])[/-])?)\s*[:#=-]?\s*(\d{12})\b',message,re.I))
     amounts=set()
-    for token in re.findall(r'(?<!\w)(?:Rs\.?|INR|₹)\s*([0-9][0-9,]*(?:\.\d{1,2})?)(?![\d.])',message,re.I):
+    for token in re.findall(r'(?<!\w)(?:Rs\.?|INR|₹)\s*([0-9][0-9,]*(?:\.\d{1,2})?)(?!\d)(?!\.\d)',message,re.I):
         try:
             number=Decimal(token.replace(',',''))
             if number>0:amounts.add(float(number))

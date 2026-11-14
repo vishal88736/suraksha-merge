@@ -574,7 +574,7 @@ export function triage(
     detected_language:
       input.language === "auto" ? detectLanguage(text) : input.language,
     panic_severity:
-      /!!|please\s*help|jaldi|panic|bachao|madad|urgent|90,000|90000|help me/i.test(
+      /!!|please\s*help|jaldi|panic|bachao|madad|urgent|90,000|90000|help me\s*(?:!|please|urgent|jaldi|asap|now)/i.test(
         text,
       )
         ? "HIGH_CRITICAL"

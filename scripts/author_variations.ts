@@ -290,7 +290,10 @@ for (const [category, byLang] of Object.entries(TEXT) as [Cat, Record<Lang, stri
       if (worst > 0.6) throw new Error(`variation too close to the challenge set: ${message}`);
       const input: TriageInput = { message, language };
       if (FRAUD.includes(category)) {
-        input.responsibility = RESPONSIBILITY[k % 4];
+        // Operator context must not contradict the message: a customer who
+        // says they shared nothing is not given customer negligence.
+        const deniesSharing = /haven't shared|kuch share nahi|साझा नहीं/.test(message);
+        input.responsibility = deniesSharing && RESPONSIBILITY[k % 4] === "customer" ? "unknown" : RESPONSIBILITY[k % 4];
         const delay = DELAYS[(k + serial) % 5];
         if (delay !== null) input.reporting_delay_working_days = delay;
       }

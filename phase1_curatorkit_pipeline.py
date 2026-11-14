@@ -57,7 +57,8 @@ def curate(rows, output, use_presidio=False, use_curatorkit=False, grouped_split
             required = {"source_id", "revision", "source_path", "row_id", "license", "original_sha256", "download_sha256", "attribution_url"}
             if not required.issubset(provenance) or provenance.get("license") not in {"cc-by-4.0", "apache-2.0"} or provenance.get("role") != "training_candidates":
                 raise ValueError("Public-source records need pinned, licensed and attributable training provenance")
-        elif row.get("origin") != "synthetic" and not row.get("consent_reference"):
+        # Hand-written variations are synthetic too (scripts/author_variations.ts).
+        elif row.get("origin") not in {"synthetic", "authored_variation"} and not row.get("consent_reference"):
             raise ValueError("Real records require an explicit consent/provenance reference")
         if row.get("human_reviewed") and not row.get("review_reference"):
             raise ValueError("Human review needs an explicit review reference")
