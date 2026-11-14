@@ -389,6 +389,7 @@ export type ModelAudit =
         tier?: { model: string; rules: string };
         actions?: { added: string[]; removed: string[] };
         panic?: { model: string; rules: string };
+        language?: { model: string; rules: string };
       };
     }
   | {

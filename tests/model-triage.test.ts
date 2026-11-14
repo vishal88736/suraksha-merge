@@ -317,13 +317,20 @@ test("urgency cannot be lowered and the language must match the message", async 
   assert.equal(urgent.payload.panic_severity, "HIGH_CRITICAL");
   assert.deepEqual(urgent.audit.model.status === "used" && urgent.audit.model.policy_from_rules?.panic, { model: "LOW", rules: "HIGH_CRITICAL" });
 
+  // In auto mode the rules own the language: a wrong guess is overwritten
+  // (and recorded), so the reply is never written in the wrong language.
   const wrongLanguage = await triageWithModel(
     { message: MESSAGE },
     CONFIG,
     fakeServer(JSON.stringify({ ...GOOD, detected_language: "tamil" })),
   );
-  assert.equal(wrongLanguage.audit.model.status, "fallback");
-  assert.ok(wrongLanguage.audit.model.status === "fallback" && wrongLanguage.audit.model.reasons.includes("language_not_grounded"));
+  assert.equal(wrongLanguage.payload.detected_language, "hinglish");
+  assert.deepEqual(
+    wrongLanguage.audit.model.status === "used" && wrongLanguage.audit.model.policy_from_rules?.language,
+    { model: "tamil", rules: "hinglish" },
+  );
+  // The validator on its own still rejects an ungrounded language.
+  assert.ok(!check(JSON.stringify({ ...GOOD, detected_language: "tamil" })).ok);
 });
 
 test("a remote model endpoint needs an explicit opt-in, https and a token", () => {
@@ -340,4 +347,17 @@ test("a busy model server falls back to rules at once", async () => {
   const busy = (async () => new Response(JSON.stringify({ error: "busy" }), { status: 503 })) as typeof fetch;
   const result = await triageWithModel({ message: MESSAGE }, CONFIG, busy);
   assert.deepEqual(result.audit.model, { status: "fallback", reasons: ["model_busy"], model: null, latency_ms: null });
+});
+
+test("a category the rules missed is judged by its own policy tier", async () => {
+  const vague = "Copied the UPI ID from the chat and Rs 4050 went to some other person. UTR 612345600199";
+  assert.equal(triage({ message: vague }).payload.dispute_category, "NEEDS_INFORMATION");
+  const result = await triageWithModel(
+    { message: vague },
+    CONFIG,
+    fakeServer(JSON.stringify({ utr_number: "612345600199", dispute_category: "VOLUNTARY_WRONG_VPA_TRANSFER", amount_inr: 4050, reporting_delay_working_days: null, rbi_liability_tier: "BANK_POLICY_REVIEW", mandatory_actions: ["CONTACT_BANK_PSP", "HUMAN_REVIEW"], detected_language: "english", panic_severity: "LOW" })),
+  );
+  assert.equal(result.audit.model.status, "used");
+  assert.equal(result.payload.dispute_category, "VOLUNTARY_WRONG_VPA_TRANSFER");
+  assert.equal(result.payload.rbi_liability_tier, "BANK_POLICY_REVIEW");
 });

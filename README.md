@@ -227,33 +227,23 @@ flowchart LR
 
 ## 📊 Results so far
 
-### Round 2: trained on human-reviewed data (current)
+### Round 3: reviewed data plus reviewed varied wording (current)
 
-The model was retrained on **598 human-reviewed English, Hindi and Hinglish cases** (550 train, 48 validation), and scored on the **54 reviewed test cases** in those languages. The model now **extracts the facts**; the **policy rules decide the liability tier and the mandatory actions** from those facts. The table measures what the system actually returns: each recorded model output goes through the real runtime gates (`scripts/eval-runtime.ts`).
+The model is trained on **765 human-reviewed cases**: the 598 reviewed English, Hindi and Hinglish corpus cases, plus 167 hand-written complaints worded differently from the templates. Those 167 were also reviewed in batches, using `scripts/author_variations.ts`.
 
-| Pipeline | All 8 fields exact | Model output used | Fell back to rules |
-| :--- | ---: | ---: | ---: |
-| Rules only | **100%** | – | – |
-| Base Qwen2.5-3B + rules | 100% | 0 / 54 | 54 (every output rejected) |
-| Unreviewed pilot + rules | 94.4% | 52 / 54 | 2 |
-| **Reviewed SFT + rules** ⭐ | 90.7% | 52 / 54 | 2 |
+The model **extracts the facts and the category**. The **policy rules decide** the tier, the actions, the reply language, and a minimum urgency. The model may name a category only when the rules can't; it may not contradict a category the rules found. Every row below goes through the real runtime gates.
 
-Raw model output alone, before the rules step (AuditKIT): reviewed SFT utility 0.74 and pilot 0.85. Both are schema-valid on every case, and both get every dispute category right. The gap comes from leaving out rule-derived actions (`REVIEW_COMPENSATION`, `REQUEST_UTR`, `HUMAN_REVIEW`) and from the tier, which is exactly what the rules now own.
+| Pipeline | 54 reviewed test cases<br>(all 8 fields exact) | 42 unfamiliar-wording cases<br>(category correct) |
+| :--- | ---: | ---: |
+| Rules only | **100%** | 38.1% |
+| Round 2: reviewed SFT (598 cases) | 90.7% | 59.5% |
+| **Round 3: reviewed SFT + varied wording (765 cases)** ⭐ | 96.3% | **73.8%** |
 
 **How to read this honestly**
 
-- ✅ With the rules owning policy, the only remaining model errors are in **panic severity**. The extracted facts (UTR, amount, category, language) are all correct.
-- ⚠️ **Rules-only scores 100% because the benchmark can't tell the two apart.** The curation gate keeps only labels consistent with the engine, and the reviewer confirmed them. A synthetic set built this way can't show the model beating the rules; the model's value is on messy real messages the rules don't understand. **Evaluation on real, human-labelled messages is the next required step.**
-- 🔒 The reviewed model saw fewer training cases than the pilot (550 vs 758) and scores slightly lower on panic severity. All differences are within a handful of cases out of 54.
-
-**Unfamiliar wording (challenge set).** 42 complaints written to differ from the training templates (`data/challenge/`; author-labelled, **not human-reviewed**, so treat these as indicators). Category accuracy:
-
-| Pipeline | Category correct |
-| :--- | ---: |
-| Rules only | 38.1% (16/42) |
-| **Reviewed SFT + rules** | **57.1%** (24/42) |
-
-The rules are precise but narrow: on unfamiliar wording they say "needs information", but when they name a category it has been right. So the model is allowed to add a category only when the rules can't name one, and it can't contradict a category the rules found. The model adds about 19 points of recall. That's real, but not good enough: the next training round needs varied, reviewed phrasings.
+- ✅ Varied, reviewed wording is what moved generalisation: the pipeline goes from 38% (rules alone) to 74% on wording it never saw. The remaining reviewed-test errors are 2 panic-severity cases.
+- ⚠️ **Rules-only scores 100% on the reviewed test set because the labels were built to agree with the engine.** That set can't show the model beating the rules; the unfamiliar-wording set can.
+- ⚠️ The unfamiliar-wording set (`data/challenge/`) is labelled by the project, not human-reviewed. The same author wrote the varied training cases (kept below 0.6 trigram similarity to the challenge set), so some style overlap is possible. **Evaluation on real, human-labelled messages is still required.**
 
 <details>
 <summary><b>Round 1: unreviewed pilots on 92 synthetic test cases</b></summary>
@@ -317,7 +307,7 @@ Needs `.venv-training`, a CUDA GPU with about 6 GB of VRAM, and a pilot checkpoi
 ```bash
 # 1. serve the model on loopback
 HF_HUB_OFFLINE=1 .venv-training/bin/python scripts/serve_model.py \
-  --model artifacts/reviewed/merged-schema-sft-001
+  --model artifacts/reviewed/merged-schema-sft-002
 
 # 2. point the website at it
 printf 'SURAKSHA_MODEL_URL=http://127.0.0.1:8765\nSURAKSHA_MODEL_TIMEOUT_MS=15000\n' > .dev.vars
@@ -442,7 +432,7 @@ Primary sources and review dates are in [`lib/policy.ts`](lib/policy.ts). The ca
 ## 🔒 Responsible use
 
 - **Research preview.** There is no bank or NPCI integration. It files no disputes, approves no refunds and contacts no one.
-- **Synthetic data only.** The training corpus combines publisher-declared synthetic public dialogues with locally authored cases. **652 of 934 cases are human-reviewed** (all English, Hindi and Hinglish cases, by one reviewer with an AI pre-audit); Tanglish and Marathi–English await a native speaker, and the evaluation queue awaits an independent second reviewer. Do not paste real customer data.
+- **Synthetic data only.** The training corpus combines publisher-declared synthetic public dialogues with locally authored cases. **652 of 934 corpus cases plus 168 varied-wording cases are human-reviewed** (all English, Hindi and Hinglish, by one reviewer with an AI pre-audit); Tanglish and Marathi–English await a native speaker, and the evaluation queue awaits an independent second reviewer. Do not paste real customer data.
 - **No persistence.** Customer messages are never stored, and exported traces are masked.
 - **Not a certification.** Operational use would need a bank-approved category mapping, a compliance review and human-reviewed evaluation on real messages.
 

@@ -82,3 +82,31 @@ CPU smoke-data checks passed for two synthetic fixtures. Trainer/reward registra
 - **Rules alone:** category accuracy 38.1%. Every rules error was `NEEDS_INFORMATION`; they never named a wrong category.
 - **Reviewed SFT pipeline:** 54.8% at first. The model sometimes contradicted a correct rules category (for example, wrong-VPA → P2P).
 - **After the gate change:** the model may only refine `NEEDS_INFORMATION` (`model_contradicts_rules_category`), and the pipeline reaches **57.1%**. The reviewed benchmark is unchanged at 90.7%.
+
+## Round 3: varied wording, 14 November 2026
+
+**What was reviewed.**
+- `scripts/author_variations.ts` wrote 168 hand-worded complaints (7 categories × English/Hinglish/Hindi × 8).
+- The author assigned each category. Every other label was derived by the policy rules for that category, and each case is held below 0.6 trigram similarity to the challenge set.
+- They were reviewed in three batches by `vishal` with an AI pre-audit. Before review, the pre-audit fixed two generator contradictions (day counts, a customer who denies sharing credentials).
+- One earlier label was corrected: `public:cucom:62aaa1c6d93ce79bdd` panic HIGH → MEDIUM. Its HIGH came from a substring match of "help me" inside "help mera".
+
+**Fixes that went in with this round.**
+- **Urgency rule:** "help me" now needs an urgency marker.
+- **phase1:** authored variations are treated as synthetic.
+- **Curation gate:** for human-reviewed rows, the engine runs with the reviewer's category, and every policy field is still checked.
+- **`public_target`:** an amount followed by a full stop is no longer dropped. That bug had quarantined 7 reviewed cases.
+
+**Curation.** 765 of 766 accepted (`data/processed/upi-reviewed-v2`; one CuratorKIT near-duplicate). `--reviewed-laptop`: 87 steps, parameters updated. Merged into `artifacts/reviewed/merged-schema-sft-002`.
+
+**Gate fixes found while evaluating.**
+- **Language:** `language_not_grounded` was rejecting 15–19 of 42 challenge answers. The rules detect all 42 languages correctly, so in auto mode the rules now own the language, and the change is recorded in `policy_from_rules.language`.
+- **Tier check:** evidence tiers were compared with the rules' NEEDS_INFORMATION tier instead of the policy tier for the model's category.
+
+**Results, both models under the final gates.**
+
+| Model | Reviewed test, all fields exact | Challenge, category accuracy |
+|---|---:|---:|
+| Rules only | 100% | 38.1% |
+| Round 2 (598 reviewed cases) | 90.7% | 59.5% |
+| Round 3 (765 cases) | 96.3% | 73.8% |

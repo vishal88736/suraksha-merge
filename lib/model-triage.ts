@@ -128,7 +128,15 @@ export function validateModelPayload(
     reasons.push("tier_requires_policy_revalidation");
   else if (tier.startsWith("TECHNICAL_") && tier !== technical)
     reasons.push("tier_inconsistent_with_category");
-  else if (EVIDENCE_TIERS.has(tier) && tier !== rules.payload.rbi_liability_tier)
+  else if (
+    EVIDENCE_TIERS.has(tier) &&
+    // The tier the policy gives for the model's own category, so a category
+    // the keyword rules missed is not judged by their NEEDS_INFORMATION tier.
+    tier !==
+      (p.dispute_category === rules.payload.dispute_category
+        ? rules.payload.rbi_liability_tier
+        : triage(input, { category: p.dispute_category }).payload.rbi_liability_tier)
+  )
     reasons.push("tier_not_supported_by_operator_context");
 
   if (
@@ -236,11 +244,16 @@ export async function triageWithModel(
       PANIC_RANK[parsed.data.panic_severity] >= PANIC_RANK[policy.panic_severity]
         ? parsed.data.panic_severity
         : policy.panic_severity;
+    // In auto mode the language comes from the script and marker rules, which
+    // choose the reply template; the model's guess does not.
+    const language =
+      input.language === "auto" ? policy.detected_language : parsed.data.detected_language;
     const merged = {
       ...parsed.data,
       rbi_liability_tier: policy.rbi_liability_tier,
       mandatory_actions: policy.mandatory_actions,
       panic_severity: panic,
+      detected_language: language,
     };
     const retried = validateModelPayload(JSON.stringify(merged), input, rules);
     if (retried.ok) {
@@ -249,13 +262,17 @@ export async function triageWithModel(
       const removed = parsed.data.mandatory_actions.filter((a) => !policy.mandatory_actions.includes(a));
       const tierChanged = parsed.data.rbi_liability_tier !== policy.rbi_liability_tier;
       const panicRaised = panic !== parsed.data.panic_severity;
-      if (tierChanged || added.length || removed.length || panicRaised)
+      const languageChanged = language !== parsed.data.detected_language;
+      if (tierChanged || added.length || removed.length || panicRaised || languageChanged)
         policyFromRules = {
           ...(tierChanged
             ? { tier: { model: parsed.data.rbi_liability_tier, rules: policy.rbi_liability_tier } }
             : {}),
           ...(added.length || removed.length ? { actions: { added, removed } } : {}),
           ...(panicRaised ? { panic: { model: parsed.data.panic_severity, rules: panic } } : {}),
+          ...(languageChanged
+            ? { language: { model: parsed.data.detected_language, rules: language } }
+            : {}),
         };
     } else checked = retried;
   }
