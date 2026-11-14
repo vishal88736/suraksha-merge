@@ -325,3 +325,19 @@ test("urgency cannot be lowered and the language must match the message", async 
   assert.equal(wrongLanguage.audit.model.status, "fallback");
   assert.ok(wrongLanguage.audit.model.status === "fallback" && wrongLanguage.audit.model.reasons.includes("language_not_grounded"));
 });
+
+test("a remote model endpoint needs an explicit opt-in, https and a token", () => {
+  const remote = { SURAKSHA_MODEL_URL: "https://inference.example.org", SURAKSHA_MODEL_TOKEN: "t" };
+  assert.equal(modelConfigFromEnv(remote), undefined);
+  assert.equal(modelConfigFromEnv({ ...remote, SURAKSHA_MODEL_ALLOW_REMOTE: "true", SURAKSHA_MODEL_TOKEN: "" }), undefined);
+  assert.equal(modelConfigFromEnv({ ...remote, SURAKSHA_MODEL_ALLOW_REMOTE: "true", SURAKSHA_MODEL_URL: "http://inference.example.org" }), undefined);
+  assert.deepEqual(modelConfigFromEnv({ ...remote, SURAKSHA_MODEL_ALLOW_REMOTE: "true" }), {
+    url: "https://inference.example.org", token: "t", timeoutMs: 15_000,
+  });
+});
+
+test("a busy model server falls back to rules at once", async () => {
+  const busy = (async () => new Response(JSON.stringify({ error: "busy" }), { status: 503 })) as typeof fetch;
+  const result = await triageWithModel({ message: MESSAGE }, CONFIG, busy);
+  assert.deepEqual(result.audit.model, { status: "fallback", reasons: ["model_busy"], model: null, latency_ms: null });
+});

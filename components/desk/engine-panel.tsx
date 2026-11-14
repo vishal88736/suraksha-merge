@@ -91,7 +91,7 @@ function Liability({ result }: { result: TriageResult }) {
 }
 
 const SKIP_REASONS =
-  /^(?:model_timeout|model_unavailable|model_http_\d+|language_outside_model_training)$/;
+  /^(?:model_timeout|model_unavailable|model_busy|model_http_\d+|language_outside_model_training)$/;
 
 export function EnginePanel({
   result,

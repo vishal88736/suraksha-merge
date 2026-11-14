@@ -13,7 +13,9 @@ declare namespace Cloudflare {
     SURAKSHA_MODEL_URL?: string;
     /** Optional bearer token shared with the local model server. */
     SURAKSHA_MODEL_TOKEN?: string;
-    /** Optional model request timeout in milliseconds (1000–60000). */
+    /** Optional model request timeout in milliseconds (1000–15000). */
     SURAKSHA_MODEL_TIMEOUT_MS?: string;
+    /** "true" to allow an https model endpoint with a bearer token. */
+    SURAKSHA_MODEL_ALLOW_REMOTE?: string;
   }
 }

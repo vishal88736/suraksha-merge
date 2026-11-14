@@ -30,7 +30,7 @@ HF_HUB_OFFLINE=1 .venv-training/bin/python scripts/serve_model.py
 Terminal 2, the website. `.dev.vars` is gitignored:
 
 ```bash
-printf 'SURAKSHA_MODEL_URL=http://127.0.0.1:8765\nSURAKSHA_MODEL_TIMEOUT_MS=30000\n' > .dev.vars
+printf 'SURAKSHA_MODEL_URL=http://127.0.0.1:8765\nSURAKSHA_MODEL_TIMEOUT_MS=15000\n' > .dev.vars
 npm run dev    # http://localhost:5173
 ```
 
@@ -56,3 +56,21 @@ Base Qwen2.5-3B-Instruct @ `aa8e7253…`, NF4, greedy decoding, max 256 new toke
 - Four test messages (collect scam, merchant failure, P2P not credited, remote-access scam): each generation took 3.1–4.1 s, and **every one fell back with `not_strict_json`**. This matches the earlier probe, where the base model prefixes `JSON:` and misspells `panic_severity`.
 
 The integration works end to end, but the base model's output is never used. Model output will reach customers only after a fine-tuned adapter produces strict JSON and passes these gates. That adapter still needs human-reviewed data and a real evaluation.
+
+## Load and timeouts
+
+The server generates one request at a time on the GPU.
+- `--max-queue` (default 2) is how many requests may wait. Any more get `503 busy` at once.
+- `--queue-timeout` (default 15 s) caps how long a request may wait.
+- The Worker sends its own time budget in `x-suraksha-deadline-ms`. A request that could not start within that budget is dropped, so the GPU never works for a caller that has given up.
+- The Worker treats `503` as a `model_busy` fallback and answers with the rules immediately.
+- `SURAKSHA_MODEL_TIMEOUT_MS` is capped at 15 000 ms, below the browser's 20 s request timeout, so the rules fallback always has time to answer.
+
+## Hosted inference (deployed Worker)
+
+A deployed Cloudflare Worker cannot reach a laptop. To use a hosted model server, all three of these are required; otherwise the Worker stays rules-only:
+- `SURAKSHA_MODEL_ALLOW_REMOTE=true`;
+- an `https://` `SURAKSHA_MODEL_URL`;
+- `SURAKSHA_MODEL_TOKEN`, sent as a bearer token and set as a secret, never in code.
+
+`serve_model.py` binds to loopback only. Put it behind a TLS reverse proxy on the GPU host (for example Caddy or nginx with a certificate) and start it with the same `SURAKSHA_MODEL_TOKEN`. Messages are redacted before they leave the Worker, but a hosted endpoint still receives transaction details, so it needs the same data-protection approval as any other processor of customer data.

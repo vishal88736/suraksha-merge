@@ -162,10 +162,13 @@ async function callModel(
     headers: {
       "content-type": "application/json",
       ...(config.token ? { authorization: `Bearer ${config.token}` } : {}),
+      // The server drops queued work it could not start before this budget.
+      "x-suraksha-deadline-ms": String(config.timeoutMs),
     },
     body: JSON.stringify({ message: sanitized, context }),
     signal: AbortSignal.timeout(config.timeoutMs),
   });
+  if (response.status === 503) throw new Error("model_busy");
   if (!response.ok) throw new Error(`model_http_${response.status}`);
   const text = await response.text();
   if (text.length > MAX_RAW_CHARS * 2) throw new Error("model_response_too_large");
@@ -204,7 +207,8 @@ export async function triageWithModel(
     const reason =
       error instanceof Error && error.name === "TimeoutError"
         ? "model_timeout"
-        : error instanceof Error && error.message.startsWith("model_http_")
+        : error instanceof Error &&
+            (error.message.startsWith("model_http_") || error.message === "model_busy")
           ? error.message
           : "model_unavailable";
     return triage(raw, {

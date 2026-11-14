@@ -33,6 +33,41 @@ class ServeModelTests(unittest.TestCase):
         except urllib.error.HTTPError as error:
             return error.code, json.loads(error.read())
 
+    def test_busy_server_refuses_instead_of_queueing_work_for_gone_callers(self):
+        import time
+        started = threading.Event()
+        release = threading.Event()
+        calls = []
+        def slow_generate(prompt):  # fixture: holds the GPU lock until released
+            calls.append(prompt)
+            started.set()
+            release.wait(5)
+            return "fixture-output", 10, 2
+        server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(slow_generate, INFO, None, max_queue=1, queue_timeout=0.5))
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        self.addCleanup(server.server_close)
+        self.addCleanup(server.shutdown)
+        url = f"http://127.0.0.1:{server.server_address[1]}/v1/triage"
+        results = {}
+        first = threading.Thread(target=lambda: results.setdefault("first", self.call(url, {"message": "m"})))
+        first.start()
+        self.assertTrue(started.wait(2))
+        # One waiter is admitted but times out in the queue; it never runs.
+        waiter = threading.Thread(target=lambda: results.setdefault("waiter", self.call(url, {"message": "m"})))
+        waiter.start()
+        time.sleep(0.1)
+        # The queue is full: refused at once.
+        self.assertEqual(self.call(url, {"message": "m"}), (503, {"error": "busy"}))
+        waiter.join(3)
+        self.assertEqual(results["waiter"], (503, {"error": "busy"}))
+        release.set()
+        first.join(3)
+        self.assertEqual(results["first"][0], 200)
+        self.assertEqual(len(calls), 1)
+        # A caller with no budget left is not served either.
+        self.assertEqual(self.call(url, {"message": "m"}, {"x-suraksha-deadline-ms": "0"}), (503, {"error": "busy"}))
+        self.assertEqual(len(calls), 1)
+
     def test_request_validation(self):
         self.assertEqual(parse_request(b'{"message":"m","context":{"language":"auto"}}'), ("m", {"language": "auto"}))
         for body in (b'{"message":""}', b'{"message":"m","extra":1}', b'{"message":"m","context":{"x":1}}',

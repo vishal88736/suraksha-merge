@@ -320,7 +320,7 @@ HF_HUB_OFFLINE=1 .venv-training/bin/python scripts/serve_model.py \
   --model artifacts/reviewed/merged-schema-sft-001
 
 # 2. point the website at it
-printf 'SURAKSHA_MODEL_URL=http://127.0.0.1:8765\nSURAKSHA_MODEL_TIMEOUT_MS=30000\n' > .dev.vars
+printf 'SURAKSHA_MODEL_URL=http://127.0.0.1:8765\nSURAKSHA_MODEL_TIMEOUT_MS=15000\n' > .dev.vars
 npm run dev -- --host 127.0.0.1
 
 # 3. confirm
