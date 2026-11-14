@@ -8,3 +8,4 @@ sacremoses==0.2.0
 indic-nlp-library==0.92
 IndicTransToolkit==1.1.1
 sacrebleu==2.5.1
+urduhack==1.1.1  # installed with --no-deps; see _urduhack_without_tensorflow in scripts/translate_i18n.py

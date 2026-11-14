@@ -112,9 +112,26 @@ def rebuild(template, values: dict[str, str], prefix=""):
     return {k: rebuild(v, values, f"{prefix}.{k}" if prefix else k) for k, v in template.items()}
 
 
+def _urduhack_without_tensorflow():
+    """IndicTransToolkit normalises Perso-Arabic text (Urdu, Kashmiri, Sindhi)
+    with urduhack, whose package __init__ imports TensorFlow for an unused NER
+    model. Register the package without running __init__ so only the plain
+    Python normalisers load."""
+    import importlib.util
+    import types
+    if "urduhack" in sys.modules:
+        return
+    spec = importlib.util.find_spec("urduhack")
+    if spec and spec.submodule_search_locations:
+        package = types.ModuleType("urduhack")
+        package.__path__ = list(spec.submodule_search_locations)
+        sys.modules["urduhack"] = package
+
+
 class Translator:
     def __init__(self, name: str, batch: int, beams: int):
         import torch
+        _urduhack_without_tensorflow()
         from IndicTransToolkit.processor import IndicProcessor
         from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
@@ -144,7 +161,9 @@ class Translator:
         return out  # type: ignore[return-value]
 
     def close(self):
+        import gc
         del self.model
+        gc.collect()
         self.torch.cuda.empty_cache()
 
 
@@ -190,6 +209,8 @@ def main() -> int:
     parser.add_argument("--back-model", default="ai4bharat/indictrans2-indic-en-1B")
     parser.add_argument("--batch", type=int, default=24)
     parser.add_argument("--beams", type=int, default=5)
+    parser.add_argument("--back-beams", type=int, default=1,
+                        help="greedy is enough for the back-translation check and fits a 6 GB GPU")
     parser.add_argument("--skip-back", action="store_true", help="skip back-translation (no reply safety check; dev only)")
     parser.add_argument("--accept", nargs="*", default=[], help="lang:reply.path entries accepted after human review")
     parser.add_argument("--no-write", action="store_true")
@@ -220,39 +241,39 @@ def main() -> int:
 
     report = json.loads(Path(args.report).read_text()) if Path(args.report).exists() else {}
     cache_path = Path(args.forward_cache)
-    source_key = json.dumps([m for *_, m, _ in masked], ensure_ascii=False)
     cache = json.loads(cache_path.read_text(encoding="utf-8")) if cache_path.exists() else {}
-    if cache.get("source") != source_key or cache.get("model") != args.forward_model:
-        cache = {"source": source_key, "model": args.forward_model, "langs": {}}
+    if cache.get("model") != args.forward_model or cache.get("format") != 2:
+        cache = {"format": 2, "model": args.forward_model, "langs": {}}
     results: dict[str, list[dict]] = {}
-    todo = [l for l in langs if l[0] not in cache["langs"]]
-    for ui, *_ in langs:
-        if ui in cache["langs"]:
-            results[ui] = cache["langs"][ui]
-            print(f"{ui}: reused cached forward translations", flush=True)
-    forward = Translator(args.forward_model, args.batch, args.beams) if todo else None
-    for ui, reply_code, flores in todo:
+    forward = None
+    for ui, reply_code, flores in langs:
         t0 = time.time()
-        outs = forward([m for *_, m, _ in masked], "eng_Latn", flores)
+        # Cached per masked source string: only new or changed strings are translated.
+        known = cache["langs"].setdefault(ui, {})
+        todo_idx = [i for i, (*_, m, _) in enumerate(masked) if m not in known]
+        if todo_idx:
+            forward = forward or Translator(args.forward_model, args.batch, args.beams)
+            for i, out in zip(todo_idx, forward([masked[i][3] for i in todo_idx], "eng_Latn", flores)):
+                known[masked[i][3]] = out
         rows = []
         retry = []
-        for i, ((kind, key, text, m, found), out) in enumerate(zip(masked, outs)):
-            value, errors = unmask(out, found)
+        for i, (kind, key, text, m, found) in enumerate(masked):
+            value, errors = unmask(known[m], found)
             rows.append({"kind": kind, "key": key, "source": text, "text": value, "errors": errors})
             if errors:
                 retry.append(i)
         if retry:  # one retry with greedy decoding for placeholder failures
+            forward = forward or Translator(args.forward_model, args.batch, args.beams)
             outs2 = forward([masked[i][3] for i in retry], "eng_Latn", flores, beams=1)
             for i, out in zip(retry, outs2):
                 value, errors = unmask(out, masked[i][4])
                 if not errors:
                     rows[i].update(text=value, errors=[], retried=True)
         results[ui] = rows
-        cache["langs"][ui] = rows
         cache_path.parent.mkdir(parents=True, exist_ok=True)
         cache_path.write_text(json.dumps(cache, ensure_ascii=False), encoding="utf-8")
         bad = sum(1 for r in rows if r["errors"])
-        print(f"{ui}: {len(rows)} strings, {bad} placeholder failures, {time.time() - t0:.0f}s", flush=True)
+        print(f"{ui}: {len(rows)} strings ({len(todo_idx)} newly translated), {bad} placeholder failures, {time.time() - t0:.0f}s", flush=True)
     if forward:
         forward.close()
     # Back-translation errors are recomputed on every run.
@@ -262,7 +283,7 @@ def main() -> int:
 
     if not args.skip_back:
         import sacrebleu
-        back = Translator(args.back_model, args.batch, args.beams)
+        back = Translator(args.back_model, args.batch, args.back_beams)
         for ui, reply_code, flores in langs:
             rows = results[ui]
             backs = back([r["text"] for r in rows], flores, "eng_Latn")

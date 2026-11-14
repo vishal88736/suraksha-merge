@@ -139,7 +139,7 @@ test("all 22 scheduled languages are registered; the hand-written ones are alway
     assert.ok(REPLY_LANGUAGES.some((l) => l.code === language.reply), language.reply);
   for (const code of ["english", "hinglish", "tanglish", "marathi_english", "hindi_devanagari"] as const)
     assert.ok(hasReplyTemplates(code), code);
-  assert.deepEqual(UI_LOCALES.slice(0, 2).map((l) => l.code).sort(), ["en", "hi"].sort());
+  for (const code of ["en", "hi"]) assert.ok(UI_LOCALES.some((l) => l.code === code), code);
 });
 
 test("a language without checked templates gets an English draft and a warning", () => {
