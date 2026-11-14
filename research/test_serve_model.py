@@ -68,15 +68,18 @@ class ServeModelTests(unittest.TestCase):
         self.assertEqual(self.call(url, {"message": "m"}, {"x-suraksha-deadline-ms": "0"}), (503, {"error": "busy"}))
         self.assertEqual(len(calls), 1)
 
-    def test_reply_is_generated_only_when_asked(self):
+    def test_reply_is_a_separate_task(self):
         url, prompts = self.serve()
         status, body = self.call(url + "/v1/triage", {"message": "₹500 debited, UTR 612345678901"})
         self.assertEqual((status, body["raw"], body["reply"]), (200, "fixture-output", None))
         self.assertEqual(len(prompts), 1)
-        status, body = self.call(url + "/v1/triage", {"message": "₹500 debited, UTR 612345678901", "reply": True})
-        self.assertEqual((status, body["raw"], body["reply"]), (200, "fixture-output", "fixture-reply"))
+        # Only the reply is generated: one generation, never the payload again.
+        status, body = self.call(url + "/v1/triage", {"message": "₹500 debited, UTR 612345678901", "task": "reply"})
+        self.assertEqual((status, body["raw"], body["reply"]), (200, "", "fixture-reply"))
+        self.assertEqual(len(prompts), 2)
         self.assertIn("customer support reply", prompts[-1])
-        self.assertEqual(self.call(url + "/v1/triage", {"message": "m", "reply": "yes"})[0], 400)
+        self.assertEqual(self.call(url + "/v1/triage", {"message": "m", "task": "poem"})[0], 400)
+        self.assertEqual(self.call(url + "/v1/triage", {"message": "m", "reply": True})[0], 400)
 
     def test_request_validation(self):
         self.assertEqual(parse_request(b'{"message":"m","context":{"language":"auto"}}'), ("m", {"language": "auto"}))

@@ -31,13 +31,14 @@ CONTEXT_KEYS = {"reporting_delay_working_days", "elapsed_calendar_days", "respon
 
 def parse_request(body: bytes, with_options: bool = False):
     """Validate the request; returns (message, context), or with_options
-    (message, context, reply) where reply asks for a customer reply too."""
+    (message, context, task) where task is "schema" (the JSON payload) or
+    "reply" (only the customer reply, asked for once the payload was used)."""
     if len(body) > MAX_BODY_BYTES:
         raise ValueError("payload_too_large")
     data = json.loads(body)
-    if not isinstance(data, dict) or set(data) - {"message", "context", "reply"}:
+    if not isinstance(data, dict) or set(data) - {"message", "context", "task"}:
         raise ValueError("invalid_request")
-    if not isinstance(data.get("reply", False), bool):
+    if data.get("task", "schema") not in ("schema", "reply"):
         raise ValueError("invalid_request")
     message, context = data.get("message"), data.get("context", {})
     if not isinstance(message, str) or not message.strip() or len(message) > MAX_MESSAGE_CHARS:
@@ -46,7 +47,7 @@ def parse_request(body: bytes, with_options: bool = False):
         raise ValueError("invalid_context")
     if any(not (value is None or isinstance(value, (str, int)) and not isinstance(value, bool)) for value in context.values()):
         raise ValueError("invalid_context")
-    return (message, context, data.get("reply", False)) if with_options else (message, context)
+    return (message, context, data.get("task", "schema")) if with_options else (message, context)
 
 
 def schema_prompt(message: str, context: dict) -> str:
@@ -114,7 +115,7 @@ def make_handler(generate, info: dict, token: str | None, max_queue: int = 2, qu
                 length = int(self.headers.get("content-length") or 0)
                 if length > MAX_BODY_BYTES:
                     raise ValueError("payload_too_large")
-                message, context, want_reply = parse_request(self.rfile.read(length), with_options=True)
+                message, context, task = parse_request(self.rfile.read(length), with_options=True)
             except (ValueError, json.JSONDecodeError) as error:
                 code = str(error) if str(error) in {"payload_too_large", "invalid_request", "invalid_message", "invalid_context"} else "invalid_json"
                 return self._send(413 if code == "payload_too_large" else 400, {"error": code})
@@ -137,13 +138,14 @@ def make_handler(generate, info: dict, token: str | None, max_queue: int = 2, qu
                 # The caller has given up: do not spend GPU time on its request.
                 if time.perf_counter() - started >= deadline:
                     return self._send(503, {"error": "busy"})
-                text, input_tokens, output_tokens = generate(schema_prompt(message, context))
-                reply_text = None
-                # The customer reply is a second generation, only when asked for
-                # and only if the caller's budget still allows it.
-                if want_reply and time.perf_counter() - started < deadline:
-                    reply_text, reply_in, reply_out = generate(reply_prompt(message, context), max_new_tokens=max_reply_tokens)
-                    input_tokens, output_tokens = input_tokens + reply_in, output_tokens + reply_out
+                # One generation per request: the caller asks for the reply
+                # separately, and only after the payload passed its gates.
+                if task == "reply":
+                    reply_text, input_tokens, output_tokens = generate(reply_prompt(message, context), max_new_tokens=max_reply_tokens)
+                    text = ""
+                else:
+                    text, input_tokens, output_tokens = generate(schema_prompt(message, context))
+                    reply_text = None
             except Exception:  # do not echo internals or inputs
                 return self._send(500, {"error": "generation_failed"})
             finally:

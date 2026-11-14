@@ -381,14 +381,28 @@ test("a model-written reply is used only when it passes every check", async () =
 });
 
 test("the desk uses the model's reply when it passes, and the template with reasons when not", async () => {
-  const server = (reply: string) => (async () => Response.json({ raw: JSON.stringify({ ...GOOD, reporting_delay_working_days: 0 }), reply, latency_ms: 900, model: MODEL })) as unknown as typeof fetch;
+  const tasks: string[] = [];
+  const server = (reply: string, raw = JSON.stringify({ ...GOOD, reporting_delay_working_days: 0 })) =>
+    (async (_url: string, init: RequestInit) => {
+      const task = JSON.parse(String(init.body)).task ?? "schema";
+      tasks.push(task);
+      return task === "reply"
+        ? Response.json({ raw: "", reply, latency_ms: 900, model: MODEL })
+        : Response.json({ raw, reply: null, latency_ms: 900, model: MODEL });
+    }) as unknown as typeof fetch;
   const good = "Samajh sakte hain, yeh stressful hai.\n\n1. Abhi bank/PSP ko fraud report karein.\n\n2. Turant 1930 par call karein aur cybercrime.gov.in par complaint karein.\n\nRefund abhi confirm nahi hai; bank verify karega.";
   const REPLIES = { ...CONFIG, replies: true };
   const off = await triageWithModel({ message: MESSAGE, reporting_delay_working_days: 0 }, CONFIG, server(good));
   assert.notEqual(off.reply.text, good); // off by default: the template writes it
+  assert.deepEqual(tasks.splice(0), ["schema"]); // and no reply is asked for
   const used = await triageWithModel({ message: MESSAGE, reporting_delay_working_days: 0 }, REPLIES, server(good));
   assert.deepEqual(used.audit.model.status === "used" && used.audit.model.reply, { source: "model" });
   assert.equal(used.reply.text, good);
+  assert.deepEqual(tasks.splice(0), ["schema", "reply"]);
+  // A payload the gates reject never costs a reply generation.
+  const rejected = await triageWithModel({ message: MESSAGE, reporting_delay_working_days: 0 }, REPLIES, server(good, "not json"));
+  assert.equal(rejected.audit.model.status, "fallback");
+  assert.deepEqual(tasks.splice(0), ["schema"]);
   assert.equal(triageResponseSchema.safeParse(used).success, true);
   const promised = await triageWithModel({ message: MESSAGE, reporting_delay_working_days: 0 }, REPLIES, server(good + " Refund 100% guaranteed hai."));
   assert.equal(promised.audit.model.status === "used" && promised.audit.model.reply?.source, "template");

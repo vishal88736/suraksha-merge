@@ -107,6 +107,9 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       setLocale,
       t: (key, vars) => translate(locale, key, vars),
     }),
+    // `loaded` is read by translate() through the locale cache, not by name:
+    // a new `t` once the catalog arrives is what re-renders the interface.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [locale, setLocale, loaded],
   );
 

@@ -37,6 +37,7 @@ import { PolicyView } from "../components/views/policy-view.tsx";
 import { Landing } from "../components/landing.tsx";
 
 import type { MessageKey } from "../lib/i18n/catalog.ts";
+import type { TriageInput } from "../lib/engine.ts";
 
 const ERROR_KEYS: Record<ClientErrorCode, MessageKey> = {
   unauthorized: "error.unauthorized",
@@ -95,7 +96,7 @@ export default function Page() {
     dispatch({ type: "scenario/select", index });
   }, []);
 
-  const run = useCallback(async (patch?: Partial<typeof state.input>) => {
+  const run = useCallback(async (patch?: Partial<TriageInput>) => {
     requestRef.current?.abort();
     const controller = new AbortController();
     requestRef.current = controller;

@@ -85,7 +85,7 @@ HF_HUB_OFFLINE=1 .venv-training/bin/python scripts/serve_model.py \
 printf 'SURAKSHA_MODEL_URL=http://127.0.0.1:8765\nSURAKSHA_MODEL_TIMEOUT_MS=35000\nSURAKSHA_MODEL_REPLIES=true\n' > .dev.vars
 ```
 
-The Worker sends `"reply": true`; the server writes the reply in a second generation (`--max-reply-tokens`, default 384). `validateModelReply` in `lib/model-triage.ts` then rejects a reply that:
+Only once the model's payload has passed every gate does the Worker make a second request, `{"task": "reply"}`, within the time left of `SURAKSHA_MODEL_TIMEOUT_MS` (`--max-reply-tokens`, default 384). A payload the gates reject therefore costs no reply generation. `validateModelReply` in `lib/model-triage.ts` then rejects a reply that:
 
 - is too short or too long, or promises a refund or outcome;
 - misses the fraud rails (bank/PSP, 1930, cybercrime.gov.in) for a fraud category;
@@ -102,7 +102,7 @@ A rejected reply is replaced by the template, and the UI tags each reply "writte
 | 54 reviewed test cases | 90.7% all fields | 27 of 52 | missing fraud rails 16, unknown link 5 |
 | 42 challenge cases | 73.8% category | 16 of 39 | wrong language 14, missing fraud rails 14 |
 
-What a user would see, from six fresh messages sent to the running site with replies on: the model's JSON was accepted for one, so only one reply could come from the model, and every request still took about 10 s instead of 2–3 s because the reply is written before the gates run. That one reply was the Hinglish template copied back nearly word for word, with two new errors ("tabhi compensation ya liability verification karega", "bhi sakte hai"). The reply targets in training were the templates themselves, so this is what the model learned; a genuinely better model reply would need human-written reply examples, which the project doesn't have.
+What a user would see, from six fresh messages sent to the running site with replies on: the model's JSON was accepted for one, so only one reply could come from the model, and every request took about 10 s instead of 2–3 s because the reply was written before the gates ran. The reply is now asked for only after the payload is accepted: on the same six messages, the five rejected payloads took 2.4–3.9 s and the accepted one 7.1 s including its reply. That one reply was the Hinglish template copied back nearly word for word, with two new errors ("tabhi compensation ya liability verification karega", "bhi sakte hai"). The reply targets in training were the templates themselves, so this is what the model learned; a genuinely better model reply would need human-written reply examples, which the project doesn't have.
 
 Reading the raw replies on the evaluation sets showed garbled Hindi, Hindi answers to English messages and some wrong advice, which is why this stays off by default. The dual model is also less accurate on the JSON task than `merged-schema-sft-002` (90.7% vs 96.3% on the reviewed test), so `merged-schema-sft-002` with template replies remains the recommended setup. The checks catch the failure classes above; they cannot prove a reply that passes is good advice, so no model reply has been human-reviewed for quality.
 

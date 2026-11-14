@@ -237,6 +237,8 @@ async function callModel(
   sanitized: string,
   context: Record<string, unknown>,
   fetchImpl: Fetch,
+  task: "schema" | "reply" = "schema",
+  timeoutMs: number = config.timeoutMs,
 ) {
   const response = await fetchImpl(`${config.url}/v1/triage`, {
     method: "POST",
@@ -244,17 +246,40 @@ async function callModel(
       "content-type": "application/json",
       ...(config.token ? { authorization: `Bearer ${config.token}` } : {}),
       // The server drops queued work it could not start before this budget.
-      "x-suraksha-deadline-ms": String(config.timeoutMs),
+      "x-suraksha-deadline-ms": String(timeoutMs),
     },
-    // The model writes the customer reply too; it is checked before use.
-    body: JSON.stringify({ message: sanitized, context, reply: Boolean(config.replies) }),
-    signal: AbortSignal.timeout(config.timeoutMs),
+    body: JSON.stringify(
+      task === "reply" ? { message: sanitized, context, task } : { message: sanitized, context },
+    ),
+    signal: AbortSignal.timeout(timeoutMs),
   });
   if (response.status === 503) throw new Error("model_busy");
   if (!response.ok) throw new Error(`model_http_${response.status}`);
   const text = await response.text();
   if (text.length > MAX_RAW_CHARS * 2) throw new Error("model_response_too_large");
   return serverResponse.parse(JSON.parse(text));
+}
+
+/** The least time worth giving the model to write a reply. */
+const MIN_REPLY_MS = 3_000;
+
+async function modelReply(
+  config: ModelConfig,
+  sanitized: string,
+  raw: TriageInput,
+  fetchImpl: Fetch,
+  started: number,
+): Promise<{ text: string } | { reason: string }> {
+  const remaining = config.timeoutMs - (Date.now() - started);
+  if (remaining < MIN_REPLY_MS) return { reason: "reply_no_time" };
+  try {
+    const response = await callModel(config, sanitized, operatorContext(raw), fetchImpl, "reply", remaining);
+    return response.reply ? { text: response.reply } : { reason: "reply_not_generated" };
+  } catch (error) {
+    return {
+      reason: error instanceof Error && error.name === "TimeoutError" ? "reply_timeout" : "reply_not_generated",
+    };
+  }
 }
 
 /** Model first, rules fallback. Rules always run and remain the safety net. */
@@ -277,6 +302,7 @@ export async function triageWithModel(
         latency_ms: null,
       },
     });
+  const started = Date.now();
   let reply: z.infer<typeof serverResponse>;
   try {
     reply = await callModel(
@@ -371,9 +397,14 @@ export async function triageWithModel(
   // The model's own reply replaces the template only if it passes every
   // check; otherwise the template is used and the reasons are shown.
   if (!config.replies) return result; // templates write the reply (default)
-  const replyCheck = reply.reply
-    ? validateModelReply(reply.reply, result.payload, input.message, result.sla.estimated_compensation_inr)
-    : { ok: false as const, reasons: ["reply_not_generated"] };
+  // The reply is asked for only now, once the payload is used, so a payload
+  // the gates reject never costs the time of writing a reply.
+  if (result.audit.model.status !== "used") return result;
+  const written = await modelReply(config, rules.privacy.sanitized, raw, fetchImpl, started);
+  const replyCheck =
+    "text" in written
+      ? validateModelReply(written.text, result.payload, input.message, result.sla.estimated_compensation_inr)
+      : { ok: false as const, reasons: [written.reason] };
   if (replyCheck.ok) {
     const policy = policyCheck(replyCheck.reply.text, result.payload);
     if (result.audit.model.status === "used") result.audit.model.reply = { source: "model" };
