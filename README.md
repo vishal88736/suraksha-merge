@@ -133,7 +133,8 @@ SurakshaDesk supports **all 22 languages of the Eighth Schedule of the Constitut
 - **Script first, then words.** Unique scripts (Tamil, Telugu, Kannada, Malayalam, Gujarati, Gurmukhi, Odia, Ol Chiki, Meetei Mayek) decide the language directly. Shared scripts are resolved by distinctive letters and words: Assamese ৰ/ৱ vs Bengali, Sindhi and Kashmiri letters vs Urdu, and marker words for Marathi, Nepali, Konkani, Maithili, Bodo, Dogri and Sanskrit vs Hindi.
 - **The operator can override it** from the composer, and dictated messages are re-detected.
 - **Right-to-left** layout is applied for Urdu, Kashmiri and Sindhi, and Noto fonts cover every script, including Ol Chiki and Meetei Mayek.
-- **The fine-tuned model knows 5 of them.** The pilot was trained on English, Hinglish, Hindi, Tanglish and Marathi–English. For any other language, the rules engine answers and the reason (`language_outside_model_training`) is shown.
+- **The fine-tuned model answers English, Hindi and Hinglish**, the languages whose training data has been human-reviewed. For every other language, including Tanglish and Marathi–English until a native speaker reviews them, the rules engine answers and the reason (`language_outside_model_training`) is shown.
+- **The rules understand native scripts.** Fraud, failed, not-received, recipient, merchant and wrong-account keywords are recognised in Bengali, Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam, Punjabi, Urdu, Odia and Hindi. They were written by the project and need native-speaker review.
 
 ### How the translations were made and checked
 
@@ -226,26 +227,42 @@ flowchart LR
 
 ## 📊 Results so far
 
-Evaluated on **92 held-out synthetic test cases**. Every model was decoded identically (NF4, greedy, no repairs).
+### Round 2: trained on human-reviewed data (current)
+
+The model was retrained on **598 human-reviewed English, Hindi and Hinglish cases** (550 train, 48 validation), and scored on the **54 reviewed test cases** in those languages. The model now **extracts the facts**; the **policy rules decide the liability tier and the mandatory actions** from those facts. The table measures what the system actually returns: each recorded model output goes through the real runtime gates (`scripts/eval-runtime.ts`).
+
+| Pipeline | All 8 fields exact | Model output used | Fell back to rules |
+| :--- | ---: | ---: | ---: |
+| Rules only | **100%** | – | – |
+| Base Qwen2.5-3B + rules | 100% | 0 / 54 | 54 (every output rejected) |
+| Unreviewed pilot + rules | 94.4% | 52 / 54 | 2 |
+| **Reviewed SFT + rules** ⭐ | 90.7% | 52 / 54 | 2 |
+
+Raw model output alone, before the rules step (AuditKIT): reviewed SFT utility 0.74 and pilot 0.85. Both are schema-valid on every case, and both get every dispute category right. The gap comes from leaving out rule-derived actions (`REVIEW_COMPENSATION`, `REQUEST_UTR`, `HUMAN_REVIEW`) and from the tier, which is exactly what the rules now own.
+
+**How to read this honestly**
+
+- ✅ With the rules owning policy, the only remaining model errors are in **panic severity**. The extracted facts (UTR, amount, category, language) are all correct.
+- ⚠️ **Rules-only scores 100% because the benchmark can't tell the two apart.** The curation gate keeps only labels consistent with the engine, and the reviewer confirmed them. A synthetic set built this way can't show the model beating the rules; the model's value is on messy real messages the rules don't understand. **Evaluation on real, human-labelled messages is the next required step.**
+- 🔒 The reviewed model saw fewer training cases than the pilot (550 vs 758) and scores slightly lower on panic severity. All differences are within a handful of cases out of 54.
+
+<details>
+<summary><b>Round 1: unreviewed pilots on 92 synthetic test cases</b></summary>
+
+<br>
 
 | Model | Utility | All fields exact | Latency / case |
 | :--- | ---: | ---: | ---: |
 | Base Qwen2.5-3B-Instruct | 0.00 | 0.00 | 8.0 s |
 | Schema SFT | 0.86 | 0.73 | 13.2 s |
-| Dual SFT (schema + reply) | **0.90** | 0.74 | 19.4 s |
-| **Merged schema SFT** ⭐ *served in the demo* | 0.86 | 0.71 | **8.1 s** |
-| Schema SFT → DR-GRPO | 0.87 | **0.75** | 14.3 s |
+| Dual SFT (schema + reply) | 0.90 | 0.74 | 19.4 s |
+| Merged schema SFT | 0.86 | 0.71 | 8.1 s |
+| Schema SFT → DR-GRPO | 0.87 | 0.75 | 14.3 s |
 | Schema + empathy-DPO merge | 0.56 | 0.00 | n/a |
 
-**What this tells us**
+Fine-tuning took the model from unusable (0.00) to 0.86–0.90 utility. Every pilot got the liability tier wrong in 15–18 of 92 cases, which is why the rules now decide it. The empathy DPO overfit to easy negatives, and merging it hurt utility.
 
-- ✅ Fine-tuning takes the model from **unusable (0.00) to 0.86–0.90 utility**.
-- ⚠️ Differences between the fine-tuned pilots are **within noise**: their confidence intervals include 0.
-- ⚠️ Every model still gets the **liability tier wrong in 15–18 of 92 cases**. That is why the policy gate and the rules fallback exist.
-- ❌ The empathy DPO overfit to easy negatives, and merging it hurt utility (−0.29). The next round needs harder negatives and merge weights tuned on the validation split.
-- 🔒 These are **unreviewed pilots on synthetic data**, not real-world accuracy claims. Production training is blocked until the data has been [human-reviewed](docs/HUMAN_REVIEW_AND_TRAINING.md).
-
----
+</details>
 
 ## 🖼️ Screenshots
 
@@ -291,7 +308,7 @@ Needs `.venv-training`, a CUDA GPU with about 6 GB of VRAM, and a pilot checkpoi
 ```bash
 # 1. serve the model on loopback
 HF_HUB_OFFLINE=1 .venv-training/bin/python scripts/serve_model.py \
-  --model artifacts/pilot/merged-schema-sft-001 --allow-pilot-adapter
+  --model artifacts/reviewed/merged-schema-sft-001
 
 # 2. point the website at it
 printf 'SURAKSHA_MODEL_URL=http://127.0.0.1:8765\nSURAKSHA_MODEL_TIMEOUT_MS=30000\n' > .dev.vars
@@ -416,7 +433,7 @@ Primary sources and review dates are in [`lib/policy.ts`](lib/policy.ts). The ca
 ## 🔒 Responsible use
 
 - **Research preview.** There is no bank or NPCI integration. It files no disputes, approves no refunds and contacts no one.
-- **Synthetic data only.** The training corpus combines publisher-declared synthetic public dialogues with locally authored cases, and **none of it has been human-reviewed yet**. Do not paste real customer data.
+- **Synthetic data only.** The training corpus combines publisher-declared synthetic public dialogues with locally authored cases. **652 of 934 cases are human-reviewed** (all English, Hindi and Hinglish cases, by one reviewer with an AI pre-audit); Tanglish and Marathi–English await a native speaker, and the evaluation queue awaits an independent second reviewer. Do not paste real customer data.
 - **No persistence.** Customer messages are never stored, and exported traces are masked.
 - **Not a certification.** Operational use would need a bank-approved category mapping, a compliance review and human-reviewed evaluation on real messages.
 
