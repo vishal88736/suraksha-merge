@@ -47,6 +47,11 @@ const EVIDENCE_TIERS = new Set([
   "CUSTOMER_NEGLIGENCE_REVIEW",
 ]);
 const FRAUD_RAILS = ["CONTACT_BANK_PSP", "CALL_1930", "REPORT_CYBERCRIME"];
+const TIER_REASONS = new Set([
+  "tier_requires_policy_revalidation",
+  "tier_inconsistent_with_category",
+  "tier_not_supported_by_operator_context",
+]);
 
 /**
  * Accept a model payload only if it is strict, schema-valid JSON whose facts
@@ -182,7 +187,30 @@ export async function triageWithModel(
     });
   }
   const model: ModelInfo = reply.model;
-  const checked = validateModelPayload(reply.raw, input, rules);
+  let checked = validateModelPayload(reply.raw, input, rules);
+  // The liability tier is a policy decision. When the model's only error is
+  // the tier, the rules decide it for the model's category and the model's
+  // grounded facts are kept; the audit records both tiers.
+  let tierFromRules: { model_tier: string; rules_tier: string } | undefined;
+  if (!checked.ok && checked.reasons.every((r) => TIER_REASONS.has(r))) {
+    const parsed = payloadSchema.safeParse(parseStrictJson(reply.raw.trim()));
+    if (parsed.success) {
+      const rulesTier = triage(raw, { category: parsed.data.dispute_category })
+        .payload.rbi_liability_tier;
+      const retried = validateModelPayload(
+        JSON.stringify({ ...parsed.data, rbi_liability_tier: rulesTier }),
+        input,
+        rules,
+      );
+      if (retried.ok) {
+        checked = retried;
+        tierFromRules = {
+          model_tier: parsed.data.rbi_liability_tier,
+          rules_tier: rulesTier,
+        };
+      }
+    }
+  }
   if (!checked.ok)
     return triage(raw, {
       model: {
@@ -194,7 +222,12 @@ export async function triageWithModel(
     });
   const result = triage(raw, {
     payload: checked.payload,
-    model: { status: "used", model, latency_ms: reply.latency_ms },
+    model: {
+      status: "used",
+      model,
+      latency_ms: reply.latency_ms,
+      ...(tierFromRules ? { tier_from_rules: tierFromRules } : {}),
+    },
   });
   // The customer reply is template-built; it must still pass the same gates.
   if (!result.audit.no_unauthorized_promises || !result.audit.fraud_rails_present)

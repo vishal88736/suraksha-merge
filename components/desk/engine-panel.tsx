@@ -181,7 +181,10 @@ export function EnginePanel({
                   ? t("engine.variantAdapter")
                   : t("engine.variantBase"),
               ms: Math.round(result.audit.model.latency_ms),
-            })
+            }) +
+            (result.audit.model.tier_from_rules
+              ? ` · ${t("engine.tierFromRules")}`
+              : "")
           : result.audit.model.status === "fallback"
             ? t(
                 // Output that was produced and rejected differs from a model

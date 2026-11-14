@@ -58,6 +58,9 @@ export const triageResponseSchema = z.object({
         status: z.literal("used"),
         model: modelInfo,
         latency_ms: z.number().finite().nonnegative(),
+        tier_from_rules: z
+          .object({ model_tier: z.string(), rules_tier: z.string() })
+          .optional(),
       }),
       z.object({
         status: z.literal("fallback"),

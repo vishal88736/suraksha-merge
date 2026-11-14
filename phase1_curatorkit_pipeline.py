@@ -50,10 +50,10 @@ def curate(rows, output, use_presidio=False, use_curatorkit=False, grouped_split
         if group in group_splits and group_splits[group] != split:
             raise ValueError("Scenario-group split leakage")
         group_splits[group] = split
-        if row.get("usage") == "evaluation_only" or row.get("source_provenance", {}).get("role") == "evaluation_only":
+        if row.get("usage") == "evaluation_only" or (row.get("source_provenance") or {}).get("role") == "evaluation_only":
             raise ValueError("Independent benchmark records may not enter the training curation path")
         if row.get("origin") == "public_source":
-            provenance = row.get("source_provenance", {})
+            provenance = (row.get("source_provenance") or {})
             required = {"source_id", "revision", "source_path", "row_id", "license", "original_sha256", "download_sha256", "attribution_url"}
             if not required.issubset(provenance) or provenance.get("license") not in {"cc-by-4.0", "apache-2.0"} or provenance.get("role") != "training_candidates":
                 raise ValueError("Public-source records need pinned, licensed and attributable training provenance")

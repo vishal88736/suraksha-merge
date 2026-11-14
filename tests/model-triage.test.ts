@@ -221,3 +221,27 @@ test("a language the pilot was not trained on is answered by rules without calli
     latency_ms: null,
   });
 });
+
+test("a model whose only error is the liability tier is used, with the tier set by policy rules", async () => {
+  const result = await triageWithModel(
+    { message: MESSAGE, reporting_delay_working_days: 0 },
+    CONFIG,
+    fakeServer(JSON.stringify({ ...GOOD, reporting_delay_working_days: 0, rbi_liability_tier: "ZERO_LIABILITY_ELIGIBLE" })),
+  );
+  assert.equal(result.audit.model.status, "used");
+  assert.equal(result.payload.rbi_liability_tier, "PENDING_VERIFICATION");
+  assert.deepEqual(result.audit.model.status === "used" && result.audit.model.tier_from_rules, {
+    model_tier: "ZERO_LIABILITY_ELIGIBLE",
+    rules_tier: "PENDING_VERIFICATION",
+  });
+  assert.equal(triageResponseSchema.safeParse(result).success, true);
+});
+
+test("a tier error alongside an ungrounded fact still falls back to rules", async () => {
+  const result = await triageWithModel(
+    { message: MESSAGE },
+    CONFIG,
+    fakeServer(JSON.stringify({ ...GOOD, utr_number: "999999999999", rbi_liability_tier: "ZERO_LIABILITY_ELIGIBLE" })),
+  );
+  assert.equal(result.audit.model.status, "fallback");
+});

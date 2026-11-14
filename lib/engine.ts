@@ -341,7 +341,13 @@ export type ModelInfo = {
 /** How the structured payload was produced. Rules always run first. */
 export type ModelAudit =
   | { status: "not_configured" }
-  | { status: "used"; model: ModelInfo; latency_ms: number }
+  | {
+      status: "used";
+      model: ModelInfo;
+      latency_ms: number;
+      /** Set when the policy rules, not the model, decided the liability tier. */
+      tier_from_rules?: { model_tier: string; rules_tier: string };
+    }
   | {
       status: "fallback";
       reasons: string[];
@@ -351,7 +357,12 @@ export type ModelAudit =
 
 export function triage(
   raw: TriageInput,
-  options: { payload?: Payload; model?: ModelAudit } = {},
+  options: {
+    payload?: Payload;
+    model?: ModelAudit;
+    /** Evaluate the policy rules as if the message had this category. */
+    category?: Payload["dispute_category"];
+  } = {},
 ) {
   const start = performance.now();
   const input = inputSchema.parse(raw);
@@ -427,7 +438,7 @@ export function triage(
           ? "customer_message"
           : "operator_context",
     });
-  const category = classify(text);
+  const category = options.category ?? classify(text);
   let tier: Payload["rbi_liability_tier"] = "PENDING_VERIFICATION";
   const actions: Payload["mandatory_actions"] = ["CONTACT_BANK_PSP"];
   let deadline: number | null = null;

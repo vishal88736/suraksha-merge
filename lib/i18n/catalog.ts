@@ -185,6 +185,7 @@ const en = {
     "Payload source: rules engine · model output rejected: {reasons}",
   "engine.sourceSkipped":
     "Payload source: rules engine · model not used: {reasons}",
+  "engine.tierFromRules": "liability tier set by policy rules",
   "engine.variantBase": "base model, not fine-tuned",
   "engine.variantAdapter": "fine-tuned adapter",
   "engine.variantPilot": "UNREVIEWED PILOT adapter, synthetic data, not for real decisions",
@@ -540,6 +541,7 @@ const hi: Record<MessageKey, string> = {
     "पेलोड स्रोत: नियम इंजन · मॉडल आउटपुट अस्वीकृत: {reasons}",
   "engine.sourceSkipped":
     "पेलोड स्रोत: नियम इंजन · मॉडल उपयोग नहीं हुआ: {reasons}",
+  "engine.tierFromRules": "देनदारी श्रेणी नीति नियमों द्वारा तय",
   "engine.variantBase": "बेस मॉडल, फ़ाइन-ट्यून नहीं",
   "engine.variantAdapter": "फ़ाइन-ट्यून एडेप्टर",
   "engine.variantPilot": "असमीक्षित पायलट एडेप्टर, सिंथेटिक डेटा, वास्तविक निर्णयों के लिए नहीं",

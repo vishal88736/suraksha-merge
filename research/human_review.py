@@ -123,7 +123,10 @@ def finalize_evaluation(queue, decisions, output, annotation_decisions=None):
     (Path(output)/'release_manifest.json').write_text(json.dumps({'status':'HUMAN_REVIEWED','reviewed':len(reviewed),'queue_sha256':digest(Path(queue).read_bytes()),'decisions_sha256':digest(Path(decisions).read_bytes()),'evaluation_sha256':digest((Path(output)/'evaluation.jsonl').read_bytes()),'model_evaluated':False},indent=2)+'\n')
     return {'reviewed':len(reviewed),'status':'HUMAN_REVIEWED','model_evaluated':False}
 
-def export_curation(queue, decisions, output):
+def export_curation(queue, decisions, output, languages=None):
+    """languages: an explicit subset whose review is complete (recorded in the result); default all."""
+    languages=tuple(languages or LANGUAGES)
+    if not set(languages)<=set(LANGUAGES): raise ValueError(f'Unknown languages: {sorted(set(languages)-set(LANGUAGES))}')
     import tempfile
     with tempfile.TemporaryDirectory() as tmp:
         materialize_reviewed(queue,decisions,tmp)
@@ -131,12 +134,13 @@ def export_curation(queue, decisions, output):
     rows=[]
     for row in reviewed:
         if row['split']=='test': continue  # Held-out evaluation never promoted to training.
+        if row['expected_json']['detected_language'] not in languages: continue
         decision=row['review_history'][-1]
         rows.append({'sample_id':row['review_id'],'scenario_group':row['scenario_group'],'split':row['split'],'origin':row['origin'],'input':row['input'],'target':row['expected_json'],'chosen_reply':row['chosen_reply'],'rejected_reply':row['rejected_reply'],'source_provenance':row['provenance'].get('source_provenance'),'human_reviewed':True,'review_reference':{'reviewer':decision['reviewer'],'timestamp_utc':decision['timestamp_utc'],'decision_sha256':digest(decision)},'label_status':'human_reviewed_annotation'})
     if {r['split'] for r in rows}!={'train','validation'}: raise ValueError('Reviewed train and validation records required')
-    if {r['target']['dispute_category'] for r in rows}!=set(CATEGORIES) or {r['target']['detected_language'] for r in rows}!=set(LANGUAGES): raise ValueError('Reviewed training coverage incomplete')
+    if {r['target']['dispute_category'] for r in rows}!=set(CATEGORIES) or {r['target']['detected_language'] for r in rows}!=set(languages): raise ValueError('Reviewed training coverage incomplete')
     write_jsonl(output,rows)
-    return {'reviewed_curation_inputs':len(rows),'heldout_test_excluded':True,'next_step':'Run existing phase1 curation gates on this input; inspect rejected corrections.'}
+    return {'reviewed_curation_inputs':len(rows),'heldout_test_excluded':True,'languages':list(languages),'languages_excluded':sorted(set(LANGUAGES)-set(languages)),'next_step':'Run existing phase1 curation gates on this input; inspect rejected corrections.'}
 
 def main():
     import argparse
@@ -146,6 +150,7 @@ def main():
     for cmd in ('show','decide','export','finalize-evaluation','export-curation'):
         d=sub.add_parser(cmd);d.add_argument('--queue',type=Path,default=ROOT/'data/review/annotation_queue.jsonl');d.add_argument('--decisions',type=Path,default=ROOT/'data/review/decisions.jsonl')
         if cmd in ('show','decide'): d.add_argument('review_id')
+        if cmd=='export-curation': d.add_argument('--languages',nargs='+',choices=sorted(LANGUAGES),help='export only these languages (their review must be complete)')
         if cmd=='decide':
             d.add_argument('--reviewer',required=True);d.add_argument('--action',choices=['accept','reject','correct','reopen'],required=True);d.add_argument('--corrections',type=Path);d.add_argument('--notes',default='');d.add_argument('--attest-human-review',action='store_true');d.add_argument('--confirmed-fields',nargs='+',default=[])
         if cmd in ('export','finalize-evaluation','export-curation'): d.add_argument('--output',type=Path,required=True)
@@ -161,7 +166,7 @@ def main():
         if result is None:
             raise SystemExit(f"Unknown review id {a.review_id!r}. IDs look like 'syn-2-0-4-1'; list them with: .venv/bin/python -I -c \"import json;[print(json.loads(l)['review_id']) for l in open('data/review/annotation_queue.jsonl')]\"")
     elif a.cmd=='decide': result=record_decision(a.queue,a.decisions,a.review_id,a.reviewer,a.action,corrections=json.loads(a.corrections.read_text()) if a.corrections else None,fields=a.confirmed_fields,notes=a.notes,attest=a.attest_human_review)
-    elif a.cmd=='export-curation': result=export_curation(a.queue,a.decisions,a.output)
+    elif a.cmd=='export-curation': result=export_curation(a.queue,a.decisions,a.output,a.languages)
     elif a.cmd=='export': result=materialize_reviewed(a.queue,a.decisions,a.output)
     else: result=finalize_evaluation(a.queue,a.decisions,a.output,a.annotation_decisions)
     print(json.dumps(result,indent=2,ensure_ascii=False))
