@@ -120,8 +120,11 @@ export type Evidence = {
 };
 // A transaction reference is only trusted when the label in front of it names a
 // transaction. Identity keywords that label the number itself disqualify it.
+// Bank statements label it by position instead: "UPI/612345678901/merchant",
+// "UPI/DR/612345678901/..." or "UPI-612345678901-...", which is where a
+// customer with a failed-but-debited payment usually finds it.
 const utrPattern =
-  /\b(?:UPI[\s._-]*(?:ref(?:erence)?|transaction[\s._-]*id|txn[\s._-]*id)|(?:txn|transaction)[\s._-]*id|UTR|RRN|ref(?:erence)?(?:\s*(?:no\.?|number|id))?)\s*[:#=-]?\s*(\d{12})\b/gi;
+  /\b(?:UPI[\s._-]*(?:ref(?:erence)?|transaction[\s._-]*id|txn[\s._-]*id)|(?:txn|transaction)[\s._-]*id|UTR|RRN|ref(?:erence)?(?:\s*(?:no\.?|number|id))?|UPI[/-](?:(?:DR|CR|P2[AMP])[/-])?)\s*[:#=-]?\s*(\d{12})\b/gi;
 // Checked against the text immediately preceding the label. The keyword must be
 // the token that labels the number, not merely a word in the same sentence.
 const disqualifyingContext =
@@ -310,8 +313,9 @@ function draftReply(
       templates.voluntary.keep,
     ];
   else steps = [...templates.generic];
-  if (!p.utr_number && p.dispute_category !== "NEEDS_INFORMATION")
-    steps.push(templates.askForUtr);
+  // Every reply without a UTR says where to find one, including failed
+  // payments, which still carry a reference.
+  if (!p.utr_number) steps.push(templates.askForUtr);
   if (needsPolicyRevalidation) steps.push(templates.policyRevalidation);
   const escalation = templates.escalation;
   return {

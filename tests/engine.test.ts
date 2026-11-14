@@ -401,3 +401,29 @@ test("a debited UPI transfer whose recipient ko mila nahi remains a P2P failure"
   assert.equal(result.payload.dispute_category, "P2P_BENEFICIARY_NOT_CREDITED");
   assert.equal(result.payload.rbi_liability_tier, "TECHNICAL_T_PLUS_1");
 });
+
+test("a UTR is read from bank-statement narration, as found for failed payments", () => {
+  for (const [message, utr] of [
+    ["Payment failed but ₹500 debited. Statement shows UPI/612345678901/swiggy", "612345678901"],
+    ["Failed transfer, ₹1,200 gone. Statement: UPI/DR/612345678902/RAVI KUMAR/YESB", "612345678902"],
+    ["Pending UPI, ₹300 debited. Narration UPI-612345678903-SBIN", "612345678903"],
+    ["Payment failed but ₹500 debited. UPI transaction ID 612345678904", "612345678904"],
+  ] as const) {
+    const result = triage({ message });
+    assert.equal(result.payload.utr_number, utr, message);
+    assert.ok(!result.payload.mandatory_actions.includes("REQUEST_UTR"), message);
+  }
+});
+
+test("an unlabelled 12-digit number is still never taken as a UTR", () => {
+  for (const message of [
+    "Payment failed but ₹500 debited. 612345678901",
+    "Payment failed, ₹500 debited. My Aadhaar is 612345678901",
+    "UPI payment failed. Aadhaar UPI/612345678901",
+  ]) {
+    const result = triage({ message });
+    assert.equal(result.payload.utr_number, null, message);
+    assert.ok(result.payload.mandatory_actions.includes("REQUEST_UTR"), message);
+    assert.match(result.reply.text, /transaction history|SMS/, message);
+  }
+});

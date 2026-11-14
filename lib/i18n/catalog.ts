@@ -141,7 +141,7 @@ const en = {
   "checklist.amountHint": "Write the amount with ₹ or Rs, for example ₹2,500.",
   "checklist.utr": "UTR / reference number",
   "checklist.utrHint":
-    "The 12-digit number from the bank SMS or UPI app, with its label: UTR, Ref No or RRN.",
+    "The 12-digit number with its label (UTR, Ref No or RRN). Failed payments have one too: check the debit SMS, the UPI app's transaction history, or the UPI/… line in the bank statement. If there is none, add the date, time and receiving UPI ID.",
   "checklist.when": "When it happened",
   "checklist.whenHint":
     "The transaction date or days since it happened, to check the reversal deadline and compensation.",
@@ -495,7 +495,7 @@ const hi: Record<MessageKey, string> = {
   "checklist.amountHint": "राशि ₹ या Rs के साथ लिखें, जैसे ₹2,500।",
   "checklist.utr": "UTR / संदर्भ संख्या",
   "checklist.utrHint":
-    "बैंक SMS या UPI ऐप का 12 अंकों वाला नंबर, उसके लेबल के साथ: UTR, Ref No या RRN।",
+    "12 अंकों वाला नंबर, उसके लेबल के साथ (UTR, Ref No या RRN)। असफल भुगतान का भी होता है: debit SMS, UPI ऐप की transaction history, या bank statement की UPI/… वाली लाइन देखें। न मिले तो तारीख, समय और पाने वाले की UPI ID जोड़ें।",
   "checklist.when": "कब हुआ",
   "checklist.whenHint":
     "लेनदेन की तारीख या कितने दिन बीते, ताकि रिवर्सल की समय-सीमा और मुआवज़ा जाँचा जा सके।",

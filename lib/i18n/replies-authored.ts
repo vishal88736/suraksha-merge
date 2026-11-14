@@ -90,11 +90,11 @@ export const AUTHORED_TEMPLATES: Record<AuthoredReplyLanguage, ReplyTemplates> =
         "Keep the transaction receipt and acknowledgement. Never pay a recovery fee or share a PIN/OTP.",
     },
     generic: [
-      "Please share the transaction type, amount, date/status and labelled 12-digit UTR/RRN from the receipt. Do not share Aadhaar, account numbers, PINs or OTPs.",
+      "Please share the transaction type (to a person or a merchant), the amount and the date/status. Do not share Aadhaar, account numbers, PINs or OTPs.",
       "If you suspect fraud, contact your bank/PSP and call 1930 immediately.",
     ],
     askForUtr:
-      "Please find the labelled 12-digit UTR/RRN in your receipt; an unlabelled 12-digit number may be a sensitive ID.",
+      "Please find the labelled 12-digit UTR/RRN: it is in the debit SMS, in your UPI app's transaction history (failed payments are listed too), or in the UPI/… line of your bank statement. An unlabelled 12-digit number may be a sensitive ID. If you cannot find it, share the date, time, amount and the receiving UPI ID instead.",
     policyRevalidation:
       "This transaction date needs review against the newer RBI liability framework.",
     escalation: OMBUDSMAN_NOTE,
@@ -143,11 +143,11 @@ export const AUTHORED_TEMPLATES: Record<AuthoredReplyLanguage, ReplyTemplates> =
         "Transaction receipt aur acknowledgement sambhaal kar rakhein. Recovery fee kabhi mat dein aur PIN/OTP share mat karein.",
     },
     generic: [
-      "Transaction type, amount, date/status aur receipt se labelled 12-digit UTR/RRN bhejein. Aadhaar, account number, PIN ya OTP share mat karein.",
+      "Transaction type (kisi person ko ya merchant ko), amount aur date/status bhejein. Aadhaar, account number, PIN ya OTP share mat karein.",
       "Agar fraud ka shak ho, turant bank/PSP se sampark karein aur 1930 par call karein.",
     ],
     askForUtr:
-      "Receipt mein labelled 12-digit UTR/RRN dhoondhein; bina label wala 12-digit number koi sensitive ID bhi ho sakta hai.",
+      "Labelled 12-digit UTR/RRN dhoondhein: yeh debit SMS mein, UPI app ki transaction history mein (failed payments bhi wahan dikhte hain), ya bank statement ki UPI/… wali line mein hota hai. Bina label wala 12-digit number koi sensitive ID bhi ho sakta hai. Na mile to date, time, amount aur paane wale ki UPI ID batayein.",
     policyRevalidation:
       "Is transaction ki date ko naye RBI liability framework ke against dobara dekhna hoga.",
     escalation:
@@ -197,11 +197,11 @@ export const AUTHORED_TEMPLATES: Record<AuthoredReplyLanguage, ReplyTemplates> =
         "Transaction receipt, acknowledgement save pannunga. Recovery fee kadaividu, PIN/OTP share pannadhu.",
     },
     generic: [
-      "Transaction type, amount, date/status, receipt-la irundhu labelled 12-digit UTR/RRN anuppunga. Aadhaar, account number, PIN, OTP share pannadhu.",
+      "Transaction type (person-ku-aa illa merchant-ku-aa), amount, date/status anuppunga. Aadhaar, account number, PIN, OTP share pannadhu.",
       "Fraud ennai nanbeno, immediate ah bank/PSP-ku sollunga, 1930-ku call pannunga.",
     ],
     askForUtr:
-      "Receipt-la labelled 12-digit UTR/RRN tharuvunga; label illa 12-digit number sensitive ID aam irukkalam.",
+      "Labelled 12-digit UTR/RRN-a debit SMS-la, UPI app transaction history-la (failed payments-um anga irukkum), illa bank statement-la UPI/… line-la paarunga. Label illadha 12-digit number sensitive ID-aa irukkalam. Kedaikkalana, date, time, amount, receiver UPI ID sollunga.",
     policyRevalidation:
       "Indha transaction date-nu naye RBI liability framework-ellaam paathu mannadiyaal theriya vendum.",
     escalation:
@@ -251,11 +251,11 @@ export const AUTHORED_TEMPLATES: Record<AuthoredReplyLanguage, ReplyTemplates> =
         "Transaction receipt ani acknowledgement japun theva. Recovery fee kadhihi deu naka ani PIN/OTP share karu naka.",
     },
     generic: [
-      "Transaction type, amount, date/status ani receipt madhla labelled 12-digit UTR/RRN pathva. Aadhaar, account number, PIN kiva OTP share karu naka.",
+      "Transaction type (vyakti la ki merchant la), amount ani date/status pathva. Aadhaar, account number, PIN kiva OTP share karu naka.",
       "Fraud chi shanka asel tar lagech bank/PSP shi samparka kara ani 1930 var call kara.",
     ],
     askForUtr:
-      "Receipt madhye labelled 12-digit UTR/RRN shodha; label naslela 12-digit number ekhada sensitive ID asu shakto.",
+      "Labelled 12-digit UTR/RRN debit SMS madhye, UPI app chya transaction history madhye (failed payments pan tithe distat), kiva bank statement madhil UPI/… line madhye shodha. Label naslela 12-digit number ekhada sensitive ID asu shakto. Sapadla nahi tar date, time, amount ani ghenaryacha UPI ID sanga.",
     policyRevalidation:
       "Ya transaction chi date navya RBI liability framework pramane punha tapasavi lagel.",
     escalation:
@@ -304,11 +304,11 @@ export const AUTHORED_TEMPLATES: Record<AuthoredReplyLanguage, ReplyTemplates> =
         "Transaction receipt और acknowledgement सहेज कर रखें। Recovery fee कभी न दें और PIN/OTP साझा न करें।",
     },
     generic: [
-      "Transaction type, amount, date/status और receipt से labelled 12-digit UTR/RRN भेजें। Aadhaar, account number, PIN या OTP साझा न करें।",
+      "Transaction type (किसी व्यक्ति को या merchant को), amount और date/status भेजें। Aadhaar, account number, PIN या OTP साझा न करें।",
       "Fraud का शक हो तो तुरंत bank/PSP से संपर्क करें और 1930 पर call करें।",
     ],
     askForUtr:
-      "Receipt में labelled 12-digit UTR/RRN ढूँढें; बिना label वाला 12-digit number कोई sensitive ID भी हो सकता है।",
+      "Labelled 12-digit UTR/RRN ढूँढें: यह debit SMS में, UPI app की transaction history में (failed payments भी वहाँ दिखते हैं), या bank statement की UPI/… वाली line में होता है। बिना label वाला 12-digit number कोई sensitive ID भी हो सकता है। न मिले तो तारीख, समय, राशि और पाने वाले की UPI ID बताएँ।",
     policyRevalidation:
       "इस transaction की date को नए RBI liability framework के साथ दोबारा देखना होगा।",
     escalation:

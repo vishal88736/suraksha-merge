@@ -72,7 +72,7 @@ def target_from_facts(category,language,*,amount=None,utr=None,delay=None,respon
 def public_target(message,language):
     # Unknown account responsibility/dates remain unknown, even when the source
     # assistant claims that a bank has already approved the case.
-    refs=set(re.findall(r'\b(?:UTR|RRN|UPI\s*Ref(?:\s*No)?)\s*[:#=-]?\s*(\d{12})\b',message,re.I))
+    refs=set(re.findall(r'\b(?:UTR|RRN|UPI\s*Ref(?:\s*No)?|UPI[/-](?:(?:DR|CR|P2[AMP])[/-])?)\s*[:#=-]?\s*(\d{12})\b',message,re.I))
     amounts=set()
     for token in re.findall(r'(?<!\w)(?:Rs\.?|INR|₹)\s*([0-9][0-9,]*(?:\.\d{1,2})?)(?![\d.])',message,re.I):
         try:
