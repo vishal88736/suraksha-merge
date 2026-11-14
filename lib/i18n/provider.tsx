@@ -72,7 +72,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   );
 
   // Generated locales load on demand; the counter re-renders once they arrive.
-  const [, setLoaded] = useState(0);
+  const [loaded, setLoaded] = useState(0);
   useEffect(() => {
     const { htmlLang, dir } = uiLocale(locale);
     document.documentElement.lang = htmlLang;
@@ -107,8 +107,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       setLocale,
       t: (key, vars) => translate(locale, key, vars),
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- loaded re-renders the catalog
-    [locale, setLocale, isLocaleLoaded(locale)],
+    [locale, setLocale, loaded],
   );
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;

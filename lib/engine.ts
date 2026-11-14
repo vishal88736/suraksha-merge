@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { asciiDigits, findAmounts } from "./numbers.ts";
 import { POLICY_VERSION } from "./policy.ts";
-import { REPLY_TEMPLATES, fill } from "./i18n/replies.ts";
+import { fill, templatesFor } from "./i18n/replies.ts";
+import { replyLanguage } from "./i18n/locales.ts";
 import { detectLanguage } from "./rules/language.ts";
 import { REPLY_LANGUAGE_CODES } from "./i18n/locales.ts";
 import { classify, isFraudCategory } from "./rules/classification.ts";
@@ -264,7 +265,7 @@ function draftReply(
   // The reply is assembled from a template bundle, never from literals in
   // the engine. The bundle is chosen by the detected language, so a customer
   // always reads the answer in the language they wrote in.
-  const templates = REPLY_TEMPLATES[p.detected_language];
+  const { templates } = templatesFor(p.detected_language);
   const fraud = isFraud(p.dispute_category);
   const deadline = sla.deadline_days;
   const dayUnit =
@@ -578,6 +579,10 @@ export function triage(
     policy_revalidation_required: postPolicy,
   };
   const reply = draftReply(payload, sla, postPolicy);
+  if (templatesFor(payload.detected_language).fallback)
+    warnings.push(
+      `No checked reply templates for ${replyLanguage(payload.detected_language).label} yet; the draft is in English.`,
+    );
   const policy = policyCheck(reply.text, payload);
   // Ground the reference in the source message itself, not in the set it came
   // from: the recorded offsets must actually contain the claimed UTR.

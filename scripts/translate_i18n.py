@@ -163,16 +163,22 @@ def write_locale(ui: str, messages: dict[str, str], content: dict[str, str], hea
 
 
 def write_replies(bundles: dict[str, dict], header: str):
-    codes = list(bundles)
     body = json.dumps(bundles, ensure_ascii=False, indent=2)
     text = "\n".join([
         header,
         'import type { ReplyTemplates } from "../replies-authored.ts";', "",
-        "export type GeneratedReplyLanguage =",
-        *[f"  | {ts_string(c)}" for c in codes][:-1], f"  | {ts_string(codes[-1])};", "",
-        "export const GENERATED_REPLIES: Record<GeneratedReplyLanguage, ReplyTemplates> = " + body + ";", "",
+        "export const GENERATED_REPLIES: Record<string, ReplyTemplates> = " + body + ";", "",
     ])
     (GENERATED / "replies.ts").write_text(text, encoding="utf-8")
+
+
+def write_index(uis: list[str], header: str):
+    lines = [header, 'import type { LocaleBundle } from "../catalog.ts";', "",
+             "export const GENERATED_LOCALE_LOADERS: Record<", "  string,",
+             "  () => Promise<{ default: LocaleBundle }>", "> = {"]
+    lines += [f'  {json.dumps(ui)}: () => import("./{ui}.ts"),' for ui in uis]
+    lines += ["};", ""]
+    (GENERATED / "index.ts").write_text("\n".join(lines), encoding="utf-8")
 
 
 def main() -> int:
@@ -200,7 +206,16 @@ def main() -> int:
     ui_pattern, reply_pattern = protector([]), protector(REPLY_TERMS)
     masked = []
     for kind, key, text in segments:
-        m, found = mask(text, reply_pattern if kind == "reply" else ui_pattern)
+        # Indic scripts have no case; ALL-CAPS English labels translate badly
+        # (and protected terms stay protected), so the model sees sentence case.
+        letters = [c for c in text if c.isalpha()]
+        model_text = text
+        if letters and sum(c.isupper() for c in letters) / len(letters) > 0.8 and len(letters) > 3:
+            known = {t.upper(): t for t in COMMON_TERMS}
+            model_text = re.sub(r"[A-Za-z][A-Za-z0-9'.-]*[A-Za-z0-9]|[A-Za-z]",
+                                lambda w: known.get(w.group(0).upper(), w.group(0).lower()), text)
+            model_text = model_text[:1].upper() + model_text[1:]
+        m, found = mask(model_text, reply_pattern if kind == "reply" else ui_pattern)
         masked.append((kind, key, text, m, found))
 
     report = json.loads(Path(args.report).read_text()) if Path(args.report).exists() else {}
@@ -294,6 +309,7 @@ def main() -> int:
     Path(args.report).write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
     if not args.no_write and not args.langs:
         write_replies(reply_bundles, header)
+        write_index([ui for ui, *_ in langs], header)
     elif not args.no_write:
         print("--langs given: replies.ts not rewritten (it needs every language)")
     if not args.no_write and not args.langs:

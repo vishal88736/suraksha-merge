@@ -11,6 +11,7 @@
  * they keep their own Latin-script reply templates. `flores` is the FLORES-200
  * code used by the translation pipeline (scripts/translate_i18n.py).
  */
+import { GENERATED_LOCALE_LOADERS } from "./generated/index.ts";
 
 export type Script =
   | "latin"
@@ -68,7 +69,11 @@ export const SCHEDULED_LANGUAGES = [
 
 type Scheduled = (typeof SCHEDULED_LANGUAGES)[number];
 
-/** Languages the interface chrome can be rendered in: English plus all 22. */
+/**
+ * Languages the interface chrome can be rendered in: English, Hindi
+ * (hand-written) and every scheduled language whose machine-translated
+ * catalog has been generated and checked.
+ */
 export const UI_LOCALES = [
   {
     code: "en",
@@ -78,7 +83,9 @@ export const UI_LOCALES = [
     nativeLabel: "English",
     speech: "en-IN",
   },
-  ...SCHEDULED_LANGUAGES.map((language) => ({
+  ...SCHEDULED_LANGUAGES.filter(
+    (language) => language.ui === "hi" || language.ui in GENERATED_LOCALE_LOADERS,
+  ).map((language) => ({
     code: language.ui,
     htmlLang: language.ui,
     dir: language.dir,

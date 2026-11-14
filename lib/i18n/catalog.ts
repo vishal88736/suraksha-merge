@@ -10,6 +10,7 @@ import {
   registerContent,
   type UiLocale,
 } from "./locales.ts";
+import { GENERATED_LOCALE_LOADERS } from "./generated/index.ts";
 
 const en = {
   "intake.sourceMessage": "View analyzed customer message",
@@ -101,7 +102,7 @@ const en = {
   "intake.customer": "Customer",
   "intake.draft": "Suraksha draft",
   "intake.forReview": "FOR REVIEW",
-  "intake.machineTranslated": "MACHINE TRANSLATION · NEEDS NATIVE REVIEW",
+  "intake.machineTranslated": "MACHINE TRANSLATION · NEEDS REVIEW BY A NATIVE SPEAKER",
   "intake.copyReply": "Copy customer reply",
   "intake.maskPii": "Reveal original briefly",
   "intake.revealRaw": "Reveal raw PII",
@@ -127,7 +128,27 @@ const en = {
   "composer.languageHint":
     "The reply is written in the language detected from your message.",
 
-  "context.toggle": "Operator context",
+  "checklist.title": "What to include",
+  "checklist.emptyHint":
+    "Paste or type the customer's message. Include what happened, the amount and the 12-digit UTR from the bank SMS.",
+  "checklist.progress": "{found} of {total} found",
+  "checklist.optional": "optional",
+  "checklist.openDetails": "Add in Details",
+  "checklist.what": "What happened",
+  "checklist.whatHint":
+    "Say what went wrong: a failed payment, money sent to the wrong UPI ID, a scam call or QR request, or a debit the customer did not make.",
+  "checklist.amount": "Amount",
+  "checklist.amountHint": "Write the amount with ₹ or Rs, for example ₹2,500.",
+  "checklist.utr": "UTR / reference number",
+  "checklist.utrHint":
+    "The 12-digit number from the bank SMS or UPI app, with its label: UTR, Ref No or RRN.",
+  "checklist.when": "When it happened",
+  "checklist.whenHint":
+    "The transaction date or days since it happened, to check the reversal deadline and compensation.",
+  "checklist.fraud": "Reporting delay and responsibility",
+  "checklist.fraudHint":
+    "How many working days before it was reported, and who was at fault, to assess liability.",
+  "context.toggle": "Details (optional)",
   "context.delay": "Reporting delay · working days",
   "context.elapsed": "Elapsed · calendar days",
   "context.responsibility": "Responsibility · requires evidence",
@@ -461,7 +482,27 @@ const hi: Record<MessageKey, string> = {
   "composer.languageHint":
     "उत्तर उसी भाषा में लिखा जाएगा जो आपके संदेश से पहचानी गई।",
 
-  "context.toggle": "ऑपरेटर संदर्भ",
+  "checklist.title": "क्या शामिल करें",
+  "checklist.emptyHint":
+    "ग्राहक का संदेश यहाँ लिखें या पेस्ट करें। क्या हुआ, राशि और बैंक SMS का 12 अंकों वाला UTR शामिल करें।",
+  "checklist.progress": "{total} में से {found} मिले",
+  "checklist.optional": "वैकल्पिक",
+  "checklist.openDetails": "विवरण में जोड़ें",
+  "checklist.what": "क्या हुआ",
+  "checklist.whatHint":
+    "बताएँ क्या गलत हुआ: असफल भुगतान, गलत UPI ID पर पैसे भेजे गए, धोखाधड़ी वाली कॉल या QR अनुरोध, या ऐसा डेबिट जो ग्राहक ने नहीं किया।",
+  "checklist.amount": "राशि",
+  "checklist.amountHint": "राशि ₹ या Rs के साथ लिखें, जैसे ₹2,500।",
+  "checklist.utr": "UTR / संदर्भ संख्या",
+  "checklist.utrHint":
+    "बैंक SMS या UPI ऐप का 12 अंकों वाला नंबर, उसके लेबल के साथ: UTR, Ref No या RRN।",
+  "checklist.when": "कब हुआ",
+  "checklist.whenHint":
+    "लेनदेन की तारीख या कितने दिन बीते, ताकि रिवर्सल की समय-सीमा और मुआवज़ा जाँचा जा सके।",
+  "checklist.fraud": "रिपोर्ट में देरी और ज़िम्मेदारी",
+  "checklist.fraudHint":
+    "रिपोर्ट करने में कितने कार्य दिवस लगे और गलती किसकी थी, ताकि देनदारी आँकी जा सके।",
+  "context.toggle": "विवरण (वैकल्पिक)",
   "context.delay": "रिपोर्ट में देरी · कार्य दिवस",
   "context.elapsed": "बीत गए दिन · कैलेंडर दिवस",
   "context.responsibility": "ज़िम्मेदारी · प्रमाण आवश्यक",
@@ -691,35 +732,8 @@ export type LocaleBundle = {
   content: Record<string, string>;
 };
 
-type GeneratedLocale = Exclude<UiLocale, "en" | "hi">;
-
 /** Generated locales load on demand so the bundle carries only English and Hindi. */
-export const LOCALE_LOADERS: Record<
-  GeneratedLocale,
-  () => Promise<{ default: LocaleBundle }>
-> = {
-  as: () => import("./generated/as.ts"),
-  bn: () => import("./generated/bn.ts"),
-  brx: () => import("./generated/brx.ts"),
-  doi: () => import("./generated/doi.ts"),
-  gu: () => import("./generated/gu.ts"),
-  kn: () => import("./generated/kn.ts"),
-  ks: () => import("./generated/ks.ts"),
-  kok: () => import("./generated/kok.ts"),
-  mai: () => import("./generated/mai.ts"),
-  ml: () => import("./generated/ml.ts"),
-  mni: () => import("./generated/mni.ts"),
-  mr: () => import("./generated/mr.ts"),
-  ne: () => import("./generated/ne.ts"),
-  or: () => import("./generated/or.ts"),
-  pa: () => import("./generated/pa.ts"),
-  sa: () => import("./generated/sa.ts"),
-  sat: () => import("./generated/sat.ts"),
-  sd: () => import("./generated/sd.ts"),
-  ta: () => import("./generated/ta.ts"),
-  te: () => import("./generated/te.ts"),
-  ur: () => import("./generated/ur.ts"),
-};
+export const LOCALE_LOADERS = GENERATED_LOCALE_LOADERS;
 
 export const catalogs: Partial<Record<UiLocale, Record<MessageKey, string>>> = {
   en,
@@ -733,7 +747,9 @@ export function isLocaleLoaded(locale: UiLocale): boolean {
 /** Load a generated locale's catalog and content table. Idempotent. */
 export async function loadLocale(locale: UiLocale): Promise<void> {
   if (catalogs[locale]) return;
-  const { default: bundle } = await LOCALE_LOADERS[locale as GeneratedLocale]();
+  const loader = LOCALE_LOADERS[locale];
+  if (!loader) return; // not generated yet: the interface stays in English
+  const { default: bundle } = await loader();
   catalogs[locale] = bundle.messages;
   registerContent(locale, bundle.content);
 }

@@ -30,7 +30,7 @@ function collect(value: unknown, out: Set<string>, seen = new Set<unknown>()) {
 }
 
 const content = new Set<string>();
-for (const module of [scenarios, mascot, pipeline, policy]) collect(module, content);
+for (const source of [scenarios, mascot, pipeline, policy]) collect(source, content);
 
 process.stdout.write(
   JSON.stringify(

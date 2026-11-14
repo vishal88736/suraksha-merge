@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { triage } from "../lib/engine.ts";
 import { SCENARIOS } from "../lib/content/scenarios.ts";
 import { catalogs, loadLocale, translate } from "../lib/i18n/catalog.ts";
-import { REPLY_TEMPLATES } from "../lib/i18n/replies.ts";
+import { REPLY_TEMPLATES, hasReplyTemplates } from "../lib/i18n/replies.ts";
 import {
   REPLY_LANGUAGES,
   SCHEDULED_LANGUAGES,
@@ -24,9 +24,9 @@ test("every interface locale covers every message key", async () => {
   }
 });
 
-test("every reply language has a complete template bundle", () => {
-  for (const language of REPLY_LANGUAGES) {
-    const bundle = REPLY_TEMPLATES[language.code];
+test("every available reply bundle is complete", () => {
+  for (const language of REPLY_LANGUAGES.filter((l) => hasReplyTemplates(l.code))) {
+    const bundle = REPLY_TEMPLATES[language.code]!;
     assert.ok(bundle, language.code);
     assert.ok(bundle.intro.length > 0);
     assert.ok(bundle.fraud.report.length > 0);
@@ -47,7 +47,7 @@ test("every reply language has a complete template bundle", () => {
 
 test("no template bundle leaves a placeholder unfilled", () => {
   const placeholders = /\{(\w+)\}/g;
-  for (const bundle of Object.values(REPLY_TEMPLATES)) {
+  for (const bundle of Object.values(REPLY_TEMPLATES).filter((b) => b !== undefined)) {
     const texts = [
       bundle.intro,
       ...bundle.fraud.dispute.split("\n"),
@@ -133,12 +133,23 @@ test("placeholders are interpolated and unknown ones are left alone", () => {
   assert.equal(translate("en", "desk.title"), "A clearer next step.");
 });
 
-test("all 22 scheduled languages are interface locales and reply languages", () => {
+test("all 22 scheduled languages are registered; the hand-written ones are always available", () => {
   assert.equal(SCHEDULED_LANGUAGES.length, 22);
-  for (const language of SCHEDULED_LANGUAGES) {
-    assert.ok(UI_LOCALES.some((l) => l.code === language.ui), language.ui);
+  for (const language of SCHEDULED_LANGUAGES)
     assert.ok(REPLY_LANGUAGES.some((l) => l.code === language.reply), language.reply);
-  }
+  for (const code of ["english", "hinglish", "tanglish", "marathi_english", "hindi_devanagari"] as const)
+    assert.ok(hasReplyTemplates(code), code);
+  assert.deepEqual(UI_LOCALES.slice(0, 2).map((l) => l.code).sort(), ["en", "hi"].sort());
+});
+
+test("a language without checked templates gets an English draft and a warning", () => {
+  const missing = REPLY_LANGUAGES.find((l) => !hasReplyTemplates(l.code));
+  if (!missing) return; // every language has been generated
+  const result = triage({ message: "UPI ₹500 debited, beneficiary not credited. UTR 612345678901", language: missing.code });
+  assert.equal(result.payload.detected_language, missing.code);
+  assert.match(result.reply.introduction, /I understand/);
+  assert.ok(result.warnings.some((w) => w.includes("draft is in English")), result.warnings.join("|"));
+  assert.equal(result.audit.no_unauthorized_promises, true);
 });
 
 test("translated interface strings keep every {placeholder} of the English source", async () => {
@@ -155,6 +166,7 @@ test("translated interface strings keep every {placeholder} of the English sourc
 });
 
 test("content prose is translated once a locale is loaded", async () => {
+  if (!UI_LOCALES.some((l) => l.code === "bn")) return; // not generated yet
   await loadLocale("bn");
   const scenario = SCENARIOS[0];
   assert.notEqual(pick(scenario.title, "bn"), scenario.title.en);

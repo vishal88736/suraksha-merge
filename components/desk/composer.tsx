@@ -20,10 +20,12 @@ import {
 import { useI18n } from "../../lib/i18n/provider.tsx";
 import type { TriageInput } from "../../lib/engine.ts";
 import { useDictation } from "../../hooks/use-dictation.ts";
+import { hasReplyTemplates } from "../../lib/i18n/replies.ts";
+import { InputChecklist } from "./input-checklist.tsx";
 
 const REPLY_LANGUAGE_OPTIONS = [
   { code: "auto", label: "Auto-detect language" },
-  ...REPLY_LANGUAGES.map((language) => ({
+  ...REPLY_LANGUAGES.filter((language) => hasReplyTemplates(language.code)).map((language) => ({
     code: language.code,
     label:
       language.nativeLabel === language.label
@@ -142,6 +144,7 @@ export function Composer({
           {input.message.length.toLocaleString()} / 12,000
         </span>
       </div>
+      <InputChecklist input={input} onOpenDetails={() => setAdvanced(true)} />
       <div className="composer-controls">
         <label className="language-select">
           <Globe2 size={14} />

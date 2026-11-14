@@ -4573,3 +4573,72 @@ td strong {
     letter-spacing: 0.7px;
   }
 }
+
+/* Live checklist of what the message still needs. */
+.input-checklist {
+  margin: 10px 0 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--line, #dce7ed);
+  border-radius: 8px;
+  background: #fbfdfe;
+  font-size: 12.5px;
+}
+.input-checklist.empty p {
+  margin: 4px 0 0;
+  color: #5b6b78;
+}
+.checklist-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+.checklist-head span {
+  color: #5b6b78;
+  font-size: 11.5px;
+}
+.input-checklist ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.input-checklist li {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 8px;
+  align-items: start;
+  color: #8a5a12;
+}
+.input-checklist li svg {
+  margin-top: 2px;
+}
+.input-checklist li.done {
+  color: #1f7a4d;
+}
+.checklist-label {
+  font-weight: 600;
+  color: var(--ink, #111b23);
+}
+.checklist-label em {
+  font-style: normal;
+  font-weight: 400;
+  color: #7a8794;
+  margin-inline-start: 6px;
+}
+.checklist-hint {
+  display: block;
+  color: #5b6b78;
+  line-height: 1.45;
+}
+.checklist-hint button {
+  margin-inline-start: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #2b6cb0;
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+}
