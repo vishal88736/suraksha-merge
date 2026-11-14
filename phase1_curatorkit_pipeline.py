@@ -74,7 +74,12 @@ def curate(rows, output, use_presidio=False, use_curatorkit=False, grouped_split
                 toolkit_rejections.append({"sample_id": row["sample_id"], "reason": ["heldout_text_overlap"]})
             else: retained.append(row)
         rows = retained
-    traces = engine_batch([row["input"] for row in rows])
+    # A human reviewer owns the category; for reviewed rows the engine is run
+    # with that category, so the gate still checks every policy-derived field
+    # (tier, actions, facts, reply rails) without overruling the reviewer on a
+    # category the keyword rules cannot recognise.
+    traces = engine_batch([{**row["input"], "__category": row["target"]["dispute_category"]}
+                           if row.get("human_reviewed") and row.get("review_reference") else row["input"] for row in rows])
     reply_inputs = []
     for row, trace in zip(rows, traces, strict=True):
         reply_inputs.extend([{"message": row.get("chosen_reply") or trace["reply"]["text"]}, {"message": row.get("rejected_reply") or "No rejected response"}])
