@@ -476,3 +476,30 @@ test("a transaction date gives the elapsed days, compensation and due date", () 
   assert.equal(future.sla.elapsed_calendar_days, null);
   assert.ok(future.warnings.some((w) => w.includes("after today")));
 });
+
+test("native-script complaints in the most-spoken scheduled languages are classified", () => {
+  const cases: [string, string][] = [
+  ["আমার UPI থেকে ₹500 কেটে গেছে কিন্তু প্রাপক পায়নি", "P2P_BENEFICIARY_NOT_CREDITED"],
+  ["আমার সাথে UPI জালিয়াতি হয়েছে, ₹2000 চলে গেছে", "UNAUTHORIZED_ACCOUNT_TAKEOVER"],
+  ["দোকানে পেমেন্ট ব্যর্থ হয়েছে কিন্তু টাকা কেটে গেছে", "P2M_CONFIRMATION_FAILURE"],
+  ["ভুল করে ভুল UPI ID তে টাকা পাঠিয়েছি", "VOLUNTARY_WRONG_VPA_TRANSFER"],
+  ["என் UPI இலிருந்து ₹500 கழிக்கப்பட்டது ஆனால் பெறுநருக்கு வரவில்லை", "P2P_BENEFICIARY_NOT_CREDITED"],
+  ["UPI மோசடி நடந்தது, பணம் போய்விட்டது", "UNAUTHORIZED_ACCOUNT_TAKEOVER"],
+  ["నా UPI నుండి ₹500 కట్ అయ్యింది కానీ గ్రహీతకు రాలేదు", "P2P_BENEFICIARY_NOT_CREDITED"],
+  ["దుకాణంలో పేమెంట్ విఫలమైంది కానీ డబ్బు కట్ అయ్యింది", "P2M_CONFIRMATION_FAILURE"],
+  ["माझे ₹500 कापले गेले पण प्राप्तकर्त्याला मिळाले नाही", "P2P_BENEFICIARY_NOT_CREDITED"],
+  ["माझी UPI फसवणूक झाली", "UNAUTHORIZED_ACCOUNT_TAKEOVER"],
+  ["મારા ₹500 કપાયા પણ પ્રાપ્તકર્તાને મળ્યા નથી", "P2P_BENEFICIARY_NOT_CREDITED"],
+  ["ನನ್ನ ₹500 ಕಡಿತವಾಗಿದೆ ಆದರೆ ಸ್ವೀಕರಿಸುವವರಿಗೆ ಬಂದಿಲ್ಲ", "P2P_BENEFICIARY_NOT_CREDITED"],
+  ["എന്റെ ₹500 പോയി, കടയിൽ പേയ്മെന്റ് പരാജയപ്പെട്ടു", "P2M_CONFIRMATION_FAILURE"],
+  ["ਮੇਰੇ ₹500 ਕੱਟੇ ਗਏ ਪਰ ਪ੍ਰਾਪਤਕਰਤਾ ਨੂੰ ਨਹੀਂ ਮਿਲੇ", "P2P_BENEFICIARY_NOT_CREDITED"],
+  ["میرے UPI سے ₹500 کٹ گئے لیکن وصول کنندہ کو نہیں ملے", "P2P_BENEFICIARY_NOT_CREDITED"],
+  ["میرے ساتھ UPI فراڈ ہوا ہے", "UNAUTHORIZED_ACCOUNT_TAKEOVER"],
+  ["ମୋ ₹500 କଟିଗଲା କିନ୍ତୁ ପ୍ରାପକ ପାଇନାହାଁନ୍ତି", "P2P_BENEFICIARY_NOT_CREDITED"],
+  ["मेरे ₹500 कट गए लेकिन पाने वाले को नहीं मिले", "P2P_BENEFICIARY_NOT_CREDITED"],
+  ["मेरे साथ UPI धोखाधड़ी हुई", "UNAUTHORIZED_ACCOUNT_TAKEOVER"],
+  ["আমার UPI পেমেন্ট আটকে আছে", "NEEDS_INFORMATION"],
+];
+  for (const [message, category] of cases)
+    assert.equal(triage({ message }).payload.dispute_category, category, message);
+});

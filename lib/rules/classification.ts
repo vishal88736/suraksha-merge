@@ -14,6 +14,31 @@ export type Category =
   | "UNAUTHORIZED_ACCOUNT_TAKEOVER"
   | "NEEDS_INFORMATION";
 
+/**
+ * Native-script keywords for the most-spoken scheduled languages (Bengali,
+ * Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam, Punjabi, Urdu, Odia,
+ * Hindi). Written by the project, not by native speakers: they need the same
+ * native-speaker review as the machine-translated replies. JavaScript \b is
+ * ASCII-only, so these are matched as plain substrings.
+ */
+const NATIVE = {
+  fraud:
+    "জালিয়াতি|প্রতারণা|প্রতারক|হ্যাক|மோசடி|ஹேக்|మోసం|హ్యాక్|फसवणूक|हॅक|છેતરપિંડી|હેક|ವಂಚನೆ|ಮೋಸ|ಹ್ಯಾಕ್|തട്ടിപ്പ്|ഹാക്ക്|ਧੋਖਾਧੜੀ|ਠੱਗੀ|ਹੈਕ|دھوکہ|فراڈ|ہیک|ପ୍ରତାରଣା|ଠକେଇ|धोखाधड़ी|धोखा|ठगी|फ्रॉड|हैक",
+  failed:
+    "ব্যর্থ|தோல்வி|విఫల|अयशस्वी|નિષ્ફળ|ವಿಫಲ|പരാജയ|ਫੇਲ੍ਹ|ਅਸਫਲ|ناکام|ବିଫଳ|विफल|असफल|फेल",
+  notReceived:
+    "পায়নি|পৌঁছায়নি|জমা হয়নি|வரவில்லை|கிடைக்கவில்லை|வரவு வைக்கப்படவில்லை|రాలేదు|అందలేదు|జమ కాలేదు|मिळाले नाही|जमा झाले नाही|પહોંચ્યા નથી|મળ્યા નથી|જમા થયા નથી|ಬಂದಿಲ್ಲ|ತಲುಪಿಲ್ಲ|ಜಮೆ ಆಗಿಲ್ಲ|ലഭിച്ചില്ല|കിട്ടിയില്ല|എത്തിയില്ല|ਨਹੀਂ ਮਿਲੇ|ਨਹੀਂ ਪਹੁੰਚ|نہیں ملے|رقم نہیں ملی|نہیں پہنچ|وصول نہیں|ପାଇନାହାଁନ୍ତି|ପହଞ୍ଚିନାହିଁ|नहीं मिले|पैसे नहीं मिल|रकम नहीं मिल|राशि नहीं मिल|नहीं पहुँच|नहीं पहुंच|जमा नहीं",
+  recipient:
+    "প্রাপক|பெறுந|గ్రహీత|प्राप्तकर्त|પ્રાપ્તકર્ત|ಸ್ವೀಕರಿಸುವವ|സ്വീകർത്താവ|ਪ੍ਰਾਪਤਕਰਤ|وصول کنندہ|ପ୍ରାପକ|पाने वाले",
+  merchant:
+    "দোকান|ব্যবসায়ী|கடை|வணிகர்|దుకాణ|వ్యాపారి|दुकान|व्यापारी|દુકાન|વેપારી|ಅಂಗಡಿ|ವ್ಯಾಪಾರಿ|കട|വ്യാപാരി|ਦੁਕਾਨ|ਵਪਾਰੀ|دکان|دکاندار|ଦୋକାନ|ବ୍ୟବସାୟୀ",
+  wrong:
+    "ভুল|தவறான|తప్పు|चुकीच्या|ખોટા|ತಪ್ಪು|തെറ്റായ|ਗਲਤ|غلط|ଭୁଲ|गलत",
+  mistake:
+    "ভুল করে|ভুলবশত|தவறுதலாக|పొరపాటున|चुकून|ભૂલથી|ತಪ್ಪಾಗಿ|അബദ്ധത്തിൽ|ਗਲਤੀ ਨਾਲ|غلطی سے|ଭୁଲରେ|गलती से|भूल से",
+} as const;
+const native = (key: keyof typeof NATIVE) => new RegExp(NATIVE[key], "u");
+
 /** Remote-access tooling: the customer installed something on their device. */
 export const REMOTE_ACCESS_SIGNALS =
   /anydesk|\.apk\b|remote\s*access|screen[ -]?shar|teamviewer|quick\s*support/i;
@@ -78,13 +103,20 @@ export function classify(text: string): Category {
   if (positive(text, REMOTE_ACCESS_SIGNALS)) return "REMOTE_ACCESS_SCAM";
   if (positive(text, COLLECT_REQUEST_SIGNALS)) return "COLLECT_REQUEST_SCAM";
   // Fraud evidence outranks any benign reading of the same sentence.
-  if (positive(text, FRAUD_SIGNALS)) return "UNAUTHORIZED_ACCOUNT_TAKEOVER";
+  if (positive(text, FRAUD_SIGNALS) || native("fraud").test(text))
+    return "UNAUTHORIZED_ACCOUNT_TAKEOVER";
   // A voluntary transfer needs the customer's own statement of intent.
-  if (WRONG_TRANSFER_SIGNALS.test(text) && VOLUNTARY_INTENT_SIGNALS.test(text))
-    return "VOLUNTARY_WRONG_VPA_TRANSFER";
-  if (TECHNICAL_FAILURE_SIGNALS.test(text) && MERCHANT_SIGNALS.test(text))
+  const wrong = WRONG_TRANSFER_SIGNALS.test(text) || native("wrong").test(text);
+  const intent =
+    VOLUNTARY_INTENT_SIGNALS.test(text) || native("mistake").test(text);
+  if (wrong && intent) return "VOLUNTARY_WRONG_VPA_TRANSFER";
+  const failure =
+    TECHNICAL_FAILURE_SIGNALS.test(text) ||
+    native("failed").test(text) ||
+    native("notReceived").test(text);
+  if (failure && (MERCHANT_SIGNALS.test(text) || native("merchant").test(text)))
     return "P2M_CONFIRMATION_FAILURE";
-  if (TECHNICAL_FAILURE_SIGNALS.test(text) && P2P_SIGNALS.test(text))
+  if (failure && (P2P_SIGNALS.test(text) || native("recipient").test(text)))
     return "P2P_BENEFICIARY_NOT_CREDITED";
   return "NEEDS_INFORMATION";
 }
