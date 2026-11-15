@@ -52,8 +52,8 @@ export const PIPELINE_STAGES: PipelineStage[] = [
       },
     ],
     status: {
-      en: "Local curation + optional CuratorKIT pass",
-      hi: "स्थानीय संचयन + वैकल्पिक CuratorKIT पास",
+      en: "Done · 934 cases curated with CuratorKIT 0.1.21; 810 human-reviewed cases in training",
+      hi: "पूरा · CuratorKIT 0.1.21 से 934 केस संकलित; 810 मानव-समीक्षित केस प्रशिक्षण में",
     },
     path: "python3 phase1_curatorkit_pipeline.py --demo",
   },
@@ -83,8 +83,8 @@ export const PIPELINE_STAGES: PipelineStage[] = [
       },
     ],
     status: {
-      en: "Requires compatible GPU + reviewed data",
-      hi: "संगत GPU + समीक्षित डेटा आवश्यक",
+      en: "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)",
+      hi: "पूरा · 810 समीक्षित केस पर QLoRA SFT, RTX 4050 (6 GB)",
     },
     path: "python3 phase2_aligntune_train_and_merge.py --stage plan",
   },
@@ -99,8 +99,8 @@ export const PIPELINE_STAGES: PipelineStage[] = [
       hi: "एक परिकल्पना, जाँच के लिए तैयार।",
     },
     details: {
-      en: "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider configures an experiment; it does not change this rule-based preview or demonstrate model quality.",
-      hi: "संगत LoRA मर्ज से भारित पैरामीटर अपडेट को संयोजित करें। सत्यापन डेटा पर वज़न sweep करें, जिसमें दोनों अनमर्ज विशेषज्ञ शामिल हैं। स्लाइडर चलाना केवल प्रयोग कॉन्फ़िगर करता है; यह इस नियम-आधारित पूर्वावलोकन को नहीं बदलता और मॉडल की गुणवत्ता प्रमाणित नहीं करता।",
+      en: "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider shows the measured result where one exists; it does not change the served model.",
+      hi: "संगत LoRA मर्ज से भारित पैरामीटर अपडेट को संयोजित करें। सत्यापन डेटा पर वज़न sweep करें, जिसमें दोनों अनमर्ज विशेषज्ञ शामिल हैं। जहाँ मापा गया परिणाम है, स्लाइडर उसे दिखाता है; यह चल रहे मॉडल को नहीं बदलता।",
     },
     outputs: [
       { en: "ΔW = λA · ΔWA + λB · ΔWB", hi: "ΔW = λA · ΔWA + λB · ΔWB" },
@@ -114,8 +114,8 @@ export const PIPELINE_STAGES: PipelineStage[] = [
       },
     ],
     status: {
-      en: "Configuration preview · no merged checkpoint yet",
-      hi: "कॉन्फ़िगरेशन पूर्वावलोकन · अभी कोई मर्ज चेकपॉइंट नहीं",
+      en: "Measured in the pilot · the 0.55/0.45 merge was worse, so it is not used",
+      hi: "पायलट में मापा गया · 0.55/0.45 मर्ज खराब रहा, इसलिए उपयोग नहीं होता",
     },
     path: "python3 phase2_aligntune_train_and_merge.py --stage merge",
   },
@@ -148,19 +148,10 @@ export const PIPELINE_STAGES: PipelineStage[] = [
       },
     ],
     status: {
-      en: "Offline scorer ready · model evaluation pending",
-      hi: "ऑफ़लाइन स्कोरर तैयार · मॉडल मूल्यांकन लंबित",
+      en: "Done · every model evaluated; results in the Benchmark lab",
+      hi: "पूरा · हर मॉडल का मूल्यांकन; परिणाम बेंचमार्क लैब में",
     },
     path: "python3 phase3_auditkit_eval.py --help",
   },
 ];
 
-/** The checkpoints the benchmark lab tracks, in ablation order. */
-export const BENCHMARK_CHECKPOINTS = [
-  "Base Qwen2.5-3B",
-  "Uncurated multitask SFT",
-  "Curated monolithic SFT",
-  "Adapter A · schema RLVR",
-  "Adapter B · empathy DPO",
-  "Suraksha-Merge · A + B",
-] as const;

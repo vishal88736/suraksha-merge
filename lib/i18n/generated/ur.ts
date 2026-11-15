@@ -58,7 +58,7 @@ const bundle: LocaleBundle = {
     "desk.pipelineTitle": "ایک پائپ لائن۔ دو ماہر۔",
     "desk.pipelineSubtitle": "شور والے پیغام سے لے کر قابل تصدیق جواب تک کے سفر کی پیروی کریں۔",
     "desk.benchmarksTitle": "اعتماد سے پہلے ثبوت۔",
-    "desk.benchmarksSubtitle": "چھ چیک پوائنٹس۔ ایک ہولڈ آؤٹ بینچ مارک۔ کوئی ایجاد شدہ نتائج نہیں۔",
+    "desk.benchmarksSubtitle": "ہر ماڈل جس کی ہم نے تربیت کی، اسی ہولڈ آؤٹ کیسوں پر ماپا گیا۔ کوئی ایجاد شدہ نتائج نہیں۔",
     "desk.policyTitle": "قواعد میں گراؤنڈ.",
     "desk.policySubtitle": "ہر ٹرائیج کی سفارش کے پیچھے ورژن شدہ بنیادی ذرائع۔",
     "workflow.message": "کسٹمر کا پیغام",
@@ -83,7 +83,7 @@ const bundle: LocaleBundle = {
     "warning.amountConflict": "متضاد رقوم پائی گئیں ؛ ایک شخص کو رقم کی تصدیق کرنی ہوگی۔",
     "warning.delayConflict": "رپورٹنگ میں تاخیر واضح نہیں ہے یا حد سے باہر ہے ؛ بینک کو اس کی تصدیق کرنی ہوگی۔",
     "warning.responsibilityUnverified": "ذمہ داری اور اختیار کی تصدیق نہیں کی گئی ہے۔ صرف 3 کام کے دنوں کے اندر رپورٹنگ صفر ذمہ داری قائم نہیں کرتی ہے۔",
-    "warning.policy2027": "یکم جنوری 2027 سے ہونے والے لین دین پر آنے والی RBI ذمہ داری ترمیم کے تحت نظر ثانی کی ضرورت ہے۔",
+    "warning.policy2027": "Transactions from 1 January 2027 need review under the upcoming RBI liability amendment.",
     "warning.noTemplates": "{language} کے لیے ابھی تک کوئی چیک شدہ جوابی ٹیمپلیٹس نہیں ہیں ؛ مسودہ انگریزی میں ہے۔",
     "intake.replyByModel": "ماڈل کی طرف سے لکھا گیا",
     "intake.replyTemplate": "ٹیمپلیٹ جواب · ماڈل کا جواب ایک چیک میں ناکام رہا: {reasons}",
@@ -220,27 +220,20 @@ const bundle: LocaleBundle = {
     "pipeline.outputs": "یہ مرحلہ کیا پیدا کرتا ہے",
     "pipeline.note": "ہر مرحلہ اپنی ماخذ شناخت کو آگے لے جاتا ہے۔ ناکام نمونوں کو ریکارڈ کیا جاتا ہے، جہاں جائز ہے وہاں مرمت کی جاتی ہے، پھر دوبارہ جانچ کی جاتی ہے۔",
     "pipeline.experimentEyebrow": "ٹاسک ریاضی کا تجربہ",
-    "pipeline.experimentTitle": "توازن تلاش کریں۔ نتیجہ کی پیمائش کریں۔",
-    "pipeline.experimentBody": "سلائیڈر آف لائن انضمام کو ترتیب دیتا ہے۔ انضمام کے بعد ماڈل کی کارکردگی کا جائزہ لینا ضروری ہے۔",
+    "pipeline.experimentTitle": "ہم نے بیلنس ناپا۔ اس کا فائدہ نہیں ہوا۔",
+    "pipeline.experimentBody": "پائلٹ میں، اسکیما اور ہمدردی کے ماہرین کو 0.55 / 0.45 پر ضم کرنے سے تمام فیلڈ کی درستگی (72.8% → 0%) ختم ہو جاتی ہے، اس لیے ضم کرنے کا استعمال نہیں کیا جاتا ہے۔ پیش کردہ ماڈل انسانی جائزہ شدہ ڈیٹا پر سادہ SFT ہوتے ہیں۔",
     "pipeline.specialistA": "سکیما ماہر",
     "pipeline.specialistB": "ہمدردی کے ماہر",
     "pipeline.empathyOnly": "صرف ہمدردی",
     "pipeline.schemaOnly": "صرف اسکیما",
-    "pipeline.resetMix": "0. 05/0. 45 پر ری سیٹ کریں",
+    "pipeline.resetMix": "0.55 / 0.45 پر دوبارہ سیٹ کریں",
     "pipeline.exportMix": "ایکسپورٹ ضم کنفیگریشن",
-    "bench.noteTitle": "تجربہ ترتیب دیا جاتا ہے۔ اس کے بعد ثبوت آتا ہے۔",
-    "bench.noteBody": "تجویز کی فیصد اور لاگت کے تخمینے کی پیمائش نہیں کی گئی ہے۔ اس جدول میں صرف قابل شناخت تشخیص کے نتائج شامل ہوں گے۔",
-    "bench.notEvaluated": "ابھی تک تشخیص نہیں کی گئی",
-    "bench.ablation": "چیک پوائنٹ ابلیشن",
-    "bench.ablationBody": "تمام ماہرین اور بیس لائنز، ایک ہی ہولڈ آؤٹ کیسوں پر ان کا جائزہ لیا گیا۔",
+    "bench.noteTitle": "ہولڈ آؤٹ ڈیٹا پر ماپا گیا، وعدہ نہیں کیا گیا۔",
+    "bench.noteBody": "نیچے دیا گیا ہر نمبر ان معاملات پر ریکارڈ شدہ رن سے آتا ہے جن پر ماڈلز نے کبھی تربیت حاصل نہیں کی تھی۔ جائزے کے سیٹ پر صرف 100% اسکور کرنے والے قواعد کی توقع کی جاتی ہے: وہ لیبل قواعد سے اتفاق کرنے کے لیے بنائے گئے تھے۔",
+    "bench.ablation": "انسانی جائزہ شدہ ڈیٹا پر تربیت یافتہ ماڈل",
+    "bench.ablationBody": "حقیقی پائپ لائن کے ذریعے رن ٹائم کے نتائج: ماڈل، چیک، اور (جہاں نوٹ کیا گیا ہے) پالیسی کے قواعد۔",
     "bench.colCheckpoint": "چیک پوائنٹ",
-    "bench.colSchema": "اسکیما پاس",
-    "bench.colFields": "فیلڈ عین مطابق میچ",
-    "bench.colUnsafe": "غیر محفوظ ضمانتیں",
-    "bench.colEmpathy": "ہمدردی/chrF",
-    "bench.colStatus": "حیثیت",
-    "bench.awaitingRun": "دوڑنے کا انتظار",
-    "bench.awaitingTraining": "تربیت کا انتظار",
+    "bench.colFields": "تمام فیلڈز درست ہیں",
     "bench.splitTitle": "منظر نامے کے لحاظ سے خاندان کو تقسیم کریں",
     "bench.splitBody": "پیرافریسز، SMS ٹیمپلیٹس اور اسی کیس کے مرمت شدہ ورژن کو ایک تقسیم میں رکھیں۔ ضم شدہ وزن کو منتخب کرنے سے پہلے ٹیسٹ سیٹ کو منجمد کریں۔",
     "bench.empathyTitle": "ہمدردی کے لیے انسان کی ضرورت ہوتی ہے",
@@ -249,15 +242,29 @@ const bundle: LocaleBundle = {
     "bench.failureBody": "غلط معلومات JSON، من گھڑت UTRs، غیر تعاون یافتہ ضمانتوں اور ہر معاملے میں گمشدہ کشیدگی کے اقدامات کی اطلاع دیں۔ بوٹسٹریپ جوڑے کے اختلافات۔",
     "bench.adversarialEyebrow": "مخالف سوٹ",
     "bench.adversarialTitle": "دباؤ سے پالیسی میں تبدیلی نہیں ہونی چاہیے۔",
-    "bench.adversarialBody": "موجودہ تعیناتی پیش نظارہ کے خلاف رقم کی واپسی کے جبر کا مقدمہ آزمائیں۔",
+    "bench.adversarialBody": "لائیو ماڈل کے خلاف رقم کی واپسی کے جبر کا مقدمہ آزمائیں: رقم کی واپسی کا وعدہ نہیں کیا جانا چاہیے۔",
     "bench.adversarialCta": "کھلا مخالفانہ منظر نامہ",
+    "bench.measuredOn": "پیمائش شدہ {date}",
+    "bench.colReviewed": "54 جائزہ لیے گئے معاملات · تمام شعبوں میں",
+    "bench.colChallenge": "42 نامعلوم زمرہ",
+    "bench.colReview": "انسانی جائزے کی ضرورت ہے",
+    "bench.colLatency": "وقت/جواب",
+    "bench.colSource": "ہر نمبر کے لیے ثبوت کی فائل",
+    "bench.colUtility": "یوٹیلیٹی",
+    "bench.mostAccurate": "سب سے زیادہ درست",
+    "bench.defaultMode": "موجودہ ڈیفالٹ",
+    "bench.footnote": "* جائزے والے سیٹ پر صرف قواعد ہی اسکور کرتے ہیں 100% کیونکہ وہ لیبل قواعد سے اتفاق کرنے کے لیے بنائے گئے تھے۔ غیر واقف الفاظ کا سیٹ منصفانہ موازنہ ہے۔ اس وقت کے قواعد سے ماپا جاتا ہے۔ غیر واقف الفاظ کا سیٹ پروجیکٹ کے ذریعے لیبل کیا جاتا ہے، انسانی جائزہ نہیں لیا جاتا ہے۔ حقیقی صارفین کے پیغامات پر کسی چیز کا اندازہ نہیں کیا گیا ہے۔",
+    "bench.pilotTitle": "راؤنڈ 1 پائلٹس: غیر جائزہ شدہ ڈیٹا",
+    "bench.pilotBody": "انسانی جائزے سے پہلے، 92 مصنوعی کیسوں پر خام ماڈل آؤٹ پٹ کو AuditKIT سے اسکور کیا گیا۔ ان پائلٹوں نے اصل پلان کا تجربہ کیا: GRPO، ہمدردی DPO اور وزنی انضمام۔",
+    "pipeline.measuredAt": "پیمائش شدہ (پائلٹ، 92 مصنوعی کیس): سخت JSON {schema}، تمام فیلڈز عین مطابق {fields}، افادیت {utility}۔",
+    "pipeline.notMeasured": "اس وزن پر ناپا نہیں گیا۔ صرف 1.00 / 0.00، 0.55 / 0.45 اور 0.00 / 1.00 چلائے گئے۔",
     "policy.search": "سرچ ذرائع، قواعد یا ادارے...",
     "policy.empty": "کوئی مماثل ذرائع نہیں",
     "policy.clear": "تلاش صاف کریں",
     "policy.disclaimerTitle": "فیصلہ کی حمایت کرنے والا تحقیقی ٹول۔",
     "policy.disclaimerBody": "یہ ذرائع اندرونی ٹرائیج پالیسی کو مطلع کرتے ہیں۔ یہ ایپلی کیشن بینک، ریگولیٹر، آفیشل UDIR گیٹ وے یا تعمیل کی تصدیق نہیں ہے۔ آپریشنل استعمال سے پہلے اطلاق اور ترامیم کا جائزہ لیں۔",
     "footer.tagline": "سوچ سمجھ کر کیے گئے فیصلے۔ قابل سراغ فیصلے۔",
-    "footer.version": "Suraksha-Merge · تحقیق پیش نظارہ v0. 1",
+    "footer.version": "Suraksha-Merge · تحقیق کا پیش نظارہ v0.1",
     "mascot.hideHint": "اشارہ چھپائیں",
     "mascot.dismissHint": "اشارہ مسترد کریں",
     "error.unavailable": "ٹریج دستیاب نہیں ہے۔ دوبارہ کوشش کریں۔",
@@ -345,13 +352,11 @@ const bundle: LocaleBundle = {
     "Bank negligence, third-party breach and customer negligence have different rules. Working days exclude the date of receiving the bank communication.":
       "بینک کی لاپرواہی، تیسرے فریق کی خلاف ورزی اور صارفین کی لاپرواہی کے مختلف قوانین ہیں۔ کام کے دنوں میں بینک سے رابطہ حاصل کرنے کی تاریخ شامل نہیں ہے۔",
     "Commercial-bank amendment applies to transactions on or after 1 January 2027; new cases from that date require policy revalidation.":
-      "کمرشل بینک ترمیم کا اطلاق یکم جنوری 2027 کو یا اس کے بعد ہونے والے لین دین پر ہوتا ہے۔ اس تاریخ سے نئے معاملات میں پالیسی کی تجدید کی ضرورت ہوتی ہے۔",
+      "Commercial-bank amendment applies to transactions on or after 1 January 2027; new cases from that date require policy revalidation.",
     "Compare all six checkpoints on held-out scenario groups. Score the full JSON schema, all extracted fields, inappropriate guarantees and required actions. Keep human-rated empathy separate from lexical ChrF, and use paired bootstrap intervals rather than treating a single percentage as proof.":
       "ہولڈ آؤٹ منظرنامہ گروپوں پر تمام چھ چیک پوائنٹس کا موازنہ کریں۔ مکمل JSON اسکیما، تمام نکالے گئے فیلڈز، نامناسب ضمانتوں اور مطلوبہ اعمال کو اسکور کریں۔ انسانی درجہ بندی کی ہمدردی کو لفظی CHrF سے الگ رکھیں، اور ایک فیصد کو ثبوت کے طور پر استعمال کرنے کے بجائے جوڑے دار بوٹسٹریپ وقفوں کا استعمال کریں۔",
-    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider configures an experiment; it does not change this rule-based preview or demonstrate model quality.":
-      "ہم آہنگ LoRA ضم کا استعمال کرتے ہوئے وزن والے پیرامیٹر کی اپ ڈیٹس مرتب کریں۔ توثیق کے ڈیٹا پر وزن کو صاف کریں، بشمول دو غیر ضم شدہ ماہرین۔ سلائیڈر کو منتقل کرنے سے ایک تجربہ تشکیل پاتا ہے۔ یہ اس اصول پر مبنی پیش نظارہ کو تبدیل نہیں کرتا ہے یا ماڈل کے معیار کو ظاہر نہیں کرتا ہے۔",
-    "Configuration preview · no merged checkpoint yet":
-      "ترتیب پیش نظارہ · ابھی تک کوئی ضم شدہ چیک پوائنٹ نہیں ہے",
+    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider shows the measured result where one exists; it does not change the served model.":
+      "ہم آہنگ LoRA ضم کا استعمال کرتے ہوئے وزن والے پیرامیٹر کی اپ ڈیٹس مرتب کریں۔ توثیق کے ڈیٹا پر وزن کو صاف کریں، بشمول دو غیر ضم شدہ ماہرین۔ سلائیڈر کو منتقل کرنے سے ناپا ہوا نتیجہ ظاہر ہوتا ہے جہاں ایک موجود ہے۔ یہ پیش کردہ ماڈل کو تبدیل نہیں کرتا ہے۔",
     "Controls · base, uncurated SFT and curated joint SFT":
       "کنٹرولز بیس، غیر ترتیب شدہ SFT اور کیوریٹڈ جوائنٹ SFT",
     "Curate with care":
@@ -360,6 +365,12 @@ const bundle: LocaleBundle = {
       "ڈیٹا سیٹ A· سخت JSON + فیلڈ پروویننس",
     "Dataset B · chosen / rejected customer replies":
       "ڈیٹا سیٹ B · منتخب/مسترد شدہ گاہکوں کے جوابات",
+    "Done · 934 cases curated with CuratorKIT 0.1.21; 810 human-reviewed cases in training":
+      "CuratorKIT 0.1.21 کے ساتھ تیار کردہ · 934 مقدمات ؛ تربیت میں 810 انسانی جائزہ لینے والے معاملات",
+    "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)":
+      "کیا گیا · QLoRA SFT 810 جائزہ شدہ معاملات پر، RTX 4050 (6 جی بی)",
+    "Done · every model evaluated; results in the Benchmark lab":
+      "ہر ماڈل کا جائزہ لیا گیا ؛ بینچ مارک لیب میں نتائج",
     "Every claim needs a measured result.":
       "ہر دعوے کے لیے ایک پیمائش شدہ نتیجہ درکار ہوتا ہے۔",
     "Found":
@@ -374,20 +385,18 @@ const bundle: LocaleBundle = {
       "دیر سے دھوکہ دہی کی رپورٹ · ضمانت شدہ رقم کی واپسی کا جبر",
     "Listening":
       "سننا۔",
-    "Local curation + optional CuratorKIT pass":
-      "لوکل کیوریشن + اختیاری CuratorKIT پاس",
     "Make quality visible":
       "معیار کو ظاہر کریں",
     "Manifest · source hashes, split IDs and rejection reasons":
       "مینی فیسٹ · ماخذ ہیش، تقسیم شدہ شناختی کارڈ اور مسترد ہونے کی وجوہات",
+    "Measured in the pilot · the 0.55/0.45 merge was worse, so it is not used":
+      "پائلٹ میں ماپا گیا · 0.55/0.45 انضمام بدتر تھا، اس لیے اسے استعمال نہیں کیا جاتا ہے",
     "Merge & investigate":
       "ضم کریں اور تفتیش کریں",
     "Merge manifest · base, tokenizer and adapter identities":
       "مینیفیسٹ · بیس، ٹوکنائزر اور اڈاپٹر شناختوں کو ضم کریں",
     "NPCI · Dispute redressal":
       "NPCI تنازعہ کا ازالہ",
-    "Offline scorer ready · model evaluation pending":
-      "آف لائن اسکورر تیار · ماڈل کی تشخیص زیر التواء ہے",
     "QR request · ₹24,500 · reported today":
       "کیو آر درخواست · ₹24,500 · آج رپورٹ کی گئی",
     "RBI · Customer liability":
@@ -410,8 +419,6 @@ const bundle: LocaleBundle = {
       "1930 اور cybercrime.gov.in کے ذریعے فوری طور پر مالیاتی سائبر فراڈ کی اطلاع دیں۔ بازیابی کی ضمانت نہیں ہے۔",
     "Report · per-case evidence + paired bootstrap deltas":
       "رپورٹ کریں · فی کیس ثبوت + جوڑی دار بوٹسٹریپ ڈیلٹا",
-    "Requires compatible GPU + reviewed data":
-      "مطابقت پذیر جی پی یو + جائزہ شدہ ڈیٹا درکار ہے",
     "Sent to the wrong person":
       "غلط شخص کو بھیجا گیا",
     "Start with synthetic or authorised customer chats. Mask sensitive identities, retain only context-labelled transaction references, validate fields against source spans, and separate schema targets from same-task preference pairs.":

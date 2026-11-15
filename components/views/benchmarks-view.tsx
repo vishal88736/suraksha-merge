@@ -10,14 +10,14 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { useI18n } from "../../lib/i18n/provider.tsx";
-import { BENCHMARK_CHECKPOINTS } from "../../lib/content/pipeline.ts";
+import { CURRENT_RESULTS, MEASURED_AT, PILOT_RESULTS } from "../../lib/content/benchmarks.ts";
 
 export function BenchmarksView({
   onOpenScenario,
 }: {
   onOpenScenario: () => void;
 }) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   return (
     <div className="benchmark-view">
       <div className="benchmark-note">
@@ -26,7 +26,7 @@ export function BenchmarksView({
           <strong>{t("bench.noteTitle")}</strong>
           <p>{t("bench.noteBody")}</p>
         </div>
-        <span className="pill soft">{t("bench.notEvaluated")}</span>
+        <span className="pill soft">{t("bench.measuredOn", { date: MEASURED_AT })}</span>
       </div>
       <div className="panel table-panel">
         <div className="panel-heading">
@@ -41,35 +41,75 @@ export function BenchmarksView({
             <thead>
               <tr>
                 <th>{t("bench.colCheckpoint")}</th>
-                <th>{t("bench.colSchema")}</th>
-                <th>{t("bench.colFields")}</th>
-                <th>{t("bench.colUnsafe")}</th>
-                <th>{t("bench.colEmpathy")}</th>
-                <th>{t("bench.colStatus")}</th>
+                <th>{t("bench.colReviewed")}</th>
+                <th>{t("bench.colChallenge")}</th>
+                <th>{t("bench.colReview")}</th>
+                <th>{t("bench.colLatency")}</th>
               </tr>
             </thead>
             <tbody>
-              {BENCHMARK_CHECKPOINTS.map((name, index) => (
-                <tr key={name} className={index === 5 ? "merge-row" : ""}>
+              {CURRENT_RESULTS.map((row) => (
+                <tr key={row.model} className={row.highlight ? "merge-row" : ""}>
                   <td>
-                    {index === 5 ? (
-                      <GitMerge size={15} />
-                    ) : (
-                      <Layers3 size={15} />
-                    )}
-                    <strong>{name}</strong>
-                  </td>
-                  <td>—</td>
-                  <td>—</td>
-                  <td>—</td>
-                  <td>— / —</td>
-                  <td>
-                    <span className="pill soft">
-                      {index === 0
-                        ? t("bench.awaitingRun")
-                        : t("bench.awaitingTraining")}
+                    <Layers3 size={15} />
+                    <span className="bench-name">
+                      <strong>{row.model}</strong>
+                      <small className="bench-detail">
+                        {locale === "hi" ? row.detail.hi : row.detail.en}
+                        {row.highlight === "served" && ` · ${t("bench.mostAccurate")}`}
+                        {row.highlight === "default" && ` · ${t("bench.defaultMode")}`}
+                      </small>
                     </span>
                   </td>
+                  <td>{row.reviewedAllFields}</td>
+                  <td>{row.challengeCategory}</td>
+                  <td>{row.review}</td>
+                  <td>{row.latency}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="bench-footnote">{t("bench.footnote")}</p>
+        <details className="bench-sources">
+          <summary>{t("bench.colSource")}</summary>
+          <ul>
+            {CURRENT_RESULTS.map((row) => (
+              <li key={row.model}>
+                <strong>{row.model}</strong>: <code>{row.source}</code>
+              </li>
+            ))}
+          </ul>
+        </details>
+      </div>
+      <div className="panel table-panel">
+        <div className="panel-heading">
+          <div>
+            <h2>{t("bench.pilotTitle")}</h2>
+            <p>{t("bench.pilotBody")}</p>
+          </div>
+          <GitMerge size={20} />
+        </div>
+        <div className="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>{t("bench.colCheckpoint")}</th>
+                <th>{t("bench.colUtility")}</th>
+                <th>{t("bench.colFields")}</th>
+                <th>{t("bench.colLatency")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {PILOT_RESULTS.map((row) => (
+                <tr key={row.model}>
+                  <td>
+                    <Layers3 size={15} />
+                    <strong>{row.model}</strong>
+                  </td>
+                  <td>{row.utility}</td>
+                  <td>{row.allFields}</td>
+                  <td>{row.latency}</td>
                 </tr>
               ))}
             </tbody>

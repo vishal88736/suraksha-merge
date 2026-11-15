@@ -58,7 +58,7 @@ const bundle: LocaleBundle = {
     "desk.pipelineTitle": "एउटा पाइपलाइन, दुई विशेषज्ञ।",
     "desk.pipelineSubtitle": "कोलाहलपूर्ण सन्देशबाट प्रमाणित प्रतिक्रियासम्मको यात्रालाई पछ्याउनुहोस्।",
     "desk.benchmarksTitle": "विश्वासभन्दा पहिले प्रमाण।",
-    "desk.benchmarksSubtitle": "छवटा चेकपोइन्टहरू। एउटा होल्ड-आउट बेन्चमार्क। कुनै आविष्कार गरिएको परिणामहरू छैनन्।",
+    "desk.benchmarksSubtitle": "हामीले प्रशिक्षण दिएका प्रत्येक मोडेल, समान होल्ड-आउट केसहरूमा मापन गरियो। कुनै आविष्कार गरिएको परिणामहरू छैनन्।",
     "desk.policyTitle": "नियमहरूमा आधारित।",
     "desk.policySubtitle": "प्रत्येक ट्राइएज सिफारिस पछाडिको संस्करण प्राथमिक स्रोतहरू।",
     "workflow.message": "ग्राहक सन्देश",
@@ -220,27 +220,20 @@ const bundle: LocaleBundle = {
     "pipeline.outputs": "यस चरणले के उत्पादन गर्छ",
     "pipeline.note": "प्रत्येक चरणले यसको स्रोत पहिचानलाई अगाडि बढाउँछ। असफल नमूनाहरू रेकर्ड गरिन्छ, जहाँ उचित छ त्यहाँ मर्मत गरिन्छ, त्यसपछि फेरि जाँच गरिन्छ।",
     "pipeline.experimentEyebrow": "कार्य-अंकगणितीय प्रयोग",
-    "pipeline.experimentTitle": "सन्तुलन खोज्नुहोस्। परिणाम मापन गर्नुहोस्।",
-    "pipeline.experimentBody": "स्लाइडरले अफलाइन मर्ज कन्फिगर गर्दछ। मर्ज गरेपछि मोडेल प्रदर्शनको मूल्याङ्कन गर्नुपर्छ।",
+    "pipeline.experimentTitle": "हामीले ब्यालेन्स मापन गर्यौँ। यसले भुक्तान गरेन।",
+    "pipeline.experimentBody": "पायलटमा, 0.55 / 0.45 मा स्किमा र समानुभूति विशेषज्ञहरू मर्ज गर्दा सबै-क्षेत्र सटीकता (72.8% → 0%) हरायो, त्यसैले मर्ज प्रयोग हुँदैन। सेवा गरिएका मोडेलहरू मानव-समीक्षा डेटामा सादा SFT हुन्।",
     "pipeline.specialistA": "स्किमा विशेषज्ञ",
     "pipeline.specialistB": "समानुभूति विशेषज्ञ",
     "pipeline.empathyOnly": "सहानुभूति मात्र",
     "pipeline.schemaOnly": "योजना मात्र",
-    "pipeline.resetMix": "0.55/0.45 मा पुनः सेट गर्नुहोस्",
+    "pipeline.resetMix": "0.55 / 0.45 मा रिसेट गर्नुहोस्",
     "pipeline.exportMix": "निर्यात मर्ज कन्फिगरेसन",
-    "bench.noteTitle": "प्रयोग सेट अप गरिएको छ। प्रमाण अर्को आउँछ।",
-    "bench.noteBody": "प्रस्तावको प्रतिशत र लागत अनुमान मापन गरिएको छैन। यो तालिकाले पहिचान योग्य मूल्याङ्कन रनहरूबाट मात्र परिणामहरू समावेश गर्नेछ।",
-    "bench.notEvaluated": "अहिलेसम्म मूल्याङ्कन गरिएको छैन",
-    "bench.ablation": "चेकपोइन्ट एब्लेसन",
-    "bench.ablationBody": "सबै विशेषज्ञहरू र आधारभूतहरू, समान आयोजित-आउट केसहरूमा मूल्याङ्कन गरियो।",
+    "bench.noteTitle": "आयोजित डेटामा मापन गरिएको, प्रतिज्ञा गरिएको छैन।",
+    "bench.noteBody": "तलको प्रत्येक नम्बर मोडेलहरूले कहिल्यै प्रशिक्षण नदिएका केसहरूमा रेकर्ड गरिएको रनबाट आउँछ। समीक्षा गरिएको सेटमा 100% स्कोर गर्ने नियमहरू मात्र अपेक्षित छन्ः ती लेबलहरू नियमहरूसँग सहमत हुन बनाइएको थियो।",
+    "bench.ablation": "मानव-समीक्षा गरिएको डेटामा प्रशिक्षित मोडेलहरू",
+    "bench.ablationBody": "वास्तविक पाइपलाइन मार्फत रनटाइम परिणामहरूः मोडेल, जाँचहरू, र (जहाँ उल्लेख गरिएको छ) नीति नियमहरू।",
     "bench.colCheckpoint": "चेकपोइन्ट",
-    "bench.colSchema": "स्किमा पास",
-    "bench.colFields": "फिल्ड सटीक खेल",
-    "bench.colUnsafe": "असुरक्षित ग्यारेन्टीहरू",
-    "bench.colEmpathy": "समानुभूति/chrF",
-    "bench.colStatus": "स्थिति",
-    "bench.awaitingRun": "दौडको प्रतीक्षा",
-    "bench.awaitingTraining": "प्रशिक्षणको प्रतीक्षा",
+    "bench.colFields": "सबै क्षेत्रहरू सही",
     "bench.splitTitle": "परिदृश्य परिवारद्वारा विभाजन",
     "bench.splitBody": "प्याराफ्रेजहरू, SMS टेम्प्लेटहरू र एउटै केसका मर्मत गरिएका संस्करणहरू एउटै विभाजनमा राख्नुहोस्। मर्ज तौलहरू चयन गर्नु अघि परीक्षण सेटलाई फ्रिज गर्नुहोस्।",
     "bench.empathyTitle": "समानुभूतिको लागि मानवको आवश्यकता हुन्छ।..............................................................................................................................................................................................",
@@ -249,8 +242,22 @@ const bundle: LocaleBundle = {
     "bench.failureBody": "विकृत JSON, बनावटी UTRs, असमर्थित ग्यारेन्टीहरू र प्रति केस एस्केलेसन कार्यहरू हराइरहेको रिपोर्ट गर्नुहोस्। बुटस्ट्र्याप जोडी भिन्नताहरू।",
     "bench.adversarialEyebrow": "प्रतिद्वन्द्वी सुइट",
     "bench.adversarialTitle": "दबाबले नीति परिवर्तन गर्नु हुँदैन।",
-    "bench.adversarialBody": "हालको निर्धारक पूर्वावलोकन विरुद्ध फिर्ती-जबरजस्ती मुद्दाको प्रयास गर्नुहोस्।",
+    "bench.adversarialBody": "प्रत्यक्ष मोडेल विरुद्ध फिर्ती-जबरजस्ती मुद्दाको प्रयास गर्नुहोस्ः कुनै फिर्तीको प्रतिज्ञा गर्नु हुँदैन।",
     "bench.adversarialCta": "खुला प्रतिकूल परिदृश्य",
+    "bench.measuredOn": "मापन गरिएको {date}",
+    "bench.colReviewed": "54 समीक्षा गरिएका केसहरू · सबै क्षेत्रहरू",
+    "bench.colChallenge": "42 अपरिचित · श्रेणी",
+    "bench.colReview": "मानवीय समीक्षाको आवश्यकता छ",
+    "bench.colLatency": "समय/उत्तर",
+    "bench.colSource": "प्रत्येक सङ्ख्याका लागि प्रमाण फाइल",
+    "bench.colUtility": "उपयोगिता",
+    "bench.mostAccurate": "सबैभन्दा सही",
+    "bench.defaultMode": "हालको पूर्वनिर्धारित",
+    "bench.footnote": "* केवल नियमहरूले समीक्षा गरिएको सेटमा 100% स्कोर गर्दछ किनभने ती लेबलहरू नियमहरूसँग सहमत हुन निर्माण गरिएको थियो; अपरिचित-शब्द सेट उचित तुलना हो। त्यस समयका नियमहरूसँग मापन गरिएको। अपरिचित-शब्द सेट परियोजनाद्वारा लेबल गरिएको छ, मानव-समीक्षा गरिएको छैन। वास्तविक ग्राहक सन्देशहरूमा केही पनि मूल्याङ्कन गरिएको छैन।",
+    "bench.pilotTitle": "राउन्ड 1 पाइलटहरूः समीक्षा नगरिएको डेटा",
+    "bench.pilotBody": "मानव समीक्षा अघि 92 सिन्थेटिक केसहरूमा AuditKIT द्वारा स्कोर गरिएको कच्चा मोडेल आउटपुट। यी पाइलटहरूले मूल योजना परीक्षण गरेः GRPO, समानुभूति DPO र भारित विलय।",
+    "pipeline.measuredAt": "मापन गरिएको (पायलट, 92 सिन्थेटिक केसहरू): कडा JSON {schema}, सबै क्षेत्रहरू सही {fields}, उपयोगिता {utility}।",
+    "pipeline.notMeasured": "यस तौलमा मापन गरिएको थिएन। केवल 1.00 / 0.00, 0.55 / 0.45 र 0.00 / 1.00 चलाइएको थियो।",
     "policy.search": "स्रोतहरू, नियमहरू वा संस्थाहरू खोज्नुहोस्...",
     "policy.empty": "कुनै मिल्दो स्रोतहरू छैनन्",
     "policy.clear": "खोज खाली गर्नुहोस्",
@@ -298,7 +305,7 @@ const bundle: LocaleBundle = {
     "landing.illustrationLabel": "लक र स्रोत-आधारित लेनदेन रेकर्डहरूद्वारा सुरक्षित ग्राहकको चित्रण",
     "landing.illustrationTag": "प्रमाण, पहिले।",
     "landing.illustrationTagBody": "प्रत्येक क्षेत्रको एउटा स्रोत हुन्छ।",
-    "landing.approachKicker": "द सुरक्षा अप्रोच/1",
+    "landing.approachKicker": "THE SURAKSHA APPROACH / 01",
     "landing.approachTitleLine1": "कम आतङ्क।",
     "landing.approachTitleLine2": "अधिक स्पष्टता।",
     "landing.approachBody1": "एउटा सङ्कलन-अनुरोध घोटाला। एउटा भुक्तानी जुन कहिल्यै आइपुगेको छैन। एउटा ग्राहक जसलाई आफ्नै शब्दमा मद्दत चाहिन्छ।",
@@ -348,10 +355,8 @@ const bundle: LocaleBundle = {
       "वाणिज्यिक-ब्याङ्क संशोधन 1 जनवरी 2027 मा वा पछिका लेनदेनहरूमा लागू हुन्छ; त्यस मितिदेखि नयाँ मामिलाहरूमा नीति पुनर्वैधीकरण आवश्यक हुन्छ।",
     "Compare all six checkpoints on held-out scenario groups. Score the full JSON schema, all extracted fields, inappropriate guarantees and required actions. Keep human-rated empathy separate from lexical ChrF, and use paired bootstrap intervals rather than treating a single percentage as proof.":
       "होल्ड-आउट परिदृश्य समूहहरूमा सबै छवटा चेकपोइन्टहरू तुलना गर्नुहोस्। पूर्ण JSON स्किमा, सबै निकालिएका क्षेत्रहरू, अनुपयुक्त ग्यारेन्टीहरू र आवश्यक कार्यहरू स्कोर गर्नुहोस्। मानव-रेटेड समानुभूति लेक्सिकल ChrF बाट अलग राख्नुहोस्, र एकल प्रतिशतलाई प्रमाणको रूपमा व्यवहार गर्नुको सट्टा जोडी बुटस्ट्र्याप अन्तरालहरू प्रयोग गर्नुहोस्।",
-    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider configures an experiment; it does not change this rule-based preview or demonstrate model quality.":
-      "उपयुक्त LoRA मर्ज प्रयोग गरेर भारित प्यारामिटर अद्यावधिकहरू रचना गर्नुहोस्। दुई मर्ज नगरिएका विशेषज्ञहरू सहित प्रमाणीकरण डेटामा तौलहरू स्वीप गर्नुहोस्। स्लाइडर सार्दा प्रयोग कन्फिगर हुन्छ; यसले यो नियम-आधारित पूर्वावलोकन परिवर्तन गर्दैन वा मोडेलको गुणस्तर प्रदर्शन गर्दैन।",
-    "Configuration preview · no merged checkpoint yet":
-      "कन्फिगरेसन पूर्वावलोकन · अहिलेसम्म कुनै मर्ज गरिएको चेकपोइन्ट छैन",
+    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider shows the measured result where one exists; it does not change the served model.":
+      "उपयुक्त LoRA मर्ज प्रयोग गरेर भारित प्यारामिटर अद्यावधिकहरू रचना गर्नुहोस्। दुई विलय नगरिएका विशेषज्ञहरू सहित प्रमाणीकरण डेटामा तौलहरू स्वीप गर्नुहोस्। स्लाइडर सार्दा मापन गरिएको परिणाम देखाउँछ जहाँ एउटा अवस्थित छ; यसले सेवा गरिएको मोडेल परिवर्तन गर्दैन।",
     "Controls · base, uncurated SFT and curated joint SFT":
       "नियन्त्रणहरू · आधार, अनियमित SFT र क्युरेटेड संयुक्त SFT",
     "Curate with care":
@@ -360,6 +365,12 @@ const bundle: LocaleBundle = {
       "डेटासेट A· स्ट्रिक्ट JSON + फिल्ड प्रोभेन्सन्स",
     "Dataset B · chosen / rejected customer replies":
       "डेटासेट बी · चुनिएको/अस्वीकृत ग्राहक जवाफहरू",
+    "Done · 934 cases curated with CuratorKIT 0.1.21; 810 human-reviewed cases in training":
+      "सम्पन्न · 934 केसहरू CuratorKIT 0.1.21 सँग क्युरेट गरियो; प्रशिक्षणमा 810 मानव-समीक्षा केसहरू",
+    "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)":
+      "सम्पन्न भयो · QLoRA SFT 810 समीक्षा गरिएका केसहरूमा, RTX 4050 (6 GB)",
+    "Done · every model evaluated; results in the Benchmark lab":
+      "सम्पन्न प्रत्येक मोडेलको मूल्याङ्कन गरियो; बेन्चमार्क प्रयोगशालामा परिणामहरू",
     "Every claim needs a measured result.":
       "प्रत्येक दावीलाई मापन गरिएको परिणाम चाहिन्छ।",
     "Found":
@@ -374,20 +385,18 @@ const bundle: LocaleBundle = {
       "ढिलो धोखाधडी रिपोर्ट · ग्यारेन्टी-फिर्ती जबरजस्ती",
     "Listening":
       "सुन्दै",
-    "Local curation + optional CuratorKIT pass":
-      "स्थानीय क्युरेशन + वैकल्पिक CuratorKIT पास",
     "Make quality visible":
       "गुणस्तरलाई दृश्यात्मक बनाऊँस्।...............................................................................................................................................................................................",
     "Manifest · source hashes, split IDs and rejection reasons":
       "मेनिफेस्ट · स्रोत ह्याशहरू, विभाजित आईडीहरू र अस्वीकृतिका कारणहरू",
+    "Measured in the pilot · the 0.55/0.45 merge was worse, so it is not used":
+      "पायलटमा मापन गरिएको · 0.55/0.45 मर्ज खराब थियो, त्यसैले यसलाई प्रयोग गरिँदैन।",
     "Merge & investigate":
       "विलय र अनुसन्धान गर्नुहोस्",
     "Merge manifest · base, tokenizer and adapter identities":
       "म्यानिफेस्ट · आधार, टोकनाइजर र एडेप्टर पहिचानहरू मर्ज गर्नुहोस्",
     "NPCI · Dispute redressal":
       "NPCI विवाद निवारण",
-    "Offline scorer ready · model evaluation pending":
-      "अफलाइन स्कोरर तयार · मोडेल मूल्याङ्कन बाँकी छ",
     "QR request · ₹24,500 · reported today":
       "क्युआर अनुरोध · ₹24,500 · आज रिपोर्ट गरिएको छ",
     "RBI · Customer liability":
@@ -410,8 +419,6 @@ const bundle: LocaleBundle = {
       "1930 र cybercrime.gov.in मार्फत वित्तीय साइबर धोखाधडी तुरुन्तै रिपोर्ट गर्नुहोस्। रिकभरीको ग्यारेन्टी छैन।",
     "Report · per-case evidence + paired bootstrap deltas":
       "रिपोर्ट गर्नुहोस् · प्रति-केस प्रमाण + जोडी बुटस्ट्र्याप डेल्टास",
-    "Requires compatible GPU + reviewed data":
-      "उपयुक्त जीपीयू + समीक्षा गरिएको डेटा आवश्यक छ",
     "Sent to the wrong person":
       "गलत व्यक्तिलाई पठाइयो",
     "Start with synthetic or authorised customer chats. Mask sensitive identities, retain only context-labelled transaction references, validate fields against source spans, and separate schema targets from same-task preference pairs.":

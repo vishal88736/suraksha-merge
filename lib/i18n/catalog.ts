@@ -83,8 +83,7 @@ const en = {
   "desk.pipelineSubtitle":
     "Follow the journey from a noisy message to a verifiable response.",
   "desk.benchmarksTitle": "Evidence before confidence.",
-  "desk.benchmarksSubtitle":
-    "Six checkpoints. One held-out benchmark. No invented results.",
+  "desk.benchmarksSubtitle": "Every model we trained, measured on the same held-out cases. No invented results.",
   "desk.policyTitle": "Grounded in the rules.",
   "desk.policySubtitle":
     "Versioned primary sources behind every triage recommendation.",
@@ -287,9 +286,8 @@ const en = {
   "pipeline.note":
     "Each stage carries its source identity forward. Failed samples are recorded, repaired where justified, then checked again.",
   "pipeline.experimentEyebrow": "TASK-ARITHMETIC EXPERIMENT",
-  "pipeline.experimentTitle": "Find the balance. Measure the result.",
-  "pipeline.experimentBody":
-    "The slider configures an offline merge. Model performance must be evaluated after merging.",
+  "pipeline.experimentTitle": "We measured the balance. It didn't pay off.",
+  "pipeline.experimentBody": "In the pilot, merging the schema and empathy specialists at 0.55 / 0.45 lost all-field accuracy (72.8% → 0%), so merging is not used. The served models are plain SFT on human-reviewed data.",
   "pipeline.specialistA": "Schema specialist",
   "pipeline.specialistB": "Empathy specialist",
   "pipeline.empathyOnly": "Empathy only",
@@ -297,21 +295,12 @@ const en = {
   "pipeline.resetMix": "Reset to 0.55 / 0.45",
   "pipeline.exportMix": "Export merge configuration",
 
-  "bench.noteTitle": "The experiment is set up. The evidence comes next.",
-  "bench.noteBody":
-    "The proposal’s percentages and cost estimates have not been measured. This table will only contain results from identifiable evaluation runs.",
-  "bench.notEvaluated": "NOT YET EVALUATED",
-  "bench.ablation": "Checkpoint ablation",
-  "bench.ablationBody":
-    "All specialists and baselines, evaluated on the same held-out cases.",
+  "bench.noteTitle": "Measured on held-out data, not promised.",
+  "bench.noteBody": "Every number below comes from a recorded run on cases the models never trained on. Rules alone scoring 100% on the reviewed set is expected: those labels were built to agree with the rules.",
+  "bench.ablation": "Models trained on human-reviewed data",
+  "bench.ablationBody": "Runtime results through the real pipeline: model, checks, and (where noted) policy rules.",
   "bench.colCheckpoint": "CHECKPOINT",
-  "bench.colSchema": "SCHEMA PASS",
-  "bench.colFields": "FIELD EXACT MATCH",
-  "bench.colUnsafe": "UNSAFE GUARANTEES",
-  "bench.colEmpathy": "EMPATHY / CHRF",
-  "bench.colStatus": "STATUS",
-  "bench.awaitingRun": "Awaiting run",
-  "bench.awaitingTraining": "Awaiting training",
+  "bench.colFields": "ALL FIELDS EXACT",
   "bench.splitTitle": "Split by scenario family",
   "bench.splitBody":
     "Keep paraphrases, SMS templates and repaired versions of the same case in one split. Freeze the test set before selecting merge weights.",
@@ -323,9 +312,26 @@ const en = {
     "Report malformed JSON, fabricated UTRs, unsupported guarantees and missing escalation actions per case. Bootstrap paired differences.",
   "bench.adversarialEyebrow": "ADVERSARIAL SUITE",
   "bench.adversarialTitle": "Pressure should not change the policy.",
-  "bench.adversarialBody":
-    "Try a refund-coercion case against the current deterministic preview.",
+  "bench.adversarialBody": "Try a refund-coercion case against the live model: no refund should be promised.",
   "bench.adversarialCta": "Open adversarial scenario",
+  "bench.measuredOn": "MEASURED {date}",
+  "bench.colReviewed": "54 REVIEWED CASES · ALL FIELDS",
+  "bench.colChallenge": "42 UNFAMILIAR · CATEGORY",
+  "bench.colReview": "NEEDS HUMAN REVIEW",
+  "bench.colLatency": "TIME / ANSWER",
+  "bench.colSource": "Evidence file for each number",
+  "bench.colUtility": "UTILITY",
+  "bench.mostAccurate": "most accurate",
+  "bench.defaultMode": "current default",
+  "bench.footnote":
+    "* Rules alone score 100% on the reviewed set because those labels were built to agree with the rules; the unfamiliar-wording set is the fair comparison. † Measured with the rules of that time. The unfamiliar-wording set is labelled by the project, not human-reviewed. Nothing has been evaluated on real customer messages.",
+  "bench.pilotTitle": "Round 1 pilots: unreviewed data",
+  "bench.pilotBody":
+    "Raw model output scored by AuditKIT on 92 synthetic cases, before human review. These pilots tested the original plan: GRPO, empathy DPO and weighted merging.",
+  "pipeline.measuredAt":
+    "Measured (pilot, 92 synthetic cases): strict JSON {schema}, all fields exact {fields}, utility {utility}.",
+  "pipeline.notMeasured":
+    "Not measured at this weight. Only 1.00 / 0.00, 0.55 / 0.45 and 0.00 / 1.00 were run.",
 
   "policy.search": "Search sources, rules or institutions…",
   "policy.empty": "No matching sources",
@@ -480,8 +486,7 @@ const hi: Record<MessageKey, string> = {
   "desk.pipelineSubtitle":
     "शोरगुल वाले संदेश से सत्यापन योग्य जवाब तक का रास्ता देखें।",
   "desk.benchmarksTitle": "विश्वास से पहले प्रमाण।",
-  "desk.benchmarksSubtitle":
-    "छह चेकपॉइंट। एक होल्ड-आउट बेंचमार्क। कोई बनावटी नतीजे नहीं।",
+  "desk.benchmarksSubtitle": "हमारा हर प्रशिक्षित मॉडल, एक ही होल्ड-आउट केसों पर मापा गया। कोई गढ़ा हुआ परिणाम नहीं।",
   "desk.policyTitle": "नियमों पर आधारित।",
   "desk.policySubtitle":
     "हर ट्रायेज सिफ़ारिश के पीछे संस्करणबद्ध प्राथमिक स्रोत।",
@@ -677,9 +682,8 @@ const hi: Record<MessageKey, string> = {
   "pipeline.note":
     "हर चरण अपनी स्रोत पहचान आगे बढ़ाता है। विफल नमूने दर्ज होते हैं, जहाँ उचित हो सुधारे जाते हैं, फिर दोबारा जाँचे जाते हैं।",
   "pipeline.experimentEyebrow": "टास्क-अरिथमेटिक प्रयोग",
-  "pipeline.experimentTitle": "संतुलन खोजें। परिणाम मापें।",
-  "pipeline.experimentBody":
-    "स्लाइडर एक ऑफ़लाइन मर्ज को कॉन्फ़िगर करता है। मर्ज के बाद मॉडल का प्रदर्शन मापा जाना चाहिए।",
+  "pipeline.experimentTitle": "हमने संतुलन मापा। फ़ायदा नहीं हुआ।",
+  "pipeline.experimentBody": "पायलट में स्कीमा और सहानुभूति विशेषज्ञों को 0.55 / 0.45 पर मर्ज करने से सभी-फ़ील्ड सटीकता घटी (72.8% → 0%), इसलिए मर्ज का उपयोग नहीं होता। चल रहे मॉडल मानव-समीक्षित डेटा पर सामान्य SFT हैं।",
   "pipeline.specialistA": "स्कीमा विशेषज्ञ",
   "pipeline.specialistB": "सहानुभूति विशेषज्ञ",
   "pipeline.empathyOnly": "केवल सहानुभूति",
@@ -687,20 +691,12 @@ const hi: Record<MessageKey, string> = {
   "pipeline.resetMix": "0.55 / 0.45 पर रीसेट करें",
   "pipeline.exportMix": "मर्ज कॉन्फ़िगरेशन निर्यात करें",
 
-  "bench.noteTitle": "प्रयोग तैयार है। प्रमाण आने बाकी हैं।",
-  "bench.noteBody":
-    "प्रस्ताव के प्रतिशत और लागत अनुमान मापे नहीं गए हैं। यह तालिका केवल पहचाने जा सकने वाले मूल्यांकन पर runs से भरेगी।",
-  "bench.notEvaluated": "अभी मूल्यांकन नहीं हुआ",
-  "bench.ablation": "चेकपॉइंट अब्लेशन",
-  "bench.ablationBody": "सभी विशेषज्ञ और आधार रेखाएँ, एक ही होल्ड-आउट केस पर।",
+  "bench.noteTitle": "होल्ड-आउट डेटा पर मापा गया, वादा नहीं।",
+  "bench.noteBody": "नीचे हर संख्या उन केसों पर दर्ज रन से है जिन पर मॉडल कभी प्रशिक्षित नहीं हुए। समीक्षित सेट पर केवल नियमों का 100% अपेक्षित है: वे लेबल नियमों से मेल खाने के लिए बने थे।",
+  "bench.ablation": "मानव-समीक्षित डेटा पर प्रशिक्षित मॉडल",
+  "bench.ablationBody": "असली पाइपलाइन से रनटाइम परिणाम: मॉडल, जाँचें, और (जहाँ लिखा है) नीति नियम।",
   "bench.colCheckpoint": "चेकपॉइंट",
-  "bench.colSchema": "स्कीमा उत्तीर्ण",
-  "bench.colFields": "फ़ील्ड सटीक मिलान",
-  "bench.colUnsafe": "असुरक्षित वादे",
-  "bench.colEmpathy": "सहानुभूति / CHRF",
-  "bench.colStatus": "स्थिति",
-  "bench.awaitingRun": "run की प्रतीक्षा",
-  "bench.awaitingTraining": "प्रशिक्षण की प्रतीक्षा",
+  "bench.colFields": "सभी फ़ील्ड सटीक",
   "bench.splitTitle": "परिदृश्य परिवार के अनुसार विभाजन",
   "bench.splitBody":
     "एक ही केस के पुनरावृत्त रूप, SMS टेम्पलेट और सुधरे हुए संस्करण एक ही विभाजन में रखें। मर्ज वज़न चुनने से पहले टेस्ट सेट को जमा कर दें।",
@@ -712,9 +708,26 @@ const hi: Record<MessageKey, string> = {
     "हर केस के लिए खराब JSON, बनावटी UTR, असमर्थित वादे और छूटे एस्केलेशन कार्रवाइयाँ दर्ज करें। युग्मित अंतरों का बूटस्ट्रैप करें।",
   "bench.adversarialEyebrow": "प्रतिकूल परीक्षण",
   "bench.adversarialTitle": "दबाव नीति नहीं बदलना चाहिए।",
-  "bench.adversarialBody":
-    "नियतात्मक पूर्वावलोकन के विरुद्ध रिफ़ंड-दबाव वाला केस आज़माएँ।",
+  "bench.adversarialBody": "चल रहे मॉडल पर रिफ़ंड-दबाव वाला केस आज़माएँ: कोई रिफ़ंड वादा नहीं होना चाहिए।",
   "bench.adversarialCta": "प्रतिकूल परिदृश्य खोलें",
+  "bench.measuredOn": "मापा गया {date}",
+  "bench.colReviewed": "54 समीक्षित केस · सभी फ़ील्ड",
+  "bench.colChallenge": "42 अपरिचित · श्रेणी",
+  "bench.colReview": "मानवीय समीक्षा ज़रूरी",
+  "bench.colLatency": "समय / उत्तर",
+  "bench.colSource": "हर संख्या की प्रमाण फ़ाइल",
+  "bench.colUtility": "उपयोगिता",
+  "bench.mostAccurate": "सबसे सटीक",
+  "bench.defaultMode": "वर्तमान डिफ़ॉल्ट",
+  "bench.footnote":
+    "* समीक्षित सेट पर केवल नियम 100% हैं क्योंकि वे लेबल नियमों से मेल खाने के लिए बने थे; अपरिचित-शब्दों वाला सेट निष्पक्ष तुलना है। † उस समय के नियमों से मापा गया। अपरिचित-शब्दों वाला सेट परियोजना द्वारा लेबल किया गया है, मानव-समीक्षित नहीं। असली ग्राहक संदेशों पर अभी मूल्यांकन नहीं हुआ है।",
+  "bench.pilotTitle": "राउंड 1 पायलट: असमीक्षित डेटा",
+  "bench.pilotBody":
+    "मानव समीक्षा से पहले, 92 सिंथेटिक केस पर AuditKIT द्वारा स्कोर किया गया कच्चा मॉडल आउटपुट। इन पायलटों ने मूल योजना जाँची: GRPO, सहानुभूति DPO और भारित मर्ज।",
+  "pipeline.measuredAt":
+    "मापा गया (पायलट, 92 सिंथेटिक केस): कठोर JSON {schema}, सभी फ़ील्ड सटीक {fields}, उपयोगिता {utility}।",
+  "pipeline.notMeasured":
+    "इस वज़न पर मापा नहीं गया। केवल 1.00 / 0.00, 0.55 / 0.45 और 0.00 / 1.00 चलाए गए।",
 
   "policy.search": "स्रोत, नियम या संस्थाएँ खोजें…",
   "policy.empty": "कोई मिलता-जुलता स्रोत नहीं",

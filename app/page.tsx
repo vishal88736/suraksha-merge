@@ -27,6 +27,7 @@ import {
 import { download } from "../lib/format.ts";
 import { POLICY_VERSION } from "../lib/policy.ts";
 import { PIPELINE_STAGES } from "../lib/content/pipeline.ts";
+import { CURRENT_RESULTS, MEASURED_AT, PILOT_RESULTS } from "../lib/content/benchmarks.ts";
 import { AppShell, type View } from "../components/shell/app-shell.tsx";
 import { IntakePanel } from "../components/desk/intake-panel.tsx";
 import { EnginePanel } from "../components/desk/engine-panel.tsx";
@@ -206,7 +207,13 @@ export default function Page() {
             onClick={
               view === "desk"
                 ? exportTrace
-                : () =>
+                : view === "benchmarks"
+                  ? () =>
+                      download(
+                        { measured_at: MEASURED_AT, current: CURRENT_RESULTS, pilots: PILOT_RESULTS },
+                        "suraksha-measured-results.json",
+                      )
+                  : () =>
                     download(
                       {
                         policy_version: POLICY_VERSION,

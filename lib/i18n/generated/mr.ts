@@ -58,7 +58,7 @@ const bundle: LocaleBundle = {
     "desk.pipelineTitle": "एक पाईपलाईन. दोन तज्ज्ञ.",
     "desk.pipelineSubtitle": "गोंगाट करणाऱ्या संदेशापासून पडताळणी करण्यायोग्य प्रतिसादापर्यंतच्या प्रवासाचे अनुसरण करा.",
     "desk.benchmarksTitle": "आत्मविश्वासाच्या आधी पुरावा.",
-    "desk.benchmarksSubtitle": "सहा चेकपॉईंट. एक रोखलेला बेंचमार्क. कोणतेही शोधलेले परिणाम नाहीत.",
+    "desk.benchmarksSubtitle": "आम्ही प्रशिक्षित केलेले प्रत्येक मॉडेल, त्याच बंद प्रकरणांवर मोजले गेले. कोणतेही शोधलेले परिणाम नाहीत.",
     "desk.policyTitle": "नियमांमध्ये आधारलेला.",
     "desk.policySubtitle": "प्रत्येक ट्रायएज शिफारशीमागील प्राथमिक स्त्रोतांची आवृत्ती.",
     "workflow.message": "ग्राहकांचा संदेश",
@@ -220,27 +220,20 @@ const bundle: LocaleBundle = {
     "pipeline.outputs": "हा टप्पा काय निर्माण करतो",
     "pipeline.note": "प्रत्येक टप्प्यात त्याची स्रोत ओळख पुढे आणली जाते. अयशस्वी नमुने नोंदवले जातात, जेथे न्याय्य आहेत तेथे दुरुस्त केले जातात, नंतर पुन्हा तपासले जातात.",
     "pipeline.experimentEyebrow": "कार्य-अंकगणितीय प्रयोग",
-    "pipeline.experimentTitle": "शिल्लक शोधा. परिणाम मोजा.",
-    "pipeline.experimentBody": "स्लाइडर ऑफलाईन विलीनीकरणाची रचना करते. विलीनीकरणानंतर प्रतिकृतीच्या कामगिरीचे मूल्यमापन करणे आवश्यक आहे.",
+    "pipeline.experimentTitle": "आम्ही शिल्लक मोजले. त्याचा फायदा झाला नाही.",
+    "pipeline.experimentBody": "प्रायोगिक तत्त्वावर, 0.55 / 0.45 वर योजना आणि सहानुभूती तज्ञांचे विलीनीकरण केल्याने सर्व-क्षेत्राची अचूकता (72.8% → 0%) गमावली, त्यामुळे विलीनीकरण वापरले जात नाही. सादर केलेले मॉडेल मानवी-पुनरावलोकन केलेल्या डेटावर साधे SFT आहेत.",
     "pipeline.specialistA": "स्किमा तज्ज्ञ",
     "pipeline.specialistB": "सहानुभूती तज्ज्ञ",
     "pipeline.empathyOnly": "केवळ सहानुभूती",
     "pipeline.schemaOnly": "केवळ योजना",
-    "pipeline.resetMix": "0.55/0.45 वर पुनर्संचयित करा",
+    "pipeline.resetMix": "0.55 / 0.45 वर पुनर्संचयित करा",
     "pipeline.exportMix": "विलीन संरचनेची निर्यात करा",
-    "bench.noteTitle": "प्रयोग तयार केला जातो. त्यानंतर पुरावा येतो.",
-    "bench.noteBody": "प्रस्तावाची टक्केवारी आणि खर्चाचे अंदाज मोजले गेले नाहीत. या तक्त्यात केवळ ओळखण्यायोग्य मूल्यमापनातील निकाल असतील.",
-    "bench.notEvaluated": "अद्याप मूल्यमापन झालेले नाही",
-    "bench.ablation": "चेकपॉईंट एब्लेशन",
-    "bench.ablationBody": "सर्व तज्ञ आणि बेसलाइन, यांचे मूल्यांकन एकाच प्रलंबित प्रकरणांवर केले गेले.",
+    "bench.noteTitle": "ठेवलेल्या माहितीवर मोजले जाते, वचनबद्ध नाही.",
+    "bench.noteBody": "खाली दिलेली प्रत्येक संख्या, मॉडेल्सनी कधीही प्रशिक्षण न घेतलेल्या नोंदवलेल्या प्रकरणांवरून येते. पुनरावलोकन केलेल्या संचावर केवळ 100% गुणांकन करणारे नियम अपेक्षित आहेतः त्या लेबल्स नियमांशी सहमत होण्यासाठी तयार केल्या गेल्या होत्या.",
+    "bench.ablation": "मानवी-पुनरावलोकन केलेल्या माहितीवर प्रशिक्षित मॉडेल्स",
+    "bench.ablationBody": "वास्तविक पाईपलाईनद्वारे रनटाइम परिणामः मॉडेल, तपासणी आणि (जेथे नमूद केले आहे) धोरण नियम.",
     "bench.colCheckpoint": "चेकपॉईंट",
-    "bench.colSchema": "स्कीमा पास",
-    "bench.colFields": "मैदानाची अचूक जुळवाजुळव",
-    "bench.colUnsafe": "असुरक्षित हमी",
-    "bench.colEmpathy": "सहानुभूती/chrF",
-    "bench.colStatus": "स्थिती.",
-    "bench.awaitingRun": "धावण्याची प्रतीक्षा",
-    "bench.awaitingTraining": "प्रशिक्षणाची प्रतीक्षा",
+    "bench.colFields": "सर्व क्षेत्रे अचूक",
     "bench.splitTitle": "परिस्थितीनुसार कुटुंब विभाजित करा",
     "bench.splitBody": "पॅराफ्रेजेस, SMS टेम्पलेट आणि त्याच केसच्या दुरुस्ती केलेल्या आवृत्त्या एकाच विभाजनात ठेवा. विलीन वजन निवडण्यापूर्वी चाचणी संच गोठवा.",
     "bench.empathyTitle": "सहानुभूतीला माणसाची गरज आहे",
@@ -249,8 +242,22 @@ const bundle: LocaleBundle = {
     "bench.failureBody": "सदोष JSON, बनावट UTRs, असमर्थित हमी आणि प्रत्येक प्रकरणातील वाढीच्या क्रिया गहाळ असल्याचा अहवाल द्या. बूटस्ट्रॅप जोडलेले फरक.",
     "bench.adversarialEyebrow": "विरोधात्मक संच",
     "bench.adversarialTitle": "दबावामुळे धोरण बदलू नये.",
-    "bench.adversarialBody": "सध्याच्या निर्धारक पूर्वावलोकनाविरूद्ध परतावा-जबरदस्तीचा खटला वापरून पहा.",
+    "bench.adversarialBody": "थेट मॉडेलच्या विरोधात परतावा-जबरदस्तीचा खटला वापरून पहाः परतावा देण्याचे आश्वासन दिले जाऊ नये.",
     "bench.adversarialCta": "खुल्या प्रतिकुल परिस्थितीचा सामना करा................................................................................................................................................................................................",
+    "bench.measuredOn": "मोजले {date}",
+    "bench.colReviewed": "54 पुनरावलोकन केलेली प्रकरणे · सर्व क्षेत्रे",
+    "bench.colChallenge": "42 अपरिचित श्रेणी",
+    "bench.colReview": "मानवी समीक्षेची गरज",
+    "bench.colLatency": "वेळ/उत्तर",
+    "bench.colSource": "प्रत्येक संख्येसाठी पुरावा फाइल",
+    "bench.colUtility": "उपयुक्तता",
+    "bench.mostAccurate": "सर्वात अचूक",
+    "bench.defaultMode": "सध्याचे पूर्वनिर्धारित",
+    "bench.footnote": "* केवळ नियम पुनरावलोकन केलेल्या संचावर 100% गुणांकन करतात कारण ती लेबले नियमांशी सहमत होण्यासाठी तयार केली गेली होती; अपरिचित-शब्द संच ही योग्य तुलना आहे. त्या काळातील नियमांशी मोजली जाते. अपरिचित-शब्द संच प्रकल्पाद्वारे लेबल केला जातो, मानवी-पुनरावलोकन नाही. वास्तविक ग्राहक संदेशांवर काहीही मूल्यांकन केले गेले नाही.",
+    "bench.pilotTitle": "राऊंड 1 पायलटः न पाहिलेली माहिती",
+    "bench.pilotBody": "मानवी पुनरावलोकनापूर्वी, 92 कृत्रिम प्रकरणांवर कच्चा मॉडेल आउटपुट AuditKIT ने गुणित केले. या वैमानिकांनी मूळ योजनेची चाचणी केलीः GRPO, सहानुभूती DPO आणि भारित विलीनीकरण.",
+    "pipeline.measuredAt": "मोजले (प्रायोगिक, 92 कृत्रिम प्रकरणे): कडक JSON {schema}, सर्व क्षेत्रे अचूक {fields}, उपयुक्तता {utility}.",
+    "pipeline.notMeasured": "या वजनावर मोजले गेले नाही. फक्त 1.00 / 0.00, 0.55 / 0.45 आणि 0.00 / 1.00 चालवले गेले.",
     "policy.search": "स्रोत, नियम किंवा संस्था शोधा...",
     "policy.empty": "जुळणारे स्रोत नाहीत",
     "policy.clear": "शोध साफ करा",
@@ -298,7 +305,7 @@ const bundle: LocaleBundle = {
     "landing.illustrationLabel": "कुलूपबंद आणि स्रोत-आधारित व्यवहाराच्या नोंदींद्वारे संरक्षित ग्राहकाचे चित्रण",
     "landing.illustrationTag": "पुरावा, प्रथम.",
     "landing.illustrationTagBody": "प्रत्येक क्षेत्राचा एक स्रोत असतो.",
-    "landing.approachKicker": "सुरक्षा दृष्टीकोन/1",
+    "landing.approachKicker": "THE SURAKSHA APPROACH / 01",
     "landing.approachTitleLine1": "भीती कमी.",
     "landing.approachTitleLine2": "अधिक स्पष्टता.",
     "landing.approachBody1": "एक संकलन-विनंती घोटाळा. एक भरणा जो कधीच आला नाही. एक ग्राहक ज्याला स्वतःच्या शब्दात मदतीची गरज आहे.",
@@ -348,10 +355,8 @@ const bundle: LocaleBundle = {
       "1 जानेवारी 2027 रोजी किंवा त्यानंतरच्या व्यवहारांना व्यावसायिक-बँक दुरुस्ती लागू होते; त्या तारखेपासून नवीन प्रकरणांमध्ये धोरण पुनर्वैधीकरण आवश्यक आहे.",
     "Compare all six checkpoints on held-out scenario groups. Score the full JSON schema, all extracted fields, inappropriate guarantees and required actions. Keep human-rated empathy separate from lexical ChrF, and use paired bootstrap intervals rather than treating a single percentage as proof.":
       "थांबलेल्या परिस्थिती गटातील सर्व सहा चेकपॉईंटची तुलना करा. संपूर्ण JSON योजना, सर्व काढलेली क्षेत्रे, अयोग्य हमी आणि आवश्यक कृती गुणांकन करा. मानवी मूल्यांकन असलेली सहानुभूती लेक्सिकल सीएचआरएफपासून वेगळी ठेवा आणि एकच टक्केवारी पुरावा मानण्याऐवजी जोडलेल्या बूटस्ट्रॅप मध्यांतरांचा वापर करा.",
-    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider configures an experiment; it does not change this rule-based preview or demonstrate model quality.":
-      "सुसंगत LoRA विलीनीकरण वापरून भारित मापदंड अद्यतने तयार करा. दोन विलीन न केलेल्या तज्ञांसह प्रमाणीकरण डेटावर वजन स्वीप करा. स्लाइडर हलवल्याने प्रयोग संरचित होतो; हे नियम-आधारित पूर्वावलोकन बदलत नाही किंवा मॉडेलची गुणवत्ता दर्शवत नाही.",
-    "Configuration preview · no merged checkpoint yet":
-      "संरचना पूर्वावलोकन · अद्याप विलीन केलेले चेकपॉईंट नाही",
+    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider shows the measured result where one exists; it does not change the served model.":
+      "सुसंगत LoRA विलीनीकरण वापरून भारित मापदंड अद्यतने तयार करा. दोन विलीन न केलेल्या तज्ञांसह प्रमाणीकरण डेटावर वजन स्वीप करा. स्लाइडर हलवणे मोजलेला परिणाम दर्शविते जिथे एक अस्तित्वात आहे; ते सर्व्ह केलेले मॉडेल बदलत नाही.",
     "Controls · base, uncurated SFT and curated joint SFT":
       "कंट्रोल्स · बेस, अनक्युरेटेड SFT आणि क्युरेटेड जॉइंट SFT",
     "Curate with care":
@@ -360,6 +365,12 @@ const bundle: LocaleBundle = {
       "डेटासेट A· स्ट्रिक्ट JSON + फील्ड प्रोव्हेनन्स",
     "Dataset B · chosen / rejected customer replies":
       "डेटासेट बी. निवडलेले/नाकारलेले ग्राहक प्रतिसाद",
+    "Done · 934 cases curated with CuratorKIT 0.1.21; 810 human-reviewed cases in training":
+      "पूर्ण झाले · CuratorKIT 0.1.21 सह तयार केलेली 934 प्रकरणे; प्रशिक्षणात 810 मानवी-पुनरावलोकन प्रकरणे",
+    "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)":
+      "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)",
+    "Done · every model evaluated; results in the Benchmark lab":
+      "पूर्ण झाले · प्रत्येक नमुन्याचे मूल्यमापन केले; त्याचे परिणाम बेंचमार्क प्रयोगशाळेत आढळतात",
     "Every claim needs a measured result.":
       "प्रत्येक दाव्यासाठी मोजमाप केलेल्या परिणामाची आवश्यकता असते.............................................................................................................................................................................................",
     "Found":
@@ -374,20 +385,18 @@ const bundle: LocaleBundle = {
       "उशीरा फसवणूक अहवाल · हमी-परतावा जबरदस्ती",
     "Listening":
       "ऐकणे.",
-    "Local curation + optional CuratorKIT pass":
-      "स्थानिक क्युरेशन + पर्यायी CuratorKIT पास",
     "Make quality visible":
       "गुणवत्ता दृश्यमान करा",
     "Manifest · source hashes, split IDs and rejection reasons":
       "मॅनिफेस्ट · स्त्रोत हॅश, विभाजित आयडी आणि नाकारण्याची कारणे",
+    "Measured in the pilot · the 0.55/0.45 merge was worse, so it is not used":
+      "पायलटमध्ये मोजले गेलेले · 0.55/0.45 विलीनीकरण अधिक वाईट होते, त्यामुळे ते वापरले जात नाही.",
     "Merge & investigate":
       "विलीन करा आणि तपास करा",
     "Merge manifest · base, tokenizer and adapter identities":
       "मॅनिफेस्ट · बेस, टोकनायझर आणि अडॅप्टर आयडेंटिटी विलीन करा",
     "NPCI · Dispute redressal":
       "NPCI · वादाचे निवारण",
-    "Offline scorer ready · model evaluation pending":
-      "ऑफलाईन स्कोअरर तयार · मॉडेलचे मूल्यांकन प्रलंबित आहे, असे सांगण्यात आले......................................................................................................................................................................................",
     "QR request · ₹24,500 · reported today":
       "QR request · ₹24,500 · reported today",
     "RBI · Customer liability":
@@ -410,8 +419,6 @@ const bundle: LocaleBundle = {
       "1930 आणि cybercrime.gov.in द्वारे आर्थिक सायबर फसवणुकीची त्वरित तक्रार करा. पुनर्प्राप्तीची हमी नाही.",
     "Report · per-case evidence + paired bootstrap deltas":
       "प्रति-प्रकरण पुरावा + जोडीदार बूटस्ट्रॅप डेल्टाचा अहवाल द्या",
-    "Requires compatible GPU + reviewed data":
-      "सुसंगत जी. पी. यू. + पुनरावलोकन केलेला डेटा आवश्यक आहे",
     "Sent to the wrong person":
       "चुकीच्या व्यक्तीला पाठविले",
     "Start with synthetic or authorised customer chats. Mask sensitive identities, retain only context-labelled transaction references, validate fields against source spans, and separate schema targets from same-task preference pairs.":

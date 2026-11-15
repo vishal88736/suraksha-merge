@@ -58,7 +58,7 @@ const bundle: LocaleBundle = {
     "desk.pipelineTitle": "એક પાઇપલાઇન. બે નિષ્ણાતો.",
     "desk.pipelineSubtitle": "ઘોંઘાટીયા સંદેશથી લઈને ચકાસી શકાય તેવા પ્રતિસાદ સુધીની યાત્રાને અનુસરો.",
     "desk.benchmarksTitle": "વિશ્વાસ પહેલાં પુરાવા.",
-    "desk.benchmarksSubtitle": "છ ચેકપોઇન્ટ્સ. એક બંધ-આઉટ બેંચમાર્ક. કોઈ શોધાયેલ પરિણામો નથી.",
+    "desk.benchmarksSubtitle": "અમે દરેક મોડેલને તાલીમ આપી છે, તે જ હોલ્ડ-આઉટ કેસો પર માપવામાં આવે છે. કોઈ શોધાયેલ પરિણામો નથી.",
     "desk.policyTitle": "નિયમોમાં આધારિત.",
     "desk.policySubtitle": "દરેક ટ્રાઇએજની ભલામણ પાછળના પ્રાથમિક સ્રોતોની આવૃત્તિ.",
     "workflow.message": "ગ્રાહકનો સંદેશ",
@@ -220,27 +220,20 @@ const bundle: LocaleBundle = {
     "pipeline.outputs": "આ તબક્કો શું ઉત્પન્ન કરે છે",
     "pipeline.note": "દરેક તબક્કો તેની સ્રોત ઓળખને આગળ લઈ જાય છે. નિષ્ફળ નમૂનાઓ રેકોર્ડ કરવામાં આવે છે, જ્યાં ન્યાયી ઠેરવવામાં આવે ત્યાં સમારકામ કરવામાં આવે છે, પછી ફરીથી તપાસ કરવામાં આવે છે.",
     "pipeline.experimentEyebrow": "કાર્ય-અંકગણિત પ્રયોગ",
-    "pipeline.experimentTitle": "સંતુલન શોધો. પરિણામ માપો.",
-    "pipeline.experimentBody": "સ્લાઈડર ઓફલાઇન મર્જને રૂપરેખાંકિત કરે છે. મર્જ કર્યા પછી મોડલની કામગીરીનું મૂલ્યાંકન કરવું આવશ્યક છે.",
+    "pipeline.experimentTitle": "અમે બાકીની રકમ માપી. તેનો ફાયદો ન થયો.",
+    "pipeline.experimentBody": "પાયલોટમાં, 0.55 / 0.45 પર સ્કિમા અને સહાનુભૂતિ નિષ્ણાતોને મર્જ કરવાથી તમામ ક્ષેત્રની ચોકસાઈ (72.8% → 0%) ગુમાવી દેવામાં આવે છે, તેથી મર્જનો ઉપયોગ થતો નથી. માનવ-સમીક્ષા ડેટા પર પીરસવામાં આવેલા મોડેલો સાદા SFT છે.",
     "pipeline.specialistA": "સ્કિમા નિષ્ણાત",
     "pipeline.specialistB": "સહાનુભૂતિ નિષ્ણાત",
     "pipeline.empathyOnly": "માત્ર સહાનુભૂતિ",
     "pipeline.schemaOnly": "માત્ર યોજના",
-    "pipeline.resetMix": "0.55/0.45 પર રીસેટ કરો",
+    "pipeline.resetMix": "0.55 / 0.45 પર રીસેટ કરો",
     "pipeline.exportMix": "મર્જ રૂપરેખાંકનની નિકાસ કરો",
-    "bench.noteTitle": "પ્રયોગ ગોઠવવામાં આવે છે. પુરાવા પછી આવે છે.",
-    "bench.noteBody": "દરખાસ્તની ટકાવારી અને ખર્ચના અંદાજો માપવામાં આવ્યા નથી. આ કોષ્ટકમાં માત્ર ઓળખી શકાય તેવા મૂલ્યાંકનના પરિણામો હશે.",
-    "bench.notEvaluated": "હજુ સુધી મૂલ્યાંકન કરવામાં આવ્યું નથી",
-    "bench.ablation": "ચેકપોઇન્ટ એબ્લેશન",
-    "bench.ablationBody": "તમામ નિષ્ણાતો અને આધારરેખાઓનું મૂલ્યાંકન સમાન અટકેલા કેસો પર કરવામાં આવ્યું હતું.",
+    "bench.noteTitle": "અટકાવેલી માહિતી પર માપવામાં આવે છે, વચન આપવામાં આવ્યું નથી.",
+    "bench.noteBody": "નીચેની દરેક સંખ્યા એવા કિસ્સાઓ પર નોંધાયેલા રનમાંથી આવે છે કે જેના પર મોડેલોએ ક્યારેય તાલીમ લીધી નથી. સમીક્ષા કરેલ સેટ પર ફક્ત 100% સ્કોરિંગ નિયમોની અપેક્ષા રાખવામાં આવે છેઃ તે લેબલો નિયમો સાથે સંમત થવા માટે બનાવવામાં આવ્યા હતા.",
+    "bench.ablation": "માનવ-સમીક્ષા કરેલ માહિતી પર પ્રશિક્ષિત નમૂનાઓ",
+    "bench.ablationBody": "વાસ્તવિક પાઇપલાઇન દ્વારા રનટાઇમ પરિણામોઃ મોડેલ, ચેક અને (જ્યાં નોંધ્યું છે) નીતિ નિયમો.",
     "bench.colCheckpoint": "ચેકપોઇન્ટ",
-    "bench.colSchema": "સ્કિમા પાસ",
-    "bench.colFields": "ફિલ્ડિંગ ચોક્કસ મેચ",
-    "bench.colUnsafe": "અસુરક્ષિત બાંયધરીઓ",
-    "bench.colEmpathy": "સહાનુભૂતિ/chrF",
-    "bench.colStatus": "સ્થિતિ",
-    "bench.awaitingRun": "દોડવાની રાહ જોવાઈ રહી છે",
-    "bench.awaitingTraining": "તાલીમની રાહ જોવી",
+    "bench.colFields": "બધા ક્ષેત્રો ચોક્કસ છે",
     "bench.splitTitle": "દૃશ્ય દ્વારા કુટુંબનું વિભાજન કરો",
     "bench.splitBody": "શબ્દસમૂહો, SMS નમૂનાઓ અને તે જ કેસના સુધારેલા સંસ્કરણોને એક વિભાજનમાં રાખો. મર્જ વજન પસંદ કરતા પહેલા પરીક્ષણ સમૂહને સ્થિર કરો.",
     "bench.empathyTitle": "સહાનુભૂતિ માટે માણસની જરૂર છે",
@@ -249,8 +242,22 @@ const bundle: LocaleBundle = {
     "bench.failureBody": "ખોટો અહેવાલ JSON, બનાવટી UTRs, અસમર્થિત બાંયધરીઓ અને કેસ દીઠ એસ્કેલેશન ક્રિયાઓ ખૂટે છે. બુટસ્ટ્રેપ જોડી તફાવતો.",
     "bench.adversarialEyebrow": "વિરોધી સ્યુટ",
     "bench.adversarialTitle": "દબાણથી નીતિમાં ફેરફાર થવો જોઈએ નહીં.",
-    "bench.adversarialBody": "વર્તમાન નિર્ધારક પૂર્વાવલોકન સામે રિફંડ-બળજબરીનો કેસ અજમાવો.",
+    "bench.adversarialBody": "જીવંત મોડેલ સામે રિફંડ-બળજબરીનો કેસ અજમાવી જુઓઃ કોઈ રિફંડનું વચન આપવું જોઈએ નહીં.",
     "bench.adversarialCta": "ખુલ્લું પ્રતિકૂળ દૃશ્ય",
+    "bench.measuredOn": "માપેલ {date}",
+    "bench.colReviewed": "54 સમીક્ષા કરાયેલા કેસો · તમામ ક્ષેત્રો",
+    "bench.colChallenge": "42 અજાણ્યા વર્ગ",
+    "bench.colReview": "માનવીય સમીક્ષાની જરૂર છે",
+    "bench.colLatency": "સમય/જવાબ",
+    "bench.colSource": "દરેક સંખ્યા માટે પુરાવા ફાઇલ",
+    "bench.colUtility": "ઉપયોગિતા",
+    "bench.mostAccurate": "સૌથી સચોટ",
+    "bench.defaultMode": "વર્તમાન મૂળભૂત",
+    "bench.footnote": "* સમીક્ષા કરેલા સમૂહ પર માત્ર નિયમો જ 100% સ્કોર કરે છે કારણ કે તે લેબલો નિયમો સાથે સહમત થવા માટે બનાવવામાં આવ્યા હતા; અપરિચિત-શબ્દ સમૂહ એ વાજબી સરખામણી છે. તે સમયના નિયમો સાથે માપવામાં આવે છે. અજાણ્યા-શબ્દ સમૂહને પ્રોજેક્ટ દ્વારા લેબલ કરવામાં આવે છે, માનવ-સમીક્ષા નહીં. વાસ્તવિક ગ્રાહક સંદેશાઓ પર કંઈપણ મૂલ્યાંકન કરવામાં આવ્યું નથી.",
+    "bench.pilotTitle": "રાઉન્ડ 1 પાયલોટઃ સમીક્ષા ન કરાયેલ માહિતી",
+    "bench.pilotBody": "માનવ સમીક્ષા પહેલાં, 92 કૃત્રિમ કેસો પર કાચા મોડેલ આઉટપુટને AuditKIT દ્વારા સ્કોર કરવામાં આવ્યું હતું. આ પાયલોટોએ મૂળ યોજનાનું પરીક્ષણ કર્યુંઃ GRPO, સહાનુભૂતિ DPO અને ભારિત મર્જ.",
+    "pipeline.measuredAt": "માપેલ (પાયલોટ, 92 કૃત્રિમ કેસ): કડક JSON {schema}, બધા ક્ષેત્રો ચોક્કસ {fields}, ઉપયોગિતા {utility}.",
+    "pipeline.notMeasured": "આ વજન પર માપવામાં આવ્યું ન હતું. માત્ર 1.00 / 0.00, 0.55 / 0.45 અને 0.00 / 1.00 ચલાવવામાં આવ્યાં હતાં.",
     "policy.search": "સ્રોત, નિયમો અથવા સંસ્થાઓ શોધો...",
     "policy.empty": "કોઈ મેળ ખાતા સ્રોતો નથી",
     "policy.clear": "શોધ સાફ કરો",
@@ -348,10 +355,8 @@ const bundle: LocaleBundle = {
       "વાણિજ્યિક-બેંક સુધારો 1 જાન્યુઆરી 2027ના રોજ અથવા તે પછીના વ્યવહારો પર લાગુ થાય છે; તે તારીખથી નવા કિસ્સાઓમાં નીતિના પુનર્વૈધીકરણની જરૂર પડે છે.",
     "Compare all six checkpoints on held-out scenario groups. Score the full JSON schema, all extracted fields, inappropriate guarantees and required actions. Keep human-rated empathy separate from lexical ChrF, and use paired bootstrap intervals rather than treating a single percentage as proof.":
       "હોલ્ડ-આઉટ દૃશ્ય જૂથો પર તમામ છ ચેકપોઇન્ટ્સની સરખામણી કરો. સંપૂર્ણ JSON યોજના, બધા કાઢેલા ક્ષેત્રો, અયોગ્ય બાંયધરીઓ અને જરૂરી ક્રિયાઓને સ્કોર કરો. માનવ-રેટેડ સહાનુભૂતિને લેક્સિકલ ChrF થી અલગ રાખો, અને એક ટકાવારીને પુરાવા તરીકે ગણવાને બદલે જોડીદાર બુટસ્ટ્રેપ અંતરાલોનો ઉપયોગ કરો.",
-    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider configures an experiment; it does not change this rule-based preview or demonstrate model quality.":
-      "સુસંગત LoRA મર્જનો ઉપયોગ કરીને ભારિત પરિમાણ સુધારાઓ લખો. માન્યતા માહિતી પર વજનને સ્વીપ કરો, જેમાં બે મર્જ ન થયેલા નિષ્ણાતો સામેલ છે. સ્લાઇડરને ખસેડવાથી પ્રયોગને રૂપરેખાંકિત કરે છે; તે આ નિયમ-આધારિત પૂર્વાવલોકનને બદલતું નથી અથવા મોડેલની ગુણવત્તા દર્શાવતું નથી.",
-    "Configuration preview · no merged checkpoint yet":
-      "રૂપરેખાંકન પૂર્વાવલોકન · હજુ સુધી કોઈ મર્જ થયેલ ચેકપોઇન્ટ નથી",
+    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider shows the measured result where one exists; it does not change the served model.":
+      "સુસંગત LoRA મર્જનો ઉપયોગ કરીને ભારિત પરિમાણ સુધારાઓ લખો. માન્યતા ડેટા પર વજનને સ્વીપ કરો, જેમાં બે અનમર્જિંગ નિષ્ણાતો સામેલ છે. સ્લાઇડરને ખસેડવું માપેલા પરિણામને દર્શાવે છે જ્યાં એક અસ્તિત્વમાં છે; તે સર્વ કરેલ મોડેલને બદલતું નથી.",
     "Controls · base, uncurated SFT and curated joint SFT":
       "કંટ્રોલ્સ · બેઝ, અનક્યુરેટેડ SFT અને ક્યુરેટેડ જોઇન્ટ SFT",
     "Curate with care":
@@ -360,6 +365,12 @@ const bundle: LocaleBundle = {
       "ડેટાસેટ A· સ્ટ્રિક્ટ JSON + ફિલ્ડ પ્રોવિન્સન્સ",
     "Dataset B · chosen / rejected customer replies":
       "ડેટાસેટ બી. પસંદ કરેલ/નકારી કાઢેલા ગ્રાહકના જવાબો",
+    "Done · 934 cases curated with CuratorKIT 0.1.21; 810 human-reviewed cases in training":
+      "CuratorKIT 0.1.21 સાથે તૈયાર કરાયેલ · 934 કેસ; તાલીમમાં 810 માનવ-સમીક્ષા કરાયેલ કેસ",
+    "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)":
+      "પૂર્ણ થયું · QLoRA SFT 810 સમીક્ષા કરાયેલા કેસો પર, RTX 4050 (6 GB)",
+    "Done · every model evaluated; results in the Benchmark lab":
+      "પૂર્ણ થયેલ દરેક મોડેલનું મૂલ્યાંકન; બેન્ચમાર્ક લેબમાં પરિણામો",
     "Every claim needs a measured result.":
       "દરેક દાવાને માપેલા પરિણામની જરૂર હોય છે.",
     "Found":
@@ -374,20 +385,18 @@ const bundle: LocaleBundle = {
       "વિલંબિત છેતરપિંડી અહેવાલ · બાંયધરીકૃત-રિફંડ બળજબરી",
     "Listening":
       "સાંભળવું",
-    "Local curation + optional CuratorKIT pass":
-      "સ્થાનિક ક્યુરેશન + વૈકલ્પિક CuratorKIT પાસ",
     "Make quality visible":
       "ગુણવત્તાને દૃશ્યમાન બનાવો",
     "Manifest · source hashes, split IDs and rejection reasons":
       "મેનિફેસ્ટ · સ્રોત હેશ, વિભાજીત ઓળખપત્રો અને અસ્વીકારના કારણો",
+    "Measured in the pilot · the 0.55/0.45 merge was worse, so it is not used":
+      "પાયલોટમાં માપવામાં આવેલ 0.55/0.45 મર્જ વધુ ખરાબ હતું, તેથી તેનો ઉપયોગ થતો નથી.",
     "Merge & investigate":
       "મર્જ કરો અને તપાસ કરો",
     "Merge manifest · base, tokenizer and adapter identities":
       "મેનિફેસ્ટ · બેઝ, ટોકનાઇઝર અને એડેપ્ટર ઓળખાણોને મર્જ કરો",
     "NPCI · Dispute redressal":
       "NPCI · વિવાદનું નિવારણ",
-    "Offline scorer ready · model evaluation pending":
-      "ઓફલાઇન સ્કોરર તૈયાર · મોડેલ મૂલ્યાંકન બાકી છે",
     "QR request · ₹24,500 · reported today":
       "આજે નોંધાયેલ ક્યુ. આર. વિનંતી · ₹24,500 ·",
     "RBI · Customer liability":
@@ -410,8 +419,6 @@ const bundle: LocaleBundle = {
       "1930 અને cybercrime.gov.in દ્વારા તાત્કાલિક નાણાકીય સાયબર છેતરપિંડીની જાણ કરો. પુનઃપ્રાપ્તિની ખાતરી નથી.",
     "Report · per-case evidence + paired bootstrap deltas":
       "કેસ દીઠ પુરાવા + જોડીદાર બુટસ્ટ્રેપ ડેલ્ટાનો અહેવાલ આપો",
-    "Requires compatible GPU + reviewed data":
-      "સુસંગત જી. પી. યુ. + સમીક્ષા કરેલ માહિતીની જરૂર છે",
     "Sent to the wrong person":
       "ખોટી વ્યક્તિને મોકલો",
     "Start with synthetic or authorised customer chats. Mask sensitive identities, retain only context-labelled transaction references, validate fields against source spans, and separate schema targets from same-task preference pairs.":

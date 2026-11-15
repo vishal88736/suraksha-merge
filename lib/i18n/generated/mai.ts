@@ -58,7 +58,7 @@ const bundle: LocaleBundle = {
     "desk.pipelineTitle": "एकटा पाइपलाइन। दूटा विशेषज्ञ।",
     "desk.pipelineSubtitle": "कोलाहलपूर्ण सन्देशसँ सत्यापनीय प्रतिक्रिया धरिक यात्राक अनुसरण करू।",
     "desk.benchmarksTitle": "विश्वाससँ पहिने साक्ष्य।",
-    "desk.benchmarksSubtitle": "छहटा चेकप्वाइंट। एकटा सीमित मानक। कोनो परिणाम नहि भेटल।",
+    "desk.benchmarksSubtitle": "प्रत्येक मॉडल जकरा हम प्रशिक्षित कयलहुँ, ओकरा समान आयोजित केस पर नापल गेल। कोनो परिणाम नहि भेटल।",
     "desk.policyTitle": "नियमक आधार पर।",
     "desk.policySubtitle": "प्रत्येक ट्राइएज सिफारिशक पाछाँ संस्करण प्राथमिक स्रोत।",
     "workflow.message": "ग्राहकक सन्देश",
@@ -220,27 +220,20 @@ const bundle: LocaleBundle = {
     "pipeline.outputs": "ई चरण की उत्पन्न करैत अछि",
     "pipeline.note": "प्रत्येक चरण अपन स्रोत पहचानकेँ आगू बढ़बैत अछि। असफल नमूनाकेँ दर्ज कयल जाइत अछि, जतऽ उचित मानल जाइत अछि ओकर मरम्मत कयल जाइत अछि, फेरसँ जाँच कयल जाइत अछि।",
     "pipeline.experimentEyebrow": "कार्य-अंकगणितीय प्रयोग",
-    "pipeline.experimentTitle": "संतुलन ताकू। परिणाम नापू।",
-    "pipeline.experimentBody": "स्लाइडर एकटा ऑफ़लाइन मर्जकेँ कॉन्फ़िगर करैत अछि। मॉडलक प्रदर्शनक मूल्यांकन विलयक बाद करबाक चाही।",
+    "pipeline.experimentTitle": "हम सभ शेष राशिकेँ नापलहुँ। एकर लाभ नहि भेटलनि।",
+    "pipeline.experimentBody": "पायलटमे, 0.55 / 0.45 पर स्कीमा आ समानुभूति विशेषज्ञसभक विलयसँ सम्पूर्ण-क्षेत्र सटीकता (72.8% → 0%) खतम भऽ जाइत छैक, तेँ विलयक उपयोग नहि कयल जाइत छैक। परोसल गेल मॉडल मानव-समीक्षित डेटा पर सादा SFT होइत छैक।",
     "pipeline.specialistA": "स्किमा विशेषज्ञ",
     "pipeline.specialistB": "सहानुभूति विशेषज्ञ",
     "pipeline.empathyOnly": "केवल सहानुभूति।",
     "pipeline.schemaOnly": "केवल योजना",
-    "pipeline.resetMix": "0.55/0.45 पर रीसेट करू।",
+    "pipeline.resetMix": "0.55 / 0.45 पर रीसेट करू।",
     "pipeline.exportMix": "निर्यात विलय विन्यास",
-    "bench.noteTitle": "प्रयोग तैयार भऽ जाइत अछि। एकर बाद सबूत आबि जाइत अछि।",
-    "bench.noteBody": "प्रस्तावक प्रतिशत आ लागतक अनुमान नहि नापल गेल अछि। एहि तालिका मे मात्र पहिचान योग्य मूल्यांकन रन के परिणाम होयत।",
-    "bench.notEvaluated": "एखन धरि मूल्यांकन नहि भेल अछि।",
-    "bench.ablation": "चेकप्वाइंट एब्लेशन",
-    "bench.ablationBody": "सभ विशेषज्ञ आ आधार रेखा, समान आयोजित मामलासभ पर मूल्यांकन कैल गेल।",
+    "bench.noteTitle": "रोकि देल गेल डेटा पर नापल गेल, वादा नहि कयल गेल।",
+    "bench.noteBody": "नीचाँ देल गेल प्रत्येक संख्या मॉडलसभ द्वारा कहियो प्रशिक्षित नहि कयल गेल मामलासभ पर रिकॉर्ड कैल गेल रनसँ अबैत अछि। समीक्षा सेट पर केवल 100% स्कोर करय बला नियमक अपेक्षा कयल जाइत अछिः ओ लेबल नियमसँ सहमत होयबाक लेल बनाओल गेल छल।",
+    "bench.ablation": "मानव-समीक्षित डेटा पर प्रशिक्षित मॉडलसभ",
+    "bench.ablationBody": "रनटाइम वास्तविक पाइपलाइन के माध्यम सँ परिणाम दैत छैः मॉडल, जाँच, आ (जतय नोट कैल गेल छै) नीति नियम।",
     "bench.colCheckpoint": "चेकप्वाइंट",
-    "bench.colSchema": "स्कीमा पास",
-    "bench.colFields": "सटीक मैचक मैदान बनाउ।",
-    "bench.colUnsafe": "असुरक्षित गारंटी",
-    "bench.colEmpathy": "सहानुभूति/chrF",
-    "bench.colStatus": "स्थिति",
-    "bench.awaitingRun": "दौड़बाक प्रतीक्षा करैत अछि।",
-    "bench.awaitingTraining": "प्रशिक्षणक प्रतीक्षा",
+    "bench.colFields": "सभ क्षेत्र सटीक अछि।",
     "bench.splitTitle": "परिस्थितिक हिसाबसँ परिवार विभाजित करू।",
     "bench.splitBody": "पैराफ्रेज, SMS टेम्प्लेट आ एकहि केसक मरम्मत कैल गेल संस्करणकेँ एक हिस्सामे राखू। मर्ज वेट चुनबासँ पहिने टेस्ट सेटकेँ फ्रीज करू।",
     "bench.empathyTitle": "सहानुभूतिक लेल मनुष्यक आवश्यकता अछि।",
@@ -249,8 +242,22 @@ const bundle: LocaleBundle = {
     "bench.failureBody": "त्रुटिपूर्ण JSON, मनगढ़ंत UTRs, असमर्थित गारंटी आ प्रति मामला लापता वृद्धि क्रिया के रिपोर्ट करू। बूटस्ट्रैप जोड़ीदार अंतर।",
     "bench.adversarialEyebrow": "विरोधी सूट",
     "bench.adversarialTitle": "दबावक कारणेँ नीतिमे बदलाव नहि अयबाक चाही।",
-    "bench.adversarialBody": "वर्तमान नियतात्मक पूर्वावलोकनक विरुद्ध धन वापसी-जबरदस्तीक मामिलाक प्रयास करू।",
+    "bench.adversarialBody": "लाइव मॉडलक खिलाफ धन वापसी-जबरदस्ती के मामला के कोशिश करूः कोनो धन वापसी के वादा नै कैल जाय।",
     "bench.adversarialCta": "खुला प्रतिकूल परिदृश्य।",
+    "bench.measuredOn": "नापल गेल {date}",
+    "bench.colReviewed": "54 समीक्षा कयल गेल मामला सभ क्षेत्र",
+    "bench.colChallenge": "42 अपरिचित · श्रेणी",
+    "bench.colReview": "मानवीय समीक्षाक आवश्यकता अछि।",
+    "bench.colLatency": "समय/उत्तर",
+    "bench.colSource": "प्रत्येक सँख्याक लेल साक्ष्य फाइल।",
+    "bench.colUtility": "उपयोगिता",
+    "bench.mostAccurate": "सबसँ सटीक।",
+    "bench.defaultMode": "वर्तमान पूर्वनिर्धारित",
+    "bench.footnote": "* केवल नियम समीक्षा सेट पर 100% स्कोर करैत अछि किएक तँ ओ लेबल नियमसँ सहमत होयबाक लेल बनाओल गेल छल; अपरिचित-शब्द सेट उचित तुलना अछि। κ ओहि समयक नियमसँ नापल जाइत अछि। अपरिचित-शब्द सेट परियोजना द्वारा लेबल कैल जाइत अछि, मानव-समीक्षा नहि कैल गेल अछि। वास्तविक ग्राहक संदेश पर किछु नहि मूल्याङ्कन कैल गेल अछि।",
+    "bench.pilotTitle": "राउंड 1 पायलटः समीक्षा नहि कैल गेल डेटा",
+    "bench.pilotBody": "मानव समीक्षा सँ पहिने 92 सिंथेटिक केस पर रॉ मॉडल आउटपुट AuditKIT द्वारा स्कोर कैल गेल। ई पायलट मूल योजनाः GRPO, सहानुभूति DPO आ भारित विलयक परीक्षण केलक।",
+    "pipeline.measuredAt": "नापल गेल (पायलट, 92 सिंथेटिक केस): सख्त JSON {schema}, सभ क्षेत्र सटीक {fields}, उपयोगिता {utility}।",
+    "pipeline.notMeasured": "एहि वजन पर नापल नहि गेल। केवल 1.00 / 0.00, 0.55 / 0.45 आ 0.00 / 1.00 चलाओल गेल छल।",
     "policy.search": "खोज स्रोत, नियम या संस्थान...",
     "policy.empty": "कोनो मेल खयबाक स्रोत नहि अछि।",
     "policy.clear": "खोज साफ करू।",
@@ -298,7 +305,7 @@ const bundle: LocaleBundle = {
     "landing.illustrationLabel": "ताला आ स्रोत-आधारित लेनदेन रिकॉर्ड द्वारा संरक्षित ग्राहकक चित्रण।",
     "landing.illustrationTag": "सबूत, पहिल।",
     "landing.illustrationTagBody": "प्रत्येक क्षेत्रक एकटा स्रोत होइत अछि।",
-    "landing.approachKicker": "सुरक्षा दृष्टिकोण/1",
+    "landing.approachKicker": "THE SURAKSHA APPROACH / 01",
     "landing.approachTitleLine1": "कम घबराहट।",
     "landing.approachTitleLine2": "अधिक स्पष्टता।",
     "landing.approachBody1": "एकटा संग्रह-अनुरोध घोटाला। एकटा भुगतान जे कहियो नहि आयल। एकटा ग्राहक जकरा अपन शब्दमे सहायताक आवश्यकता अछि।",
@@ -348,10 +355,8 @@ const bundle: LocaleBundle = {
       "वाणिज्यिक-बैंक संशोधन 1 जनवरी 2027 केँ या ओकर बादक लेनदेन पर लागू होइत अछि; ओहि तारीखसँ नव मामिलाक लेल नीति पुनर्वैधीकरणक आवश्यकता होइत अछि।",
     "Compare all six checkpoints on held-out scenario groups. Score the full JSON schema, all extracted fields, inappropriate guarantees and required actions. Keep human-rated empathy separate from lexical ChrF, and use paired bootstrap intervals rather than treating a single percentage as proof.":
       "होल्ड-आउट परिदृश्य समूह पर सब छओ चेकप्वाइंटक तुलना करू। पूरा JSON स्कीमा, सभ निकालि गेल क्षेत्र, अनुचित गारंटी आ आवश्यक क्रिया के स्कोर करू। मानव-रेटेड सहानुभूति के शाब्दिक ChrF सँ अलग राखू, आ एकल प्रतिशत के प्रमाण के रूप में मानने के बजाय जोड़ीदार बूटस्ट्रैप अंतराल के उपयोग करू।",
-    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider configures an experiment; it does not change this rule-based preview or demonstrate model quality.":
-      "एकटा संगत LoRA मर्जक उपयोग करैत भारित पैरामीटर अद्यतन रचना करू। मान्यताक डेटा पर भार बढ़ाउ, जाहिमे दूटा असम्बद्ध विशेषज्ञ सेहो शामिल अछि। स्लाइडरकेँ घुमयबा एकटा प्रयोगकेँ कॉन्फ़िगर करैत अछि; ई एहि नियम-आधारित पूर्वावलोकनकेँ नहि बदलैत अछि या मॉडलक गुणवत्ताकेँ प्रदर्शित नहि करैत अछि।",
-    "Configuration preview · no merged checkpoint yet":
-      "कॉन्फ़िगरेशन पूर्वावलोकन · एखन धरि कोनो विलय चेकप्वाइंट नहि अछि",
+    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider shows the measured result where one exists; it does not change the served model.":
+      "एकटा संगत LoRA मर्जक उपयोग करैत भारित पैरामीटर अद्यतन रचना करू। मान्यता डेटा पर स्वीप वेट करू, जाहि मे दूटा असम्बद्ध विशेषज्ञ सेहो शामिल अछि। स्लाइडर केँ स्थानांतरित करब मापल गेल परिणाम देखबैत अछि जतऽ एकटा मौजूद अछि; ई परोसल गेल मॉडल केँ नहि बदलैत अछि।",
     "Controls · base, uncurated SFT and curated joint SFT":
       "कंट्रोल्स बेस, अनक्युरेटेड SFT आ क्यूरेटेड ज्वाइंट SFT",
     "Curate with care":
@@ -360,6 +365,12 @@ const bundle: LocaleBundle = {
       "डेटासेट ए · सख्त JSON + क्षेत्र उद्गम",
     "Dataset B · chosen / rejected customer replies":
       "डेटासेट बी · चुनल गेल/अस्वीकृत ग्राहकक जवाब",
+    "Done · 934 cases curated with CuratorKIT 0.1.21; 810 human-reviewed cases in training":
+      "पूरा भेल CuratorKIT 0.1.21 क संग क्यूरेट कैल गेल 934 मामला; प्रशिक्षणमे 810 मानव-समीक्षित मामला",
+    "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)":
+      "पूरा भेल · QLoRA SFT 810 समीक्षा मामलासभ पर, आर. टी. एक्स. 4050 (6 जी. बी.)",
+    "Done · every model evaluated; results in the Benchmark lab":
+      "हरेक मॉडलक मूल्यांकन पूरा भऽ गेल; परिणाम बेंचमार्क प्रयोगशाला मे अबैत अछि।",
     "Every claim needs a measured result.":
       "प्रत्येक दावाक एकटा मापित परिणामक आवश्यकता होइत छैक।",
     "Found":
@@ -374,20 +385,18 @@ const bundle: LocaleBundle = {
       "देरसँ धोखाधड़ी रिपोर्ट · गारंटी-धन वापसी जबरदस्ती",
     "Listening":
       "सुनि रहल छथि।",
-    "Local curation + optional CuratorKIT pass":
-      "स्थानीय उपचार + वैकल्पिक CuratorKIT पास",
     "Make quality visible":
       "गुणवत्ताकेँ दृष्टिगोचर बनाउ।",
     "Manifest · source hashes, split IDs and rejection reasons":
       "मैनिफेस्ट · स्रोत हैश, विभाजित आईडी आ अस्वीकृतिक कारणसभ",
+    "Measured in the pilot · the 0.55/0.45 merge was worse, so it is not used":
+      "पायलटमे नापल गेल · 0.55/0.45 विलय बेसी खराब छल, तेँ एकर उपयोग नहि कयल जाइत अछि।",
     "Merge & investigate":
       "विलय आ जाँच करू।",
     "Merge manifest · base, tokenizer and adapter identities":
       "मैनिफेस्ट · बेस, टोकनाइजर आ एडाप्टर आइडेंटिटीकेँ मिलाउ",
     "NPCI · Dispute redressal":
       "NPCI विवाद निवारण",
-    "Offline scorer ready · model evaluation pending":
-      "ऑफ़लाइन स्कोरर तैयार · मॉडल मूल्यांकन लंबित अछि",
     "QR request · ₹24,500 · reported today":
       "क्यू. आर. अनुरोध · ₹24,500 · आइ रिपोर्ट कयल गेल अछि।",
     "RBI · Customer liability":
@@ -410,8 +419,6 @@ const bundle: LocaleBundle = {
       "वित्तीय साइबर धोखाधड़ी के तुरंत 1930 आ cybercrime.gov.in के माध्यम सँ रिपोर्ट करू। वसूली के गारंटी नहि छैक।",
     "Report · per-case evidence + paired bootstrap deltas":
       "प्रति-मामला सबूत + जोड़ीदार बूटस्ट्रैप डेल्टा के रिपोर्ट करू",
-    "Requires compatible GPU + reviewed data":
-      "अनुकूल जी. पी. यू. + समीक्षा डेटा आवश्यक अछि।",
     "Sent to the wrong person":
       "गलत व्यक्तिकेँ पठाओल गेल।",
     "Start with synthetic or authorised customer chats. Mask sensitive identities, retain only context-labelled transaction references, validate fields against source spans, and separate schema targets from same-task preference pairs.":

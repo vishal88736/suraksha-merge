@@ -58,7 +58,7 @@ const bundle: LocaleBundle = {
     "desk.pipelineTitle": "एक पाईपलाईन. दोन विशेशज्ञ.",
     "desk.pipelineSubtitle": "गोंगाट करपी संदेशासावन सत्यापनीय प्रतिसादा मेरेनच्या प्रवासाचें अनुकरण करात.",
     "desk.benchmarksTitle": "आत्मविश्वासा पयलीं पुरावो.",
-    "desk.benchmarksSubtitle": "स चेकपॉईंट. एक धरून दवरिल्लो बेंचमार्क. कसलोच सोदून काडिल्लो परिणाम मेळूंक ना.",
+    "desk.benchmarksSubtitle": "आमी प्रशिक्षण दिल्लें दर एक मॉडेल, त्याच धरून दवरिल्ल्या प्रकरणांचेर मेजलें. कसलोच सोदून काडिल्लो परिणाम मेळूंक ना.",
     "desk.policyTitle": "नेमांचेर आदारीत.",
     "desk.policySubtitle": "दर एका ट्रायएज शिफारशी फाटल्यान आवृत्ती प्राथमीक स्रोत.",
     "workflow.message": "गिरायकांचो संदेश",
@@ -220,27 +220,20 @@ const bundle: LocaleBundle = {
     "pipeline.outputs": "हो पांवडो कितें निर्माण करता?",
     "pipeline.note": "दर एका पांवड्यार आपली स्रोत वळख मुखार व्हरतात. अपेशी थारिल्ले नमुने नोंद करतात, जंय योग्य थारतात थंय दुरुस्ती करतात, मागीर परत तपासतात.",
     "pipeline.experimentEyebrow": "कार्य-अंकगणिताचो प्रयोग",
-    "pipeline.experimentTitle": "शिल्लक सोदून काडात. परिणाम मेजात.",
-    "pipeline.experimentBody": "स्लायडर ऑफलाईन विलीनीकरणाची मांडणी करता. विलीनीकरणा उपरांत मॉडेलाच्या कामगिरीचें मुल्यांकन करचें पडटा.",
+    "pipeline.experimentTitle": "आमी शिल्लक मेजली. ताचो फायदो जालो ना.",
+    "pipeline.experimentBody": "पायलट पद्दतींत, स्किमा आनी सहानुभूती विशेशज्ञांक 0.55 / 0.45 चेर विलीन केल्यार सगळ्या क्षेत्राची अचूकताय (72.8% → 0%) उणी जाता, देखून विलीन करप वापरनात. मनशान नियाळिल्ल्या डेटाचेर सादर केल्ले मॉडेल सादें SFT आसतात.",
     "pipeline.specialistA": "स्किमा विशेशज्ञ",
     "pipeline.specialistB": "सहानुभूती विशेशज्ञ",
     "pipeline.empathyOnly": "फकत सहानुभूती",
     "pipeline.schemaOnly": "फकत स्किमा",
-    "pipeline.resetMix": "0.55/0.45 चेर परतून सेट करात",
+    "pipeline.resetMix": "0.55 / 0.45 चेर परतून सेट करात",
     "pipeline.exportMix": "एक्सपोर्ट मर्ज मांडणी",
-    "bench.noteTitle": "प्रयोग तयार जाता. ताचे उपरांत पुरावे मेळटात.",
-    "bench.noteBody": "प्रस्तावाची टक्केवारी आनी खर्चाचो अदमास मेजूंक ना. ह्या वळेरेंत फकत वळखुपाक येवपी मुल्यांकनाचो परिणाम आसतलो.",
-    "bench.notEvaluated": "अजून मुल्यांकन जावंक ना",
-    "bench.ablation": "चेकपॉईंट एब्लेशन",
-    "bench.ablationBody": "सगळे विशेशज्ञ आनी बेसलायनी, एकाच धरून दवरिल्ल्या केशींचेर मुल्यांकन केलें.",
+    "bench.noteTitle": "धरून दवरिल्ल्या डेटाचेर मेजतात, वचन दिल्लें न्हय.",
+    "bench.noteBody": "सकयल दिल्ले दरेके क्रमांक मॉडेलांनी केन्नाच प्रशिक्षण दिवंक नाशिल्ल्या केशींचेर नोंद केल्ल्या रनांतल्यान येतात. पुनरावलोकन केल्ल्या संचाचेर फकत 100% स्कोर करपाचे नेम अपेक्षीत आसातः ते लेबल नेमांक मान्य करपा खातीर तयार केल्ले.",
+    "bench.ablation": "मनशान नियाळिल्ल्या डेटाचेर प्रशिक्षीत मॉडेल्स",
+    "bench.ablationBody": "प्रत्यक्ष पाईपलायना वरवीं रनटायमाचो परिणामः मॉडेल, तपासणी, आनी (जंय नोंद केल्या) धोरण नेम.",
     "bench.colCheckpoint": "चेकपॉईंट",
-    "bench.colSchema": "स्किमा पास",
-    "bench.colFields": "फिल्डाची अचूक मॅच",
-    "bench.colUnsafe": "असुरक्षीत हमी",
-    "bench.colEmpathy": "सहानुभूती/chrF",
-    "bench.colStatus": "स्थिती",
-    "bench.awaitingRun": "धांवपाची वाट पळयता",
-    "bench.awaitingTraining": "प्रशिक्षणाची वाट पळयता",
+    "bench.colFields": "सगळीं क्षेत्रां अचूक",
     "bench.splitTitle": "परिस्थिती प्रमाणें कुटुंबाची विभागणी करची",
     "bench.splitBody": "पॅराफ्रेझ, SMS टेम्पलेट आनी त्याच केसाची दुरुस्ती केल्ली आवृत्ती एकाच विभागांत दवरात. विलीन वजन वेंचून काडचे पयलीं चांचणी संच गोठय....................................................................................................................................................................",
     "bench.empathyTitle": "सहानुभूती खातीर मनशाची गरज आसता.",
@@ -249,8 +242,22 @@ const bundle: LocaleBundle = {
     "bench.failureBody": "विकृत JSON, बनावट UTRs, असमर्थीत गॅरंटी आनी दर एका केशींत एस्केलेशन क्रिया गहाळ जाल्ल्याची म्हायती दिवची. बूटस्ट्रॅप जोडिल्ल्या फरकांचो अहवाल दिवचो.-------------------------------------------------------------------------------------------------------------------------------------------------------- -",
     "bench.adversarialEyebrow": "विरोधात्मक सूट",
     "bench.adversarialTitle": "दबावाक लागून धोरण बदलचें न्हय.",
-    "bench.adversarialBody": "सद्याच्या निर्धारक पूर्वावलोकना आड रिफंड-जबरदस्तीची केस वापरून पळयात.",
+    "bench.adversarialBody": "लायव्ह मॉडेला आड रिफंड-जबरदस्तीची केस करून पळयातः रिफंड दिवपाचें उतर दिवचें न्हय.",
     "bench.adversarialCta": "विरोधात्मक परिस्थिती उक्ती कर",
+    "bench.measuredOn": "मेजिल्ले {date}",
+    "bench.colReviewed": "54 पुनरावलोकन केल्ले केशी · सगळे क्षेत्र",
+    "bench.colChallenge": "42 अनवळखी वर्ग",
+    "bench.colReview": "मनशाचे नियाळ घेवपाची गरज आसा",
+    "bench.colLatency": "वेळ/जाप",
+    "bench.colSource": "दर एका क्रमांका खातीर पुरावो फाइल",
+    "bench.colUtility": "उपयुक्तताय",
+    "bench.mostAccurate": "सगळ्यांत अचूक",
+    "bench.defaultMode": "सद्याची पूर्वनिर्धारीत",
+    "bench.footnote": "* पुनरावलोकन केल्ल्या संचांत फकत नेमच 100% गूण दितात कारण ते लेबल नेमांकडेन सहमत जावपा खातीर तयार केल्ले; अनवळखी-शब्द संच ही योग्य तुळा. त्या काळांतल्या नेमांकडेन मेजतात. अनवळखी-शब्द संच प्रकल्पा वरवीं लेबल करतात, मनशान नियाळ घेवंक ना. खर्या गिरायक संदेशांचेर कांयच मुल्यांकन करूंक ना.",
+    "bench.pilotTitle": "राउंड 1 पायलटः नियाळ घेवंक नाशिल्लो डेटा",
+    "bench.pilotBody": "मनशाचो नियाळ घेवचे पयलीं, 92 कृत्रीम प्रकरणांचेर कच्च्या मॉडेलाचें उत्पादन AuditKIT मेळयलें. ह्या पायलटांनी मूळ येवजण चांचणी केलीः GRPO, सहानुभूती DPO आनी भारित विलीनीकरण.",
+    "pipeline.measuredAt": "मेजिल्ले (पायलट, 92 कृत्रीम केस): कडक JSON {schema}, सगळे अचूक {fields}, उपयुक्तताय {utility}.",
+    "pipeline.notMeasured": "ह्या वजनाचेर मेजूंक नाशिल्लें. फकत 1.00 / 0.00, 0.55 / 0.45 आनी 0.00 / 1.00 चलयताले.",
     "policy.search": "स्रोत, नेम वा संस्था सोद...",
     "policy.empty": "मेळपी स्रोत नात",
     "policy.clear": "सोद निवळ कर",
@@ -348,10 +355,8 @@ const bundle: LocaleBundle = {
       "वेवसायीक-बँक दुरुस्ती 1 जानेवारी 2027 दिसा वा ताचे उपरांतच्या वेव्हारांक लागू जाता; त्या तारखे सावन नव्या प्रकरणांक धोरण पुनर्वैधीकरण जाय पडटा.",
     "Compare all six checkpoints on held-out scenario groups. Score the full JSON schema, all extracted fields, inappropriate guarantees and required actions. Keep human-rated empathy separate from lexical ChrF, and use paired bootstrap intervals rather than treating a single percentage as proof.":
       "धरून दवरिल्ल्या परिस्थिती गटांचेर सगळ्या स तपासणी केंद्रांची तुळा करात. पुराय JSON स्किमा, सगळीं काडिल्लीं क्षेत्रां, अयोग्य हमी आनी गरजेच्यो कृती स्कोर करात. मनशाच्या दर्जाची सहानुभूती लेक्सिकल ChrF परस वेगळी दवरात, आनी एक टक्के प्रमाण मानपा बदला जोडिल्ल्या बूटस्ट्रॅप मध्यंतरांचो वापर करात.",
-    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider configures an experiment; it does not change this rule-based preview or demonstrate model quality.":
-      "सुसंगत LoRA मर्ज वापरून भारित पॅरामीटर अद्ययावत रचात. दोन विलीन जावंक नाशिल्ल्या विशेशज्ञां सयत प्रमाणीकरण डेटाचेर वजन स्वीप करात. स्लायडर हालयल्यार प्रयोगाची मांडणी जाता; तो ह्या नियमाचेर आदारीत पूर्वावलोकनांत बदल करिना वा मॉडेलाची गुणवत्ता दाखयता.",
-    "Configuration preview · no merged checkpoint yet":
-      "मांडणी पूर्वावलोकन · अजून मेरेन विलीन चेकपॉईंट ना",
+    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider shows the measured result where one exists; it does not change the served model.":
+      "सुसंगत LoRA मर्ज वापरून भारित पॅरामीटर अद्ययावत रचात. दोन विलीन जावंक नाशिल्ल्या विशेशज्ञां सयत प्रमाणीकरण डेटाचेर वजन स्वीप करात. स्लायडर हालयल्यार एक अस्तित्वांत आसा थंय मेजिल्लो परिणाम दाखयता; तो सादर केल्ल्या मॉडेलांत बदल करिना.",
     "Controls · base, uncurated SFT and curated joint SFT":
       "कंट्रोल्स बेस, अनक्युरेटेड SFT आनी क्युरेटेड जॉइंट SFT",
     "Curate with care":
@@ -360,6 +365,12 @@ const bundle: LocaleBundle = {
       "डेटासेट ए · स्ट्रिक्ट JSON + फिल्ड प्रोव्हेनन्स.......................................................................................................................................................................................",
     "Dataset B · chosen / rejected customer replies":
       "डेटासेट बी....................................................................................................................................................................................................",
+    "Done · 934 cases curated with CuratorKIT 0.1.21; 810 human-reviewed cases in training":
+      "CuratorKIT 0.1.21 वांगडा क्युरेट केल्ल्यो · 934 केशी; प्रशिक्षणांत 810 मनशान नियाळ घेतिल्ल्यो केशी",
+    "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)":
+      "810 पुनरावलोकन केशींचेर पूर्ण · QLoRA SFT, आरटीएक्स 4050 (6 जीबी)",
+    "Done · every model evaluated; results in the Benchmark lab":
+      "डून दरेक मॉडेलाचें मुल्यांकन केलां; परिणाम बेंचमार्क लॅबांत मेळटा",
     "Every claim needs a measured result.":
       "दर एका दाव्याक मेजिल्ले परिणामाची गरज आसता.............................................................................................................................................................................................",
     "Found":
@@ -374,20 +385,18 @@ const bundle: LocaleBundle = {
       "उसरां जाल्ली फसवणुकीची म्हायती · गॅरंटी-रिफंड करड घालप-करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडावणी करडाव",
     "Listening":
       "आयकुपाक",
-    "Local curation + optional CuratorKIT pass":
-      "थळावे क्युरेशन + ऐच्छिक CuratorKIT पास",
     "Make quality visible":
       "दर्जो दिश्टी पडचो",
     "Manifest · source hashes, split IDs and rejection reasons":
       "मॅनिफेस्ट · सोर्स हॅश, स्प्लिट आयडी आनी न्हयकारपाचीं कारणां",
+    "Measured in the pilot · the 0.55/0.45 merge was worse, so it is not used":
+      "पायलटांत मेजिल्लें · 0.55/0.45 विलीन जावप चड वायट आशिल्लें, देखून ताचो वापर जायना.",
     "Merge & investigate":
       "विलीन करात आनी तपास करात",
     "Merge manifest · base, tokenizer and adapter identities":
       "मॅनिफेस्ट · बेस, टोकनायझर आनी अडॅप्टर आयडेंटिटी विलीन कर",
     "NPCI · Dispute redressal":
       "NPCI वाद निवारण",
-    "Offline scorer ready · model evaluation pending":
-      "ऑफलायन स्कोरर तयार · मॉडेल मुल्यांकन प्रलंबित आसा",
     "QR request · ₹24,500 · reported today":
       "क्यू. आर. विनंती · ₹24,500 · आयज नोंद केल्या",
     "RBI · Customer liability":
@@ -410,8 +419,6 @@ const bundle: LocaleBundle = {
       "1930 आनी cybercrime.gov.in वरवीं अर्थीक सायबर फसवणुकीची रोखडीच म्हायती दिवची. रिकव्हरीची हमी ना.",
     "Report · per-case evidence + paired bootstrap deltas":
       "अहवाल दिवचो · दर केसाचो पुरावो + जोडिल्लो बूटस्ट्रॅप डेल्टा",
-    "Requires compatible GPU + reviewed data":
-      "सुसंगत जी. पी. यू. + पुनरावलोकन केल्लो डेटा जाय पडटा",
     "Sent to the wrong person":
       "चुकीच्या मनशाक धाडलो",
     "Start with synthetic or authorised customer chats. Mask sensitive identities, retain only context-labelled transaction references, validate fields against source spans, and separate schema targets from same-task preference pairs.":

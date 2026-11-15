@@ -58,7 +58,7 @@ const bundle: LocaleBundle = {
     "desk.pipelineTitle": "একটি পাইপলাইন, দুজন বিশেষজ্ঞ।",
     "desk.pipelineSubtitle": "কোলাহলপূর্ণ বার্তা থেকে যাচাইযোগ্য প্রতিক্রিয়া পর্যন্ত যাত্রাটি অনুসরণ করুন।",
     "desk.benchmarksTitle": "আত্মবিশ্বাসের আগে প্রমাণ।",
-    "desk.benchmarksSubtitle": "ছয়টি চেকপয়েন্ট। একটি নির্ধারিত মাপকাঠি। কোনও উদ্ভাবিত ফলাফল নেই।",
+    "desk.benchmarksSubtitle": "প্রতিটি মডেল যা আমরা প্রশিক্ষণ দিয়েছিলাম, একই হোল্ড-আউট ক্ষেত্রে পরিমাপ করা হয়েছিল। কোনও উদ্ভাবিত ফলাফল নেই।",
     "desk.policyTitle": "নিয়মে ভিত্তি করে।",
     "desk.policySubtitle": "প্রতিটি ট্রাইএজ সুপারিশের পিছনে প্রাথমিক উৎসের সংস্করণ।",
     "workflow.message": "গ্রাহক বার্তা",
@@ -220,27 +220,20 @@ const bundle: LocaleBundle = {
     "pipeline.outputs": "এই পর্যায়টি কী তৈরি করে",
     "pipeline.note": "প্রতিটি পর্যায় তার উৎস পরিচয় বহন করে। ব্যর্থ নমুনাগুলি রেকর্ড করা হয়, যেখানে ন্যায্য সেখানে মেরামত করা হয়, তারপর আবার পরীক্ষা করা হয়।",
     "pipeline.experimentEyebrow": "কার্য-গাণিতিক পরীক্ষা",
-    "pipeline.experimentTitle": "ভারসাম্য খুঁজে বের করুন। ফলাফল পরিমাপ করুন।",
-    "pipeline.experimentBody": "স্লাইডার একটি অফলাইন মার্জ কনফিগার করে। মডেলের কার্যকারিতা অবশ্যই মার্জের পরে মূল্যায়ন করা উচিত।",
+    "pipeline.experimentTitle": "আমরা ভারসাম্য পরিমাপ করেছিলাম। তা কাজে আসেনি।",
+    "pipeline.experimentBody": "পাইলট পদ্ধতিতে, 0.55 / 0.45-এ স্কিমা এবং সহানুভূতি বিশেষজ্ঞদের একত্রীকরণ সমস্ত ক্ষেত্রের নির্ভুলতা (72.8% → 0%) হারিয়েছে, তাই একত্রীকরণ ব্যবহার করা হয় না। পরিবেশন করা মডেলগুলি মানব-পর্যালোচিত ডেটাতে সাধারণ SFT।",
     "pipeline.specialistA": "স্কিমা বিশেষজ্ঞ",
     "pipeline.specialistB": "সহানুভূতি বিশেষজ্ঞ",
     "pipeline.empathyOnly": "শুধুমাত্র সহানুভূতি",
     "pipeline.schemaOnly": "শুধুমাত্র স্কিমা",
-    "pipeline.resetMix": "0.55/0.45-এ পুনরায় সেট করুন",
+    "pipeline.resetMix": "0.55 / 0.45-এ পুনরায় সেট করুন",
     "pipeline.exportMix": "এক্সপোর্ট মার্জ কনফিগারেশন",
-    "bench.noteTitle": "পরীক্ষা-নিরীক্ষা করা হয়। এরপর আসে প্রমাণ।",
-    "bench.noteBody": "প্রস্তাবের শতাংশ এবং ব্যয়ের প্রাক্কলন পরিমাপ করা হয়নি। এই সারণিতে শুধুমাত্র শনাক্তযোগ্য মূল্যায়নের ফলাফল থাকবে।",
-    "bench.notEvaluated": "এখনও মূল্যায়ন করা হয়নি",
-    "bench.ablation": "চেকপয়েন্ট অ্যাবলেশন",
-    "bench.ablationBody": "সমস্ত বিশেষজ্ঞ এবং বেসলাইন, একই হোল্ড-আউট ক্ষেত্রে মূল্যায়ন করা হয়।",
+    "bench.noteTitle": "আটকে রাখা তথ্যের উপর পরিমাপ করা হয়েছে, প্রতিশ্রুতি দেওয়া হয়নি।",
+    "bench.noteBody": "নীচের প্রতিটি সংখ্যা মডেলরা কখনও প্রশিক্ষিত হয়নি এমন ক্ষেত্রে রেকর্ড করা রান থেকে আসে। পর্যালোচিত সেটে শুধুমাত্র 100% স্কোরিং নিয়মগুলি প্রত্যাশিতঃ সেই লেবেলগুলি নিয়মগুলির সাথে একমত হওয়ার জন্য তৈরি করা হয়েছিল।",
+    "bench.ablation": "মানব-পর্যালোচিত তথ্যের উপর প্রশিক্ষিত মডেলরা",
+    "bench.ablationBody": "প্রকৃত পাইপলাইনের মাধ্যমে রানটাইম ফলাফলঃ মডেল, চেক এবং (যেখানে উল্লেখ করা হয়েছে) নীতি নিয়ম।",
     "bench.colCheckpoint": "চেকপয়েন্ট",
-    "bench.colSchema": "স্কিমা পাস",
-    "bench.colFields": "ফিল্ডের সঠিক ম্যাচ",
-    "bench.colUnsafe": "অনিরাপদ নিশ্চয়তা",
-    "bench.colEmpathy": "সহানুভূতি/chrF",
-    "bench.colStatus": "স্ট্যাটাস",
-    "bench.awaitingRun": "দৌড়ের অপেক্ষা",
-    "bench.awaitingTraining": "প্রশিক্ষণের জন্য অপেক্ষা",
+    "bench.colFields": "সমস্ত ক্ষেত্র সঠিক",
     "bench.splitTitle": "দৃশ্যপট অনুসারে পরিবার ভাগ করুন",
     "bench.splitBody": "প্যারাফ্রেজ, SMS টেমপ্লেট এবং একই কেসের মেরামত করা সংস্করণগুলি একটি ভাগে রাখুন। মার্জ ওজন নির্বাচন করার আগে পরীক্ষার সেটটি হিমায়িত করুন।",
     "bench.empathyTitle": "সহানুভূতির জন্য একজন মানুষের প্রয়োজন",
@@ -249,8 +242,22 @@ const bundle: LocaleBundle = {
     "bench.failureBody": "ত্রুটিপূর্ণ JSON, মনগড়া UTRs, অসমর্থিত গ্যারান্টি এবং প্রতি ক্ষেত্রে অনুপস্থিত বৃদ্ধি কর্মের রিপোর্ট করুন। বুটস্ট্র্যাপ জোড়া পার্থক্য।",
     "bench.adversarialEyebrow": "বিরোধী স্যুট",
     "bench.adversarialTitle": "চাপের কারণে নীতি পরিবর্তন করা উচিত নয়।",
-    "bench.adversarialBody": "বর্তমান নির্ধারণমূলক প্রাকদর্শনটির বিরুদ্ধে একটি রিফান্ড-বলপ্রয়োগের মামলা করার চেষ্টা করুন।",
+    "bench.adversarialBody": "লাইভ মডেলের বিরুদ্ধে রিফান্ড-জবরদস্তির মামলা করার চেষ্টা করুনঃ কোনও রিফান্ডের প্রতিশ্রুতি দেওয়া উচিত নয়।",
     "bench.adversarialCta": "উন্মুক্ত প্রতিকূল পরিস্থিতি",
+    "bench.measuredOn": "পরিমাপ করা হয়েছে {date}",
+    "bench.colReviewed": "54টি পর্যালোচিত মামলা · সমস্ত ক্ষেত্র",
+    "bench.colChallenge": "42 অপরিচিত বিভাগ",
+    "bench.colReview": "মানবিক পর্যালোচনার প্রয়োজন",
+    "bench.colLatency": "সময়/উত্তর",
+    "bench.colSource": "প্রতিটি সংখ্যার জন্য প্রমাণ ফাইল",
+    "bench.colUtility": "ইউটিলিটি",
+    "bench.mostAccurate": "সবচেয়ে সঠিক",
+    "bench.defaultMode": "বর্তমান ডিফল্ট",
+    "bench.footnote": "* শুধুমাত্র নিয়মগুলি পর্যালোচিত সেটে 100% স্কোর করে কারণ সেই লেবেলগুলি নিয়মগুলির সাথে একমত হওয়ার জন্য তৈরি করা হয়েছিল; অপরিচিত-শব্দের সেটটি ন্যায্য তুলনা। সেই সময়ের নিয়মগুলির সাথে পরিমাপ করা হয়। অপরিচিত-শব্দের সেটটি প্রকল্প দ্বারা লেবেল করা হয়, মানব-পর্যালোচিত নয়। প্রকৃত গ্রাহক বার্তাগুলিতে কিছুই মূল্যায়ন করা হয়নি।",
+    "bench.pilotTitle": "রাউন্ড 1 পাইলটঃ পর্যালোচিত তথ্য",
+    "bench.pilotBody": "মানুষের পর্যালোচনার আগে 92টি সিন্থেটিক ক্ষেত্রে কাঁচা মডেলের আউটপুট AuditKIT দ্বারা স্কোর করা হয়েছিল। এই পাইলটরা মূল পরিকল্পনাটি পরীক্ষা করেছিলেনঃ GRPO, সহানুভূতি DPO এবং ওজনযুক্ত একত্রীকরণ।",
+    "pipeline.measuredAt": "পরিমাপ করা হয়েছে (পাইলট, 92টি সিন্থেটিক কেস): কঠোর JSON {schema}, সমস্ত ক্ষেত্র সঠিক {fields}, ইউটিলিটি {utility}।",
+    "pipeline.notMeasured": "এই ওজনে পরিমাপ করা হয়নি। শুধুমাত্র 1.00 / 0.00, 0.55 / 0.45 এবং 0.00 / 1.00 চালানো হয়েছিল।",
     "policy.search": "অনুসন্ধানের উৎস, নিয়ম বা প্রতিষ্ঠান...",
     "policy.empty": "কোনও মিলনের উৎস নেই",
     "policy.clear": "অনুসন্ধান মুছে ফেলুন",
@@ -298,7 +305,7 @@ const bundle: LocaleBundle = {
     "landing.illustrationLabel": "লক এবং সোর্স-গ্রাউন্ডেড লেনদেনের রেকর্ড দ্বারা সুরক্ষিত একজন গ্রাহকের চিত্র",
     "landing.illustrationTag": "প্রমাণ, প্রথমে।",
     "landing.illustrationTagBody": "প্রতিটি ক্ষেত্রের একটি উৎস থাকে।",
-    "landing.approachKicker": "দ্য সুরক্ষ অ্যাপ্রোচ/1",
+    "landing.approachKicker": "THE SURAKSHA APPROACH / 01",
     "landing.approachTitleLine1": "আতঙ্ক কম।",
     "landing.approachTitleLine2": "আরও স্পষ্টতা।",
     "landing.approachBody1": "একটি সংগ্রহ-অনুরোধ কেলেঙ্কারি। এমন একটি অর্থপ্রদান যা কখনও আসেনি। এমন একজন গ্রাহক যার নিজের ভাষায় সাহায্যের প্রয়োজন।",
@@ -348,10 +355,8 @@ const bundle: LocaleBundle = {
       "বাণিজ্যিক-ব্যাঙ্ক সংশোধনী 2027 সালের 1লা জানুয়ারি বা তার পরে লেনদেনের ক্ষেত্রে প্রযোজ্য; সেই তারিখ থেকে নতুন ক্ষেত্রে নীতি পুনর্বিবেচনার প্রয়োজন হয়।",
     "Compare all six checkpoints on held-out scenario groups. Score the full JSON schema, all extracted fields, inappropriate guarantees and required actions. Keep human-rated empathy separate from lexical ChrF, and use paired bootstrap intervals rather than treating a single percentage as proof.":
       "হোল্ড-আউট সিনারিও গ্রুপে সমস্ত ছয়টি চেকপয়েন্টের তুলনা করুন। সম্পূর্ণ JSON স্কিমা, সমস্ত নিষ্কাশিত ক্ষেত্র, অনুপযুক্ত গ্যারান্টি এবং প্রয়োজনীয় ক্রিয়া স্কোর করুন। মানুষের-রেটযুক্ত সহানুভূতিকে আভিধানিক ChrF থেকে আলাদা রাখুন, এবং একটি শতাংশকে প্রমাণ হিসাবে বিবেচনা করার পরিবর্তে জোড়া বুটস্ট্র্যাপ ব্যবধান ব্যবহার করুন।",
-    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider configures an experiment; it does not change this rule-based preview or demonstrate model quality.":
-      "সামঞ্জস্যপূর্ণ LoRA মার্জ ব্যবহার করে ওজনযুক্ত প্যারামিটার আপডেটগুলি রচনা করুন। দুটি সংযুক্ত বিশেষজ্ঞ সহ বৈধতা ডেটাতে ওজন ঝাঁকুন। স্লাইডারটি সরানো একটি পরীক্ষা কনফিগার করে; এটি এই নিয়ম-ভিত্তিক প্রাকদর্শন পরিবর্তন করে না বা মডেলের গুণমান প্রদর্শন করে না।",
-    "Configuration preview · no merged checkpoint yet":
-      "কনফিগারেশন প্রাকদর্শন · এখনও কোনও সংযুক্ত চেকপয়েন্ট নেই",
+    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider shows the measured result where one exists; it does not change the served model.":
+      "সামঞ্জস্যপূর্ণ LoRA মার্জ ব্যবহার করে ওজনযুক্ত প্যারামিটার আপডেটগুলি রচনা করুন। দুটি সংযুক্ত বিশেষজ্ঞ সহ বৈধতা ডেটাতে ওজন ঝাঁকুন। স্লাইডারটি সরানো পরিমাপ করা ফলাফলটি দেখায় যেখানে একটি বিদ্যমান; এটি পরিবেশন করা মডেলটি পরিবর্তন করে না।",
     "Controls · base, uncurated SFT and curated joint SFT":
       "নিয়ন্ত্রণ · বেস, অপরিশোধিত SFT এবং কিউরেটেড জয়েন্ট SFT",
     "Curate with care":
@@ -360,6 +365,12 @@ const bundle: LocaleBundle = {
       "ডেটাসেট এ · কঠোর JSON + ক্ষেত্রের উৎস",
     "Dataset B · chosen / rejected customer replies":
       "ডেটাসেট বি. নির্বাচিত/প্রত্যাখ্যাত গ্রাহকের উত্তর",
+    "Done · 934 cases curated with CuratorKIT 0.1.21; 810 human-reviewed cases in training":
+      "সম্পন্ন হয়েছে CuratorKIT 0.1.21 দিয়ে তৈরি 934টি কেস; প্রশিক্ষণে 810টি মানব-পর্যালোচিত কেস",
+    "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)":
+      "সম্পন্ন হয়েছে · QLoRA SFT 810টি পর্যালোচিত ক্ষেত্রে, আরটিএক্স 4050 (6 জিবি)",
+    "Done · every model evaluated; results in the Benchmark lab":
+      "সম্পন্ন · প্রতিটি মডেলের মূল্যায়ন করা হয়েছে; ফলাফল বেঞ্চমার্ক ল্যাবে পাওয়া গেছে",
     "Every claim needs a measured result.":
       "প্রতিটি দাবির একটি পরিমাপযোগ্য ফলাফল প্রয়োজন।",
     "Found":
@@ -374,20 +385,18 @@ const bundle: LocaleBundle = {
       "দেরিতে জালিয়াতির রিপোর্ট · গ্যারান্টিযুক্ত-ফেরত বলপ্রয়োগ",
     "Listening":
       "শোনা।",
-    "Local curation + optional CuratorKIT pass":
-      "স্থানীয় কিউরেশন + ঐচ্ছিক CuratorKIT পাস",
     "Make quality visible":
       "গুণমান দৃশ্যমান করুন",
     "Manifest · source hashes, split IDs and rejection reasons":
       "ম্যানিফেস্ট · উৎস হ্যাশ, বিভক্ত আইডি এবং প্রত্যাখ্যানের কারণ",
+    "Measured in the pilot · the 0.55/0.45 merge was worse, so it is not used":
+      "পাইলটে পরিমাপ করা হয়েছে 0.55/0.45 মার্জ আরও খারাপ ছিল, তাই এটি ব্যবহার করা হয় না।",
     "Merge & investigate":
       "একত্রিত করুন এবং তদন্ত করুন",
     "Merge manifest · base, tokenizer and adapter identities":
       "ম্যানিফেস্ট · বেস, টোকেনাইজার এবং অ্যাডাপ্টার পরিচয় একত্রিত করুন",
     "NPCI · Dispute redressal":
       "NPCI · বিরোধ নিষ্পত্তি",
-    "Offline scorer ready · model evaluation pending":
-      "অফলাইন স্কোরার প্রস্তুত · মডেল মূল্যায়ন মুলতুবি রয়েছে",
     "QR request · ₹24,500 · reported today":
       "কিউআর অনুরোধ · ₹24,500 · আজ রিপোর্ট করা হয়েছে",
     "RBI · Customer liability":
@@ -410,8 +419,6 @@ const bundle: LocaleBundle = {
       "1930 এবং cybercrime.gov.in-এর মাধ্যমে অবিলম্বে আর্থিক সাইবার জালিয়াতির রিপোর্ট করুন। পুনরুদ্ধারের নিশ্চয়তা নেই।",
     "Report · per-case evidence + paired bootstrap deltas":
       "প্রতি-ক্ষেত্রে প্রমাণ + জোড়া বুটস্ট্র্যাপ ডেল্টা রিপোর্ট করুন",
-    "Requires compatible GPU + reviewed data":
-      "সামঞ্জস্যপূর্ণ জিপিইউ + পর্যালোচিত তথ্য প্রয়োজন",
     "Sent to the wrong person":
       "ভুল ব্যক্তির কাছে পাঠানো হয়েছে",
     "Start with synthetic or authorised customer chats. Mask sensitive identities, retain only context-labelled transaction references, validate fields against source spans, and separate schema targets from same-task preference pairs.":

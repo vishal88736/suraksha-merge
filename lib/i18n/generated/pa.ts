@@ -58,7 +58,7 @@ const bundle: LocaleBundle = {
     "desk.pipelineTitle": "ਇੱਕ ਪਾਈਪਲਾਈਨ। ਦੋ ਮਾਹਿਰ।",
     "desk.pipelineSubtitle": "ਸ਼ੋਰ-ਸ਼ਰਾਬੇ ਵਾਲੇ ਸੰਦੇਸ਼ ਤੋਂ ਲੈ ਕੇ ਤਸਦੀਕਯੋਗ ਜਵਾਬ ਤੱਕ ਦੀ ਯਾਤਰਾ ਦਾ ਪਾਲਣ ਕਰੋ।",
     "desk.benchmarksTitle": "ਭਰੋਸੇ ਤੋਂ ਪਹਿਲਾਂ ਸਬੂਤ।",
-    "desk.benchmarksSubtitle": "ਛੇ ਚੈੱਕਪੁਆਇੰਟਸ। ਇੱਕ ਹੋਲਡ-ਆਊਟ ਬੈਂਚਮਾਰਕ। ਕੋਈ ਖੋਜ ਨਤੀਜੇ ਨਹੀਂ।",
+    "desk.benchmarksSubtitle": "ਹਰੇਕ ਮਾਡਲ ਜਿਸ ਨੂੰ ਅਸੀਂ ਸਿਖਲਾਈ ਦਿੱਤੀ ਹੈ, ਉਸੇ ਰੱਖੇ ਗਏ ਮਾਮਲਿਆਂ'ਤੇ ਮਾਪਿਆ ਜਾਂਦਾ ਹੈ। ਕੋਈ ਨਤੀਜਾ ਨਹੀਂ ਲੱਭਿਆ ਗਿਆ।",
     "desk.policyTitle": "ਨਿਯਮਾਂ ਵਿੱਚ ਅਧਾਰਤ.",
     "desk.policySubtitle": "ਹਰੇਕ ਟ੍ਰਾਈਏਜ ਸਿਫਾਰਸ਼ ਦੇ ਪਿੱਛੇ ਸੰਸਕਰਣ ਪ੍ਰਾਇਮਰੀ ਸਰੋਤ।",
     "workflow.message": "ਗਾਹਕ ਸੰਦੇਸ਼",
@@ -220,27 +220,20 @@ const bundle: LocaleBundle = {
     "pipeline.outputs": "ਇਹ ਪਡ਼ਾਅ ਕੀ ਪੈਦਾ ਕਰਦਾ ਹੈ",
     "pipeline.note": "ਹਰੇਕ ਪਡ਼ਾਅ ਆਪਣੀ ਸਰੋਤ ਪਛਾਣ ਨੂੰ ਅੱਗੇ ਵਧਾਉਂਦਾ ਹੈ। ਅਸਫਲ ਨਮੂਨਿਆਂ ਨੂੰ ਦਰਜ ਕੀਤਾ ਜਾਂਦਾ ਹੈ, ਜਿੱਥੇ ਜਾਇਜ਼ ਹੈ ਉੱਥੇ ਮੁਰੰਮਤ ਕੀਤੀ ਜਾਂਦੀ ਹੈ, ਫਿਰ ਦੁਬਾਰਾ ਜਾਂਚ ਕੀਤੀ ਜਾਂਦੀ ਹੈ।",
     "pipeline.experimentEyebrow": "ਟਾਸਕ-ਗਣਿਤ ਪ੍ਰਯੋਗ",
-    "pipeline.experimentTitle": "ਸੰਤੁਲਨ ਲੱਭੋ। ਨਤੀਜਾ ਮਾਪੋ।",
-    "pipeline.experimentBody": "ਸਲਾਈਡਰ ਇੱਕ ਆਫਲਾਈਨ ਰਲੇਵੇਂ ਦੀ ਸੰਰਚਨਾ ਕਰਦਾ ਹੈ। ਰਲੇਵੇਂ ਤੋਂ ਬਾਅਦ ਮਾਡਲ ਦੀ ਕਾਰਗੁਜ਼ਾਰੀ ਦਾ ਮੁੱਲਾਂਕਣ ਕੀਤਾ ਜਾਣਾ ਚਾਹੀਦਾ ਹੈ।",
+    "pipeline.experimentTitle": "ਅਸੀਂ ਸੰਤੁਲਨ ਨੂੰ ਮਾਪਿਆ। ਇਸ ਦਾ ਕੋਈ ਫਾਇਦਾ ਨਹੀਂ ਹੋਇਆ।",
+    "pipeline.experimentBody": "ਪਾਇਲਟ ਵਿੱਚ, 0.55 / 0.45 ਉੱਤੇ ਸਕੀਮਾ ਅਤੇ ਹਮਦਰਦੀ ਮਾਹਰਾਂ ਨੂੰ ਮਿਲਾਉਣ ਨਾਲ ਸਾਰੇ ਖੇਤਰ ਦੀ ਸ਼ੁੱਧਤਾ (72.8% → 0%) ਖਤਮ ਹੋ ਜਾਂਦੀ ਹੈ, ਇਸ ਲਈ ਰਲੇਵੇਂ ਦੀ ਵਰਤੋਂ ਨਹੀਂ ਕੀਤੀ ਜਾਂਦੀ। ਪੇਸ਼ ਕੀਤੇ ਮਾਡਲ ਮਨੁੱਖ ਦੁਆਰਾ ਸਮੀਖਿਆ ਕੀਤੇ ਅੰਕਡ਼ਿਆਂ ਉੱਤੇ ਸਾਦੇ SFT ਹੁੰਦੇ ਹਨ।",
     "pipeline.specialistA": "ਸਕੈਮਾ ਮਾਹਰ",
     "pipeline.specialistB": "ਹਮਦਰਦੀ ਮਾਹਰ",
     "pipeline.empathyOnly": "ਸਿਰਫ਼ ਹਮਦਰਦੀ",
     "pipeline.schemaOnly": "ਸਿਰਫ਼ ਯੋਜਨਾ",
-    "pipeline.resetMix": "0.55/0.45 ਉੱਤੇ ਰੀਸੈੱਟ ਕਰੋ",
+    "pipeline.resetMix": "0.55 / 0.45 ਉੱਤੇ ਰੀਸੈੱਟ ਕਰੋ",
     "pipeline.exportMix": "ਐਕਸਪੋਰਟ ਮਰਜ ਸੰਰਚਨਾ",
-    "bench.noteTitle": "ਤਜਰਬਾ ਸਥਾਪਤ ਕੀਤਾ ਜਾਂਦਾ ਹੈ। ਸਬੂਤ ਅੱਗੇ ਆਉਂਦਾ ਹੈ।",
-    "bench.noteBody": "ਪ੍ਰਸਤਾਵ ਦੀ ਪ੍ਰਤੀਸ਼ਤਤਾ ਅਤੇ ਲਾਗਤ ਅਨੁਮਾਨਾਂ ਨੂੰ ਮਾਪਿਆ ਨਹੀਂ ਗਿਆ ਹੈ। ਇਸ ਸਾਰਣੀ ਵਿੱਚ ਸਿਰਫ ਪਛਾਣਯੋਗ ਮੁਲਾਂਕਣ ਦੇ ਨਤੀਜੇ ਸ਼ਾਮਲ ਹੋਣਗੇ।",
-    "bench.notEvaluated": "ਹਾਲੇ ਤੱਕ ਮੁੱਲਾਂਕਣ ਨਹੀਂ ਕੀਤਾ ਗਿਆ",
-    "bench.ablation": "ਚੈੱਕਪੁਆਇੰਟ ਘਟਾਓ",
-    "bench.ablationBody": "ਸਾਰੇ ਮਾਹਰਾਂ ਅਤੇ ਬੇਸਲਾਈਨਾਂ ਦਾ ਮੁਲਾਂਕਣ ਇੱਕੋ ਜਿਹੇ ਰੱਖੇ ਗਏ ਮਾਮਲਿਆਂ ਉੱਤੇ ਕੀਤਾ ਗਿਆ।",
+    "bench.noteTitle": "ਰੱਖੇ ਗਏ ਅੰਕਡ਼ਿਆਂ ਉੱਤੇ ਮਾਪਿਆ ਗਿਆ, ਵਾਅਦਾ ਨਹੀਂ ਕੀਤਾ ਗਿਆ।",
+    "bench.noteBody": "ਹੇਠਾਂ ਦਿੱਤਾ ਗਿਆ ਹਰੇਕ ਨੰਬਰ ਉਹਨਾਂ ਮਾਮਲਿਆਂ'ਤੇ ਰਿਕਾਰਡ ਕੀਤੇ ਗਏ ਰਨ ਤੋਂ ਆਉਂਦਾ ਹੈ ਜਿਨ੍ਹਾਂ'ਤੇ ਮਾਡਲਾਂ ਨੇ ਕਦੇ ਸਿਖਲਾਈ ਨਹੀਂ ਦਿੱਤੀ। ਸਮੀਖਿਆ ਕੀਤੇ ਸੈੱਟ'ਤੇ ਇਕੱਲੇ ਨਿਯਮ 100% ਸਕੋਰ ਕਰਨ ਦੀ ਉਮੀਦ ਕੀਤੀ ਜਾਂਦੀ ਹੈਃ ਉਹ ਲੇਬਲ ਨਿਯਮਾਂ ਨਾਲ ਸਹਿਮਤ ਹੋਣ ਲਈ ਬਣਾਏ ਗਏ ਸਨ।",
+    "bench.ablation": "ਮਨੁੱਖੀ ਸਮੀਖਿਆ ਕੀਤੇ ਅੰਕਡ਼ਿਆਂ ਉੱਤੇ ਸਿਖਲਾਈ ਪ੍ਰਾਪਤ ਮਾਡਲ",
+    "bench.ablationBody": "ਅਸਲ ਪਾਈਪਲਾਈਨ ਰਾਹੀਂ ਰਨਟਾਈਮ ਨਤੀਜੇਃ ਮਾਡਲ, ਚੈੱਕ ਅਤੇ (ਜਿੱਥੇ ਨੋਟ ਕੀਤਾ ਗਿਆ ਹੈ) ਨੀਤੀ ਨਿਯਮ।",
     "bench.colCheckpoint": "ਚੈੱਕਪੁਆਇੰਟ",
-    "bench.colSchema": "ਸਕੀਮਾ ਪਾਸ",
-    "bench.colFields": "ਫੀਲਡ ਦਾ ਸਹੀ ਮੈਚ",
-    "bench.colUnsafe": "ਅਸੁਰੱਖਿਅਤ ਗਾਰੰਟੀ",
-    "bench.colEmpathy": "ਹਮਦਰਦੀ/chrF",
-    "bench.colStatus": "ਸਥਿਤੀ",
-    "bench.awaitingRun": "ਦੌਡ਼ ਦੀ ਉਡੀਕ",
-    "bench.awaitingTraining": "ਸਿਖਲਾਈ ਦੀ ਉਡੀਕ",
+    "bench.colFields": "ਸਾਰੇ ਖੇਤਰ ਸਹੀ ਹਨ",
     "bench.splitTitle": "ਦ੍ਰਿਸ਼ ਪਰਿਵਾਰ ਦੁਆਰਾ ਵੰਡੋ",
     "bench.splitBody": "ਪੈਰਾਫਰੇਸ, SMS ਟੈਂਪਲੇਟਸ ਅਤੇ ਉਸੇ ਕੇਸ ਦੇ ਮੁਰੰਮਤ ਕੀਤੇ ਸੰਸਕਰਣਾਂ ਨੂੰ ਇੱਕ ਵੰਡ ਵਿੱਚ ਰੱਖੋ। ਮਰਜ ਵਜ਼ਨ ਦੀ ਚੋਣ ਕਰਨ ਤੋਂ ਪਹਿਲਾਂ ਟੈਸਟ ਸੈੱਟ ਨੂੰ ਫ੍ਰੀਜ਼ ਕਰੋ।",
     "bench.empathyTitle": "ਹਮਦਰਦੀ ਲਈ ਮਨੁੱਖ ਦੀ ਜ਼ਰੂਰਤ ਹੈ",
@@ -249,8 +242,22 @@ const bundle: LocaleBundle = {
     "bench.failureBody": "ਗਲਤ JSON, ਮਨਘਡ਼ਤ UTRs, ਅਸਮਰਥਿਤ ਗਾਰੰਟੀਆਂ ਅਤੇ ਪ੍ਰਤੀ ਕੇਸ ਐਕਸਲੇਸ਼ਨ ਕਾਰਵਾਈਆਂ ਦੀ ਘਾਟ ਦੀ ਰਿਪੋਰਟ ਕਰੋ। ਬੂਟਸਟ੍ਰੈਪ ਪੇਅਰਡ ਅੰਤਰ",
     "bench.adversarialEyebrow": "ਵਿਰੋਧੀ ਸੂਟ",
     "bench.adversarialTitle": "ਦਬਾਅ ਨਾਲ ਨੀਤੀ ਨਹੀਂ ਬਦਲਣੀ ਚਾਹੀਦੀ।",
-    "bench.adversarialBody": "ਮੌਜੂਦਾ ਨਿਰਧਾਰਕ ਪੂਰਵਦਰਸ਼ਨ ਦੇ ਵਿਰੁੱਧ ਰਿਫੰਡ-ਜ਼ਬਰਦਸਤੀ ਕੇਸ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+    "bench.adversarialBody": "ਲਾਈਵ ਮਾਡਲ ਦੇ ਵਿਰੁੱਧ ਰਿਫੰਡ-ਜ਼ਬਰਦਸਤੀ ਦਾ ਕੇਸ ਅਜ਼ਮਾਓਃ ਕੋਈ ਰਿਫੰਡ ਦਾ ਵਾਅਦਾ ਨਹੀਂ ਕੀਤਾ ਜਾਣਾ ਚਾਹੀਦਾ।",
     "bench.adversarialCta": "ਖੁੱਲ੍ਹਾ ਵਿਰੋਧੀ ਦ੍ਰਿਸ਼",
+    "bench.measuredOn": "ਮਾਪਿਆ {date}",
+    "bench.colReviewed": "54 ਸਮੀਖਿਆ ਕੀਤੇ ਕੇਸ · ਸਾਰੇ ਖੇਤਰ",
+    "bench.colChallenge": "42 ਅਣਜਾਣ ਸ਼੍ਰੇਣੀ",
+    "bench.colReview": "ਮਨੁੱਖੀ ਸਮੀਖਿਆ ਦੀ ਲੋਡ਼ ਹੈ",
+    "bench.colLatency": "ਸਮਾਂ/ਜਵਾਬ",
+    "bench.colSource": "ਹਰੇਕ ਨੰਬਰ ਲਈ ਸਬੂਤ ਫਾਈਲ",
+    "bench.colUtility": "ਉਪਯੋਗਤਾ",
+    "bench.mostAccurate": "ਸਭ ਤੋਂ ਸਹੀ",
+    "bench.defaultMode": "ਮੌਜੂਦਾ ਡਿਫਾਲਟ",
+    "bench.footnote": "* ਇਕੱਲੇ ਨਿਯਮ ਸਮੀਖਿਆ ਕੀਤੇ ਸੈੱਟ ਉੱਤੇ 100% ਸਕੋਰ ਕਰਦੇ ਹਨ ਕਿਉਂਕਿ ਉਹ ਲੇਬਲ ਨਿਯਮਾਂ ਨਾਲ ਸਹਿਮਤ ਹੋਣ ਲਈ ਬਣਾਏ ਗਏ ਸਨ; ਅਣਜਾਣ-ਸ਼ਬਦਾਂ ਦਾ ਸੈੱਟ ਨਿਰਪੱਖ ਤੁਲਨਾ ਹੈ। ਉਸ ਸਮੇਂ ਦੇ ਨਿਯਮਾਂ ਨਾਲ ਮਾਪਿਆ ਜਾਂਦਾ ਹੈ। ਅਣਜਾਣ-ਸ਼ਬਦਾਂ ਦਾ ਸੈੱਟ ਪ੍ਰੋਜੈਕਟ ਦੁਆਰਾ ਲੇਬਲ ਕੀਤਾ ਜਾਂਦਾ ਹੈ, ਨਾ ਕਿ ਮਨੁੱਖੀ-ਸਮੀਖਿਆ ਕੀਤੀ ਜਾਂਦੀ ਹੈ। ਅਸਲ ਗਾਹਕ ਸੰਦੇਸ਼ਾਂ ਉੱਤੇ ਕੁਝ ਵੀ ਮੁਲਾਂਕਣ ਨਹੀਂ ਕੀਤਾ ਗਿਆ ਹੈ।",
+    "bench.pilotTitle": "ਰਾਊਂਡ 1 ਪਾਇਲਟਃ ਅਣ-ਸਮੀਖਿਅਕ ਅੰਕਡ਼ੇ",
+    "bench.pilotBody": "ਮਨੁੱਖੀ ਸਮੀਖਿਆ ਤੋਂ ਪਹਿਲਾਂ, 92 ਸਿੰਥੈਟਿਕ ਮਾਮਲਿਆਂ ਉੱਤੇ AuditKIT ਦੁਆਰਾ ਕੱਚੇ ਮਾਡਲ ਆਉਟਪੁੱਟ ਦਾ ਸਕੋਰ ਕੀਤਾ ਗਿਆ। ਇਨ੍ਹਾਂ ਪਾਇਲਟਾਂ ਨੇ ਮੂਲ ਯੋਜਨਾ ਦੀ ਜਾਂਚ ਕੀਤੀਃ GRPO, ਹਮਦਰਦੀ DPO ਅਤੇ ਭਾਰਿਤ ਅਭੇਦ।",
+    "pipeline.measuredAt": "ਮਾਪਿਆ ਗਿਆ (ਪਾਇਲਟ, 92 ਸਿੰਥੈਟਿਕ ਕੇਸ): ਸਖਤ JSON {schema}, ਸਾਰੇ ਖੇਤਰ ਸਹੀ {fields}, ਉਪਯੋਗਤਾ {utility}।",
+    "pipeline.notMeasured": "ਇਸ ਵਜ਼ਨ ਉੱਤੇ ਨਹੀਂ ਮਾਪਿਆ ਗਿਆ। ਸਿਰਫ਼ 1.00 / 0.00, 0.55 / 0.45 ਅਤੇ 0.00 / 1.00 ਚਲਾਏ ਗਏ ਸਨ।",
     "policy.search": "ਖੋਜ ਸਰੋਤ, ਨਿਯਮ ਜਾਂ ਸੰਸਥਾਵਾਂ...",
     "policy.empty": "ਕੋਈ ਮੇਲ ਨਹੀਂ ਖਾਂਦਾ ਸਰੋਤ",
     "policy.clear": "ਖੋਜ ਸਾਫ਼ ਕਰੋ",
@@ -348,10 +355,8 @@ const bundle: LocaleBundle = {
       "ਵਪਾਰਕ-ਬੈਂਕ ਸੋਧ 1 ਜਨਵਰੀ 2027 ਨੂੰ ਜਾਂ ਉਸ ਤੋਂ ਬਾਅਦ ਦੇ ਲੈਣ-ਦੇਣ ਉੱਤੇ ਲਾਗੂ ਹੁੰਦੀ ਹੈ; ਉਸ ਮਿਤੀ ਤੋਂ ਨਵੇਂ ਮਾਮਲਿਆਂ ਲਈ ਨੀਤੀ ਪੁਨਰ-ਪ੍ਰਮਾਣਨ ਦੀ ਲੋਡ਼ ਹੁੰਦੀ ਹੈ।",
     "Compare all six checkpoints on held-out scenario groups. Score the full JSON schema, all extracted fields, inappropriate guarantees and required actions. Keep human-rated empathy separate from lexical ChrF, and use paired bootstrap intervals rather than treating a single percentage as proof.":
       "ਹੋਲਡ-ਆਊਟ ਦ੍ਰਿਸ਼ ਸਮੂਹਾਂ ਉੱਤੇ ਸਾਰੇ ਛੇ ਚੈੱਕਪੁਆਇੰਟਾਂ ਦੀ ਤੁਲਨਾ ਕਰੋ। ਪੂਰੇ JSON ਸਕੀਮਾ, ਸਾਰੇ ਕੱਢੇ ਗਏ ਖੇਤਰਾਂ, ਅਣਉਚਿਤ ਗਾਰੰਟੀਆਂ ਅਤੇ ਲੋਡ਼ੀਂਦੀਆਂ ਕਾਰਵਾਈਆਂ ਨੂੰ ਸਕੋਰ ਕਰੋ। ਮਨੁੱਖੀ-ਰੇਟਿਡ ਹਮਦਰਦੀ ਨੂੰ ਸ਼ਬਦਾਵਲੀ ChrF ਤੋਂ ਵੱਖਰਾ ਰੱਖੋ, ਅਤੇ ਇੱਕ ਪ੍ਰਤੀਸ਼ਤ ਨੂੰ ਸਬੂਤ ਵਜੋਂ ਮੰਨਣ ਦੀ ਬਜਾਏ ਪੇਅਰਡ ਬੂਟਸਟ੍ਰੈਪ ਅੰਤਰਾਲਾਂ ਦੀ ਵਰਤੋਂ ਕਰੋ।",
-    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider configures an experiment; it does not change this rule-based preview or demonstrate model quality.":
-      "ਭਾਰਿਤ ਪੈਰਾਮੀਟਰ ਅੱਪਡੇਟ ਨੂੰ ਇੱਕ ਅਨੁਕੂਲ LoRA ਅਭੇਦ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਲਿਖੋ। ਪ੍ਰਮਾਣਿਕਤਾ ਡੇਟਾ ਉੱਤੇ ਵਜ਼ਨ ਨੂੰ ਸਾਫ਼ ਕਰੋ, ਜਿਸ ਵਿੱਚ ਦੋ ਅਭੇਦ ਮਾਹਿਰ ਵੀ ਸ਼ਾਮਲ ਹਨ। ਸਲਾਈਡਰ ਨੂੰ ਹਿਲਾਉਣਾ ਇੱਕ ਪ੍ਰਯੋਗ ਨੂੰ ਸੰਰਚਿਤ ਕਰਦਾ ਹੈ; ਇਹ ਇਸ ਨਿਯਮ-ਅਧਾਰਤ ਪੂਰਵਦਰਸ਼ਨ ਨੂੰ ਨਹੀਂ ਬਦਲਦਾ ਜਾਂ ਮਾਡਲ ਦੀ ਗੁਣਵੱਤਾ ਨੂੰ ਪ੍ਰਦਰਸ਼ਿਤ ਨਹੀਂ ਕਰਦਾ।",
-    "Configuration preview · no merged checkpoint yet":
-      "ਸੰਰਚਨਾ ਪੂਰਵਦਰਸ਼ਨ · ਹਾਲੇ ਤੱਕ ਕੋਈ ਰਲੇਵੇਂ ਵਾਲਾ ਚੈੱਕਪੁਆਇੰਟ ਨਹੀਂ",
+    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider shows the measured result where one exists; it does not change the served model.":
+      "ਭਾਰਿਤ ਪੈਰਾਮੀਟਰ ਅੱਪਡੇਟ ਨੂੰ ਇੱਕ ਅਨੁਕੂਲ LoRA ਅਭੇਦ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਲਿਖੋ। ਪ੍ਰਮਾਣਿਕਤਾ ਡੇਟਾ ਉੱਤੇ ਵਜ਼ਨ ਨੂੰ ਸਾਫ਼ ਕਰੋ, ਜਿਸ ਵਿੱਚ ਦੋ ਅਣ-ਅਭੇਦ ਮਾਹਿਰ ਵੀ ਸ਼ਾਮਲ ਹਨ। ਸਲਾਈਡਰ ਨੂੰ ਹਿਲਾਉਣਾ ਮਾਪਿਆ ਨਤੀਜਾ ਦਰਸਾਉਂਦਾ ਹੈ ਜਿੱਥੇ ਇੱਕ ਮੌਜੂਦ ਹੈ; ਇਹ ਪਰੋਸੇ ਗਏ ਮਾਡਲ ਨੂੰ ਨਹੀਂ ਬਦਲਦਾ।",
     "Controls · base, uncurated SFT and curated joint SFT":
       "ਨਿਯੰਤਰਣ ਬੇਸ, ਅਣਕੁਚਿਤ SFT ਅਤੇ ਕਿਊਰੇਟਿਡ ਜੁਆਇੰਟ SFT",
     "Curate with care":
@@ -360,6 +365,12 @@ const bundle: LocaleBundle = {
       "ਡੇਟਾਸੇਟ A· ਸਖਤੀ JSON + ਫੀਲਡ ਉਤਪਤੀ",
     "Dataset B · chosen / rejected customer replies":
       "ਡੇਟਾਸੇਟ ਬੀ · ਚੁਣੇ/ਰੱਦ ਕੀਤੇ ਗਾਹਕ ਜਵਾਬ",
+    "Done · 934 cases curated with CuratorKIT 0.1.21; 810 human-reviewed cases in training":
+      "ਪੂਰਾ ਹੋਇਆ · 934 ਮਾਮਲੇ CuratorKIT 0.1.21 ਨਾਲ ਤਿਆਰ ਕੀਤੇ ਗਏ; ਸਿਖਲਾਈ ਵਿੱਚ 810 ਮਨੁੱਖੀ-ਸਮੀਖਿਆ ਕੀਤੇ ਕੇਸ",
+    "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)":
+      "810 ਸਮੀਖਿਆ ਕੀਤੇ ਕੇਸਾਂ ਉੱਤੇ ਕੀਤਾ ਗਿਆ · QLoRA SFT, ਆਰਟੀਐਕਸ 4050 (6 ਜੀ. ਬੀ.)",
+    "Done · every model evaluated; results in the Benchmark lab":
+      "ਕੀਤਾ ਗਿਆ · ਹਰੇਕ ਮਾਡਲ ਦਾ ਮੁਲਾਂਕਣ ਕੀਤਾ ਗਿਆ; ਬੈਂਚਮਾਰਕ ਲੈਬ ਵਿੱਚ ਨਤੀਜੇ",
     "Every claim needs a measured result.":
       "ਹਰੇਕ ਦਾਅਵੇ ਲਈ ਇੱਕ ਮਾਪਿਆ ਨਤੀਜਾ ਚਾਹੀਦਾ ਹੈ।",
     "Found":
@@ -374,20 +385,18 @@ const bundle: LocaleBundle = {
       "ਦੇਰ ਨਾਲ ਧੋਖਾਧਡ਼ੀ ਰਿਪੋਰਟ · ਗਾਰੰਟੀਸ਼ੁਦਾ-ਰਿਫੰਡ ਜ਼ਬਰਦਸਤੀ",
     "Listening":
       "ਸੁਣਦੇ-ਸੁਣਦੇ।",
-    "Local curation + optional CuratorKIT pass":
-      "ਲੋਕਲ ਕਿਊਰੇਸ਼ਨ + ਵਿਕਲਪਿਕ CuratorKIT ਪਾਸ",
     "Make quality visible":
       "ਗੁਣਵੱਤਾ ਨੂੰ ਪ੍ਰਤੱਖ ਬਣਾਓ",
     "Manifest · source hashes, split IDs and rejection reasons":
       "ਮੈਨੀਫੈਸਟ · ਸਰੋਤ ਹੈਸ਼, ਸਪਲਿਟ ਆਈ. ਡੀ. ਅਤੇ ਰੱਦ ਕਰਨ ਦੇ ਕਾਰਨ",
+    "Measured in the pilot · the 0.55/0.45 merge was worse, so it is not used":
+      "ਪਾਇਲਟ · ਵਿੱਚ ਮਾਪਿਆ ਗਿਆ 0.55/0.45 ਅਭੇਦ ਬਦਤਰ ਸੀ, ਇਸ ਲਈ ਇਸ ਦੀ ਵਰਤੋਂ ਨਹੀਂ ਕੀਤੀ ਜਾਂਦੀ",
     "Merge & investigate":
       "ਮਿਲਾਓ ਅਤੇ ਜਾਂਚ ਕਰੋ",
     "Merge manifest · base, tokenizer and adapter identities":
       "ਮੈਨੀਫੈਸਟ · ਬੇਸ, ਟੋਕਨਾਈਜ਼ਰ ਅਤੇ ਅਡਾਪਟਰ ਪਛਾਣ ਨੂੰ ਮਿਲਾਓ",
     "NPCI · Dispute redressal":
       "NPCI ਵਿਵਾਦ ਦਾ ਹੱਲ",
-    "Offline scorer ready · model evaluation pending":
-      "ਆਫਲਾਈਨ ਸਕੋਰਰ ਤਿਆਰ · ਮਾਡਲ ਦਾ ਮੁੱਲਾਂਕਣ ਲੰਬਿਤ ਹੈ",
     "QR request · ₹24,500 · reported today":
       "ਅੱਜ ਰਿਪੋਰਟ ਕੀਤੀ ਗਈ ਕਿਊ. ਆਰ. ਬੇਨਤੀ · ₹24,500",
     "RBI · Customer liability":
@@ -410,8 +419,6 @@ const bundle: LocaleBundle = {
       "1930 ਅਤੇ cybercrime.gov.in ਰਾਹੀਂ ਤੁਰੰਤ ਵਿੱਤੀ ਸਾਈਬਰ ਧੋਖਾਧਡ਼ੀ ਦੀ ਰਿਪੋਰਟ ਕਰੋ। ਰਿਕਵਰੀ ਦੀ ਗਰੰਟੀ ਨਹੀਂ ਹੈ।",
     "Report · per-case evidence + paired bootstrap deltas":
       "ਰਿਪੋਰਟ · ਪ੍ਰਤੀ ਕੇਸ ਸਬੂਤ + ਪੇਅਰਡ ਬੂਟਸਟ੍ਰੈਪ ਡੈਲਟਾ",
-    "Requires compatible GPU + reviewed data":
-      "ਅਨੁਕੂਲ ਜੀ. ਪੀ. ਯੂ. + ਸਮੀਖਿਅਕ ਡਾਟਾ ਦੀ ਲੋਡ਼ ਹੈ",
     "Sent to the wrong person":
       "ਗਲਤ ਵਿਅਕਤੀ ਨੂੰ ਭੇਜਿਆ",
     "Start with synthetic or authorised customer chats. Mask sensitive identities, retain only context-labelled transaction references, validate fields against source spans, and separate schema targets from same-task preference pairs.":

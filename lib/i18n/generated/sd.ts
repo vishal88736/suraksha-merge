@@ -58,7 +58,7 @@ const bundle: LocaleBundle = {
     "desk.pipelineTitle": "ہڪ پائپ لائن۔ ٻہ ماہر۔",
     "desk.pipelineSubtitle": "ہڪ شور واری پیغام کان وٺی تصدیق واری جواب تائین سفر جی پیروی ڪریو",
     "desk.benchmarksTitle": "اعتماد کان اڳ ثبوت",
-    "desk.benchmarksSubtitle": "ڇھ چیڪ پوئنٽ۔ ھڪ ہولڊ آئوٽ بینچ مارڪ۔ ڪو بہ ایجاد ٿیل نتیجا نہ",
+    "desk.benchmarksSubtitle": "ہر ماڊل جنہن کی اسان تربیت ڏنی، ساڳئی روڪیل ڪیسن تی ماپی وئی۔ ڪو بہ ایجاد ٿیل نتیجا نہ",
     "desk.policyTitle": "زابتن ۾ گھریل آھی۔",
     "desk.policySubtitle": "ہر ٽریج جی سفارش جی پویان ورجن بنیادی ذریعا",
     "workflow.message": "گراہڪ پیغام",
@@ -220,27 +220,20 @@ const bundle: LocaleBundle = {
     "pipeline.outputs": "اھو مرحلو ڇا پیدا ڪری ٿو",
     "pipeline.note": "ہر مرحلھ پنھنجی ذریعن جی سڃاڻپ کی اڳتی وڌائی ٿو۔ ناڪام نمونی رڪارڊ ڪیا ویندا آھن، مرمت ڪئی ویندی آھی جتی جائز آھی، پوء وری چیڪ ڪیو ویندو آھی",
     "pipeline.experimentEyebrow": "ڪم-ریاضیاتی تجربو",
-    "pipeline.experimentTitle": "توازن ڳولھیو۔ نتیجن کی ماپیو",
-    "pipeline.experimentBody": "سلائڊر ھڪ آف لائن ضم کی ترتیب ڏئی ٿو ماڊل جی ڪارڪردگی کی ضم ٿیڻ کان پوء ضرور جائزو وٺڻ گھرجی",
+    "pipeline.experimentTitle": "اسان بیلنس ماپیو۔ اھو ادا نہ ٿیو",
+    "pipeline.experimentBody": "In the pilot, merging the schema and empathy specialists at 0.55 / 0.45 lost all-field accuracy (72.8% → 0%), so merging is not used. The served models are plain SFT on human-reviewed data.",
     "pipeline.specialistA": "اسڪیما ماہر",
     "pipeline.specialistB": "حساسیت جو ماہر",
     "pipeline.empathyOnly": "صرف ہمدردی",
     "pipeline.schemaOnly": "صرف اسڪیما",
-    "pipeline.resetMix": "0. 05/0. 45 تی ری سیٽ ڪریو",
+    "pipeline.resetMix": "0.55 / 0.45 ڏانہن ری سیٽ ڪریو",
     "pipeline.exportMix": "ایڪسپورٽ ضم ٿیل ترتیب",
-    "bench.noteTitle": "تجربو قائم ڪیو ویو آھی ثبوت اڳتی اچی ٿو",
-    "bench.noteBody": "تجویز جی سیڪڙو ۽ قیمت جو اندازو نہ ماپیو ویو آھی ھن ٽیبل ۾ صرف سڃاڻپ لائق تشخیصی رن جا نتیجا ھوندا",
-    "bench.notEvaluated": "اڃا تائین جائزو نہ ورتو ویو",
-    "bench.ablation": "چیڪ پوائنٽ ابلیشن",
-    "bench.ablationBody": "سڀنی ماہرن ۽ بیس لائنز، ساڳئی روڪیل ڪیسن تی جائزو ورتو ویو",
+    "bench.noteTitle": "رکیل ڊیٽا تی ماپیو ویو، نہ واعدو ڪیو ویو",
+    "bench.noteBody": "ھیٺ ڏنل ہر نمبر انھن ڪیسن تی رڪارڊ ٿیل رن مان اچی ٿو جن تی ماڊلز کی ڪڏھن بہ تربیت نہ ڏنی وئی آھی صرف قاعدن جو جائزو وٺڻ واری سیٽ تی 100% سکور ڪرڻ جی امید آھی اہی لیبل قاعدن سان متفق ٿیڻ لاء ٺاہیا ویا ہئا",
+    "bench.ablation": "انسانی نظرثانی ٿیل ڊیٽا تی تربیت یافتہ ماڊل",
+    "bench.ablationBody": "حقیقی پائپ لائن ذریعی رن ٽائیم جا نتیجا ماڊل چیڪ ۽ (جتی نوٽ ڪیو ویو آھی) پالیسی جا اصول",
     "bench.colCheckpoint": "چیڪ پوائنٽ",
-    "bench.colSchema": "اسڪیما پاس",
-    "bench.colFields": "فیلڊ صحیح میچ",
-    "bench.colUnsafe": "غیر محفوظ ضمانتون",
-    "bench.colEmpathy": "ہمدردی/chrF",
-    "bench.colStatus": "حالت",
-    "bench.awaitingRun": "ڊوڙڻ جی انتظار ۾",
-    "bench.awaitingTraining": "تربیت جی انتظار ۾",
+    "bench.colFields": "سڀ فیلڊ صحیح آھن",
     "bench.splitTitle": "منظرنامی خاندان جی لحاظ کان تقسیم ڪریو",
     "bench.splitBody": "پیرافریس، SMS ٽیمپلیٽ ۽ ساڳئی صورت جی مرمت ٿیل ورجن کی ھڪ تقسیم ۾ رکو۔ ضم ٿیل وزن چونڊڻ کان اڳ ٽیسٽ سیٽ کی منجمد ڪریو",
     "bench.empathyTitle": "ہمدردی کی انسان جی ضرورت آھی",
@@ -249,15 +242,29 @@ const bundle: LocaleBundle = {
     "bench.failureBody": "رپورٽ ڪریو خراب ٿیل JSON، ٺڳیل UTRs، غیر حمایت ٿیل ضمانتون ۽ گم ٿیل واڌاری جی عملن فی ڪیس. بوٽسٽراپ جوڙی فرق",
     "bench.adversarialEyebrow": "اڊورسریئل سوٽ",
     "bench.adversarialTitle": "دٻاء کی پالسیء کی تبدیل نہ ڪرڻ گھرجی۔",
-    "bench.adversarialBody": "موجودہ ڊیٽرمینسٽڪ پری ویو جی خلاف واپسی-جبر ڪیس جی ڪوشش ڪریو",
+    "bench.adversarialBody": "لائیو ماڊل جی خلاف واپسی-جبر ڪیس جی ڪوشش ڪریو: واپسی جو ڪو بہ واعدو نہ ڪیو وڃی",
     "bench.adversarialCta": "کلیل مخالف منظرنامو",
+    "bench.measuredOn": "ماپیل {date}",
+    "bench.colReviewed": "54 نظرثانی ٿیل ڪیس · سڀ علائقا",
+    "bench.colChallenge": "42 اڻ سڃاتل قسم",
+    "bench.colReview": "انسانی جاچ پڙتال جی ضرورت آھی",
+    "bench.colLatency": "وقت/جواب",
+    "bench.colSource": "ہر نمبر لاء ثبوت فائل",
+    "bench.colUtility": "یوٽیلٽی",
+    "bench.mostAccurate": "سڀ کان وڌیڪ صحیح",
+    "bench.defaultMode": "موجودہ ڊیفالٽ",
+    "bench.footnote": "* Rules alone score 100% on the reviewed set because those labels were built to agree with the rules; the unfamiliar-wording set is the fair comparison. † Measured with the rules of that time. The unfamiliar-wording set is labelled by the project, not human-reviewed. Nothing has been evaluated on real customer messages.",
+    "bench.pilotTitle": "گول 1 پائلٽ: غیر نظرثانی ٿیل ڊیٽا",
+    "bench.pilotBody": "انسانی نظرثانی کان اڳ، 92 مصنوعی ڪیسن تی خام ماڊل جی پیداوار کی AuditKIT پاران گول ڪیو ویو۔ انہن پائلٽن اصل منصوبی جی جانچ ڪئی: GRPO، ہمدردی DPO ۽ وزن واری ضم",
+    "pipeline.measuredAt": "ماپیل (پائلٽ، 92 مصنوعی ڪیس) سخت JSON {schema}، سڀ فیلڊ صحیح {fields}، یوٽیلٽی {utility}",
+    "pipeline.notMeasured": "ھن وزن تی ماپ نہ ڪیو ویو۔ صرف 1.00 / 0.00، 0.55 / 0.45 ۽ 0.00 / 1.00 ھلیا ویا",
     "policy.search": "ڳولا جا ذریعا، ضابطھ یا ادارھ۔۔۔",
     "policy.empty": "ڪو ملاپ وارو ذریعو ناہی",
     "policy.clear": "ڳولا صاف ڪریو",
     "policy.disclaimerTitle": "ھڪ فیصلو-سپورٽ ریسرچ اوزار",
     "policy.disclaimerBody": "اھی ذریعا اندرونی ٽریج پالیسی کی اطلاع ڏین ٿا ہی ایپلیڪیشن بینڪ، ریگیولیٽر، سرڪاری UDIR گیٽ وی یا تعمیل سرٽیفڪیٽ نہ آھی",
     "footer.tagline": "سوچ ویچار وارو ٽرایج۔ تلاش ڪرڻ لائق فیصلو۔",
-    "footer.version": "Suraksha-Merge ریسرچ پری ویو v0. 1",
+    "footer.version": "Suraksha-Merge ریسرچ پری ویو v0.1",
     "mascot.hideHint": "اشارو لڪایو",
     "mascot.dismissHint": "اشارو رد ڪریو",
     "error.unavailable": "ٽریج دستیاب ناہی۔ وری ڪوشش ڪریو",
@@ -298,7 +305,7 @@ const bundle: LocaleBundle = {
     "landing.illustrationLabel": "ہڪ گراہڪ جو مثال ہڪ تالا ۽ ذریعو-گرائونڊ ٿیل ٽرانزیڪشن رڪارڊ طرفان محفوظ ڪیل",
     "landing.illustrationTag": "ثبوت، پہریون۔",
     "landing.illustrationTagBody": "ہر فیلڊ جو ہڪ ذریعو آھی",
-    "landing.approachKicker": "سورڪش اپروچ/1",
+    "landing.approachKicker": "THE SURAKSHA APPROACH / 01",
     "landing.approachTitleLine1": "گھٽ گھبرائی۔",
     "landing.approachTitleLine2": "وڌیڪ وضاحت",
     "landing.approachBody1": "ہڪ گڏ ڪرڻ جی درخواست جو گھوٽو۔ ہڪ ادائگی جیڪا ڪڏھن بہ نہ آئی۔ ہڪ گراہڪ جنہن کی پنھنجی لفظن ۾ مدد جی ضرورت آھی",
@@ -348,10 +355,8 @@ const bundle: LocaleBundle = {
       "تجارتی-بینڪ ترمیم 1 جنوری 2027 تی یا ان کان پوء ٽرانزیڪشن تی لاڳو ٿئی ٿی ؛ ان تاریخ کان نوان ڪیس پالیسی جی بحالی جی ضرورت آھی",
     "Compare all six checkpoints on held-out scenario groups. Score the full JSON schema, all extracted fields, inappropriate guarantees and required actions. Keep human-rated empathy separate from lexical ChrF, and use paired bootstrap intervals rather than treating a single percentage as proof.":
       "ہولڊ آئوٽ منظرنامی گروپن تی سڀنی ڇہن چیڪ پوائنٽن جو موازنہ ڪریو۔ مڪمل JSON اسڪیما کی سکور ڪریو، سڀ ڪ ext یل فیلڊ، نامناسب ضمانتون ۽ ضروری عمل۔ انسانی ریٽیڊ ہمدردی کی لیڪسڪل CHrF کان الڳ رکو، ۽ ھڪ سیڪڙو کی ثبوت جی طئور تی استعمال ڪرڻ جی بدران جوڙی بوٽسٽراپ وقفن جو استعمال ڪریو",
-    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider configures an experiment; it does not change this rule-based preview or demonstrate model quality.":
-      "ھڪ مطابقت رکندڙ LoRA ضم استعمال ڪندی وزن واری پیرامیٽر جی اپڊیٽس کی ترتیب ڏیو۔ ٻن غیر ضم ٿیل ماہرن سمیت تصدیق واری ڊیٽا تی وزن کی صاف ڪریو۔ سلائڊر کی منتقل ڪرڻ ہڪ تجربی کی ترتیب ڏئی ٿو ؛ اھو ھن قاعدن تی ٻڌل پریو کی تبدیل نٿو ڪری یا ماڊل جی معیار کی ظاھر نٿو ڪری",
-    "Configuration preview · no merged checkpoint yet":
-      "ترتیب پری ویو · اڃا تائین ڪو ضم ٿیل چیڪ پوائنٽ ناہی",
+    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider shows the measured result where one exists; it does not change the served model.":
+      "ھڪ مطابقت رکندڙ LoRA ضم استعمال ڪندی وزن واری پیرامیٽر جی اپڊیٽس کی ترتیب ڏیو۔ ٻن غیر ضم ٿیل ماہرن سمیت تصدیق واری ڊیٽا تی وزن کی صاف ڪریو۔ سلائڊر کی منتقل ڪرڻ ماپیل نتیجو ڏیکاری ٿو جتی ہڪ موجود آھی ؛ اھو پیش ڪیل ماڊل کی تبدیل نٿو ڪری",
     "Controls · base, uncurated SFT and curated joint SFT":
       "ڪنٽرول بیس، غیر ترتیب ڏنل SFT ۽ ترتیب ڏنل گڏیل SFT",
     "Curate with care":
@@ -360,6 +365,12 @@ const bundle: LocaleBundle = {
       "Dataset A · سخت JSON + فیلڊ پروویننس",
     "Dataset B · chosen / rejected customer replies":
       "Dataset B · چونڊیل/رد ٿیل گراہڪ جا جواب",
+    "Done · 934 cases curated with CuratorKIT 0.1.21; 810 human-reviewed cases in training":
+      "Done · 934 ڪیس CuratorKIT 0.1.21 سان ترتیب ڏنل ؛ تربیت ۾ 810 انسانی نظرثانی ٿیل ڪیس",
+    "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)":
+      "ڪیو ویو · QLoRA SFT 810 نظرثانی ٿیل ڪیسن تی، RTX 4050 (6 GB)",
+    "Done · every model evaluated; results in the Benchmark lab":
+      "Done· ہر ماڊل جو جائزو ورتو ویو ؛ نتیجن کی بینچ مارڪ لیب ۾",
     "Every claim needs a measured result.":
       "ہر دعوی کی ماپیل نتیجن جی ضرورت آھی",
     "Found":
@@ -374,20 +385,18 @@ const bundle: LocaleBundle = {
       "دیر سان فراڊ رپورٽ · ضمانت-واپسی جبر",
     "Listening":
       "ٻڌندی آھی۔",
-    "Local curation + optional CuratorKIT pass":
-      "مڪانی علاج + اختیاری CuratorKIT پاس",
     "Make quality visible":
       "معیار کی ڏسڻ ۾ اچی",
     "Manifest · source hashes, split IDs and rejection reasons":
       "ظاھر · ذریعو ھیش، تقسیم IDs ۽ رد ڪرڻ جا سبب",
+    "Measured in the pilot · the 0.55/0.45 merge was worse, so it is not used":
+      "پائلٽ ۾ ماپیل · 0.55/0.45 ضم خراب ہو، تنہنڪری اہو استعمال نہ ڪیو ویندو آھی",
     "Merge & investigate":
       "ضم ڪریو ۽ جاچ ڪریو",
     "Merge manifest · base, tokenizer and adapter identities":
       "مینیفیسٽ · بیس، ٽوڪنائزر ۽ ایڊاپٽر سڃاڻپ کی ضم ڪریو",
     "NPCI · Dispute redressal":
       "NPCI · تڪرار جو ازالو",
-    "Offline scorer ready · model evaluation pending":
-      "آف لائن سکورر تیار آھی ماڊل جو جائزو زیر التواء آھی",
     "QR request · ₹24,500 · reported today":
       "ڪی آر جی درخواست · ₹24,500 · اڄ رپورٽ ڪئی وئی",
     "RBI · Customer liability":
@@ -410,8 +419,6 @@ const bundle: LocaleBundle = {
       "مالی سائبر فراڊ کی فوری طئور تی رپورٽ ڪریو 1930 ۽ cybercrime.gov.in ذریعی۔ وصولی جی ضمانت نہ آھی",
     "Report · per-case evidence + paired bootstrap deltas":
       "رپورٽ ڪریو · فی ڪیس ثبوت + جوڙی ٿیل بوٽسٽراپ ڊیلٽا",
-    "Requires compatible GPU + reviewed data":
-      "ضرورت آھی مطابقت رکندڙ جی پی یو + نظرثانی ٿیل ڊیٽا",
     "Sent to the wrong person":
       "غلط شخص ڏانہن موڪلیو ویو",
     "Start with synthetic or authorised customer chats. Mask sensitive identities, retain only context-labelled transaction references, validate fields against source spans, and separate schema targets from same-task preference pairs.":

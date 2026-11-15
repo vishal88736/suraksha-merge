@@ -58,7 +58,7 @@ const bundle: LocaleBundle = {
     "desk.pipelineTitle": "ꯄꯥꯏꯄꯂꯥꯏꯟ ꯑꯃ ꯫ ꯁ ꯭ ꯄꯦꯁꯤꯑꯦꯂꯤꯁ ꯭ ꯠ ꯑꯅꯤ ꯫",
     "desk.pipelineSubtitle": "ꯆꯣꯠ ꯆꯣꯠ ꯂꯥꯎꯕ ꯃꯦꯁꯦꯖ ꯑꯃꯗꯒꯤ ꯆꯦꯛꯁꯤꯟꯕꯤꯕ ꯌꯥꯕ ꯔꯤꯄꯣꯟ ꯭ ꯁ ꯐꯥꯎꯕ ꯆꯠꯄꯒꯤ ꯈꯣꯡꯆꯠ ꯑꯗꯨ ꯃꯈꯥ ꯆꯠꯊꯕꯤꯌꯨ ꯫",
     "desk.benchmarksTitle": "ꯊꯥꯖꯕꯒꯤ ꯃꯃꯥꯡꯗ ꯄ ꯭ ꯔꯃꯥꯟ ꯄꯤ ꯫",
-    "desk.benchmarksSubtitle": "ꯆꯦꯛꯄꯣꯏꯟ ꯭ ꯇ ꯇꯔꯨꯛ ꯫ ꯂꯦꯞꯊꯣꯛꯂꯕ ꯕꯦꯟꯆꯥꯔ ꯭ ꯛ ꯑꯃ ꯫ ꯊꯤꯗꯣꯛꯂꯕ ꯃꯍꯩ ꯑꯃꯠꯇ ꯂꯩꯇꯦ ꯫",
+    "desk.benchmarksSubtitle": "ꯑꯩꯈꯣꯏꯅ ꯇ ꯭ ꯔꯦꯅꯤꯡ ꯄꯤꯈꯤꯕ ꯃꯣꯗꯦꯜ ꯈꯨꯗꯤꯡꯃꯛ ꯆꯞ ꯃꯥꯟꯅꯕ ꯂꯦꯞꯊꯣꯛꯂꯕ ꯀꯦꯁꯁꯤꯡꯗ ꯂꯦꯞꯈꯤ ꯫ ꯊꯤꯗꯣꯛꯂꯕ ꯃꯍꯩ ꯑꯃꯠꯇ ꯂꯩꯇꯦ ꯫",
     "desk.policyTitle": "ꯅꯤꯌꯝꯁꯤꯡꯗ ꯌꯨꯝꯐꯝ ꯑꯣꯏ ꯫",
     "desk.policySubtitle": "ꯇ ꯭ ꯔꯥꯏꯌꯦꯖ ꯔꯤꯀꯃꯦꯟꯗꯦꯁꯟ ꯈꯨꯗꯤꯡꯃꯛꯀꯤ ꯃꯇꯨꯡꯗ ꯂꯩꯕ ꯚꯔꯁꯟ ꯄ ꯭ ꯔꯥꯏꯃꯔꯤ ꯁꯣꯔ ꯭ ꯁꯁꯤꯡ ꯫",
     "workflow.message": "ꯀꯁ ꯭ ꯇꯃꯔ ꯃꯦꯁꯦꯖ",
@@ -220,27 +220,20 @@ const bundle: LocaleBundle = {
     "pipeline.outputs": "ꯁ ꯭ ꯇꯦꯖ ꯑꯁꯤꯅ ꯀꯔꯤ ꯄꯨꯊꯣꯛꯏ",
     "pipeline.note": "ꯁ ꯭ ꯇꯦꯖ ꯈꯨꯗꯤꯡꯃꯛꯅ ꯃꯈꯣꯏꯒꯤ ꯍꯧꯔꯛꯐꯝꯒꯤ ꯃꯁꯛ ꯑꯗꯨ ꯃꯥꯡꯖꯤꯜ ꯊꯥꯅ ꯄꯨꯜꯂꯤ ꯫ ꯃꯥꯏ ꯄꯥꯛꯄ ꯉꯝꯗ ꯭ ꯔꯕ ꯁꯦꯝꯕ ꯭ ꯂꯤꯁꯤꯡ ꯑꯗꯨ ꯔꯦꯀꯣꯔ ꯭ ꯗ ꯇꯧꯋꯤ, ꯑꯆꯨꯝꯕ ꯃꯐꯝ ꯑꯗꯨꯗ ꯁꯦꯝꯗꯣꯛ-ꯁꯦꯝꯖꯤꯟ ꯇꯧꯋꯤ, ꯃꯗꯨꯒꯤ ꯃꯇꯨꯡꯗ ꯑꯃꯨꯛ ꯍꯟꯅ ꯌꯦꯡꯁꯤꯜꯂꯤ ꯫",
     "pipeline.experimentEyebrow": "ꯇꯁ ꯭ ꯛ-ꯑꯦꯔꯤꯊꯃꯦꯇꯤꯛ ꯆꯥꯡꯌꯦꯡ",
-    "pipeline.experimentTitle": "ꯕꯦꯂꯦꯟꯁ ꯑꯗꯨ ꯊꯤꯌꯨ ꯫ ꯐꯜ ꯑꯗꯨ ꯌꯦꯡꯁꯤꯟꯕꯤꯌꯨ ꯫",
-    "pipeline.experimentBody": "ꯁ ꯭ ꯂꯥꯏꯗꯔ ꯑꯁꯤꯅ ꯑꯣꯐꯂꯥꯏꯟ ꯃꯔꯖ ꯑꯃ ꯁꯦꯝꯗꯣꯛꯏ ꯫ ꯃꯣꯗꯦꯜ ꯄꯔꯐꯣꯃꯦꯟꯁ ꯑꯁꯤ ꯃꯔꯖ ꯇꯧꯔꯕ ꯃꯇꯨꯡꯗ ꯌꯦꯡꯁꯤꯟꯒꯗꯕꯅꯤ ꯫",
+    "pipeline.experimentTitle": "ꯑꯩꯈꯣꯏꯅ ꯕꯦꯂꯦꯟꯁ ꯑꯗꯨ ꯂꯦꯞꯊꯣꯛꯈꯤ ꯫ ꯃꯗꯨ ꯐꯡꯈꯤꯗꯦ ꯫",
+    "pipeline.experimentBody": "ꯄꯥꯏꯂꯣꯠꯇ, ꯁ ꯭ ꯀꯤꯃꯥ ꯑꯃꯁꯨꯡ ꯏꯝꯄꯦꯊꯤ ꯁ ꯭ ꯄꯦꯁ ꯭ ꯌꯦꯂꯤꯁ ꯭ ꯠꯁꯤꯡꯕꯨ 0.55 / 0.45 ꯗ ꯄꯨꯟꯁꯤꯟꯕꯗ ꯐꯤꯜꯗ ꯄꯨꯝꯅꯃꯛꯀꯤ ꯑꯆꯨꯝꯕ ꯑꯗꯨ ꯃꯥꯡꯈꯤ (72.8% → 0%), ꯃꯔꯝ ꯑꯗꯨꯅ ꯄꯨꯟꯁꯤꯟꯕ ꯑꯁꯤ ꯁꯤꯖꯤꯟꯅꯗꯦ ꯫ ꯄꯤꯔꯤꯕ ꯃꯣꯗꯦꯜꯁꯤꯡ ꯑꯁꯤ ꯃꯤꯑꯣꯏꯕꯅ ꯌꯦꯡꯁꯤꯟꯈꯤꯕ ꯗꯦꯇꯥꯗ ꯄ ꯭ ꯂꯦ SFT ꯑꯣꯏ ꯫",
     "pipeline.specialistA": "ꯁ ꯭ ꯀꯤꯃꯥ ꯁ ꯭ ꯄꯦꯁꯤꯌꯦꯂꯤꯁ ꯭ ꯠ",
     "pipeline.specialistB": "ꯏꯝꯄꯦꯊꯤ ꯁ ꯭ ꯄꯦꯁ ꯭ ꯌꯦꯂꯤꯁ ꯭ ꯠ",
     "pipeline.empathyOnly": "ꯏꯝꯄꯦꯊꯤ ꯈꯛꯇ",
     "pipeline.schemaOnly": "ꯁ ꯭ ꯀꯤꯃꯥ ꯈꯛꯇꯃꯛ",
-    "pipeline.resetMix": "0.55/0.45 ꯗ ꯔꯤꯁꯦꯠ ꯇꯧ",
+    "pipeline.resetMix": "0.55 / 0.45 ꯗ ꯔꯤꯁꯦꯠ ꯇꯧ ꯫",
     "pipeline.exportMix": "ꯑꯦꯛꯁꯄꯣꯔꯠ ꯃꯔꯖ ꯀꯟꯐꯤꯒ ꯭ ꯔꯤꯁꯟ",
-    "bench.noteTitle": "ꯆꯥꯡꯌꯦꯡ ꯑꯗꯨ ꯁꯦꯝꯖꯤꯟꯈ ꯭ ꯔꯦ ꯫ ꯃꯗꯨꯒꯤ ꯃꯇꯨꯡꯗ ꯄ ꯭ ꯔꯃꯥꯟ ꯑꯗꯨ ꯂꯥꯛꯏ ꯫",
-    "bench.noteBody": "ꯄ ꯭ ꯔꯣꯄꯣꯖꯦꯜ ꯑꯗꯨꯒꯤ ꯆꯥꯗꯁꯤꯡ ꯑꯃꯁꯨꯡ ꯆꯥꯗꯤꯡꯒꯤ ꯃꯃꯜ ꯂꯦꯞꯄ ꯉꯝꯗ ꯭ ꯔꯤ ꯫ ꯃꯁꯤꯒꯤ ꯇꯦꯕꯜ ꯑꯁꯤꯗ ꯃꯁꯛ ꯈꯪꯗꯣꯛꯄ ꯌꯥꯕ ꯃꯃꯜ ꯂꯦꯞꯄꯗꯒꯤ ꯐꯪꯕ ꯃꯍꯩꯈꯛꯇꯃꯛ ꯌꯥꯎꯒꯅꯤ ꯫",
-    "bench.notEvaluated": "ꯍꯧꯖꯤꯛ ꯐꯥꯎꯕ ꯃꯃꯜ ꯂꯦꯞꯄ ꯉꯝꯗ ꯭ ꯔꯤ",
-    "bench.ablation": "ꯆꯦꯛꯄꯣꯏꯟ ꯭ ꯇ ꯑꯦꯕ ꯭ ꯂꯦꯁꯟ",
-    "bench.ablationBody": "ꯁ ꯭ ꯄꯦꯁ ꯭ ꯌꯦꯂꯤꯁ ꯭ ꯠꯁꯤꯡ ꯑꯃꯁꯨꯡ ꯕꯦꯖꯂꯥꯏꯟ ꯄꯨꯝꯅꯃꯛ ꯑꯁꯤ ꯆꯞ ꯃꯥꯟꯅꯕ ꯂꯦꯞꯈꯤꯕ ꯀꯦꯁꯁꯤꯡꯗ ꯌꯦꯡꯁꯤꯜꯂꯤ ꯫",
+    "bench.noteTitle": "ꯍꯣꯜꯗ-ꯑꯥꯎꯠ ꯗꯦꯇꯥꯗ ꯂꯦꯞꯊꯣꯛꯏ, ꯋꯥꯀꯠꯄ ꯂꯩꯇꯦ ꯫",
+    "bench.noteBody": "ꯃꯈꯥꯗ ꯄꯤꯔꯤꯕ ꯃꯁꯤꯡ ꯈꯨꯗꯤꯡꯃꯛ ꯑꯁꯤ ꯃꯣꯗꯦꯜꯁꯤꯡꯅ ꯇ ꯭ ꯔꯦꯟ ꯇꯧꯗ ꯭ ꯔꯤꯕ ꯀꯦꯁꯁꯤꯡꯗ ꯔꯦꯀꯣꯔ ꯭ ꯗ ꯇꯧꯔꯕ ꯔꯟ ꯑꯃꯗꯒꯤ ꯂꯥꯛꯏ ꯫ ꯔꯤꯚ ꯭ ꯌꯨ ꯇꯧꯔꯕ ꯁꯦꯠꯇ ꯅꯤꯌꯝꯈꯛꯇꯅ 100% ꯁ ꯭ ꯀꯣꯔ ꯇꯧꯕ ꯌꯥꯏ ꯍꯥꯏꯅ ꯄꯥꯅꯔꯤ: ꯍꯥꯏꯔꯤꯕ ꯂꯦꯕꯦꯜꯁꯤꯡ ꯑꯁꯤ ꯅꯤꯌꯝꯁꯤꯡꯒ ꯌꯥꯅꯕ ꯑꯣꯏꯅ ꯁꯥꯈꯤꯕꯅꯤ ꯫",
+    "bench.ablation": "ꯍ ꯭ ꯌꯨꯃꯦꯟ-ꯔꯤꯚ ꯭ ꯌꯨꯗ ꯗꯦꯇꯥꯗ ꯇ ꯭ ꯔꯦꯟ ꯇꯧꯔꯕ ꯃꯣꯗꯦꯜꯁꯤꯡ",
+    "bench.ablationBody": "ꯑꯁꯦꯡꯕ ꯄꯥꯏꯄꯂꯥꯏꯟꯒꯤ ꯈꯨꯠꯊꯥꯡꯗ ꯔꯟꯇꯥꯏꯝꯒꯤ ꯃꯍꯩꯁꯤꯡ: ꯃꯣꯗꯦꯜ, ꯆꯦꯛꯁꯤꯡ, ꯑꯃꯁꯨꯡ (ꯄꯟꯈ ꯭ ꯔꯕ ꯃꯐꯝꯗ) ꯊꯧꯁꯤꯜꯒꯤ ꯀꯥꯡꯂꯣꯟꯁꯤꯡ ꯫",
     "bench.colCheckpoint": "ꯆꯦꯛꯄꯣꯏꯟ ꯭ ꯇ",
-    "bench.colSchema": "ꯁ ꯭ ꯀꯤꯃꯥ ꯄꯥꯁ",
-    "bench.colFields": "ꯐꯤꯜꯗ ꯑꯦꯛꯇꯦꯛꯠ ꯃꯦꯆ",
-    "bench.colUnsafe": "ꯉꯥꯛꯁꯦꯟꯗꯕ ꯆꯦꯛꯁꯤꯟ ꯊꯧꯔꯥꯡꯁꯤꯡ",
-    "bench.colEmpathy": "ꯏꯝꯄꯦꯊꯤ/chrF",
-    "bench.colStatus": "ꯁ ꯭ ꯇꯦꯠꯁ",
-    "bench.awaitingRun": "ꯔꯟ ꯉꯥꯏꯔꯤ",
-    "bench.awaitingTraining": "ꯇ ꯭ ꯔꯦꯅꯤꯡ ꯉꯥꯏꯔꯤ",
+    "bench.colFields": "ꯐꯤꯜꯗ ꯄꯨꯝꯅꯃꯛ ꯆꯞ ꯆꯥꯕ ꯑꯣꯏ ꯫",
     "bench.splitTitle": "ꯁꯤꯟꯐꯝꯒꯤ ꯏꯃꯨꯡꯒꯤ ꯃꯇꯨꯡ ꯏꯟꯅ ꯈꯥꯏꯗꯣꯛꯎ",
     "bench.splitBody": "ꯄꯦꯔꯥꯐ ꯭ ꯔꯦꯁꯁꯤꯡ, SMS ꯇꯦꯝꯄ ꯭ ꯂꯦꯠꯁꯤꯡ ꯑꯃꯁꯨꯡ ꯆꯞ ꯃꯥꯟꯅꯕ ꯀꯦꯁ ꯑꯗꯨꯒꯤ ꯁꯦꯝꯗꯣꯛ-ꯁꯦꯝꯖꯤꯟ ꯇꯧꯔꯕ ꯃꯈꯜꯁꯤꯡ ꯑꯁꯤ ꯁ ꯭ ꯄꯤꯠ ꯑꯃꯗ ꯊꯝꯃꯨ ꯫ ꯃꯔꯖ ꯋꯦꯠꯁꯤꯡ ꯈꯟꯗ ꯭ ꯔꯤꯉꯩ ꯃꯃꯥꯡꯗ ꯇꯦꯁ ꯭ ꯠ ꯁꯦꯠ ꯑꯗꯨ ꯐ ꯭ ꯔꯤꯖ ꯇꯧ ꯫",
     "bench.empathyTitle": "ꯏꯝꯄꯦꯊꯤ ꯑꯁꯤ ꯃꯤꯑꯣꯏꯕ ꯑꯃ ꯃꯊꯧ ꯇꯥꯏ ꯫",
@@ -249,8 +242,22 @@ const bundle: LocaleBundle = {
     "bench.failureBody": "ꯑꯔꯥꯟꯕ JSON, ꯁꯦꯝꯖꯤꯟꯈ ꯭ ꯔꯕ UTRs, ꯃꯇꯦꯡ ꯄꯤꯗꯕ ꯒꯥꯔꯟꯇꯤꯁꯤꯡ ꯑꯃꯁꯨꯡ ꯀꯦꯁ ꯈꯨꯗꯤꯡꯒꯤ ꯑꯦꯛꯁꯂꯦꯁꯟ ꯑꯦꯛꯁꯟꯁꯤꯡ ꯃꯥꯡꯈꯤꯕꯒꯤ ꯄꯥꯎ ꯄꯤꯌꯨ ꯫ ꯕꯨꯠꯁ ꯭ ꯇ ꯭ ꯔꯦꯞ ꯄꯦꯌꯔ ꯗꯤꯐꯔꯦꯟꯁꯁꯤꯡ ꯫",
     "bench.adversarialEyebrow": "ꯑꯦꯗꯚꯔꯁꯥꯔ ꯭ ꯌꯦꯜ ꯁ ꯭ ꯌꯨꯠ",
     "bench.adversarialTitle": "ꯄ ꯭ ꯔꯦꯁꯔ ꯑꯁꯤꯅ ꯊꯧꯁꯤꯜ ꯑꯗꯨ ꯍꯣꯡꯗꯣꯛꯄ ꯌꯥꯔꯣꯏꯗꯕꯅꯤ ꯫",
-    "bench.adversarialBody": "ꯍꯧꯖꯤꯛ ꯂꯩꯔꯤꯕ ꯗꯤꯇꯔꯃꯤꯅꯤꯁꯇꯤꯛ ꯄ ꯭ ꯔꯤꯚ ꯭ ꯌꯨꯒꯤ ꯃꯥꯌꯣꯛꯇ ꯔꯤꯐꯟꯗ-ꯀꯣꯔꯁꯤꯌꯟ ꯀꯦꯁ ꯑꯃ ꯁꯤꯖꯤꯟꯅꯧ ꯫",
+    "bench.adversarialBody": "ꯂꯥꯏꯕ ꯃꯣꯗꯦꯜ ꯑꯗꯨꯒꯤ ꯃꯥꯌꯣꯛꯇ ꯔꯤꯐꯟꯗ-ꯀꯣꯔꯁꯤꯌꯟ ꯀꯦꯁ ꯑꯃ ꯁꯤꯖꯤꯟꯅꯧ: ꯔꯤꯐꯟꯗ ꯑꯃꯠꯇ ꯄꯤꯔꯣꯏꯗꯕꯅꯤ ꯫",
     "bench.adversarialCta": "ꯑꯣꯄꯟ ꯑꯦꯚꯦꯁꯔ ꯭ ꯌꯦꯜ ꯁꯤꯟꯔꯤꯑꯣꯔꯤ",
+    "bench.measuredOn": "ꯆꯥꯡꯆꯠꯇ {date}",
+    "bench.colReviewed": "ꯔꯤꯚ ꯭ ꯌꯨ ꯇꯧꯔꯕ ꯀꯦꯁ 54 · ꯐꯤꯜꯗ ꯄꯨꯝꯅꯃꯛ",
+    "bench.colChallenge": "42 ꯈꯡꯗꯕ · ꯀꯦꯇꯦꯒꯣꯔꯤ",
+    "bench.colReview": "ꯍ ꯭ ꯌꯨꯃꯦꯟ ꯔꯤꯚ ꯭ ꯌꯨ ꯃꯊꯧ ꯇꯥꯏ",
+    "bench.colLatency": "ꯃꯇꯝ/पाउखुम ꯄꯤꯔꯛꯎ",
+    "bench.colSource": "ꯃꯁꯤꯡ ꯈꯨꯗꯤꯡꯃꯛꯀꯤ ꯄ ꯭ ꯔꯃꯥꯟ ꯐꯥꯏꯜ",
+    "bench.colUtility": "ꯌꯨꯇꯤꯂꯤꯇꯤ",
+    "bench.mostAccurate": "ꯈ ꯭ ꯋꯥꯏꯗꯒꯤ ꯑꯆꯨꯝꯕ",
+    "bench.defaultMode": "ꯍꯧꯖꯤꯛ ꯂꯩꯔꯤꯕ ꯗꯤꯐꯣꯜꯠ",
+    "bench.footnote": "* ꯅꯤꯌꯝꯁꯤꯡ ꯈꯛꯇꯅ ꯔꯤꯚ ꯭ ꯌꯨ ꯇꯧꯔꯕ ꯁꯦꯠꯇ 100% ꯁ ꯭ ꯀꯣꯔ ꯇꯧꯋꯤ ꯃꯔꯝꯗꯤ ꯍꯥꯏꯔꯤꯕ ꯂꯦꯕꯦꯜꯁꯤꯡ ꯑꯁꯤ ꯅꯤꯌꯝꯁꯤꯡꯒ ꯌꯥꯅꯕ ꯁꯥꯈꯤꯕꯅꯤ; ꯈꯡꯗꯕ-ꯋꯥꯔꯤꯡ ꯁꯦꯠ ꯑꯁꯤ ꯑꯆꯨꯝꯕ ꯆꯥꯡꯗꯝꯅꯕꯅꯤ ꯫ κ ꯃꯇꯝ ꯑꯗꯨꯒꯤ ꯅꯤꯌꯝꯁꯤꯡꯒ ꯆꯥꯡꯗꯝꯅꯕꯗ ꯫ ꯈꯡꯗꯕ-ꯋꯥꯔꯤꯡ ꯁꯦꯠ ꯑꯁꯤ ꯄ ꯭ ꯔꯣꯖꯦꯛ ꯑꯗꯨꯅ ꯂꯦꯕꯦꯜ ꯇꯧꯋꯤ, ꯃꯤꯑꯣꯏꯕꯅ ꯔꯤꯚ ꯭ ꯌꯨ ꯇꯧꯗꯦ ꯫ ꯑꯁꯦꯡꯕ ꯀꯁ ꯭ ꯇꯃꯔ ꯃꯦꯁꯦꯖꯁꯤꯡꯗ ꯑꯃꯠꯇꯁꯨ ꯌꯦꯡꯁꯤꯟꯕ ꯉꯝꯗꯦ ꯫",
+    "bench.pilotTitle": "ꯔꯥꯎꯟꯗ 1 ꯄꯥꯏꯂꯣꯠꯁꯤꯡ: ꯌꯦꯡꯁꯤꯟꯕ ꯉꯝꯗ ꯭ ꯔꯤꯕ ꯗꯦꯇꯥ",
+    "bench.pilotBody": "ꯍ ꯭ ꯌꯨꯃꯦꯟ ꯔꯤꯚ ꯭ ꯌꯨꯒꯤ ꯃꯃꯥꯡꯗ ꯁꯤꯟꯊꯤꯌꯥ ꯀꯦꯁ 92ꯗ ꯔꯥꯎ ꯃꯣꯗꯦꯜ ꯑꯥꯎꯠꯄꯨꯠ AuditKIT ꯅ ꯁ ꯭ ꯀꯣꯔ ꯇꯧꯈꯤ ꯫ ꯄꯥꯏꯂꯣꯠꯁꯤꯡ ꯑꯁꯤꯅ ꯑꯁꯦꯡꯕ ꯊꯧꯔꯥꯡ ꯑꯗꯨ ꯆꯥꯡꯌꯦꯡ ꯇꯧꯈꯤ: GRPO, ꯏꯝꯄꯦꯊꯤ DPO ꯑꯃꯁꯨꯡ ꯋꯦꯇꯦꯗ ꯃꯔꯖꯔ ꯫",
+    "pipeline.measuredAt": "ꯃꯦꯆꯔ ꯇꯧꯔꯕ (ꯄꯥꯏꯂꯣꯠ, ꯁꯤꯟꯊꯤꯌꯥ ꯀꯦꯁ 92): ꯁ ꯭ ꯇ ꯭ ꯔꯤꯛꯠ JSON {schema}, ꯐꯤꯜꯗ ꯄꯨꯝꯅꯃꯛ ꯆꯞ ꯆꯥꯕ {fields}, ꯌꯨꯇꯤꯂꯤꯇꯤ {utility} ꯫",
+    "pipeline.notMeasured": "ꯃꯩꯁꯥ ꯑꯁꯤ ꯑꯁꯤꯒꯨꯝꯕ ꯆꯥꯡꯗ ꯄꯥꯕ ꯉꯝꯈꯤꯗꯦ ꯫ 1.00 / 0.00, 0.55 / 0.45 ꯑꯃꯁꯨꯡ 0.00 / 1.00 ꯈꯛꯇꯃꯛ ꯆꯂꯥꯏꯈꯤ ꯫",
     "policy.search": "ꯁꯣꯔ ꯭ ꯁꯁꯤꯡ, ꯅꯤꯌꯝꯁꯤꯡ ꯅꯠꯇ ꯭ ꯔꯒ ꯏꯟꯁ ꯭ ꯇꯤꯇ ꯭ ꯌꯨꯁꯟꯁꯤꯡ ꯊꯤꯌꯨ...",
     "policy.empty": "ꯁꯝꯅꯕ ꯁꯣꯔ ꯭ ꯁ ꯑꯃꯠꯇ ꯂꯩꯇꯦ",
     "policy.clear": "ꯊꯤꯕ ꯑꯗꯨ ꯁꯦꯡꯗꯣꯛꯎ",
@@ -298,7 +305,7 @@ const bundle: LocaleBundle = {
     "landing.illustrationLabel": "ꯂꯣꯛ ꯑꯃꯁꯨꯡ ꯁꯣꯔ ꯭ ꯁ-ꯒ ꯭ ꯔꯥꯎꯟꯗ ꯇ ꯭ ꯔꯥꯟꯖꯦꯛꯁꯟ ꯔꯦꯀꯣꯔ ꯭ ꯗꯁꯤꯡꯅ ꯉꯥꯛꯁꯦꯟꯗꯨꯅ ꯂꯩꯕ ꯀꯁ ꯭ ꯇꯃꯔ ꯑꯃꯒꯤ ꯈꯨꯗꯝ ꯎꯠꯄ",
     "landing.illustrationTag": "ꯄ ꯭ ꯔꯃꯥꯟ, ꯑꯍꯥꯟꯕꯗ ꯫",
     "landing.illustrationTagBody": "ꯐꯤꯜꯗ ꯈꯨꯗꯤꯡꯃꯛꯀꯤ ꯍꯧꯔꯛꯐꯝ ꯑꯃ ꯂꯩ ꯫",
-    "landing.approachKicker": "ꯁꯨꯔꯛꯁꯥ ꯈꯣꯡꯊꯥꯡ/1",
+    "landing.approachKicker": "THE SURAKSHA APPROACH / 01",
     "landing.approachTitleLine1": "ꯀꯤꯕꯒꯤ ꯆꯥꯡ ꯍꯟꯊꯩ ꯫",
     "landing.approachTitleLine2": "ꯍꯦꯟꯅ ꯃꯌꯦꯛ ꯁꯦꯡꯉꯤ ꯫",
     "landing.approachBody1": "ꯀꯂꯦꯛꯇ-ꯔꯤꯀ ꯭ ꯋꯦꯁ ꯭ ꯠ ꯁ ꯭ ꯀꯃꯥꯟ ꯑꯃꯥꯅꯤ ꯫ ꯃꯇꯝ ꯑꯃꯠꯇꯗ ꯂꯥꯛꯄ ꯉꯝꯗ ꯭ ꯔꯤꯕ ꯄꯦꯃꯦꯟꯠ ꯑꯃꯥꯅꯤ ꯫ ꯃꯁꯥꯒꯤ ꯑꯣꯏꯕ ꯋꯥꯍꯩꯗ ꯃꯇꯦꯡ ꯃꯊꯧ ꯇꯥꯕ ꯀꯁ ꯭ ꯇꯃꯔ ꯑꯃꯥꯅꯤ ꯫",
@@ -348,10 +355,8 @@ const bundle: LocaleBundle = {
       "ꯀꯝꯃꯔꯁꯦꯜ-ꯕꯦꯡꯛ ꯑꯦꯃꯦꯟꯗꯃꯦꯟꯠ ꯑꯁꯤ ꯏꯪ 2027ꯒꯤ ꯖꯅꯨꯋꯥꯔꯤ 1ꯗ ꯅꯠꯇ ꯭ ꯔꯒ ꯃꯗꯨꯒꯤ ꯃꯇꯨꯡꯗ ꯇꯧꯕ ꯇ ꯭ ꯔꯥꯟꯖꯦꯛꯁꯟꯁꯤꯡꯗ ꯆꯠꯅꯒꯅꯤ; ꯃꯇꯝ ꯑꯗꯨꯗꯒꯤ ꯑꯅꯧꯕ ꯀꯦꯁꯁꯤꯡꯗ ꯄꯨꯂꯤꯁꯤ ꯔꯤꯋꯦꯂꯤꯗꯦꯁꯟ ꯃꯊꯧ ꯇꯥꯏ ꯫",
     "Compare all six checkpoints on held-out scenario groups. Score the full JSON schema, all extracted fields, inappropriate guarantees and required actions. Keep human-rated empathy separate from lexical ChrF, and use paired bootstrap intervals rather than treating a single percentage as proof.":
       "ꯍꯣꯜꯗ-ꯑꯥꯎꯠ ꯁꯤꯅꯦꯑꯣꯔꯤ ꯒ ꯭ ꯔꯨꯞꯁꯤꯡꯗ ꯆꯦꯛꯄꯣꯏꯟ ꯭ ꯇ ꯇꯔꯨꯛ ꯄꯨꯝꯅꯃꯛ ꯆꯥꯡꯗꯝꯅꯕ ꯇꯧ ꯫ ꯃꯄꯨꯡꯐꯥꯕ JSON ꯁ ꯭ ꯀꯤꯃꯥ, ꯂꯧꯊꯣꯛꯄ ꯃꯐꯝ ꯄꯨꯝꯅꯃꯛ, ꯃꯇꯤꯛ ꯆꯥꯗꯕ ꯒꯥꯔꯟꯇꯤꯁꯤꯡ ꯑꯃꯁꯨꯡ ꯃꯊꯧ ꯇꯥꯕ ꯑꯦꯛꯁꯟꯁꯤꯡ ꯁ ꯭ ꯀꯣꯔ ꯇꯧ ꯫ ꯍ ꯭ ꯌꯨꯃꯦꯟ-ꯔꯦꯠ ꯇꯧꯔꯕ ꯏꯝꯄꯦꯊꯤ ꯑꯁꯤ ꯂꯦꯛꯁꯤꯀꯦꯜ ꯁꯤ. ꯑꯩꯆ. ꯑꯥꯔ. ꯑꯦꯐ. ꯗꯒꯤ ꯇꯣꯉꯥꯟꯕ ꯊꯝꯃꯨ, ꯑꯃꯁꯨꯡ ꯆꯥꯗ ꯑꯃꯈꯛꯇꯕꯨ ꯄ ꯭ ꯔꯣꯐ ꯑꯣꯏꯅ ꯂꯧꯕꯒꯤ ꯃꯍꯨꯠꯇ ꯄꯦꯌꯔ ꯇꯧꯔꯕ ꯕꯨꯠꯁ ꯭ ꯇ ꯭ ꯔꯦꯞ ꯏꯟꯇꯔꯚꯦꯜꯁꯤꯡ ꯁꯤꯖꯤꯟꯅꯧ ꯫",
-    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider configures an experiment; it does not change this rule-based preview or demonstrate model quality.":
-      "ꯆꯥꯟꯅꯕ LoRA ꯃꯔꯖ ꯁꯤꯖꯤꯟꯅꯗꯨꯅ ꯋꯦꯇꯦꯗ ꯄꯦꯔꯥꯃꯤꯇꯔ ꯑꯞꯗꯦꯠꯁꯤꯡ ꯑꯗꯨ ꯁꯦꯝꯃꯨ ꯫ ꯚꯦꯜꯗꯤꯑꯦꯁꯟ ꯗꯦꯇꯥꯗ ꯁ ꯭ ꯋꯤꯞ ꯋꯦꯠꯁꯤꯡ, ꯃꯔꯖ ꯇꯧꯗꯕ ꯁ ꯭ ꯄꯦꯁ ꯭ ꯌꯦꯂꯤꯁ ꯭ ꯠ ꯑꯅꯤ ꯌꯥꯎꯅ ꯫ ꯁ ꯭ ꯂꯥꯏꯗꯔ ꯑꯗꯨ ꯍꯣꯡꯗꯣꯛꯄꯅ ꯆꯥꯡꯌꯦꯡ ꯑꯃ ꯁꯦꯝꯗꯣꯛꯏ; ꯃꯁꯤꯅ ꯅꯤꯌꯝꯗ ꯌꯨꯝꯐꯝ ꯑꯣꯏꯕ ꯄ ꯭ ꯔꯤꯚ ꯭ ꯌꯨ ꯑꯁꯤ ꯍꯣꯡꯗꯣꯛꯄ ꯅꯠꯇ ꯭ ꯔꯒ ꯃꯣꯗꯦꯜꯒꯤ ꯃꯒꯨꯟ ꯎꯠꯄ ꯉꯝꯗꯦ ꯫",
-    "Configuration preview · no merged checkpoint yet":
-      "ꯀꯟꯐꯤꯒ ꯭ ꯔꯦꯁꯟ ꯄ ꯭ ꯔꯤꯚ ꯭ ꯌꯨ · ꯍꯧꯖꯤꯛ ꯐꯥꯎꯕ ꯃꯔꯖꯔ ꯇꯧꯔꯕ ꯆꯦꯛꯄꯣꯏꯟ ꯭ ꯇ ꯑꯃꯠꯇ ꯂꯩꯇꯦ",
+    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider shows the measured result where one exists; it does not change the served model.":
+      "ꯆꯥꯟꯅꯕ LoRA ꯃꯔꯖ ꯁꯤꯖꯤꯟꯅꯗꯨꯅ ꯋꯦꯇꯦꯗ ꯄꯦꯔꯥꯃꯤꯇꯔ ꯑꯞꯗꯦꯠꯁꯤꯡ ꯑꯗꯨ ꯁꯦꯝꯃꯨ ꯫ ꯌꯥꯟꯁꯤꯟꯅꯗꯕ ꯁ ꯭ ꯄꯦꯁ ꯭ ꯌꯦꯂꯤꯁ ꯭ ꯠ ꯑꯅꯤ ꯌꯥꯎꯅ ꯚꯦꯜꯗꯤꯑꯦꯁꯟ ꯗꯦꯇꯥꯗ ꯋꯦꯠꯁꯤꯡ ꯁ ꯭ ꯋꯤꯞ ꯇꯧ ꯫ ꯁ ꯭ ꯂꯥꯏꯗꯔ ꯑꯗꯨ ꯍꯣꯡꯗꯣꯛꯄꯅ ꯑꯃ ꯂꯩꯕ ꯃꯐꯝ ꯑꯗꯨꯗ ꯆꯥꯡ ꯂꯦꯞꯂꯕ ꯐꯜ ꯑꯗꯨ ꯎꯠꯂꯤ; ꯃꯁꯤꯅ ꯁꯔꯚ ꯇꯧꯔꯕ ꯃꯣꯗꯦꯜ ꯑꯗꯨ ꯍꯣꯡꯗꯦ ꯫",
     "Controls · base, uncurated SFT and curated joint SFT":
       "ꯀꯟꯇ ꯭ ꯔꯣꯜꯁ · ꯕꯦꯖ, ꯑꯟꯀ ꯭ ꯌꯨꯔꯦꯇꯦꯗ SFT ꯑꯃꯁꯨꯡ ꯀ ꯭ ꯌꯨꯔꯦꯇꯦꯗ ꯖꯣꯏꯟꯠ SFT",
     "Curate with care":
@@ -360,6 +365,12 @@ const bundle: LocaleBundle = {
       "Dataset A · strict JSON + field provenance",
     "Dataset B · chosen / rejected customer replies":
       "ꯗꯦꯇꯥꯁꯦꯠ ꯕꯤ · ꯈꯟꯒꯠꯂꯕ/ꯌꯥꯗꯕ ꯀꯁ ꯭ ꯇꯃꯔꯁꯤꯡꯒꯤ ꯔꯤꯄ ꯭ ꯂꯥꯏꯁꯤꯡ",
+    "Done · 934 cases curated with CuratorKIT 0.1.21; 810 human-reviewed cases in training":
+      "CuratorKIT 0.1.21; ꯇ ꯭ ꯔꯦꯅꯤꯡꯗ ꯃꯤꯑꯣꯏꯕꯅ ꯌꯦꯡꯁꯤꯟꯈꯤꯕ ꯀꯦꯁ 810ꯒ ꯂꯣꯏꯅꯅ ꯀ ꯭ ꯌꯨꯔꯦꯇ ꯇꯧꯔꯕ ꯀꯦꯁ 934 ꯂꯣꯏꯔꯦ",
+    "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)":
+      "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)",
+    "Done · every model evaluated; results in the Benchmark lab":
+      "ꯇꯧꯈ ꯭ ꯔꯦ · ꯃꯣꯗꯦꯜ ꯈꯨꯗꯤꯡꯃꯛ ꯌꯦꯡꯁꯤꯟꯈ ꯭ ꯔꯦ; ꯃꯁꯤꯒꯤ ꯃꯍꯩ ꯑꯁꯤ ꯕꯦꯟꯆꯃꯔ ꯭ ꯛ ꯂꯦꯕꯇ ꯐꯪꯉꯤ ꯫",
     "Every claim needs a measured result.":
       "ꯀ ꯭ ꯂꯦꯝ ꯈꯨꯗꯤꯡꯃꯛꯀꯤ ꯆꯥꯡ ꯅꯥꯏꯕ ꯐꯜ ꯑꯃ ꯃꯊꯧ ꯇꯥꯏ ꯫",
     "Found":
@@ -374,20 +385,18 @@ const bundle: LocaleBundle = {
       "ꯂꯦꯠ ꯐ ꯭ ꯔꯣꯗ ꯔꯤꯄꯣꯔꯠ · ꯒ ꯭ ꯔꯥꯟꯇꯤꯗ-ꯔꯤꯐꯟꯗ ꯀꯣꯔꯁꯤꯌꯟ",
     "Listening":
       "ꯇꯥꯔꯤꯕꯗꯨ",
-    "Local curation + optional CuratorKIT pass":
-      "ꯂꯣꯀꯦꯜ ꯀ ꯭ ꯌꯨꯔꯦꯁꯟ + ꯑꯣꯞꯁꯅꯦꯜ CuratorKIT ꯄꯥꯁ",
     "Make quality visible":
       "ꯃꯒꯨꯟ ꯑꯗꯨ ꯎꯕ ꯐꯪꯍꯟꯕꯤꯌꯨ",
     "Manifest · source hashes, split IDs and rejection reasons":
       "ꯃꯦꯅꯤꯐꯦꯁ ꯭ ꯠ · ꯁꯣꯔ ꯭ ꯁ ꯍꯦꯁꯁꯤꯡ, ꯁ ꯭ ꯄꯤꯠ ꯑꯥꯏ. ꯗꯤ. ꯁꯤꯡ ꯑꯃꯁꯨꯡ ꯌꯥꯗꯕꯒꯤ ꯃꯔꯝꯁꯤꯡ",
+    "Measured in the pilot · the 0.55/0.45 merge was worse, so it is not used":
+      "ꯄꯥꯏꯂꯣꯠꯇ ꯂꯦꯞꯊꯣꯛꯂꯕ · 0.55/0.45 ꯃꯔꯖ ꯑꯁꯤ ꯍꯦꯟꯅ ꯁꯥꯊꯤꯕ ꯑꯣꯏꯈꯤ, ꯃꯔꯝ ꯑꯗꯨꯅ ꯃꯁꯤ ꯁꯤꯖꯤꯟꯅꯗꯦ ꯫",
     "Merge & investigate":
       "ꯌꯥꯟꯁꯤꯟꯅꯕ ꯑꯃꯁꯨꯡ ꯊꯤꯖꯤꯟꯕꯒꯤ ꯊꯕꯛ ꯇꯧ",
     "Merge manifest · base, tokenizer and adapter identities":
       "ꯃꯦꯅꯤꯐꯦꯁꯠ · ꯕꯦꯖ, ꯇꯣꯀꯦꯅꯥꯏꯖꯔ ꯑꯃꯁꯨꯡ ꯑꯦꯗꯦꯄꯇꯔ ꯑꯥꯏꯗꯦꯟꯇꯤꯇꯤꯠꯁꯤꯡ ꯄꯨꯟꯁꯤꯜꯂꯨ",
     "NPCI · Dispute redressal":
       "NPCI · ꯋꯥꯊꯣꯛ ꯀꯣꯛꯍꯟꯕ",
-    "Offline scorer ready · model evaluation pending":
-      "ꯑꯣꯐꯂꯥꯏꯟ ꯁ ꯭ ꯀꯣꯂꯔ ꯔꯦꯗꯤ · ꯃꯣꯗꯦꯜꯒꯤ ꯃꯃꯜ ꯂꯦꯞꯄ ꯂꯩꯇ ꯭ ꯔꯤ",
     "QR request · ₹24,500 · reported today":
       "QR request · ₹24,500 · reported today",
     "RBI · Customer liability":
@@ -410,8 +419,6 @@ const bundle: LocaleBundle = {
       "ꯁꯦꯜ-ꯊꯨꯝꯒꯤ ꯑꯣꯏꯕ ꯁꯥꯏꯕꯔ ꯐ ꯭ ꯔꯣꯗꯀꯤ ꯃꯇꯥꯡꯗ 1930 ꯑꯃꯁꯨꯡ cybercrime.gov.in ꯒꯤ ꯈꯨꯠꯊꯥꯡꯗ ꯊꯨꯅ ꯄꯥꯎꯗꯝꯕꯤꯌꯨ ꯫ ꯐꯒꯠꯂꯛꯄꯒꯤ ꯊꯥꯖꯕ ꯂꯩꯇꯦ ꯫",
     "Report · per-case evidence + paired bootstrap deltas":
       "ꯔꯤꯄꯣꯔ ꯭ ꯠ · ꯄꯔ-ꯀꯦꯁ ꯄ ꯭ ꯔꯃꯥꯟ + ꯄꯦꯌꯔꯗ ꯕꯨꯠꯁ ꯭ ꯇ ꯭ ꯔꯦꯞ ꯗꯦꯜꯇꯥꯁ",
-    "Requires compatible GPU + reviewed data":
-      "ꯁꯝꯅꯕ ꯖꯤ. ꯄꯤ. ꯌꯨ. + ꯔꯤꯚ ꯭ ꯌꯨ ꯇꯧꯔꯕ ꯗꯦꯇꯥ ꯃꯊꯧ ꯇꯥꯏ",
     "Sent to the wrong person":
       "ꯑꯔꯥꯟꯕ ꯃꯤꯑꯣꯏ ꯑꯗꯨꯗ ꯊꯥꯔꯛꯎ",
     "Start with synthetic or authorised customer chats. Mask sensitive identities, retain only context-labelled transaction references, validate fields against source spans, and separate schema targets from same-task preference pairs.":
@@ -435,7 +442,7 @@ const bundle: LocaleBundle = {
     "UPI P2P · ₹1,500 · T+2 calendar days":
       "UPI P2P · ₹1,500 · T+2 ꯀꯦꯂꯦꯟꯗꯔꯒꯤ ꯅꯨꯃꯤꯠꯁꯤꯡ",
     "UPI transfer: T+1. Merchant confirmation failure: T+5. T refers to calendar date; compensation is ₹100 per day beyond the applicable deadline.":
-      "UPI ꯊꯥꯗꯣꯛꯄ: T+1 ꯫ ꯃꯔꯆꯦꯟ ꯭ ꯇ ꯀꯟꯐꯔꯃꯦꯁꯟ ꯐꯦꯜ: T+5 ꯫ Tꯅ ꯀꯦꯂꯦꯟꯗꯔꯒꯤ ꯇꯥꯡ ꯇꯥꯛꯏ; ꯁꯦꯟꯊꯣꯛ ꯄꯤꯕꯁꯤ ꯆꯠꯅꯔꯤꯕ ꯃꯇꯝ ꯑꯗꯨꯒꯤ ꯃꯊꯛꯇ ꯂꯩꯕ ꯅꯨꯃꯤꯠ ꯈꯨꯗꯤꯡꯒꯤ ₹100 ꯅꯤ ꯫",
+      "UPI ꯊꯥꯗꯣꯛꯄ: T+1 ꯫ ꯃꯔꯆꯦꯟ ꯭ ꯇ ꯀꯟꯐꯔꯃꯦꯁꯟ ꯐꯦꯜ: T+5 ꯫ Tꯅ ꯀꯦꯂꯦꯟꯗꯔꯒꯤ ꯇꯥꯡ ꯑꯗꯨ ꯇꯥꯛꯏ; ꯁꯦꯟꯊꯣꯛ ꯄꯤꯕꯁꯤ ꯆꯠꯅꯔꯤꯕ ꯃꯇꯝ ꯑꯗꯨꯒꯤ ꯃꯊꯛꯇ ꯂꯩꯕ ꯅꯨꯃꯤꯠ ꯈꯨꯗꯤꯡꯒꯤ ₹100 ꯅꯤ ꯫",
     "Validation sweep · weights selected before held-out test":
       "ꯚꯦꯜꯗꯤꯗꯦꯁꯟ ꯁ ꯭ ꯋꯤꯞ · ꯍꯣꯜꯗ-ꯑꯥꯎꯠ ꯇꯦꯁ ꯭ ꯠ ꯇꯧꯗ ꯭ ꯔꯤꯉꯩ ꯃꯃꯥꯡꯗ ꯈꯟꯒꯠꯂꯕ ꯋꯦꯠꯁꯤꯡ",
     "Voluntary wrong VPA · no automatic reversal":

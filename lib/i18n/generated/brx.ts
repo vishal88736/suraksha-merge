@@ -58,7 +58,7 @@ const bundle: LocaleBundle = {
     "desk.pipelineTitle": "मोनसे पाइपलाइन। सानै रोंगसाफोर।",
     "desk.pipelineSubtitle": "दावराव-दावसिनि खौरांनिफ्राय लानानै फोरमान खालामथाव फिननायसिम दावबायनायखौ उनसं।",
     "desk.benchmarksTitle": "फोथायनायनि सिगां फोरमान।",
-    "desk.benchmarksSubtitle": "मोनद'चेकप्वाइन्टफोर। मोनसे थामोनथि गोनां। जेबो दिहुनजानाय फिथायफोर गैया।",
+    "desk.benchmarksSubtitle": "मोनफ्रोम मडेलखौ जों फोरोंदोंमोन, एखे थाबथानाय जाथायफोराव सुनाय जादोंमोन। जेबो दिहुनजानाय फिथायफोर गैयामोन।",
     "desk.policyTitle": "नेमफोराव बिथा खालाम जानाय।",
     "desk.policySubtitle": "मोनफ्रोम ट्राइएज गनायथिनि उनाव गुदि फुंखाफोरनि रोखोम।",
     "workflow.message": "बायग्रानि खौरां।",
@@ -220,27 +220,20 @@ const bundle: LocaleBundle = {
     "pipeline.outputs": "बे थाखोआ मा दिहुनो?",
     "pipeline.note": "मोनफ्रोमबो थाखोआ गावनि फुंखा सिनायथिखौ सिगांथिं लाबोयो। फेलें जानाय नमुनाफोरखौ रेबगान्थि खालामनाय जायो, जेराव थार, फाहामनाय जायो, फिन फिन नायफिननाय जायो।",
     "pipeline.experimentEyebrow": "टास्क-एरिथमेटिक एक्सपेरिमेन्ट।",
-    "pipeline.experimentTitle": "आद्रा थानाय रांखौ नागिर। फिथाइखौ सुनाय।",
-    "pipeline.experimentBody": "स्लाइडारआ मोनसे अफलाइन मर्जखौ कनफिगार खालामो। म'डेल दिन्थिफुंनायखौ मर्ज खालामनायनि उनाव मूल्याङ्कन खालामनांगौ।",
+    "pipeline.experimentTitle": "जों आद्रा थानाय रांखौ सुनायसै। बेनि जेबो मुलामफा जायाखैमोन।",
+    "pipeline.experimentBody": "पाइलटआव, 0.55 / 0.45 आव स्किमा आरो मोनदांथि रोंगसाफोरखौ ज'खालामनाया गासै-फोथारनि थारथिखौ खोमाना लायो (72.8% → 0%), बेनिखायनो ज'खालामनायखौ बाहायनाय जाया। मावजानाय मडेलफोरा सुबुं-नायसंजानाय खारिआव सादारन SFT।",
     "pipeline.specialistA": "स्किमा रोंग'सारगिरि।",
     "pipeline.specialistB": "मोनदांथि रोंग'सारगिरि।",
     "pipeline.empathyOnly": "अननायल'।",
     "pipeline.schemaOnly": "स्किमाल'।",
-    "pipeline.resetMix": "0.55/0.45 आव रिसेट खालाम।",
+    "pipeline.resetMix": "0.55 / 0.45 आव रिसेट खालाम।",
     "pipeline.exportMix": "एक्सपोर्ट मार्ज कनफिगारेशन।",
-    "bench.noteTitle": "आनजाद नायनायखौ थि खालामनाय जायो। बेनि उनाव फोरमान फैयो।",
-    "bench.noteBody": "थांखिनि जौखोन्दो आरो बेसेननि अनुमानखौ सुनाय जायाखै। बे टेबला सिनायजानाय बेसेननि खारथाइफोरनिफ्रायल'फिथायफोर थाफागोन।...........................................................................................................................................................................",
-    "bench.notEvaluated": "दासिमबो मूल्याङ्कन खालामजायाखै।",
-    "bench.ablation": "चेकप'न्ट एब्लेसन।",
-    "bench.ablationBody": "गासिबो रोंगसाफोर आरो गुदिफोर, एखे थाबथानाय जाथायफोरनि सायाव बिजिरनाय जायो।",
+    "bench.noteTitle": "हमथानाय खारिथिनि सायाव सुनाय, बावसोमनाय नङा।",
+    "bench.noteBody": "गाहायाव होनाय मोनफ्रोमबो अनजिमाया केसफोरनि रेबगान्थि खालामजानाय राननिफ्राय फैयो जेराव मडेलफोरा माब्लाबाबो फोरोंजायाखै। नायसंजानाय सेटआव खालि नेमफोरल'100% स्कर खालामनायनि आसा खालामनाय जायोः बैफोर लेबेलफोरखौ नेमफोरजों गोरोबनो थाखाय बानायनाय जादोंमोन।",
+    "bench.ablation": "सुबुं-नायसंजानाय खारिथिनि सायाव फोरोंजानाय मडेलफोर।",
+    "bench.ablationBody": "नंगुबै पाइपलाइननि गेजेरजों रानटाइम फिथायफोरः मडेल, चेक, आरो (जेराव मुंख'नाय) पलिसि नेमफोर।",
     "bench.colCheckpoint": "चेकप'न्ट।",
-    "bench.colSchema": "स्किमा पास।",
-    "bench.colFields": "फील्ड नंगुबै मेच।",
-    "bench.colUnsafe": "रैखाथि गैयै गारान्टिफोर।",
-    "bench.colEmpathy": "मोनदांथि/chrF",
-    "bench.colStatus": "थाथाय।",
-    "bench.awaitingRun": "खारनायखौ नेगासिनो।",
-    "bench.awaitingTraining": "फोरोंथायखौ नेगासिनो।",
+    "bench.colFields": "गासिबो थि फिल्डफोर।",
     "bench.splitTitle": "न'खरारि नुथाइजों गावस्राला।",
     "bench.splitBody": "पेराफ्रेजफोर, SMS टेमप्लेटफोर आरो एखे केसखौ फाहामनाय रोखोमफोरखौ मोनसे बाहागोआव दोन। ज'खालामनाय गिलिरखौ सायख'नायनि सिगां आनजाद सेटखौ फ्रीज खालाम।,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
     "bench.empathyTitle": "मोनदांथिनि थाखाय सासे मानसिनि गोनांथि जायो।",
@@ -249,15 +242,29 @@ const bundle: LocaleBundle = {
     "bench.failureBody": "गाज्रि महर होनाय JSON, बानायजानाय UTRs, मदद गैयै गारान्टिफोर आरो मोनफ्रोम केसाव एस्केलेशन एक्शन गैयैखौ रिपर्ट खालाम। बुटस्ट्रेप जरा खालामनाय फारागथिफोर।",
     "bench.adversarialEyebrow": "हेंथा सुइत।",
     "bench.adversarialTitle": "नारसिननाया खान्थिखौ सोलायनो नाङा।",
-    "bench.adversarialBody": "आथिखालनि थि खालामनाय प्रिभिउनि बेरेखायै रिफन्ड-नारसिननाय केस खालामनो नाजा।",
+    "bench.adversarialBody": "लाइभ मडेलनि बेरेखायै रिफन्ड-नारसिननाय केस खालामनो नाजाः जेबो रिफन्डनि बाथ्रा होनाङा।",
     "bench.adversarialCta": "हेंथा नुथाइखौ गेवनाय।",
+    "bench.measuredOn": "सुनाय जादों {date}",
+    "bench.colReviewed": "54 नायसंजानाय जाथायफोर · गासैबो ओनसोलफोर।",
+    "bench.colChallenge": "42 मिथिजायै थाखो।",
+    "bench.colReview": "सुबुं बिजिरसंनायनि गोनांथि दं।",
+    "bench.colLatency": "सम/फिन हर।",
+    "bench.colSource": "मोनफ्रोमबो अनजिमानि थाखाय फोरमान फाइल।",
+    "bench.colUtility": "बाहायजाथाव।",
+    "bench.mostAccurate": "बयनिख्रुइबो थारसिन।",
+    "bench.defaultMode": "दानि दिफल्ट।",
+    "bench.footnote": "नायसंजानाय सेटआव नेमफोरा हारसिङैनो 100% स्कर खालामो मानोना बैफोर लेबेलफोरा नेमफोरजों गोरोबनो थाखाय बानायनाय जादोंमोन; मिथिजायै-सोदोब सेटआ मोजां रुजुथाय। बै समनि नेमफोरजों सुनाय जायो। मिथिजायै-सोदोब सेटआ प्रजेक्तजों लेबेल खालाम जायो, सुबुं-नायसंजानाय नङा। नंगुबै बायग्रानि खौरांफोराव जेबो मूल्याङ्कन खालामजायाखै।",
+    "bench.pilotTitle": "राउन्ड 1 पाय'ल'ट्सः नायसंजायै खारि।",
+    "bench.pilotBody": "सुबुं बिजिरसंनायनि सिगां, 92 सिन्थेटिक केसफोराव गोथां मडेल आउटपुटआ AuditKIT जों स्कर खालामजादोंमोन। बेफोर पाय'ल'टफोरा गुबै प्लेनखौ आनजाद नायदोंमोनः GRPO, मोनदांथि DPO आरो गिलिर गोरोबनाय।",
+    "pipeline.measuredAt": "सुनाय (पाइलट, 92 सिन्थेटिक केसफोर): गोख्रों JSON {schema}, गासैबो फील्डफोरा नंगुबै {fields}, बाहायथि {utility}।",
+    "pipeline.notMeasured": "बे लिरथायाव सुनाय जायाखै। खालि 1.00 / 0.00, 0.55 / 0.45 आरो 0.00 / 1.00 खौल'सालायनाय जादोंमोन।",
     "policy.search": "फुंखाफोर, नेमफोर एबा फसंथानफोरखौ नागिर।",
     "policy.empty": "गोरोबनाय फुंखाफोर गैया।",
     "policy.clear": "नागिरनायखौ साफा खालाम।",
     "policy.disclaimerTitle": "मोनसे थिरांथा-हेफाजाबारि बिजिरसं आगजु।",
     "policy.disclaimerBody": "बेफोर फुंखाफोरा सिंनि ट्राइएज पलिसिखौ फोरमायथि होयो। बे एप्लिकेशनआ मोनसे बेंक, रेगुलेटर, मावख'आरि UDIR गेटवे एबा कमप्लायन्स सार्टिफिकेशन नङा। बाहायजाथाव आरो बाहायजानाय बाहायनायनि सिगां फोसाबनायफोरखौ नायसं।",
     "footer.tagline": "सानबोलावरि ट्राइएज। उनसंनो हाथाव थिरांथाफोर।",
-    "footer.version": "Suraksha-Merge · रिसार्च प्रिभिउ v0.1",
+    "footer.version": "Suraksha-Merge · बिजिरसं प्रिभिउ v0.1",
     "mascot.hideHint": "सिनखौ दोनखोमा।",
     "mascot.dismissHint": "सिनखौ नेवसि।",
     "error.unavailable": "ट्राइया मोनथावना नङा। फिन नाजा।",
@@ -348,10 +355,8 @@ const bundle: LocaleBundle = {
       "फालांगियारि-बेंक फोसाबनाया 1 जानुवारि 2027 मायथाइआव एबा बेनि उनाव ट्रेन्जेकसनफोराव बाहाय जायो; बै अक्ट'निफ्राय गोदान जाथायफोरा पलिसि फोसाबनायनि गोनांथि जायो।",
     "Compare all six checkpoints on held-out scenario groups. Score the full JSON schema, all extracted fields, inappropriate guarantees and required actions. Keep human-rated empathy separate from lexical ChrF, and use paired bootstrap intervals rather than treating a single percentage as proof.":
       "गासिबो मोनद'चेकप्वाइन्टफोरखौ ह'ल्ड-आउट सिनारिअ ग्रुपफोराव रुजु। आबुं JSON स्किमा, गासिबो दिहुनजानाय फिल्डफोर, आरजाथाव नङि गारान्टिफोर आरो गोनां खामानिफोरखौ स्क'र खालाम। सुबुं-रेटेड मोनदांथिखौ लेक्सिकेल CHrF निफ्राय आलादा लाखि, आरो मोनसे जौखोन्दोखौ फोरमान महरै नायनायनि बदलै जरा बुटस्ट्रेप थाद'नायफोरखौ बाहाय।",
-    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider configures an experiment; it does not change this rule-based preview or demonstrate model quality.":
-      "मोनसे गोरोबथाव LoRA मर्जखौ बाहायनानै गिलिर प्यारामिटार आपदेटफोरखौ रनसाय। सानै गोरोबै रोंग'सारफोरजों लोगोसे थारथिनि खारिखौ सो। स्लाइडारखौ लांनाया मोनसे आनजाद साजायो; बेयो बे नेम-बिथायारि प्रिभिउखौ सोलायाखै एबा मडेलनि गुनखौ दिन्थिया।",
-    "Configuration preview · no merged checkpoint yet":
-      "कनफिगारेशन प्रिभिउआ दासिमबो गोरोबहोनाय चेकप'न्ट गैया",
+    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider shows the measured result where one exists; it does not change the served model.":
+      "मोनसे गोरोबथाव LoRA मर्जखौ बाहायनानै गिलिर प्यारामिटार आपदेटफोरखौ रनसाय। सानै गलायजायै रोंग'सारफोरजों लोगोसे थारथिनि खारिथियाव गिलिर खालाम। स्लाइडारखौ लांनाया जखा खालामजानाय फिथाइखौ दिन्थियो जेराव मोनसे दं; बेयो मावजानाय मडेलखौ सोलाया।",
     "Controls · base, uncurated SFT and curated joint SFT":
       "कन्ट्र'ल्स बेस, आनकिउरेटेड SFT आरो किउरेटेड ज्वाइन्ट SFT।",
     "Curate with care":
@@ -360,6 +365,12 @@ const bundle: LocaleBundle = {
       "डेटासेट A· स्ट्रिक्ट JSON + फील्ड प्रभिनेन्स।",
     "Dataset B · chosen / rejected customer replies":
       "डेटासेट B· सायख'जानाय/नेवसिजानाय बायग्रानि फिननायफोर।",
+    "Done · 934 cases curated with CuratorKIT 0.1.21; 810 human-reviewed cases in training":
+      "934 केसफोरखौ CuratorKIT 0.1.21 जों जुथुमनाय जादों; फोरोंथायाव 810 सुबुं-नायसंजानाय केसफोर।",
+    "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)":
+      "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)",
+    "Done · every model evaluated; results in the Benchmark lab":
+      "मोनफ्रोम मडेलखौ बिजिरनाय जायो; बेन्चमार्क लेबआव फिथाय मोनो।",
     "Every claim needs a measured result.":
       "मोनफ्रोमबो दाबिनि थाखाय मोनसे जखानि फिथाइ नांगौ जायो।",
     "Found":
@@ -374,20 +385,18 @@ const bundle: LocaleBundle = {
       "लेट फ्र'ड रिप'र्ट · गारान्टि-रिफन्ड नारसिननाय।",
     "Listening":
       "खोनानाय।",
-    "Local curation + optional CuratorKIT pass":
-      "जायगायारि फाहामनाय + सायख'जाथाव CuratorKIT पास।",
     "Make quality visible":
       "गुनखौ नुथाव खालाम।",
     "Manifest · source hashes, split IDs and rejection reasons":
       "मेनिफेस्ट सोर्स हैश, स्प्लिट आई. डी. आरो नेवसिजानायनि जाहोनफोर।",
+    "Measured in the pilot · the 0.55/0.45 merge was worse, so it is not used":
+      "पाय'ल'टआव जखा खालामनाय 0.55/0.45 मर्जआ गाज्रिसिनमोन, बेनिखायनो बेखौ बाहायनाय जाया।",
     "Merge & investigate":
       "ज'खालाम आरो नायबिजिर।",
     "Merge manifest · base, tokenizer and adapter identities":
       "मेनिफेस्ट · बेस, ट'कैनाइजार आरो एडाप्टर सिनायथिफोरखौ ज'खालाम।",
     "NPCI · Dispute redressal":
       "NPCI बेले-बेजेखौ फोसाबनाय।",
-    "Offline scorer ready · model evaluation pending":
-      "अफलाइन स्क'रार रेदि · मडेल मूल्याङ्कनआ थाबथानाय।",
     "QR request · ₹24,500 · reported today":
       "क्यू. आर. नि आर'ज खालामनाय · ₹24,500 · खौ दिनै फोरमायदोंमोन।",
     "RBI · Customer liability":
@@ -410,8 +419,6 @@ const bundle: LocaleBundle = {
       "1930 आरो cybercrime.gov.in नि गेजेरजों रांखान्थियारि साइबर फ्र'डखौ थाबैनो फोरमाय। रिकभारिनि ग्यारान्टि गैया।",
     "Report · per-case evidence + paired bootstrap deltas":
       "रिपर्ट खालाम मोनफ्रोम-केस फोरमान + जरा खालामनाय बुटस्ट्रेप डेल्टाफोर।",
-    "Requires compatible GPU + reviewed data":
-      "गोरोबथाव जी. पी. यू. + नायसंजानाय खारि नांगौ।",
     "Sent to the wrong person":
       "गोरोनथि गोनां मानसिनाव दैथायहरदोंमोन।",
     "Start with synthetic or authorised customer chats. Mask sensitive identities, retain only context-labelled transaction references, validate fields against source spans, and separate schema targets from same-task preference pairs.":

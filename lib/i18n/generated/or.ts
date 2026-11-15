@@ -58,7 +58,7 @@ const bundle: LocaleBundle = {
     "desk.pipelineTitle": "ଗୋଟିଏ ପାଇପ ଲାଇନ। ଦୁଇ ଜଣ ବିଶେଷଜ୍ଞ।",
     "desk.pipelineSubtitle": "ଏକ କୋଲାହଲପୂର୍ଣ୍ଣ ବାର୍ତ୍ତା ଠାରୁ ଏକ ଯାଞ୍ଚଯୋଗ୍ଯ଼ ପ୍ରତିକ୍ରିଯ଼ା ପର୍ଯ୍ଯ଼ନ୍ତ ଯାତ୍ରା ଅନୁସରଣ କରନ୍ତୁ।",
     "desk.benchmarksTitle": "ଆତ୍ମବିଶ୍ୱାସ ପୂର୍ବରୁ ପ୍ରମାଣ।",
-    "desk.benchmarksSubtitle": "ଛଅଟି ଚେକପଏଣ୍ଟ। ଗୋଟିଏ ସ୍ଥିରୀକୃତ ମାନଦଣ୍ଡ। କୌଣସି ଉଦ୍ଭାବିତ ଫଳାଫଳ ନାହିଁ।",
+    "desk.benchmarksSubtitle": "ଆମେ ତାଲିମ ଦେଇଥିବା ପ୍ରତ୍ଯ଼େକ ମଡେଲ୍, ସମାନ ଅଟକାଯାଇଥିବା କେସ୍ ଉପରେ ମାପ କରାଯାଏ | କୌଣସି ଉଦ୍ଭାବିତ ଫଳାଫଳ ନାହିଁ |",
     "desk.policyTitle": "ନିଯ଼ମରେ ଆଧାରିତ।",
     "desk.policySubtitle": "ପ୍ରତ୍ଯ଼େକ ଟ୍ରାଇଏଜ୍ ସୁପାରିଶ ପଛରେ ସଂସ୍କରଣ ପ୍ରାଥମିକ ଉତ୍ସ |",
     "workflow.message": "ଗ୍ରାହକଙ୍କ ବାର୍ତ୍ତା",
@@ -220,27 +220,20 @@ const bundle: LocaleBundle = {
     "pipeline.outputs": "ଏହି ପର୍ଯ୍ଯ଼ାଯ଼ କ \"ଣ ସୃଷ୍ଟି କରେ?",
     "pipeline.note": "ପ୍ରତ୍ଯ଼େକ ପର୍ଯ୍ଯ଼ାଯ଼ ଏହାର ଉତ୍ସ ପରିଚଯ଼କୁ ଆଗକୁ ନେଇଥାଏ। ବିଫଳ ନମୁନାଗୁଡିକ ରେକର୍ଡ କରାଯାଏ, ଯେଉଁଠାରେ ନ୍ଯ଼ାଯ଼ସଙ୍ଗତ ମରାମତି କରାଯାଏ, ତା'ପରେ ପୁନର୍ବାର ଯାଞ୍ଚ କରାଯାଏ |",
     "pipeline.experimentEyebrow": "କାର୍ଯ୍ଯ଼-ଗାଣିତିକ ପରୀକ୍ଷଣ",
-    "pipeline.experimentTitle": "ସନ୍ତୁଳନ ଖୋଜନ୍ତୁ। ଫଳାଫଳକୁ ମାପନ୍ତୁ।",
-    "pipeline.experimentBody": "ସ୍ଲାଇଡର୍ ଏକ ଅଫଲାଇନ୍ ମିଶ୍ରଣକୁ ବିନ୍ଯ଼ାସ କରିଥାଏ। ମିଶ୍ରଣ ପରେ ମଡେଲ୍ କାର୍ଯ୍ଯ଼ଦକ୍ଷତାକୁ ମୂଲ୍ଯ଼ାଙ୍କନ କରାଯିବା ଆବଶ୍ଯ଼କ |",
+    "pipeline.experimentTitle": "ଆମେ ବଳକା ପରିମାଣ ମାପିଲୁ। ତାହା ଫଳପ୍ରଦ ହେଲା ନାହିଁ।",
+    "pipeline.experimentBody": "ପାଇଲଟରେ, 0.55 / 0.45 ରେ ସ୍କିମା ଏବଂ ସହାନୁଭୂତି ବିଶେଷଜ୍ଞମାନଙ୍କୁ ମିଶ୍ରଣ କରିବା ଦ୍ୱାରା ସମସ୍ତ କ୍ଷେତ୍ରର ସଠିକତା (72.8% → 0%) ହରାଇଥାଏ, ତେଣୁ ମିଶ୍ରଣ ବ୍ଯ଼ବହୃତ ହୁଏ ନାହିଁ। ସେବା କରାଯାଇଥିବା ମଡେଲଗୁଡିକ ମାନବ-ସମୀକ୍ଷା ତଥ୍ଯ଼ ଉପରେ ସରଳ SFT | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |",
     "pipeline.specialistA": "ସ୍କିମା ବିଶେଷଜ୍ଞ",
     "pipeline.specialistB": "ସହାନୁଭୂତି ବିଶେଷଜ୍ଞ",
     "pipeline.empathyOnly": "କେବଳ ସହାନୁଭୂତି",
     "pipeline.schemaOnly": "କେବଳ ସ୍କିମା",
-    "pipeline.resetMix": "0.55/0.45 କୁ ପୁନଃସ୍ଥାପନ କରନ୍ତୁ",
+    "pipeline.resetMix": "0.55 / 0.45 କୁ ପୁନଃସ୍ଥାପନ କରନ୍ତୁ",
     "pipeline.exportMix": "ମିଶ୍ରଣ ବିନ୍ଯ଼ାସ ରପ୍ତାନୀ କରନ୍ତୁ",
-    "bench.noteTitle": "ପରୀକ୍ଷଣ ପ୍ରସ୍ତୁତ ହୋଇଛି। ପ୍ରମାଣ ପରବର୍ତ୍ତୀ ଆସେ।",
-    "bench.noteBody": "ପ୍ରସ୍ତାବର ପ୍ରତିଶତ ଏବଂ ବ୍ଯ଼ଯ଼ ଆକଳନ ଆକଳନ କରାଯାଇନାହିଁ। ଏହି ସାରଣୀରେ କେବଳ ଚିହ୍ନଟ ଯୋଗ୍ଯ଼ ମୂଲ୍ଯ଼ାଙ୍କନ ରନ୍ର ଫଳାଫଳ ରହିବ।",
-    "bench.notEvaluated": "ଏପର୍ଯ୍ଯ଼ନ୍ତ ମୂଲ୍ଯ଼ାଙ୍କନ ହୋଇନାହିଁ",
-    "bench.ablation": "ଚେକପଏଣ୍ଟ ଅବ୍ଲେସନ",
-    "bench.ablationBody": "ସମସ୍ତ ବିଶେଷଜ୍ଞ ଏବଂ ବେସଲାଇନ୍, ସମାନ ସ୍ଥଗିତ ମାମଲା ଉପରେ ମୂଲ୍ଯ଼ାଙ୍କନ କରାଯାଇଥିଲା |",
+    "bench.noteTitle": "ଅଟକାଇ ରଖାଯାଇଥିବା ତଥ୍ଯ଼ ଉପରେ ମାପ କରାଯାଏ, ପ୍ରତିଶୃତି ହୋଇନଥାଏ।",
+    "bench.noteBody": "ନିମ୍ନରେ ଦିଆଯାଇଥିବା ପ୍ରତ୍ଯ଼େକ ସଂଖ୍ଯ଼ା ମଡେଲମାନେ କେବେ ତାଲିମ ନେଉନଥିବା କେସ୍ ଉପରେ ରେକର୍ଡ ହୋଇଥିବା ରନ୍ରୁ ଆସିଥାଏ | ସମୀକ୍ଷା ସେଟରେ କେବଳ 100% ସ୍କୋରିଂ ନିଯ଼ମ ଆଶା କରାଯାଏଃ ସେହି ଲେବଲ୍ଗୁଡିକ ନିଯ଼ମ ସହିତ ସହମତ ହେବା ପାଇଁ ନିର୍ମିତ ହୋଇଥିଲା |",
+    "bench.ablation": "ମାନବ-ସମୀକ୍ଷା ତଥ୍ଯ଼ ଉପରେ ତାଲିମପ୍ରାପ୍ତ ମଡେଲ୍",
+    "bench.ablationBody": "ବାସ୍ତବ ପାଇପଲାଇନ୍ ମାଧ୍ଯ଼ମରେ ରନ୍ ଟାଇମ୍ ଫଳାଫଳଃ ମଡେଲ୍, ଚେକ୍, ଏବଂ (ଯେଉଁଠାରେ ଉଲ୍ଲେଖ କରାଯାଇଛି) ନୀତି ନିଯ଼ମ |",
     "bench.colCheckpoint": "ଚେକପଏଣ୍ଟ",
-    "bench.colSchema": "ସ୍କିମା ପାସ୍",
-    "bench.colFields": "ଫିଲ୍ଡିଂ ସଠିକ୍ ମ୍ଯ଼ାଚ୍",
-    "bench.colUnsafe": "ଅସୁରକ୍ଷିତ ଗ୍ଯ଼ାରେଣ୍ଟି",
-    "bench.colEmpathy": "ସହାନୁଭୂତି/chrF",
-    "bench.colStatus": "ସ୍ଥିତି",
-    "bench.awaitingRun": "ଦୌଡ଼ିବା ପାଇଁ ଅପେକ୍ଷା",
-    "bench.awaitingTraining": "ପ୍ରଶିକ୍ଷଣ ଅପେକ୍ଷାରେ",
+    "bench.colFields": "ସମସ୍ତ କ୍ଷେତ୍ର ସଠିକ୍",
     "bench.splitTitle": "ପରିଦୃଶ୍ଯ଼ ପରିବାର ଦ୍ୱାରା ବିଭାଜିତ ହୁଅନ୍ତୁ",
     "bench.splitBody": "ପାରାଫ୍ରେଜ୍, SMS ଟେମ୍ପଲେଟ୍ ଏବଂ ସମାନ କେସ୍ ର ମରାମତି ସଂସ୍କରଣକୁ ଗୋଟିଏ ବିଭାଜନରେ ରଖନ୍ତୁ | ମିଶ୍ରଣ ଓଜନ ଚଯ଼ନ କରିବା ପୂର୍ବରୁ ପରୀକ୍ଷା ସେଟ୍ କୁ ଫ୍ରିଜ୍ କରନ୍ତୁ |",
     "bench.empathyTitle": "ସହାନୁଭୂତି ପାଇଁ ଜଣେ ମଣିଷର ଆବଶ୍ଯ଼କତା ରହିଛି।",
@@ -249,8 +242,22 @@ const bundle: LocaleBundle = {
     "bench.failureBody": "ପ୍ରତି ମାମଲାରେ ତ୍ରୁଟିପୂର୍ଣ୍ଣ JSON, ମନଗଢ଼ା UTRs, ଅସମର୍ଥିତ ଗ୍ଯ଼ାରେଣ୍ଟି ଏବଂ ଅନୁପସ୍ଥିତ ବୃଦ୍ଧି କାର୍ଯ୍ଯ଼କଳାପ ରିପୋର୍ଟ କରନ୍ତୁ। ବୁଟଷ୍ଟ୍ରାପ୍ ଯୋଡ଼ି ହୋଇଥିବା ପାର୍ଥକ୍ଯ଼।",
     "bench.adversarialEyebrow": "ପ୍ରତିଦ୍ୱନ୍ଦ୍ୱୀ ସ୍ଯ଼ୁଟ୍",
     "bench.adversarialTitle": "ଚାପ ନୀତି ବଦଳାଇବା ଉଚିତ ନୁହେଁ।",
-    "bench.adversarialBody": "ବର୍ତ୍ତମାନର ନିର୍ଣ୍ଣାଯ଼କ ପୂର୍ବରୂପ ବିରୁଦ୍ଧରେ ଏକ ଫେରସ୍ତ-ଜବରଦସ୍ତ ମାମଲା ଚେଷ୍ଟା କରନ୍ତୁ।",
+    "bench.adversarialBody": "ଲାଇଭ୍ ମଡେଲ୍ ବିରୁଦ୍ଧରେ ଏକ ରିଫଣ୍ଡ୍-ଜବରଦସ୍ତ ମାମଲା ଚେଷ୍ଟା କରନ୍ତୁଃ କୌଣସି ରିଫଣ୍ଡ୍ ପ୍ରତିଶୃତି ଦିଆଯିବା ଉଚିତ ନୁହେଁ |",
     "bench.adversarialCta": "ଖୋଲା ପ୍ରତିକୂଳ ପରିଦୃଶ୍ଯ଼",
+    "bench.measuredOn": "ମାପ କରାଯାଇଥିବା {date}",
+    "bench.colReviewed": "54ଟି ସମୀକ୍ଷା କରାଯାଇଥିବା ମାମଲା · ସମସ୍ତ କ୍ଷେତ୍ର",
+    "bench.colChallenge": "42 ଅପରିଚିତ ବର୍ଗ",
+    "bench.colReview": "ମାନବୀଯ଼ ସମୀକ୍ଷା ଆବଶ୍ଯ଼କ",
+    "bench.colLatency": "ସମଯ଼/ଉତ୍ତର",
+    "bench.colSource": "ପ୍ରତ୍ଯ଼େକ ସଂଖ୍ଯ଼ା ପାଇଁ ପ୍ରମାଣ ଫାଇଲ",
+    "bench.colUtility": "ଉପଯୋଗିତା",
+    "bench.mostAccurate": "ସବୁଠାରୁ ସଠିକ୍",
+    "bench.defaultMode": "ବର୍ତ୍ତମାନର ପୂର୍ବନିର୍ଦ୍ଧାରିତ",
+    "bench.footnote": "* ସମୀକ୍ଷା କରାଯାଇଥିବା ସେଟ୍ରେ କେବଳ ନିଯ଼ମଗୁଡ଼ିକ ହିଁ 100% ସ୍କୋର କରିଥାଏ, କାରଣ ସେହି ଲେବଲ୍ଗୁଡ଼ିକ ନିଯ଼ମଗୁଡ଼ିକ ସହ ସହମତ ହେବା ପାଇଁ ନିର୍ମାଣ କରାଯାଇଥିଲା; ଅପରିଚିତ-ଶବ୍ଦ ସେଟ୍ ହେଉଛି ସଠିକ୍ ତୁଳନା। κ ସେହି ସମଯ଼ର ନିଯ଼ମଗୁଡ଼ିକ ସହିତ ମାପ କରାଯାଏ। ଅପରିଚିତ-ଶବ୍ଦ ସେଟ୍ ପ୍ରକଳ୍ପ ଦ୍ୱାରା ଲେବେଲ କରାଯାଇଥାଏ, ମାନବ-ସମୀକ୍ଷା ନୁହେଁ। ପ୍ରକୃତ ଗ୍ରାହକ ବାର୍ତ୍ତାଗୁଡ଼ିକ ଉପରେ କିଛି ମୂଲ୍ଯ଼ାଙ୍କନ କରାଯାଇନାହିଁ।... | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |",
+    "bench.pilotTitle": "ରାଉଣ୍ଡ 1 ପାଇଲଟ୍ଃ ସମୀକ୍ଷା ହୋଇନଥିବା ତଥ୍ଯ଼",
+    "bench.pilotBody": "ମାନବ ସମୀକ୍ଷା ପୂର୍ବରୁ 92 ଟି ସିନ୍ଥେଟିକ୍ କେସ୍ ଉପରେ AuditKIT ଦ୍ୱାରା ରା ମଡେଲ ଆଉଟପୁଟ ସ୍କୋର କରାଯାଇଥିଲା | ଏହି ପାଇଲଟ୍ମାନେ ମୂଳ ଯୋଜନାକୁ ପରୀକ୍ଷା କରିଥିଲେଃ GRPO, ସହାନୁଭୂତି DPO ଏବଂ ଓଜନଯୁକ୍ତ ମିଶ୍ରଣ |",
+    "pipeline.measuredAt": "ମାପ (ପାଇଲଟ୍, 92 ସିନ୍ଥେଟିକ୍ କେସ୍): କଠୋର JSON {schema}, ସମସ୍ତ କ୍ଷେତ୍ର ସଠିକ୍ {fields}, ଉପଯୋଗିତା {utility}।",
+    "pipeline.notMeasured": "ଏହି ଓଜନରେ ମାପ କରାଯାଇ ନଥିଲା। କେବଳ 1.00 / 0.00, 0.55 / 0.45 ଏବଂ 0.00 / 1.00 ରନ୍ କରାଯାଇଥିଲା।",
     "policy.search": "ସନ୍ଧାନ ଉତ୍ସ, ନିଯ଼ମ କିମ୍ବା ଅନୁଷ୍ଠାନ...",
     "policy.empty": "କୌଣସି ମେଳ ଖାଉଥିବା ଉତ୍ସ ନାହିଁ",
     "policy.clear": "ସନ୍ଧାନକୁ ସଫା କରନ୍ତୁ",
@@ -298,7 +305,7 @@ const bundle: LocaleBundle = {
     "landing.illustrationLabel": "ଏକ ତାଲା ଏବଂ ଉତ୍ସ-ଆଧାରିତ କାରବାର ରେକର୍ଡ ଦ୍ୱାରା ସୁରକ୍ଷିତ ଜଣେ ଗ୍ରାହକଙ୍କ ଚିତ୍ରଣ",
     "landing.illustrationTag": "ପ୍ରମାଣ, ପ୍ରଥମେ।",
     "landing.illustrationTagBody": "ପ୍ରତ୍ଯ଼େକ କ୍ଷେତ୍ରର ଏକ ଉତ୍ସ ରହିଛି।",
-    "landing.approachKicker": "ସୁରକ୍ଷା ଆଭିମୁଖ୍ଯ଼/1",
+    "landing.approachKicker": "THE SURAKSHA APPROACH / 01",
     "landing.approachTitleLine1": "କମ୍ ଆତଙ୍କିତ ହୁଅନ୍ତୁ।",
     "landing.approachTitleLine2": "ଅଧିକ ସ୍ପଷ୍ଟତା।",
     "landing.approachBody1": "ଏକ ସଂଗ୍ରହ-ଅନୁରୋଧ ସ୍କାମ୍। ଏକ ଦେଯ଼ ଯାହା କେବେ ପହଞ୍ଚି ନଥିଲା। ଜଣେ ଗ୍ରାହକ ଯିଏ ନିଜ ଭାଷାରେ ସାହାଯ୍ଯ଼ ଆବଶ୍ଯ଼କ କରନ୍ତି |",
@@ -348,10 +355,8 @@ const bundle: LocaleBundle = {
       "ବାଣିଜ୍ଯ଼ିକ-ବ୍ଯ଼ାଙ୍କ ସଂଶୋଧନ 1 ଜାନୁଆରୀ 2027 ରେ କିମ୍ବା ତା'ପରେ କାରବାର ପାଇଁ ପ୍ରଯୁଜ୍ଯ଼; ସେହି ତାରିଖ ଠାରୁ ନୂତନ ମାମଲା ନୀତି ପୁନଃ ବୈଧକରଣ ଆବଶ୍ଯ଼କ କରେ |",
     "Compare all six checkpoints on held-out scenario groups. Score the full JSON schema, all extracted fields, inappropriate guarantees and required actions. Keep human-rated empathy separate from lexical ChrF, and use paired bootstrap intervals rather than treating a single percentage as proof.":
       "ଅଟକାଯାଇଥିବା ପରିଦୃଶ୍ଯ଼ ସମୂହରେ ସମସ୍ତ ଛଅଟି ଚେକପଏଣ୍ଟକୁ ତୁଳନା କରନ୍ତୁ। ସମ୍ପୂର୍ଣ୍ଣ JSON ସ୍କିମା, ସମସ୍ତ ବାହାର କରାଯାଇଥିବା କ୍ଷେତ୍ର, ଅନୁପଯୁକ୍ତ ଗ୍ଯ଼ାରେଣ୍ଟି ଏବଂ ଆବଶ୍ଯ଼କ କାର୍ଯ୍ଯ଼କଳାପ ସ୍କୋର କରନ୍ତୁ। ମାନବ-ରେଟେଡ୍ ସହାନୁଭୂତି ଲେକ୍ସିକାଲ୍ ChrF ରୁ ଅଲଗା ରଖନ୍ତୁ, ଏବଂ ଗୋଟିଏ ପ୍ରତିଶତକୁ ପ୍ରମାଣ ଭାବରେ ବିବେଚନା କରିବା ପରିବର୍ତ୍ତେ ଯୋଡ଼ି ହୋଇଥିବା ବୁଟଷ୍ଟ୍ରାପ୍ ବ୍ଯ଼ବଧାନ ବ୍ଯ଼ବହାର କରନ୍ତୁ |",
-    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider configures an experiment; it does not change this rule-based preview or demonstrate model quality.":
-      "ଏକ ସୁସଙ୍ଗତ LoRA ମିଶ୍ରଣ ବ୍ଯ଼ବହାର କରି ଓଜନିତ ପରିମାପକ ଅଦ୍ଯ଼ତନଗୁଡ଼ିକୁ ରଚନା କରନ୍ତୁ। ଦୁଇ ଜଣ ଅଣ-ମିଶ୍ରଣ ବିଶେଷଜ୍ଞଙ୍କ ସମେତ ବୈଧିକରଣ ତଥ୍ଯ଼ ଉପରେ ଓଜନକୁ ସ୍ୱିପ୍ କରନ୍ତୁ। ସ୍ଲାଇଡର୍ ଘୁଞ୍ଚାଇବା ଦ୍ୱାରା ଏକ ପରୀକ୍ଷଣ ବିନ୍ଯ଼ାସ ହୋଇଥାଏ; ଏହା ଏହି ନିଯ଼ମ-ଆଧାରିତ ପୂର୍ବରୂପକୁ ପରିବର୍ତ୍ତନ କରିନଥାଏ କିମ୍ବା ମଡେଲର ଗୁଣବତ୍ତା ପ୍ରଦର୍ଶନ କରିନଥାଏ।",
-    "Configuration preview · no merged checkpoint yet":
-      "ବିନ୍ଯ଼ାସ ପୂର୍ବରୂପ · ଏପର୍ଯ୍ଯ଼ନ୍ତ କୌଣସି ମିଶ୍ରଣ ହୋଇଥିବା ଚେକପଏଣ୍ଟ ନାହିଁ",
+    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider shows the measured result where one exists; it does not change the served model.":
+      "ଏକ ସୁସଙ୍ଗତ LoRA ମିଶ୍ରଣ ବ୍ଯ଼ବହାର କରି ଓଜନ ପରିମାପକ ଅଦ୍ଯ଼ତନଗୁଡ଼ିକୁ ରଚନା କରନ୍ତୁ। ଦୁଇ ଜଣ ଅଣ-ମିଶ୍ରଣ ବିଶେଷଜ୍ଞଙ୍କ ସମେତ ବୈଧିକରଣ ତଥ୍ଯ଼ ଉପରେ ଓଜନକୁ ସ୍ୱିପ୍ କରନ୍ତୁ। ସ୍ଲାଇଡରକୁ ଘୁଞ୍ଚାଇବା ମାପ କରାଯାଇଥିବା ଫଳାଫଳକୁ ଦର୍ଶାଏ ଯେଉଁଠାରେ ଗୋଟିଏ ବିଦ୍ଯ଼ମାନ ଅଛି; ଏହା ପରିବେଷିତ ମଡେଲକୁ ପରିବର୍ତ୍ତନ କରେ ନାହିଁ।",
     "Controls · base, uncurated SFT and curated joint SFT":
       "କଣ୍ଟ୍ରୋଲ୍ସ୍ · ବେସ୍, ଅନକ୍ଯ଼ୁରେଟେଡ୍ SFT ଏବଂ କ୍ଯ଼ୁରେଟେଡ୍ ଯୁଗ୍ମ SFT",
     "Curate with care":
@@ -360,6 +365,12 @@ const bundle: LocaleBundle = {
       "ଡାଟାସେଟ A · କଠୋର JSON + କ୍ଷେତ୍ରର ଉତ୍ପତ୍ତି",
     "Dataset B · chosen / rejected customer replies":
       "ଡାଟାସେଟ ବି. ଚଯ଼ନିତ/ପ୍ରତ୍ଯ଼ାଖ୍ଯ଼ାନ କରାଯାଇଥିବା ଗ୍ରାହକଙ୍କ ଉତ୍ତର",
+    "Done · 934 cases curated with CuratorKIT 0.1.21; 810 human-reviewed cases in training":
+      "CuratorKIT 0.1.21 ସହିତ କ୍ଯ଼ୁରେଟେଡ୍ ହୋଇଥିବା · 934 ମାମଲା; ପ୍ରଶିକ୍ଷଣରେ 810 ମାନବ-ସମୀକ୍ଷା ମାମଲା",
+    "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)":
+      "ସମ୍ପନ୍ନ ହୋଇଛି · QLoRA SFT 810ଟି ସମୀକ୍ଷା ହୋଇଥିବା ମାମଲାରେ, ଆରଟିଏକ୍ସ 4050 (6 ଜିବି)",
+    "Done · every model evaluated; results in the Benchmark lab":
+      "ସମ୍ପନ୍ନ · ପ୍ରତ୍ଯ଼େକ ମଡେଲର ମୂଲ୍ଯ଼ାଙ୍କନ; ବେଞ୍ଚମାର୍କ ଲ୍ଯ଼ାବରେ ଫଳାଫଳ",
     "Every claim needs a measured result.":
       "ପ୍ରତ୍ଯ଼େକ ଦାବି ଏକ ମାପକାଠି ଫଳାଫଳ ଆବଶ୍ଯ଼କ କରେ | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |",
     "Found":
@@ -374,20 +385,18 @@ const bundle: LocaleBundle = {
       "ବିଳମ୍ବ ଜାଲିଆତି ରିପୋର୍ଟ · ଗ୍ଯ଼ାରେଣ୍ଟି-ଫେରସ୍ତ ବାଧ୍ଯ଼ତା",
     "Listening":
       "ଶୁଣୁଛି।",
-    "Local curation + optional CuratorKIT pass":
-      "ସ୍ଥାନୀଯ଼ ସମାଧାନ + ଇଚ୍ଛାଧୀନ CuratorKIT ପାସ୍",
     "Make quality visible":
       "ଗୁଣବତ୍ତା ଦୃଶ୍ଯ଼ମାନ କରନ୍ତୁ",
     "Manifest · source hashes, split IDs and rejection reasons":
       "ମେନିଫେଷ୍ଟ · ଉତ୍ସ ହ୍ଯ଼ାସ, ବିଭାଜିତ ପରିଚଯ଼ ପତ୍ର ଏବଂ ପ୍ରତ୍ଯ଼ାଖ୍ଯ଼ାନ କାରଣ",
+    "Measured in the pilot · the 0.55/0.45 merge was worse, so it is not used":
+      "ପାଇଲଟ୍ ରେ ମାପ କରାଯାଇଥିବା 0.55/0.45 ମିଶ୍ରଣ ଅଧିକ ଖରାପ ଥିଲା, ତେଣୁ ଏହା ବ୍ଯ଼ବହୃତ ହୁଏ ନାହିଁ",
     "Merge & investigate":
       "ମିଶ୍ରଣ କରନ୍ତୁ ଏବଂ ଅନୁସନ୍ଧାନ କରନ୍ତୁ",
     "Merge manifest · base, tokenizer and adapter identities":
       "ମେନିଫେଷ୍ଟ · ଆଧାର, ଟୋକନାଇଜର ଏବଂ ଆଡାପ୍ଟର ପରିଚଯ଼କୁ ମିଶ୍ରଣ କରନ୍ତୁ",
     "NPCI · Dispute redressal":
       "NPCI · ବିବାଦର ସମାଧାନ",
-    "Offline scorer ready · model evaluation pending":
-      "ଅଫଲାଇନ୍ ସ୍କୋରର୍ ପ୍ରସ୍ତୁତ · ମଡେଲ୍ ମୂଲ୍ଯ଼ାଙ୍କନ ବିଚାରାଧୀନ",
     "QR request · ₹24,500 · reported today":
       "QR request · ₹24,500 · reported today",
     "RBI · Customer liability":
@@ -410,8 +419,6 @@ const bundle: LocaleBundle = {
       "1930 ଏବଂ cybercrime.gov.in ମାଧ୍ଯ଼ମରେ ତୁରନ୍ତ ଆର୍ଥିକ ସାଇବର ଠକେଇ ରିପୋର୍ଟ କରନ୍ତୁ। ପୁନରୁଦ୍ଧାରର ଗ୍ଯ଼ାରେଣ୍ଟି ନାହିଁ।",
     "Report · per-case evidence + paired bootstrap deltas":
       "ରିପୋର୍ଟ କରନ୍ତୁ · ପ୍ରତି-ମାମଲା ପ୍ରମାଣ + ଯୋଡ଼ି ହୋଇଥିବା ବୁଟଷ୍ଟ୍ରାପ ଡେଲଟା",
-    "Requires compatible GPU + reviewed data":
-      "ସୁସଙ୍ଗତ ଜି. ପି. ଯ଼ୁ. + ସମୀକ୍ଷା କରାଯାଇଥିବା ତଥ୍ଯ଼ ଆବଶ୍ଯ଼କ କରେ",
     "Sent to the wrong person":
       "ଭୁଲ ବ୍ଯ଼କ୍ତିଙ୍କୁ ପଠାଗଲା",
     "Start with synthetic or authorised customer chats. Mask sensitive identities, retain only context-labelled transaction references, validate fields against source spans, and separate schema targets from same-task preference pairs.":

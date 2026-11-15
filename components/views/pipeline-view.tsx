@@ -15,6 +15,16 @@ import {
 } from "../../lib/content/pipeline.ts";
 import { download } from "../../lib/format.ts";
 
+/**
+ * The only merge weights ever run (unreviewed pilot, 92 synthetic cases,
+ * AuditKIT; docs/PILOT_TRAINING.md). Every other weight is unmeasured.
+ */
+const MERGE_MEASURED: Record<number, { schema: string; fields: string; utility: string }> = {
+  100: { schema: "100%", fields: "72.8%", utility: "0.86" },
+  55: { schema: "98.9%", fields: "0%", utility: "0.56" },
+  0: { schema: "0%", fields: "0%", utility: "0.00" },
+};
+
 const ICONS: Record<StageIcon, typeof Database> = {
   database: Database,
   layers: Layers3,
@@ -149,6 +159,11 @@ export function PipelineView({
             <em>{(mix / 100).toFixed(2)}</em> ΔW<sub>A</sub> +{" "}
             <em>{(1 - mix / 100).toFixed(2)}</em> ΔW<sub>B</sub>
           </div>
+          <p className="merge-measured" data-measured={Boolean(MERGE_MEASURED[mix])} role="status">
+            {MERGE_MEASURED[mix]
+              ? t("pipeline.measuredAt", MERGE_MEASURED[mix])
+              : t("pipeline.notMeasured")}
+          </p>
           <button
             className="small-button"
             onClick={() =>
@@ -160,7 +175,7 @@ export function PipelineView({
                     Number((mix / 100).toFixed(2)),
                     Number((1 - mix / 100).toFixed(2)),
                   ],
-                  measured: false,
+                  measured: MERGE_MEASURED[mix] ?? false,
                 },
                 "merge-experiment.json",
               )

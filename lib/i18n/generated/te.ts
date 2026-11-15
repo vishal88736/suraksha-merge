@@ -58,7 +58,7 @@ const bundle: LocaleBundle = {
     "desk.pipelineTitle": "ఒక పైప్లైన్. ఇద్దరు నిపుణులు.",
     "desk.pipelineSubtitle": "ధ్వనించే సందేశం నుండి ధృవీకరించదగిన ప్రతిస్పందన వరకు ప్రయాణాన్ని అనుసరించండి.",
     "desk.benchmarksTitle": "విశ్వాసానికి ముందు సాక్ష్యం.",
-    "desk.benchmarksSubtitle": "ఆరు చెక్పాయింట్లు. ఒక నిలుపుకున్న బెంచ్మార్క్. కనుగొన్న ఫలితాలు లేవు.",
+    "desk.benchmarksSubtitle": "మేము శిక్షణ ఇచ్చిన ప్రతి నమూనా, అదే హోల్డ్-అవుట్ కేసులపై కొలుస్తారు. ఎటువంటి ఫలితాలను కనుగొనలేదు.",
     "desk.policyTitle": "నియమాలలో ఆధారపడింది.",
     "desk.policySubtitle": "ప్రతి ట్రైజ్ సిఫార్సు వెనుక ప్రాథమిక మూలాల వెర్షన్.",
     "workflow.message": "వినియోగదారులకు సందేశం",
@@ -220,27 +220,20 @@ const bundle: LocaleBundle = {
     "pipeline.outputs": "ఈ దశ ఏమి ఉత్పత్తి చేస్తుంది",
     "pipeline.note": "ప్రతి దశ దాని మూల గుర్తింపును ముందుకు తీసుకువెళుతుంది. విఫలమైన నమూనాలు నమోదు చేయబడతాయి, సమర్థించబడిన చోట మరమ్మతు చేయబడతాయి, ఆపై మళ్లీ తనిఖీ చేయబడతాయి.",
     "pipeline.experimentEyebrow": "పని-అంకగణిత ప్రయోగం",
-    "pipeline.experimentTitle": "సంతులనం కనుగొనండి. ఫలితాన్ని కొలవండి.",
-    "pipeline.experimentBody": "స్లైడర్ ఆఫ్లైన్ విలీనాన్ని ఆకృతీకరిస్తుంది. విలీనం చేసిన తర్వాత నమూనా పనితీరును అంచనా వేయాలి.",
+    "pipeline.experimentTitle": "మేము బకాయిలను కొలిచాము. అది ఫలించలేదు.",
+    "pipeline.experimentBody": "ప్రయోగాత్మకంగా, 0.55 / 0.45 వద్ద స్కీమా మరియు తాదాత్మ్యం నిపుణులను విలీనం చేయడం అన్ని-క్షేత్ర ఖచ్చితత్వాన్ని కోల్పోయింది (72.8% → 0%), కాబట్టి విలీనం ఉపయోగించబడదు. అందించిన నమూనాలు మానవ-సమీక్షించిన డేటాపై సాదా SFT గా ఉంటాయి.",
     "pipeline.specialistA": "స్కీమా నిపుణుడు",
     "pipeline.specialistB": "సానుభూతి నిపుణుడు",
     "pipeline.empathyOnly": "సానుభూతి మాత్రమే",
     "pipeline.schemaOnly": "స్కీమా మాత్రమే",
-    "pipeline.resetMix": "0.55/0.45 కు రీసెట్ చేయండి",
+    "pipeline.resetMix": "0.55 / 0.45 కు రీసెట్ చేయండి",
     "pipeline.exportMix": "విలీన ఆకృతీకరణను ఎగుమతి చేయండి",
-    "bench.noteTitle": "ప్రయోగం ఏర్పాటు చేయబడింది. సాక్ష్యం తరువాత వస్తుంది.",
-    "bench.noteBody": "ప్రతిపాదన యొక్క శాతాలు మరియు వ్యయ అంచనాలు కొలవలేదు. ఈ పట్టిక గుర్తించదగిన మూల్యాంకనం పరుగుల నుండి మాత్రమే ఫలితాలను కలిగి ఉంటుంది.",
-    "bench.notEvaluated": "ఇంకా అంచనా వేయబడలేదు",
-    "bench.ablation": "చెక్పాయింట్ అబ్లేషన్",
-    "bench.ablationBody": "అన్ని నిపుణులు మరియు బేస్లైన్లు, ఒకే హోల్డ్-అవుట్ కేసులపై మూల్యాంకనం చేయబడ్డాయి.",
+    "bench.noteTitle": "నిలుపుకున్న డేటాపై కొలుస్తారు, వాగ్దానం చేయబడలేదు.",
+    "bench.noteBody": "క్రింద ఉన్న ప్రతి సంఖ్య నమూనాలు ఎన్నడూ శిక్షణ పొందని కేసులలో నమోదు చేయబడిన రన్ నుండి వస్తుంది. సమీక్షించిన సెట్లో 100% స్కోరింగ్ మాత్రమే నియమాలు ఆశించబడతాయిః ఆ లేబుల్లు నియమాలకు అనుగుణంగా నిర్మించబడ్డాయి.",
+    "bench.ablation": "మానవ-సమీక్షించిన డేటాపై శిక్షణ పొందిన నమూనాలు",
+    "bench.ablationBody": "రియల్ పైప్లైన్ ద్వారా రన్టైమ్ ఫలితాలుః మోడల్, చెక్కులు మరియు (గుర్తించిన చోట) విధాన నియమాలు.",
     "bench.colCheckpoint": "చెక్పాయింట్",
-    "bench.colSchema": "స్కీమా పాస్",
-    "bench.colFields": "ఫీల్డ్ ఖచ్చితమైన మ్యాచ్",
-    "bench.colUnsafe": "సురక్షితం కాని హామీలు",
-    "bench.colEmpathy": "సానుభూతి/chrF",
-    "bench.colStatus": "స్థితి.",
-    "bench.awaitingRun": "పరుగు కోసం వేచి ఉండండి",
-    "bench.awaitingTraining": "శిక్షణ కోసం వేచి ఉండండి",
+    "bench.colFields": "అన్ని ఖాళీలను ఖచ్చితమైనవి",
     "bench.splitTitle": "దృష్టాంతంలో కుటుంబాన్ని విభజించండి",
     "bench.splitBody": "పారాఫ్రేజ్లు, SMS టెంప్లేట్లు మరియు అదే కేసు యొక్క మరమ్మతు చేసిన సంస్కరణలను ఒకే విభజనలో ఉంచండి. విలీనం బరువులను ఎంచుకునే ముందు పరీక్ష సమితిని స్తంభింపజేయండి.",
     "bench.empathyTitle": "సానుభూతికి మానవుడు అవసరం",
@@ -249,8 +242,22 @@ const bundle: LocaleBundle = {
     "bench.failureBody": "తప్పుగా రూపొందించిన JSON, కల్పితమైన UTRs, మద్దతు లేని హామీలు మరియు ప్రతి కేసుకు తప్పిపోయిన ఎస్కలేషన్ చర్యలను నివేదించండి. బూట్స్ట్రాప్ జత చేసిన తేడాలు.",
     "bench.adversarialEyebrow": "వ్యతిరేక సూట్",
     "bench.adversarialTitle": "ఒత్తిడి విధానాన్ని మార్చకూడదు.",
-    "bench.adversarialBody": "ప్రస్తుత నిర్ణయాత్మక ప్రివ్యూకి వ్యతిరేకంగా రీఫండ్-బలవంతం కేసును ప్రయత్నించండి.",
+    "bench.adversarialBody": "ప్రత్యక్ష నమూనాకు వ్యతిరేకంగా తిరిగి చెల్లింపు-బలవంతం కేసును ప్రయత్నించండిః తిరిగి చెల్లింపు వాగ్దానం చేయబడదు.",
     "bench.adversarialCta": "బహిరంగ ప్రతికూల దృష్టాంతం",
+    "bench.measuredOn": "కొలవబడినది {date}",
+    "bench.colReviewed": "54 సమీక్షించిన కేసులు · అన్ని రంగాలు",
+    "bench.colChallenge": "42 తెలియని వర్గము",
+    "bench.colReview": "మానవ సమీక్ష అవసరం",
+    "bench.colLatency": "సమయం/సమాధానం",
+    "bench.colSource": "ప్రతి సంఖ్యకు సాక్ష్యం ఫైలు",
+    "bench.colUtility": "ఉపయుక్తత.",
+    "bench.mostAccurate": "అత్యంత ఖచ్చితమైనది",
+    "bench.defaultMode": "ప్రస్తుత డిఫాల్ట్",
+    "bench.footnote": "* సమీక్షించిన సెట్లో నియమాలు మాత్రమే 100% స్కోర్ చేస్తాయి, ఎందుకంటే ఆ లేబుల్లు నియమాలతో ఏకీభవించడానికి నిర్మించబడ్డాయి; తెలియని-పదాల సమితి సరసమైన పోలిక. ఆ కాలపు నియమాలతో కొలవబడుతుంది. తెలియని-పదాల సమితి ప్రాజెక్ట్ ద్వారా లేబుల్ చేయబడుతుంది, మానవ-సమీక్ష కాదు. నిజమైన కస్టమర్ సందేశాలపై ఏమీ అంచనా వేయబడలేదు.",
+    "bench.pilotTitle": "రౌండ్ 1 పైలట్లుః సమీక్షించని డేటా",
+    "bench.pilotBody": "మానవ సమీక్షకు ముందు 92 సింథటిక్ కేసులపై రా మోడల్ అవుట్పుట్ AuditKIT ద్వారా స్కోర్ చేయబడింది. ఈ పైలట్లు అసలు ప్రణాళికను పరీక్షించారుః GRPO, తాదాత్మ్యం DPO మరియు వెయిటెడ్ విలీనం.",
+    "pipeline.measuredAt": "కొలిచిన (పైలెట్, 92 సింథటిక్ కేసులు): కఠినమైన JSON {schema}, అన్ని ఖాళీలను ఖచ్చితమైన {fields}, యుటిలిటీ {utility}.",
+    "pipeline.notMeasured": "ఈ బరువుతో కొలవలేదు. కేవలం 1.00 / 0.00, 0.55 / 0.45 మరియు 0.00 / 1.00 మాత్రమే అమలు చేయబడ్డాయి.",
     "policy.search": "మూలాలు, నియమాలు లేదా సంస్థలను వెతకండి...",
     "policy.empty": "సరిపోలిక మూలాలు లేవు",
     "policy.clear": "శోధనను క్లియర్ చేయండి",
@@ -348,10 +355,8 @@ const bundle: LocaleBundle = {
       "వాణిజ్య-బ్యాంకు సవరణ 2027 జనవరి 1న లేదా ఆ తరువాత జరిగిన లావాదేవీలకు వర్తిస్తుంది; ఆ తేదీ నుండి కొత్త కేసులకు పాలసీ పునరుద్ధరణ అవసరం.",
     "Compare all six checkpoints on held-out scenario groups. Score the full JSON schema, all extracted fields, inappropriate guarantees and required actions. Keep human-rated empathy separate from lexical ChrF, and use paired bootstrap intervals rather than treating a single percentage as proof.":
       "హోల్డ్-అవుట్ దృష్టాంత సమూహాలలో మొత్తం ఆరు చెక్పాయింట్లను పోల్చండి. పూర్తి JSON స్కీమా, అన్ని సేకరించిన ఖాళీలను, తగని హామీలు మరియు అవసరమైన చర్యలను స్కోర్ చేయండి. మానవ-రేటెడ్ సానుభూతిని లెక్సికల్ ChrF నుండి వేరుగా ఉంచండి మరియు ఒకే శాతాన్ని రుజువుగా పరిగణించే బదులు జత చేసిన బూట్స్ట్రాప్ విరామాలను ఉపయోగించండి.",
-    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider configures an experiment; it does not change this rule-based preview or demonstrate model quality.":
-      "అనుకూలమైన LoRA విలీనం ఉపయోగించి బరువున్న పరామితి నవీకరణలను కంపోజ్ చేయండి. విలీనం చేయని ఇద్దరు నిపుణులతో సహా ధ్రువీకరణ డేటాపై బరువులను స్వీప్ చేయండి. స్లైడర్ను కదిలించడం ఒక ప్రయోగాన్ని ఆకృతీకరిస్తుంది; ఇది ఈ నియమ-ఆధారిత ప్రివ్యూను మార్చదు లేదా నమూనా నాణ్యతను ప్రదర్శించదు.",
-    "Configuration preview · no merged checkpoint yet":
-      "కాన్ఫిగరేషన్ ప్రివ్యూ · ఇంకా విలీనం చేయబడిన చెక్పాయింట్ లేదు",
+    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider shows the measured result where one exists; it does not change the served model.":
+      "అనుకూలమైన LoRA విలీనం ఉపయోగించి బరువున్న పరామితి నవీకరణలను కంపోజ్ చేయండి. విలీనం చేయని ఇద్దరు నిపుణులతో సహా ధ్రువీకరణ డేటాపై బరువులను స్వీప్ చేయండి. స్లైడర్ను కదిలించడం అనేది ఒకటి ఉన్న చోట కొలిచిన ఫలితాన్ని చూపుతుంది; ఇది అందించిన నమూనాను మార్చదు.",
     "Controls · base, uncurated SFT and curated joint SFT":
       "కంట్రోల్స్ · బేస్, అన్క్యురేటెడ్ SFT మరియు క్యూరేటెడ్ జాయింట్ SFT",
     "Curate with care":
@@ -360,6 +365,12 @@ const bundle: LocaleBundle = {
       "డేటాసెట్ A· స్ట్రిక్ట్ JSON + ఫీల్డ్ రుజువు",
     "Dataset B · chosen / rejected customer replies":
       "డేటాసెట్ బి · ఎంచుకున్న/తిరస్కరించబడిన వినియోగదారుల ప్రత్యుత్తరాలు",
+    "Done · 934 cases curated with CuratorKIT 0.1.21; 810 human-reviewed cases in training":
+      "పూర్తయింది · 934 కేసులు CuratorKIT 0.1.21 తో క్యూరేట్ చేయబడ్డాయి; శిక్షణలో 810 మానవ-సమీక్షించబడిన కేసులు",
+    "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)":
+      "పూర్తయింది · QLoRA SFT 810 సమీక్షించిన కేసులలో, RTX 4050 (6 GB)",
+    "Done · every model evaluated; results in the Benchmark lab":
+      "పూర్తయింది · ప్రతి నమూనా మూల్యాంకనం చేయబడింది; బెంచ్మార్క్ ప్రయోగశాలలో ఫలితాలు",
     "Every claim needs a measured result.":
       "ప్రతి దావాకు కొలిచిన ఫలితం అవసరం.",
     "Found":
@@ -374,20 +385,18 @@ const bundle: LocaleBundle = {
       "ఆలస్యమైన మోసం నివేదిక · హామీ-తిరిగి చెల్లింపు బలవంతం",
     "Listening":
       "వినడం.",
-    "Local curation + optional CuratorKIT pass":
-      "లోకల్ క్యూరేషన్ + ఐచ్ఛిక CuratorKIT పాస్",
     "Make quality visible":
       "నాణ్యత కనపడేలా చేయండి",
     "Manifest · source hashes, split IDs and rejection reasons":
       "మానిఫెస్ట్ · సోర్స్ హాష్లు, స్ప్లిట్ ఐడీలు మరియు తిరస్కరణ కారణాలు",
+    "Measured in the pilot · the 0.55/0.45 merge was worse, so it is not used":
+      "పైలట్లో కొలవబడినది · 0.55/0.45 విలీనం అధ్వాన్నంగా ఉంది, కాబట్టి ఇది ఉపయోగించబడదు",
     "Merge & investigate":
       "విలీనం & దర్యాప్తు",
     "Merge manifest · base, tokenizer and adapter identities":
       "మానిఫెస్ట్ · బేస్, టోకనైజర్ మరియు అడాప్టర్ ఐడెంటిటీలను కలపండి",
     "NPCI · Dispute redressal":
       "NPCI · వివాద పరిష్కారం",
-    "Offline scorer ready · model evaluation pending":
-      "ఆఫ్లైన్ స్కోర్ సిద్ధంగా ఉంది · నమూనా మూల్యాంకనం పెండింగ్లో ఉంది",
     "QR request · ₹24,500 · reported today":
       "ఈ రోజు నివేదించబడిన క్యూఆర్ అభ్యర్థన · ₹24,500",
     "RBI · Customer liability":
@@ -410,8 +419,6 @@ const bundle: LocaleBundle = {
       "1930 మరియు cybercrime.gov.in ద్వారా ఆర్థిక సైబర్ మోసాలను వెంటనే నివేదించండి. రికవరీకి హామీ లేదు.",
     "Report · per-case evidence + paired bootstrap deltas":
       "ప్రతి-కేసు సాక్ష్యం + జత చేసిన బూట్స్ట్రాప్ డెల్టాలను నివేదించండి",
-    "Requires compatible GPU + reviewed data":
-      "అనుకూలమైన జీపీయూ + సమీక్షించిన డేటా అవసరం",
     "Sent to the wrong person":
       "తప్పు వ్యక్తికి పంపబడింది",
     "Start with synthetic or authorised customer chats. Mask sensitive identities, retain only context-labelled transaction references, validate fields against source spans, and separate schema targets from same-task preference pairs.":

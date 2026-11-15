@@ -58,7 +58,7 @@ const bundle: LocaleBundle = {
     "desk.pipelineTitle": "इक पाइपलाइन। दो माहिर।",
     "desk.pipelineSubtitle": "इक शोर-शराबे आह्ले संदेश थमां इक तसदीक करने जोग प्रतिक्रिया तक्कर दी जातरा दा पालन करो।",
     "desk.benchmarksTitle": "विश्वास कोला पैह्लें सबूत।",
-    "desk.benchmarksSubtitle": "छे चैक्कप्वाइंट। इक होल्ड-आउट बेंचमार्क। कोई अविष्कृत नतीजा नेईं।",
+    "desk.benchmarksSubtitle": "हर इक माडल जिस्सी असां प्रशिक्षत कीता, उʼनें गै रोके गेदे मामलें पर मापेआ गेआ। कोई अविष्कृत नतीजा नेईं।",
     "desk.policyTitle": "नियमें च अधारत।",
     "desk.policySubtitle": "हर इक ट्राइएज अनुशंसा दे परैंत्त संस्करण प्राथमिक स्रोत।",
     "workflow.message": "गाह्क संदेश",
@@ -220,27 +220,20 @@ const bundle: LocaleBundle = {
     "pipeline.outputs": "एह् चरण केह् पैदा करदा ऐ",
     "pipeline.note": "हर इक चरण अपनी स्रोत पहचान गी अग्गें बधांदा ऐ। असफल नमूनें गी दर्ज कीता जंदा ऐ, जित्थै जायज होंदा ऐ, उंʼदी मरम्मत कीती जंदी ऐ, फ्ही परतियै जांच कीती जंदी ऐ।",
     "pipeline.experimentEyebrow": "कम्म-अंकगणित प्रयोग",
-    "pipeline.experimentTitle": "संतुलन तुप्पो। नतीजे गी नापो।",
-    "pipeline.experimentBody": "स्लाइडर इक ऑफ़लाइन विलय गी संरचित करदा ऐ। विलय दे परैंत्त माडल प्रदर्शन दा मूल्यांकन कीता जाना चाहिदा।",
+    "pipeline.experimentTitle": "असां बाकी गी मापेआ। एह् ठीक नेईं होआ।",
+    "pipeline.experimentBody": "पायलट च, 0.55 / 0.45 पर स्कीमा ते समानुभूति विशेषज्ञें गी विलय करने कन्नै सारे खेतर दी सटीकता (72.8% → 0%) चली जंदी ऐ, इस करियै विलय दा उपयोग नेईं कीता जंदा ऐ। परोसे गेदे माडल इन्सान द्वारा समीक्षा कीते गेदे डेटा पर सादे SFT होंदे न।",
     "pipeline.specialistA": "योजना माहिर",
     "pipeline.specialistB": "समानुभूति माहिर",
     "pipeline.empathyOnly": "सिर्फ समानुभूति।",
     "pipeline.schemaOnly": "छड़ा योजना",
-    "pipeline.resetMix": "0.55/0.45 पर रीसैट करो",
+    "pipeline.resetMix": "0.55 / 0.45 पर रीसैट करो",
     "pipeline.exportMix": "निर्यात विलय विन्यास",
-    "bench.noteTitle": "प्रयोग स्थापत कीता जंदा ऐ। सबूत अग्गें आउदा ऐ।",
-    "bench.noteBody": "प्रस्ताव दे फीसदी ते लागत अनुमानें गी मापेआ नेईं गेआ ऐ। इस तालिका च छड़े चि'न्नत कीते जाई सकने आह्ले मूल्यांकन दे नतीजे शामल होग।",
-    "bench.notEvaluated": "अजें तक्कर मूल्यांकन नेईं कीता गेआ ऐ",
-    "bench.ablation": "चैक्कप्वाइंट एब्लेशन",
-    "bench.ablationBody": "सभनें माहिरें ते आधार रेखाएं दा मूल्यांकन उʼनें गै रोके गेदे मामलें पर कीता गेआ।",
+    "bench.noteTitle": "रोके दे डेटा पर मापेआ जंदा ऐ, वादा नेईं कीता गेआ ऐ।",
+    "bench.noteBody": "खʼल्ल दित्ता गेआ हर इक नंबर उ'नें मामलें पर रिकार्ड कीते गेदे रन थमां होंदा ऐ जिं'दे पर मॉडलें कदें प्रशिक्षत नेईं कीता हा। समीक्षा कीते गेदे सैट्ट पर छड़ा नियम 100% स्कोर करने दी मेद कीती जंदी ऐः उ'नें लेबलें गी नियमें कन्नै सहमत होने आस्तै बनाया गेआ हा।",
+    "bench.ablation": "मानव-समीक्षित डेटा पर प्रशिक्षत माडल",
+    "bench.ablationBody": "वास्तविक पाइपलाइन दे राहें रनटाइम नतीजाः माडल, जांच, ते (जित्थै नोट कीता गेआ ऐ) नीति नियम।",
     "bench.colCheckpoint": "चैक्कप्वाइंट्स (चैक्कप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप्वाइंट्स। चेकप",
-    "bench.colSchema": "स्कीमा पास",
-    "bench.colFields": "मैदानी सटीक मिलान",
-    "bench.colUnsafe": "असुरक्खत गारंटियां",
-    "bench.colEmpathy": "समानुभूति/chrF",
-    "bench.colStatus": "स्थिति------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -",
-    "bench.awaitingRun": "दौड़ दा इंतजार करा'रदे होई",
-    "bench.awaitingTraining": "प्रशिक्षण दा इंतजार करना",
+    "bench.colFields": "सारे खेतर सटीक न",
     "bench.splitTitle": "परिद्रश्य परोआर दे मताबक बंडो",
     "bench.splitBody": "इक गै केस दे पैराफ्रेज़, SMS टेम्पलेट ते मरम्मत कीते गेदे संस्करणें गी इक स्प्लिट च र'वो। विलय भार चुनने शा पैह्लें परख सैट्ट गी फ्रीज़ करो।",
     "bench.empathyTitle": "हमदर्दी आस्तै इन्सान दी लोड़ होंदी ऐ।",
@@ -249,8 +242,22 @@ const bundle: LocaleBundle = {
     "bench.failureBody": "गलत जानकारी JSON, मनगढ़ंत UTRs, असमर्थत गारंटियां ते प्रति मामले लापता वृद्धि क्रियाएं दी रिपोर्ट करो। बूटस्ट्रैप जोड़ीदार फर्क।",
     "bench.adversarialEyebrow": "बरोधी सूट",
     "bench.adversarialTitle": "दबाऽ कन्नै नीति नेईं बदलनी चाहिदी।",
-    "bench.adversarialBody": "वर्तमान नियतात्मक पूर्वावलोकन दे खलाफ धन-वापसी-जबरदस्ती दे मामले दी कोशश करो।",
+    "bench.adversarialBody": "लाइव माडल दे खलाफ रिफंड-जबरदस्ती दे मामले दी कोशश करो-कोई रिफंड दा वायदा नेईं कीता जाना चाहिदा।",
     "bench.adversarialCta": "खु'ल्ले बरोधी परिद्रश्य",
+    "bench.measuredOn": "मापे दा {date}",
+    "bench.colReviewed": "54 समीक्षा कीते गेदे मामले · सारे खेतर",
+    "bench.colChallenge": "42 अनजान · वर्ग",
+    "bench.colReview": "मानवी समीक्षा दी लोड़ ऐ",
+    "bench.colLatency": "समां/जवाब",
+    "bench.colSource": "हर इक गिनतरी आस्तै सबूत फाइल",
+    "bench.colUtility": "उपयोगता",
+    "bench.mostAccurate": "सभनें शा सटीक",
+    "bench.defaultMode": "वर्तमान डिफाल्ट",
+    "bench.footnote": "समीक्षा कीते गेदे सैट्ट पर अकेले नियमें दा स्कोर 100% होंदा ऐ की जे ओह् लेबल नियमें कन्नै सहमत होने आस्तै बनाए गे हे; अनजान-शब्द सैट्ट निरपक्ख तुलना ऐ। उस समें दे नियमें कन्नै मापेआ जंदा ऐ। अनजान-शब्द सैट्ट गी परियोजना आसेआ लेबल कीता जंदा ऐ, इन्सान द्वारा समीक्षा नेईं कीती जंदी ऐ। असली गाह्क संदेशें पर किश बी मूल्यांकन नेईं कीता गेआ ऐ।",
+    "bench.pilotTitle": "राउंड 1 पायलटः गैर-समीक्षा डेटा",
+    "bench.pilotBody": "इंसानी समीक्षा शा पैह्लें, 92 सिंथेटिक मामलें पर कच्चे माडल आउटपुट गी AuditKIT द्वारा स्कोर कीता गेआ। इʼनें पायलटें मूल योजना दा परीक्षण कीताः GRPO, समानुभूति DPO ते भारित विलय।",
+    "pipeline.measuredAt": "मापे गेदे (पायलट, 92 सिंथेटिक केस): सख्त JSON {schema}, सारे खेतर सटीक {fields}, उपयोगता {utility}।",
+    "pipeline.notMeasured": "इस वजन पर मापेआ नेईं गेआ। छड़ा 1.00 / 0.00, 0.55 / 0.45 ते 0.00 / 1.00 चलाए गे हे।",
     "policy.search": "स्रोतें, नियमें जां संस्थानें गी तुप्पो...",
     "policy.empty": "कोई मिलान करने आह्ले स्रोत नेईं न",
     "policy.clear": "खोज साफ करो",
@@ -348,10 +355,8 @@ const bundle: LocaleBundle = {
       "वाणिज्यिक-बैंक सधार 1 जनवरी 2027 गी जां ओह्दे परैंत्त दे लैन-देनें पर लागू होंदा ऐ; उस तरीकै थमां नमें मामलें च नीति गी परतियै मान्यत करने दी लोड़ होंदी ऐ।",
     "Compare all six checkpoints on held-out scenario groups. Score the full JSON schema, all extracted fields, inappropriate guarantees and required actions. Keep human-rated empathy separate from lexical ChrF, and use paired bootstrap intervals rather than treating a single percentage as proof.":
       "रोके गेदे परिदृश्य समूहें पर सभनें छे जांच चौकीएं दी तुलना करो। पूरे JSON स्कीमा, सारे निकाले गेदे खेतरें, अनुपयुक्त गारंटियें ते लाजमी कार्रवाइयें गी स्कोर करो। इन्सान-मूल्यांकन समानुभूति गी लेक्सिकल ChrF कोला बक्ख र'वो, ते इक फीसदी गी सबूत दे रूप च मन्नने दे बजाए जोड़ीदार बूटस्ट्रैप अंतरालें दा इस्तेमाल करो।",
-    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider configures an experiment; it does not change this rule-based preview or demonstrate model quality.":
-      "इक अनुकूल LoRA विलय दा उपयोग करियै भारित पैरामीटर अद्यतनें दी रचना करो। दो गैर-विलय विशेषज्ञें समेत प्रमाणन डेटा पर भारें गी घुमाओ। स्लाइडर गी घुमाना इक प्रयोग गी संरचित करदा ऐ; एह् इस नियम-अधारत पूर्वावलोकन गी नेईं बदलेदा जां माडल दी गुणवत्ता दा प्रदर्शन नेईं करदा ऐ।",
-    "Configuration preview · no merged checkpoint yet":
-      "विन्यास पूर्वावलोकन · हून तक्कर कोई विलय कीते दा चैक्कप्वाइंट नेईं ऐ",
+    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider shows the measured result where one exists; it does not change the served model.":
+      "इक अनुकूल LoRA विलय दा उपयोग करियै भारित पैरामीटर अद्यतनें दी रचना करो। दो गैर-विलय विशेषज्ञें समेत प्रमाणन डेटा पर भारें गी घुमाओ। स्लाइडर गी घुमाना मापे गेदे नतीजे गी दर्शांदा ऐ जित्थै इक मजूद ऐ; एह् परोसे गेदे माडल गी नेईं बदलेदा।",
     "Controls · base, uncurated SFT and curated joint SFT":
       "कंट्रोल्स बेस, अनक्युरेटेड SFT ते क्यूरेटेड जुआइंट SFT",
     "Curate with care":
@@ -360,6 +365,12 @@ const bundle: LocaleBundle = {
       "डेटासेट ए · सख्त JSON + खेतर स्रोत",
     "Dataset B · chosen / rejected customer replies":
       "डेटासेट बी · चुने दे/अस्वीकृत गाह्क जवाब",
+    "Done · 934 cases curated with CuratorKIT 0.1.21; 810 human-reviewed cases in training":
+      "पूरा होई गेआ · 934 मामलें गी CuratorKIT 0.1.21 दे कन्नै क्यूरेट कीता गेआ; प्रशिक्षण च 810 मानव-समीक्षा मामले",
+    "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)":
+      "810 समीक्षा कीते गेदे मामलें, आर. टी. एक्स. 4050 (6 जी. बी.) पर कीता गेआ · QLoRA SFT",
+    "Done · every model evaluated; results in the Benchmark lab":
+      "कीता गेआ · हर माडल दा मूल्यांकन कीता गेआ; नतीजा बेंचमार्क लैब च मिलदा ऐ",
     "Every claim needs a measured result.":
       "हर इक दाह्वे गी इक मापे दे नतीजे दी लोड़ होंदी ऐ।",
     "Found":
@@ -374,20 +385,18 @@ const bundle: LocaleBundle = {
       "देर कन्नै धोखाधड़ी रिपोर्ट · गारंटी-रिफंड जबरदस्ती",
     "Listening":
       "सुनो",
-    "Local curation + optional CuratorKIT pass":
-      "स्थानी उपचार + ऐच्छिक CuratorKIT पास",
     "Make quality visible":
       "गुणवत्ता गी स्पश्ट बनाओ",
     "Manifest · source hashes, split IDs and rejection reasons":
       "मैनिफेस्ट · स्रोत हैश, विभाजित आईडी ते अस्वीकृति दे कारण",
+    "Measured in the pilot · the 0.55/0.45 merge was worse, so it is not used":
+      "पायलट च मापे दा 0.55/0.45 विलय खराब हा, इस करियै इसगी इस्तेमाल नेईं कीता जंदा ऐ",
     "Merge & investigate":
       "विलय करो ते तफतीश करो",
     "Merge manifest · base, tokenizer and adapter identities":
       "मैनिफेस्ट · बेस, टोकनाइज़र ते अडाप्टर पहचानें दा विलय करो",
     "NPCI · Dispute redressal":
       "NPCI विवाद निपटान",
-    "Offline scorer ready · model evaluation pending":
-      "ऑफ़लाइन स्कोरर त्यार · माडल मूल्यांकन बकाया ऐ",
     "QR request · ₹24,500 · reported today":
       "क्यू. आर. विनती · ₹24,500 · अज्ज रिपोर्ट कीती गेई",
     "RBI · Customer liability":
@@ -410,8 +419,6 @@ const bundle: LocaleBundle = {
       "1930 ते cybercrime.gov.in राहें वित्तीय साइबर धोखाधड़ी दी फौरन रिपोर्ट करो। बरामदगी दी गरंटी नेईं ऐ।",
     "Report · per-case evidence + paired bootstrap deltas":
       "रिपोर्ट करो · प्रति-मामला सबूत + जोड़ीदार बूटस्ट्रैप डेल्टा",
-    "Requires compatible GPU + reviewed data":
-      "अनुकूल जी. पी. यू. + समीक्षा कीते गेदे डेटा दी लोड़ होंदी ऐ",
     "Sent to the wrong person":
       "गलत व्यक्ति गी भेजेआ गेआ",
     "Start with synthetic or authorised customer chats. Mask sensitive identities, retain only context-labelled transaction references, validate fields against source spans, and separate schema targets from same-task preference pairs.":

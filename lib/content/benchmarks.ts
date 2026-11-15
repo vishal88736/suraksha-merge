@@ -71,8 +71,8 @@ export const CURRENT_RESULTS: Measured[] = [
   {
     model: "Round 4 JSON + reply · merged-dual-sft-004",
     detail: {
-      en: "810 reviewed cases · model writes everything (default)",
-      hi: "810 समीक्षित केस · हर उत्तर मॉडल लिखता है (डिफ़ॉल्ट)",
+      en: "810 reviewed cases · model writes everything",
+      hi: "810 समीक्षित केस · हर उत्तर मॉडल लिखता है",
     },
     reviewedAllFields: "55.6%",
     challengeCategory: "76.2%",

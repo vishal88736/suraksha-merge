@@ -58,7 +58,7 @@ const bundle: LocaleBundle = {
     "desk.pipelineTitle": "ಒಂದು ಪೈಪ್ಲೈನ್. ಇಬ್ಬರು ತಜ್ಞರು.",
     "desk.pipelineSubtitle": "ಗದ್ದಲದ ಸಂದೇಶದಿಂದ ಪರಿಶೀಲಿಸಬಹುದಾದ ಪ್ರತಿಕ್ರಿಯೆಯವರೆಗಿನ ಪ್ರಯಾಣವನ್ನು ಅನುಸರಿಸಿ.",
     "desk.benchmarksTitle": "ವಿಶ್ವಾಸಕ್ಕಿಂತ ಮೊದಲು ಪುರಾವೆ.",
-    "desk.benchmarksSubtitle": "ಆರು ಚೆಕ್ಪಾಯಿಂಟ್ಗಳು. ಒಂದು ತಡೆಹಿಡಿಯಲಾದ ಮಾನದಂಡ. ಯಾವುದೇ ಆವಿಷ್ಕಾರದ ಫಲಿತಾಂಶಗಳಿಲ್ಲ.",
+    "desk.benchmarksSubtitle": "ನಾವು ತರಬೇತಿ ನೀಡಿದ ಪ್ರತಿಯೊಂದು ಮಾದರಿಯು, ಅದೇ ತಡೆಹಿಡಿಯಲಾದ ಪ್ರಕರಣಗಳಲ್ಲಿ ಅಳೆಯಲಾಗುತ್ತದೆ. ಯಾವುದೇ ಆವಿಷ್ಕಾರದ ಫಲಿತಾಂಶಗಳಿಲ್ಲ.",
     "desk.policyTitle": "ನಿಯಮಗಳ ಆಧಾರದ ಮೇಲೆ.",
     "desk.policySubtitle": "ಪ್ರತಿ ಟ್ರೈಜ್ ಶಿಫಾರಸಿನ ಹಿಂದಿನ ಆವೃತ್ತಿ ಪ್ರಾಥಮಿಕ ಮೂಲಗಳು.",
     "workflow.message": "ಗ್ರಾಹಕರಿಂದ ಸಂದೇಶ",
@@ -220,27 +220,20 @@ const bundle: LocaleBundle = {
     "pipeline.outputs": "ಈ ಹಂತವು ಏನನ್ನು ಉತ್ಪಾದಿಸುತ್ತದೆ",
     "pipeline.note": "ಪ್ರತಿ ಹಂತವು ಅದರ ಮೂಲ ಗುರುತನ್ನು ಮುಂದೆ ಕೊಂಡೊಯ್ಯುತ್ತದೆ. ವಿಫಲವಾದ ಮಾದರಿಗಳನ್ನು ದಾಖಲಿಸಲಾಗುತ್ತದೆ, ಸಮರ್ಥನೆ ಇರುವಲ್ಲಿ ದುರಸ್ತಿ ಮಾಡಲಾಗುತ್ತದೆ, ನಂತರ ಮತ್ತೆ ಪರಿಶೀಲಿಸಲಾಗುತ್ತದೆ.",
     "pipeline.experimentEyebrow": "ಕಾರ್ಯ-ಅಂಕಗಣಿತದ ಪ್ರಯೋಗ",
-    "pipeline.experimentTitle": "ಸಮತೋಲನವನ್ನು ಹುಡುಕಿ. ಫಲಿತಾಂಶವನ್ನು ಅಳೆಯಿರಿ.",
-    "pipeline.experimentBody": "ಸ್ಲೈಡರ್ ಆಫ್ಲೈನ್ ವಿಲೀನವನ್ನು ಸಂರಚಿಸುತ್ತದೆ. ವಿಲೀನಗೊಂಡ ನಂತರ ಮಾದರಿ ಕಾರ್ಯಕ್ಷಮತೆಯನ್ನು ಮೌಲ್ಯಮಾಪನ ಮಾಡಬೇಕು.",
+    "pipeline.experimentTitle": "ನಾವು ಬಾಕಿ ಮೊತ್ತವನ್ನು ಅಳೆಯುತ್ತಿದ್ದೆವು. ಅದು ಫಲ ನೀಡಲಿಲ್ಲ.",
+    "pipeline.experimentBody": "ಪ್ರಾಯೋಗಿಕವಾಗಿ, 0.55 / 0.45 ನಲ್ಲಿ ಸ್ಕೀಮಾ ಮತ್ತು ಪರಾನುಭೂತಿ ತಜ್ಞರನ್ನು ವಿಲೀನಗೊಳಿಸುವುದು ಎಲ್ಲಾ ಕ್ಷೇತ್ರಗಳ ನಿಖರತೆಯನ್ನು ಕಳೆದುಕೊಂಡಿತು (72.8% → 0%), ಆದ್ದರಿಂದ ವಿಲೀನವನ್ನು ಬಳಸಲಾಗುವುದಿಲ್ಲ. ಒದಗಿಸಿದ ಮಾದರಿಗಳು ಮಾನವ-ಪರಿಶೀಲಿಸಿದ ದತ್ತಾಂಶದಲ್ಲಿ ಸರಳ SFT ಆಗಿರುತ್ತವೆ.",
     "pipeline.specialistA": "ಸ್ಕೀಮಾ ತಜ್ಞ",
     "pipeline.specialistB": "ಪರಾನುಭೂತಿ ತಜ್ಞ",
     "pipeline.empathyOnly": "ಪರಾನುಭೂತಿ ಮಾತ್ರ",
     "pipeline.schemaOnly": "ಸ್ಕೀಮಾ ಮಾತ್ರ",
-    "pipeline.resetMix": "0.55/0.45ಕ್ಕೆ ಮರುಹೊಂದಿಸಿ",
+    "pipeline.resetMix": "0.55 / 0.45 ಗೆ ಮರುಹೊಂದಿಸಿ",
     "pipeline.exportMix": "ವಿಲೀನ ಸಂರಚನೆಯನ್ನು ರಫ್ತು ಮಾಡಿ",
-    "bench.noteTitle": "ಪ್ರಯೋಗವನ್ನು ಸ್ಥಾಪಿಸಲಾಗಿದೆ. ಸಾಕ್ಷ್ಯವು ಮುಂದೆ ಬರುತ್ತದೆ.",
-    "bench.noteBody": "ಪ್ರಸ್ತಾಪದ ಶೇಕಡಾವಾರು ಮತ್ತು ವೆಚ್ಚದ ಅಂದಾಜುಗಳನ್ನು ಅಳೆಯಲಾಗಿಲ್ಲ. ಈ ಕೋಷ್ಟಕವು ಗುರುತಿಸಬಹುದಾದ ಮೌಲ್ಯಮಾಪನದ ಫಲಿತಾಂಶಗಳನ್ನು ಮಾತ್ರ ಒಳಗೊಂಡಿರುತ್ತದೆ.",
-    "bench.notEvaluated": "ಇನ್ನೂ ಮೌಲ್ಯಮಾಪನವಾಗಿಲ್ಲ.",
-    "bench.ablation": "ಚೆಕ್ಪಾಯಿಂಟ್ ಕ್ಷಯಿಸುವಿಕೆ",
-    "bench.ablationBody": "ಎಲ್ಲಾ ತಜ್ಞರು ಮತ್ತು ಬೇಸ್ಲೈನ್ಗಳು, ಅದೇ ತಡೆಹಿಡಿಯಲಾದ ಪ್ರಕರಣಗಳಲ್ಲಿ ಮೌಲ್ಯಮಾಪನ ಮಾಡಲ್ಪಟ್ಟವು.",
+    "bench.noteTitle": "ಹಿಡಿದಿರುವ ದತ್ತಾಂಶದ ಮೇಲೆ ಅಳೆಯಲಾಗುತ್ತದೆ, ಭರವಸೆ ನೀಡಲಾಗಿಲ್ಲ.",
+    "bench.noteBody": "ಕೆಳಗಿನ ಪ್ರತಿಯೊಂದು ಸಂಖ್ಯೆಯು ಮಾದರಿಗಳು ಎಂದಿಗೂ ತರಬೇತಿ ಪಡೆಯದ ಪ್ರಕರಣಗಳಲ್ಲಿ ದಾಖಲಾದ ರನ್ನಿಂದ ಬರುತ್ತದೆ. ಪರಿಶೀಲಿಸಿದ ಸೆಟ್ನಲ್ಲಿ 100% ಅನ್ನು ಸ್ಕೋರಿಂಗ್ ಮಾಡುವ ನಿಯಮಗಳು ಮಾತ್ರ ನಿರೀಕ್ಷಿಸಲಾಗಿದೆಃ ಆ ಲೇಬಲ್ಗಳನ್ನು ನಿಯಮಗಳೊಂದಿಗೆ ಒಪ್ಪಿಕೊಳ್ಳಲು ನಿರ್ಮಿಸಲಾಗಿದೆ.",
+    "bench.ablation": "ಮಾನವ-ಪರಿಶೀಲಿಸಿದ ದತ್ತಾಂಶದ ಮೇಲೆ ತರಬೇತಿ ಪಡೆದ ಮಾದರಿಗಳು",
+    "bench.ablationBody": "ನೈಜ ಪೈಪ್ಲೈನ್ ಮೂಲಕ ರನ್ಟೈಮ್ ಫಲಿತಾಂಶಗಳುಃ ಮಾದರಿ, ಚೆಕ್ಗಳು, ಮತ್ತು (ಗುರುತಿಸಿದಲ್ಲಿ) ನೀತಿ ನಿಯಮಗಳು.",
     "bench.colCheckpoint": "ಚೆಕ್ಪಾಯಿಂಟ್",
-    "bench.colSchema": "ಸ್ಕೀಮಾ ಪಾಸ್",
-    "bench.colFields": "ಫೀಲ್ಡ್ ನಿಖರವಾದ ಹೊಂದಾಣಿಕೆ",
-    "bench.colUnsafe": "ಅಸುರಕ್ಷಿತ ಖಾತರಿಗಳು",
-    "bench.colEmpathy": "ಪರಾನುಭೂತಿ/chrF",
-    "bench.colStatus": "ಸ್ಥಿತಿಗತಿ.",
-    "bench.awaitingRun": "ಕಾಯುತ್ತಿರುವ ಓಟ",
-    "bench.awaitingTraining": "ಕಾಯುತ್ತಿರುವ ತರಬೇತಿ",
+    "bench.colFields": "ಎಲ್ಲಾ ಕ್ಷೇತ್ರಗಳು ನಿಖರವಾಗಿವೆ",
     "bench.splitTitle": "ಸನ್ನಿವೇಶದ ಕುಟುಂಬದಿಂದ ಬೇರ್ಪಡಿಸಿ",
     "bench.splitBody": "ಪ್ಯಾರಾಫ್ರೇಸ್ಗಳು, SMS ಟೆಂಪ್ಲೆಟ್ಗಳು ಮತ್ತು ಅದೇ ಕೇಸ್ನ ರಿಪೇರಿ ಮಾಡಲಾದ ಆವೃತ್ತಿಗಳನ್ನು ಒಂದೇ ಸ್ಪ್ಲಿಟ್ನಲ್ಲಿ ಇರಿಸಿ. ವಿಲೀನ ತೂಕಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡುವ ಮೊದಲು ಪರೀಕ್ಷಾ ಸೆಟ್ ಅನ್ನು ಫ್ರೀಜ್ ಮಾಡಿ.",
     "bench.empathyTitle": "ಪರಾನುಭೂತಿಗೆ ಮನುಷ್ಯರ ಅಗತ್ಯವಿದೆ",
@@ -249,8 +242,22 @@ const bundle: LocaleBundle = {
     "bench.failureBody": "ದೋಷಪೂರಿತವಾದ JSON, ಕಲ್ಪಿತವಾದ UTRs, ಬೆಂಬಲಿತವಲ್ಲದ ಖಾತರಿಗಳು ಮತ್ತು ಪ್ರತಿ ಪ್ರಕರಣಕ್ಕೂ ತಪ್ಪಿದ ಎಸ್ಕಲೇಷನ್ ಕ್ರಿಯೆಗಳನ್ನು ವರದಿ ಮಾಡಿ. ಬೂಟ್ಸ್ಟ್ರಾಪ್ ಜೋಡಿಯಾದ ವ್ಯತ್ಯಾಸಗಳು.",
     "bench.adversarialEyebrow": "ವಿರೋಧಿ ಸೂಟ್",
     "bench.adversarialTitle": "ಒತ್ತಡವು ನೀತಿಯನ್ನು ಬದಲಾಯಿಸಬಾರದು.",
-    "bench.adversarialBody": "ಪ್ರಸ್ತುತ ನಿರ್ಣಾಯಕ ಪೂರ್ವವೀಕ್ಷಣೆಯ ವಿರುದ್ಧ ಮರುಪಾವತಿ-ಬಲವಂತದ ಪ್ರಕರಣವನ್ನು ಪ್ರಯತ್ನಿಸಿ.",
+    "bench.adversarialBody": "ಲೈವ್ ಮಾದರಿಯ ವಿರುದ್ಧ ಮರುಪಾವತಿ-ಬಲವಂತದ ಪ್ರಕರಣವನ್ನು ಪ್ರಯತ್ನಿಸಿಃ ಯಾವುದೇ ಮರುಪಾವತಿಯ ಭರವಸೆ ನೀಡಬಾರದು.",
     "bench.adversarialCta": "ತೆರೆದ ಪ್ರತಿಕೂಲ ಸನ್ನಿವೇಶ",
+    "bench.measuredOn": "ಅಳತೆ {date}",
+    "bench.colReviewed": "54 ಪರಿಶೀಲಿಸಿದ ಪ್ರಕರಣಗಳು · ಎಲ್ಲಾ ಕ್ಷೇತ್ರಗಳು",
+    "bench.colChallenge": "42 ಪರಿಚಯವಿಲ್ಲದ ವರ್ಗ",
+    "bench.colReview": "ಮಾನವ ವಿಮರ್ಶೆಯ ಅಗತ್ಯವಿದೆ",
+    "bench.colLatency": "ಸಮಯ/ಉತ್ತರ",
+    "bench.colSource": "ಪ್ರತಿ ಸಂಖ್ಯೆಗೆ ಸಾಕ್ಷ್ಯದ ಕಡತ",
+    "bench.colUtility": "ಉಪಯುಕ್ತತೆ.",
+    "bench.mostAccurate": "ಅತ್ಯಂತ ನಿಖರವಾದ",
+    "bench.defaultMode": "ಪ್ರಸ್ತುತ ಪೂರ್ವನಿಯೋಜಿತ",
+    "bench.footnote": "* ನಿಯಮಗಳು ಮಾತ್ರ ಪರಿಶೀಲಿಸಿದ ಸೆಟ್ನಲ್ಲಿ 100% ಅನ್ನು ಸ್ಕೋರ್ ಮಾಡುತ್ತವೆ ಏಕೆಂದರೆ ಆ ಲೇಬಲ್ಗಳನ್ನು ನಿಯಮಗಳೊಂದಿಗೆ ಸಮ್ಮತಿಸಲು ನಿರ್ಮಿಸಲಾಗಿದೆ; ಪರಿಚಯವಿಲ್ಲದ-ಪದಗಳ ಸೆಟ್ ನ್ಯಾಯಯುತ ಹೋಲಿಕೆಯಾಗಿದೆ. ಆ ಸಮಯದ ನಿಯಮಗಳೊಂದಿಗೆ ಅಳೆಯಲಾಗುತ್ತದೆ. ಪರಿಚಯವಿಲ್ಲದ-ಪದಗಳ ಸೆಟ್ ಅನ್ನು ಯೋಜನೆಯಿಂದ ಲೇಬಲ್ ಮಾಡಲಾಗಿದೆ, ಮಾನವ-ವಿಮರ್ಶೆ ಮಾಡಲಾಗಿಲ್ಲ. ನೈಜ ಗ್ರಾಹಕ ಸಂದೇಶಗಳ ಮೇಲೆ ಏನನ್ನೂ ಮೌಲ್ಯಮಾಪನ ಮಾಡಲಾಗಿಲ್ಲ.",
+    "bench.pilotTitle": "ರೌಂಡ್ 1 ಪೈಲೆಟ್ಗಳುಃ ಪರಿಶೀಲಿಸದ ದತ್ತಾಂಶ",
+    "bench.pilotBody": "ಮಾನವ ಪರಿಶೀಲನೆಯ ಮೊದಲು, 92 ಸಂಶ್ಲೇಷಿತ ಪ್ರಕರಣಗಳಲ್ಲಿ ಕಚ್ಚಾ ಮಾದರಿ ಔಟ್ಪುಟ್ ಅನ್ನು AuditKIT ಗಳಿಸಿತು. ಈ ಚಾಲಕರು ಮೂಲ ಯೋಜನೆಯನ್ನು ಪರೀಕ್ಷಿಸಿದರುಃ GRPO, ಪರಾನುಭೂತಿ DPO ಮತ್ತು ತೂಕದ ವಿಲೀನ.",
+    "pipeline.measuredAt": "ಅಳತೆ (ಪ್ರಾಯೋಗಿಕವಾಗಿ, 92 ಸಂಶ್ಲೇಷಿತ ಪ್ರಕರಣಗಳು): ಕಟ್ಟುನಿಟ್ಟಾದ JSON {schema}, ಎಲ್ಲಾ ಕ್ಷೇತ್ರಗಳು ನಿಖರವಾದ {fields}, ಉಪಯುಕ್ತತೆ {utility}.",
+    "pipeline.notMeasured": "ಈ ತೂಕದಲ್ಲಿ ಅಳೆಯಲಾಗಿಲ್ಲ. ಕೇವಲ 1.00 / 0.00, 0.55 / 0.45 ಮತ್ತು 0.00 / 1.00 ಮಾತ್ರ ಚಾಲನೆಯಲ್ಲಿವೆ.",
     "policy.search": "ಹುಡುಕಾಟ ಮೂಲಗಳು, ನಿಯಮಗಳು ಅಥವಾ ಸಂಸ್ಥೆಗಳು...",
     "policy.empty": "ಹೊಂದಾಣಿಕೆಯ ಮೂಲಗಳಿಲ್ಲ",
     "policy.clear": "ಹುಡುಕಾಟವನ್ನು ತೆರವುಗೊಳಿಸಿ",
@@ -348,10 +355,8 @@ const bundle: LocaleBundle = {
       "ವಾಣಿಜ್ಯ-ಬ್ಯಾಂಕ್ ತಿದ್ದುಪಡಿಯು 1 ಜನವರಿ 2027 ರಂದು ಅಥವಾ ನಂತರದ ವಹಿವಾಟುಗಳಿಗೆ ಅನ್ವಯಿಸುತ್ತದೆ; ಆ ದಿನಾಂಕದಿಂದ ಹೊಸ ಪ್ರಕರಣಗಳಿಗೆ ನೀತಿ ಮರುಮೌಲ್ಯಮಾಪನದ ಅಗತ್ಯವಿರುತ್ತದೆ.",
     "Compare all six checkpoints on held-out scenario groups. Score the full JSON schema, all extracted fields, inappropriate guarantees and required actions. Keep human-rated empathy separate from lexical ChrF, and use paired bootstrap intervals rather than treating a single percentage as proof.":
       "ಎಲ್ಲಾ ಆರು ಚೆಕ್ಪಾಯಿಂಟ್ಗಳನ್ನು ತಡೆಹಿಡಿಯಲಾದ ಸನ್ನಿವೇಶದ ಗುಂಪುಗಳಲ್ಲಿ ಹೋಲಿಸಿ. ಪೂರ್ಣ JSON ಸ್ಕೀಮಾವನ್ನು ಸ್ಕೋರ್ ಮಾಡಿ, ಎಲ್ಲಾ ಹೊರತೆಗೆಯಲಾದ ಕ್ಷೇತ್ರಗಳು, ಸೂಕ್ತವಲ್ಲದ ಖಾತರಿಗಳು ಮತ್ತು ಅಗತ್ಯ ಕ್ರಮಗಳು. ಮಾನವ-ರೇಟೆಡ್ ಪರಾನುಭೂತಿಯನ್ನು ಲೆಕ್ಸಿಕಲ್ ChrF ನಿಂದ ಪ್ರತ್ಯೇಕವಾಗಿ ಇರಿಸಿ, ಮತ್ತು ಒಂದೇ ಶೇಕಡಾವಾರು ಪ್ರಮಾಣವನ್ನು ಪುರಾವೆಯಾಗಿ ಪರಿಗಣಿಸುವ ಬದಲು ಜೋಡಿಯಾದ ಬೂಟ್ಸ್ಟ್ರ್ಯಾಪ್ ಮಧ್ಯಂತರಗಳನ್ನು ಬಳಸಿ.",
-    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider configures an experiment; it does not change this rule-based preview or demonstrate model quality.":
-      "ಹೊಂದಾಣಿಕೆಯ LoRA ವಿಲೀನವನ್ನು ಬಳಸಿಕೊಂಡು ತೂಕದ ನಿಯತಾಂಕದ ನವೀಕರಣಗಳನ್ನು ರಚಿಸಿ. ವಿಲೀನಗೊಳ್ಳದ ಇಬ್ಬರು ತಜ್ಞರನ್ನು ಒಳಗೊಂಡಂತೆ ಊರ್ಜಿತಗೊಳಿಸುವ ದತ್ತಾಂಶದ ಮೇಲೆ ತೂಕವನ್ನು ಹೆಚ್ಚಿಸಿ. ಸ್ಲೈಡರ್ ಅನ್ನು ಚಲಿಸುವುದರಿಂದ ಪ್ರಯೋಗವನ್ನು ಸಂರಚಿಸುತ್ತದೆ; ಇದು ಈ ನಿಯಮ-ಆಧಾರಿತ ಪೂರ್ವವೀಕ್ಷಣೆಯನ್ನು ಬದಲಾಯಿಸುವುದಿಲ್ಲ ಅಥವಾ ಮಾದರಿಯ ಗುಣಮಟ್ಟವನ್ನು ಪ್ರದರ್ಶಿಸುವುದಿಲ್ಲ.",
-    "Configuration preview · no merged checkpoint yet":
-      "ಸಂರಚನೆಯ ಪೂರ್ವವೀಕ್ಷಣೆ · ಇನ್ನೂ ವಿಲೀನಗೊಂಡ ಚೆಕ್ಪಾಯಿಂಟ್ ಇಲ್ಲ",
+    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider shows the measured result where one exists; it does not change the served model.":
+      "ಹೊಂದಾಣಿಕೆಯ LoRA ವಿಲೀನವನ್ನು ಬಳಸಿಕೊಂಡು ತೂಕದ ನಿಯತಾಂಕ ನವೀಕರಣಗಳನ್ನು ರಚಿಸಿ. ವಿಲೀನಗೊಳ್ಳದ ಇಬ್ಬರು ತಜ್ಞರನ್ನು ಒಳಗೊಂಡಂತೆ ಊರ್ಜಿತಗೊಳಿಸುವ ದತ್ತಾಂಶದ ಮೇಲೆ ತೂಕವನ್ನು ಹೆಚ್ಚಿಸಿ. ಸ್ಲೈಡರ್ ಅನ್ನು ಚಲಿಸುವುದರಿಂದ ಒಂದು ಇರುವಲ್ಲಿ ಅಳತೆ ಮಾಡಿದ ಫಲಿತಾಂಶವನ್ನು ತೋರಿಸುತ್ತದೆ; ಇದು ನೀಡಲಾದ ಮಾದರಿಯನ್ನು ಬದಲಾಯಿಸುವುದಿಲ್ಲ.",
     "Controls · base, uncurated SFT and curated joint SFT":
       "ನಿಯಂತ್ರಣಗಳು · ಬೇಸ್, ಅನಿಯಂತ್ರಿತ SFT ಮತ್ತು ಕ್ಯೂರೇಟೆಡ್ ಜಾಯಿಂಟ್ SFT",
     "Curate with care":
@@ -360,6 +365,12 @@ const bundle: LocaleBundle = {
       "ಡೇಟಾಸೆಟ್ ಎ · ಕಟ್ಟುನಿಟ್ಟಾದ JSON + ಕ್ಷೇತ್ರ ಮೂಲ",
     "Dataset B · chosen / rejected customer replies":
       "ಡೇಟಾಸೆಟ್ ಬಿ. ಆಯ್ದ/ತಿರಸ್ಕರಿಸಿದ ಗ್ರಾಹಕ ಪ್ರತ್ಯುತ್ತರಗಳು",
+    "Done · 934 cases curated with CuratorKIT 0.1.21; 810 human-reviewed cases in training":
+      "ಪೂರ್ಣಗೊಂಡಿದೆ · 934 ಪ್ರಕರಣಗಳನ್ನು CuratorKIT 0.1.21 ನೊಂದಿಗೆ ಸಂಗ್ರಹಿಸಲಾಗಿದೆ; ತರಬೇತಿಯಲ್ಲಿ 810 ಮಾನವ-ಪರಿಶೀಲಿಸಿದ ಪ್ರಕರಣಗಳು",
+    "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)":
+      "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)",
+    "Done · every model evaluated; results in the Benchmark lab":
+      "ಪೂರ್ಣಗೊಂಡಿದೆ · ಪ್ರತಿ ಮಾದರಿಯು ಮೌಲ್ಯಮಾಪನಗೊಂಡಿದೆ; ಬೆಂಚ್ಮಾರ್ಕ್ ಪ್ರಯೋಗಾಲಯದಲ್ಲಿ ಫಲಿತಾಂಶಗಳು",
     "Every claim needs a measured result.":
       "ಪ್ರತಿ ದಾವೆಗೂ ಒಂದು ಅಳತೆಯ ಫಲಿತಾಂಶದ ಅಗತ್ಯವಿದೆ.",
     "Found":
@@ -374,20 +385,18 @@ const bundle: LocaleBundle = {
       "ತಡವಾದ ವಂಚನೆ ವರದಿ · ಖಾತರಿ-ಮರುಪಾವತಿ ದಬ್ಬಾಳಿಕೆ",
     "Listening":
       "ಆಲಿಸುವಿಕೆ.",
-    "Local curation + optional CuratorKIT pass":
-      "ಸ್ಥಳೀಯ ಕ್ಯೂರೇಶನ್ + ಐಚ್ಛಿಕ CuratorKIT ಪಾಸ್",
     "Make quality visible":
       "ಗುಣಮಟ್ಟ ಗೋಚರವಾಗುವಂತೆ ಮಾಡಿ",
     "Manifest · source hashes, split IDs and rejection reasons":
       "ಮ್ಯಾನಿಫೆಸ್ಟ್ · ಮೂಲ ಹ್ಯಾಶ್ಗಳು, ವಿಭಜಿತ ಗುರುತಿನ ಚೀಟಿಗಳು ಮತ್ತು ನಿರಾಕರಣೆಯ ಕಾರಣಗಳು",
+    "Measured in the pilot · the 0.55/0.45 merge was worse, so it is not used":
+      "ಪ್ರಾಯೋಗಿಕವಾಗಿ ಅಳೆಯಲಾದ · 0.55/0.45 ವಿಲೀನವು ಕೆಟ್ಟದಾಗಿತ್ತು, ಆದ್ದರಿಂದ ಅದನ್ನು ಬಳಸಲಾಗುವುದಿಲ್ಲ.",
     "Merge & investigate":
       "ವಿಲೀನಗೊಳಿಸಿ ಮತ್ತು ತನಿಖೆ ಮಾಡಿ",
     "Merge manifest · base, tokenizer and adapter identities":
       "ಮ್ಯಾನಿಫೆಸ್ಟ್ · ಬೇಸ್, ಟೋಕನೈಸರ್ ಮತ್ತು ಅಡಾಪ್ಟರ್ ಗುರುತುಗಳನ್ನು ವಿಲೀನಗೊಳಿಸಿ",
     "NPCI · Dispute redressal":
       "NPCI · ವಿವಾದ ಪರಿಹಾರ",
-    "Offline scorer ready · model evaluation pending":
-      "ಆಫ್ಲೈನ್ ಸ್ಕೋರರ್ ರೆಡಿ · ಮಾದರಿ ಮೌಲ್ಯಮಾಪನ ಬಾಕಿ ಇದೆ",
     "QR request · ₹24,500 · reported today":
       "QR request · ₹24,500 · reported today",
     "RBI · Customer liability":
@@ -410,8 +419,6 @@ const bundle: LocaleBundle = {
       "ಹಣಕಾಸಿನ ಸೈಬರ್ ವಂಚನೆಯನ್ನು ತಕ್ಷಣವೇ 1930 ಮತ್ತು cybercrime.gov.in ಮೂಲಕ ವರದಿ ಮಾಡಿ. ಚೇತರಿಕೆಯ ಭರವಸೆ ಇಲ್ಲ.",
     "Report · per-case evidence + paired bootstrap deltas":
       "ವರದಿ ಮಾಡಿ · ಪ್ರತಿ-ಪ್ರಕರಣ ಸಾಕ್ಷ್ಯಾಧಾರ + ಜೋಡಿಯಾದ ಬೂಟ್ಸ್ಟ್ರ್ಯಾಪ್ ಡೆಲ್ಟಾಗಳು",
-    "Requires compatible GPU + reviewed data":
-      "ಹೊಂದಾಣಿಕೆಯ ಜಿಪಿಯು + ಪರಿಶೀಲಿಸಿದ ದತ್ತಾಂಶದ ಅಗತ್ಯವಿದೆ",
     "Sent to the wrong person":
       "ತಪ್ಪಾದ ವ್ಯಕ್ತಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ",
     "Start with synthetic or authorised customer chats. Mask sensitive identities, retain only context-labelled transaction references, validate fields against source spans, and separate schema targets from same-task preference pairs.":

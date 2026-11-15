@@ -58,7 +58,7 @@ const bundle: LocaleBundle = {
     "desk.pipelineTitle": "এটা পাইপ লাইন। দুজন বিশেষজ্ঞ।",
     "desk.pipelineSubtitle": "কোলাহলপূৰ্ণ বাৰ্তাৰ পৰা পৰীক্ষা কৰিব পৰা প্ৰতিক্ৰিয়ালৈ যাত্ৰাটো অনুসৰণ কৰক।",
     "desk.benchmarksTitle": "বিশ্বাসৰ আগত প্ৰমাণ।",
-    "desk.benchmarksSubtitle": "ছয়টা চেকপ \"ন্ট। এটা ধৰি ৰখা মানদণ্ড। কোনো ফলাফলৰ আৱিষ্কাৰ হোৱা নাই।",
+    "desk.benchmarksSubtitle": "আমি প্ৰশিক্ষণ দিয়া প্ৰতিটো মডেল, একে ধৰণৰ ধৰি ৰখা গোচৰৰ ওপৰত পৰিমাপ কৰা হৈছিল। কোনো ফলাফল উদ্ভাৱন কৰা হোৱা নাছিল।",
     "desk.policyTitle": "নিয়মবোৰত আধাৰিত।",
     "desk.policySubtitle": "প্ৰতিটো ট্ৰাইজেজ পৰামৰ্শৰ আঁৰৰ সংস্কৰণ প্ৰাথমিক উৎস।",
     "workflow.message": "গ্ৰাহকৰ বাৰ্তা",
@@ -220,27 +220,20 @@ const bundle: LocaleBundle = {
     "pipeline.outputs": "এই পৰ্য্যায়টোৱে কি উৎপন্ন কৰে",
     "pipeline.note": "প্ৰতিটো পৰ্য্যায়ে ইয়াৰ উৎস পৰিচয়ক আগুৱাই লৈ যায়। বিফল নমুনাবোৰ ৰেকৰ্ড কৰা হয়, য'ত ন্যায়সঙ্গত হয় তাত মেৰামতি কৰা হয়, তাৰ পিছত পুনৰ পৰীক্ষা কৰা হয়।",
     "pipeline.experimentEyebrow": "কাৰ্য্য-গাণিতিক পৰীক্ষা",
-    "pipeline.experimentTitle": "ভাৰসাম্য বিচাৰি উলিয়াওক। ফলাফল পৰিমাপ কৰক।",
-    "pipeline.experimentBody": "স্লাইডাৰে অফলাইন একত্ৰীকৰণ বিন্যাস কৰে। একত্ৰীকৰণৰ পিছত মডেলৰ প্ৰদৰ্শনৰ মূল্যায়ন কৰিব লাগিব।",
+    "pipeline.experimentTitle": "আমি ভাৰসাম্য পৰিমাপ কৰিলো। ইয়াৰ কোনো লাভ নহ \"ল।",
+    "pipeline.experimentBody": "পাইলটত, স্কিমা আৰু সহানুভূতি বিশেষজ্ঞসকলক 0.55 / 0.45 ত একত্ৰিত কৰিলে সকলো ক্ষেত্ৰৰ সঠিকতা হেৰাই যায় (72.8% → 0%), সেয়েহে একত্ৰীকৰণ ব্যৱহাৰ কৰা নহয়। পৰিৱেশন কৰা মডেলবোৰ মানুহৰ দ্বাৰা পৰ্যালোচনা কৰা তথ্যত সাধাৰণ SFT হয়।",
     "pipeline.specialistA": "স্কিমা বিশেষজ্ঞ",
     "pipeline.specialistB": "সহানুভূতি বিশেষজ্ঞ",
     "pipeline.empathyOnly": "কেৱল সহানুভূতি",
     "pipeline.schemaOnly": "কেৱল স্কিমা",
-    "pipeline.resetMix": "0.55/0.45 লৈ পুনৰ ছেট কৰক",
+    "pipeline.resetMix": "0.55 / 0.45 লৈ পুনৰ ছেট কৰক",
     "pipeline.exportMix": "একত্ৰীকৰণ বিন্যাস ৰপ্তানি কৰক",
-    "bench.noteTitle": "পৰীক্ষাটো স্থাপন কৰা হয়। ইয়াৰ পিছত প্ৰমাণ আহে।",
-    "bench.noteBody": "প্ৰস্তাৱটোৰ শতাংশ আৰু ব্যয়ৰ অনুমান পৰিমাপ কৰা হোৱা নাই। এই তালিকাখনত কেৱল চিনাক্ত কৰিব পৰা মূল্যায়নৰ ফলাফলহে থাকিব।",
-    "bench.notEvaluated": "এতিয়াও মূল্যায়ন কৰা হোৱা নাই",
-    "bench.ablation": "চেকপ \"ইণ্ট এব্লেচন",
-    "bench.ablationBody": "সকলো বিশেষজ্ঞ আৰু বেচলাইন, একে ধৰণৰ ধৰি ৰখা ঘটনাৰ ওপৰত মূল্যায়ন কৰা হৈছিল।",
+    "bench.noteTitle": "ধৰি ৰখা তথ্যৰ ওপৰত পৰিমাপ কৰা হয়, প্ৰতিশ্ৰুতি দিয়া নহয়।",
+    "bench.noteBody": "তলত দিয়া প্ৰতিটো নম্বৰ মডেলবোৰে কেতিয়াও প্ৰশিক্ষণ লোৱা নাই তেনে ক্ষেত্ৰত ৰেকৰ্ড কৰা ৰানৰ পৰা আহিছে। পৰ্যালোচনা কৰা ছেটত কেৱল 100% স্ক \"ৰ কৰা নিয়মবোৰ আশা কৰা হয়ঃ সেই লেবেলবোৰ নিয়মৰ সৈতে সন্মত হ'বলৈ নিৰ্মাণ কৰা হৈছিল।",
+    "bench.ablation": "মানৱ-পৰ্য্যালোচনা কৰা তথ্যৰ ওপৰত প্ৰশিক্ষণপ্ৰাপ্ত মডেলসমূহ",
+    "bench.ablationBody": "প্ৰকৃত পাইপলাইনৰ জৰিয়তে ৰানটাইম ফলাফলঃ আৰ্হি, পৰীক্ষা, আৰু (য'ত উল্লেখ কৰা হৈছে) নীতিৰ নিয়ম।",
     "bench.colCheckpoint": "চেক পইণ্ট",
-    "bench.colSchema": "স্কিমা পাছ",
-    "bench.colFields": "ফিল্ডত সঠিক মিল",
-    "bench.colUnsafe": "অসুৰক্ষিত নিশ্চয়তা",
-    "bench.colEmpathy": "সহানুভূতি/chrF",
-    "bench.colStatus": "অৱস্থা",
-    "bench.awaitingRun": "দৌৰিবলৈ অপেক্ষা কৰা",
-    "bench.awaitingTraining": "প্ৰশিক্ষণৰ বাবে অপেক্ষা কৰা",
+    "bench.colFields": "সকলো ক্ষেত্ৰ সঠিক",
     "bench.splitTitle": "দৃশ্যপট অনুসৰি পৰিয়াল বিভাজন কৰক",
     "bench.splitBody": "পেৰাফৰেজ, SMS টেমপ্লেট আৰু একেটা কেছৰ মেৰামতি কৰা সংস্কৰণবোৰ এটা বিভাজনত ৰাখক। একত্ৰিত ওজন বাছনি কৰাৰ আগতে পৰীক্ষা ছেটটো হিমায়িত কৰক।",
     "bench.empathyTitle": "সহানুভূতিৰ বাবে এজন মানুহৰ প্ৰয়োজন।",
@@ -249,8 +242,22 @@ const bundle: LocaleBundle = {
     "bench.failureBody": "বিকৃত JSON, মনোগ্ৰাহী UTRs, সমৰ্থিত নোহোৱা গেৰাণ্টি আৰু প্ৰতিটো ক্ষেত্ৰত বৃদ্ধিৰ কাৰ্য্য নোহোৱাৰ প্ৰতিবেদন দিয়ক। বুটষ্ট্ৰেপ পেয়াৰ কৰা পাৰ্থক্যসমূহ।",
     "bench.adversarialEyebrow": "বিৰোধী চুইট",
     "bench.adversarialTitle": "চাপৰ ফলত নীতি সলনি হোৱা উচিত নহয়।",
-    "bench.adversarialBody": "বৰ্তমানৰ নিৰ্ণায়ক পূৰ্বদৰ্শনৰ বিৰুদ্ধে ৰিফাণ্ড-বলপূৰ্বক গোচৰ এটা চেষ্টা কৰক।",
+    "bench.adversarialBody": "লাইভ মডেলটোৰ বিৰুদ্ধে ৰিফাণ্ড-বলপূৰ্বক গোচৰ এটা চেষ্টা কৰকঃ কোনো ৰিফাণ্ডৰ প্ৰতিশ্ৰুতি দিয়া উচিত নহয়।",
     "bench.adversarialCta": "মুকলি বিৰোধী পৰিস্থিতি",
+    "bench.measuredOn": "পৰিমাপ কৰা হৈছে {date}",
+    "bench.colReviewed": "54 পৰ্য্যালোচনা কৰা গোচৰসমূহ · সকলো ক্ষেত্ৰ",
+    "bench.colChallenge": "42 অচিনাকি শ্ৰেণী",
+    "bench.colReview": "মানৱীয় পুনৰীক্ষণৰ প্ৰয়োজন",
+    "bench.colLatency": "সময়/উত্তৰ",
+    "bench.colSource": "প্ৰতিটো সংখ্যাৰ বাবে প্ৰমাণ ফাইল",
+    "bench.colUtility": "উপযোগিতা",
+    "bench.mostAccurate": "আটাইতকৈ সঠিক",
+    "bench.defaultMode": "বৰ্তমানৰ ডিফল্ট",
+    "bench.footnote": "* কেৱল নিয়মেই পৰ্যালোচনা কৰা ছেটত 100% স্ক'ৰ কৰে কাৰণ সেই লেবেলবোৰ নিয়মৰ সৈতে সন্মত হ'বলৈ নিৰ্মাণ কৰা হৈছিল; অচিনাকি-শব্দৰ ছেট হৈছে ন্যায্য তুলনা। সেই সময়ৰ নিয়মৰ সৈতে পৰিমাপ কৰা হয়। অচিনাকি-শব্দৰ ছেটটো প্ৰকল্পৰ দ্বাৰা লেবেল কৰা হয়, মানুহৰ দ্বাৰা পৰ্যালোচনা কৰা নহয়। প্ৰকৃত গ্ৰাহকৰ বাৰ্তাবোৰত একো মূল্যায়ন কৰা হোৱা নাই।",
+    "bench.pilotTitle": "ৰাউণ্ড 1 পাইলটঃ সমীক্ষা নকৰা তথ্য",
+    "bench.pilotBody": "মানৱ পৰ্যালোচনাৰ পূৰ্বে 92টা সংশ্লেষিত ক্ষেত্ৰত AuditKIT ৰ দ্বাৰা ৰ'মডেল আউটপুট স্কোৰ কৰা হৈছিল। এই পাইলটসকলে মূল পৰিকল্পনাটো পৰীক্ষা কৰিছিলঃ GRPO, সহানুভূতি DPO আৰু ওজনযুক্ত একত্ৰীকৰণ।",
+    "pipeline.measuredAt": "পৰিমাপ কৰা হৈছে (পাইলট, 92টা সংশ্লেষিত ক্ষেত্ৰ): কঠোৰ JSON {schema}, সকলো ক্ষেত্ৰ সঠিক {fields}, উপযোগিতা {utility}।",
+    "pipeline.notMeasured": "এই ওজনেৰে পৰিমাপ কৰা হোৱা নাছিল। কেৱল 1.00 / 0.00, 0.55 / 0.45 আৰু 0.00 / 1.00 চলোৱা হৈছিল।",
     "policy.search": "উৎস, নিয়ম বা প্ৰতিষ্ঠানসমূহৰ সন্ধান কৰক...",
     "policy.empty": "কোনো মিল থকা উৎস নাই",
     "policy.clear": "সন্ধান পৰিষ্কাৰ কৰক",
@@ -348,10 +355,8 @@ const bundle: LocaleBundle = {
       "বাণিজ্যিক-বেংক সংশোধনী 2027 চনৰ 1 জানুৱাৰীত বা তাৰ পিছত হোৱা লেনদেনৰ ক্ষেত্ৰত প্ৰযোজ্য হয়; সেই তাৰিখৰ পৰা নতুন ক্ষেত্ৰত নীতি পুনৰ্মূল্যায়নৰ প্ৰয়োজন হয়।",
     "Compare all six checkpoints on held-out scenario groups. Score the full JSON schema, all extracted fields, inappropriate guarantees and required actions. Keep human-rated empathy separate from lexical ChrF, and use paired bootstrap intervals rather than treating a single percentage as proof.":
       "সম্পূৰ্ণ JSON স্কিমা, সকলো আহৰণ কৰা ক্ষেত্ৰ, অনুপযুক্ত গেৰাণ্টি আৰু প্ৰয়োজনীয় কাৰ্য্যসমূহ স্কোৰ কৰক। মানৱ-ৰেটিং সমানুভূতিক আভিধানিক ChrF-ৰ পৰা পৃথক ৰাখক, আৰু এটা শতাংশক প্ৰমাণ হিচাপে গণ্য কৰাৰ পৰিৱৰ্তে যোৰা বুটষ্ট্ৰেপৰ ব্যৱধান ব্যৱহাৰ কৰক।",
-    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider configures an experiment; it does not change this rule-based preview or demonstrate model quality.":
-      "সামঞ্জস্যপূর্ণ LoRA একত্ৰীকৰণ ব্যৱহাৰ কৰি ওজনযুক্ত পেৰামিটাৰৰ আপডেইটসমূহ লিখক। দুটা একত্ৰীকৰণ নোহোৱা বিশেষজ্ঞকে ধৰি বৈধকৰণ তথ্যৰ ওপৰত ওজনবোৰ ছুইপ কৰক। স্লাইডাৰটো স্থানান্তৰ কৰিলে এটা পৰীক্ষা সংৰূপণ কৰে; ই এই নিয়ম-আধাৰিত পূৰ্বদৰ্শন সলনি নকৰে বা মডেলৰ মানদণ্ড প্ৰদৰ্শন নকৰে।",
-    "Configuration preview · no merged checkpoint yet":
-      "কনফিগাৰেশ্যন পূৰ্বদৰ্শন · এতিয়ালৈকে কোনো একত্ৰিত চেক পইণ্ট নাই",
+    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider shows the measured result where one exists; it does not change the served model.":
+      "সামঞ্জস্যপূর্ণ LoRA একত্ৰীকৰণ ব্যৱহাৰ কৰি ওজনযুক্ত পেৰামিটাৰৰ আপডেইটসমূহ লিখক। দুটা একত্ৰীকৰণ নোহোৱা বিশেষজ্ঞকে ধৰি বৈধকৰণ তথ্যৰ ওপৰত ওজনবোৰ ছুইপ কৰক। স্লাইডাৰটো স্থানান্তৰ কৰিলে এটা থকা ঠাইত পৰিমাপিত ফলাফল দেখুৱায়; ই পৰিৱেশন কৰা মডেলটো সলনি নকৰে।",
     "Controls · base, uncurated SFT and curated joint SFT":
       "নিয়ন্ত্ৰণসমূহ · আধাৰ, অনিয়ন্ত্ৰিত SFT আৰু কিউৰেটেড জইণ্ট SFT",
     "Curate with care":
@@ -360,6 +365,12 @@ const bundle: LocaleBundle = {
       "ডাটাসেট A· কঠোৰ JSON + ক্ষেত্ৰৰ উৎপত্তিস্থল",
     "Dataset B · chosen / rejected customer replies":
       "ডাটাসেট বি · নিৰ্বাচিত/প্ৰত্যাখ্যান কৰা গ্ৰাহকৰ উত্তৰসমূহ",
+    "Done · 934 cases curated with CuratorKIT 0.1.21; 810 human-reviewed cases in training":
+      "সম্পূৰ্ণ কৰা হৈছে CuratorKIT 0.1.21 ৰ সৈতে কিউৰেট কৰা 934 টা ঘটনা; প্ৰশিক্ষণত 810 টা মানৱ-পৰ্যালোচনা কৰা ঘটনা",
+    "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)":
+      "কৰা হৈছে · QLoRA SFT 810টা পৰ্য্যালোচনা কৰা গোচৰত, আৰটিএক্স 4050 (6 জিবি)",
+    "Done · every model evaluated; results in the Benchmark lab":
+      "সম্পন্ন · প্ৰতিটো আৰ্হিৰ মূল্যায়ন কৰা হয়; বেঞ্চমাৰ্ক পৰীক্ষাগাৰত ফলাফল পোৱা যায়",
     "Every claim needs a measured result.":
       "প্ৰতিটো দাবীৰ বাবে এক পৰিমাপিত ফলাফলৰ প্ৰয়োজন।",
     "Found":
@@ -374,20 +385,18 @@ const bundle: LocaleBundle = {
       "বিলম্বিত প্ৰতাৰণাৰ প্ৰতিবেদন · গেৰাণ্টি-ৰিফাণ্ড বলপূৰ্বক",
     "Listening":
       "শুনা-শুনা কৰা।",
-    "Local curation + optional CuratorKIT pass":
-      "স্থানীয় কিউৰেশ্যন + ঐচ্ছিক CuratorKIT পাছ",
     "Make quality visible":
       "গুণগত মান দৃশ্যমান কৰক",
     "Manifest · source hashes, split IDs and rejection reasons":
       "মেনিফেষ্ট · উৎস হেছ, বিভক্ত আইডি আৰু প্ৰত্যাখ্যানৰ কাৰণসমূহ",
+    "Measured in the pilot · the 0.55/0.45 merge was worse, so it is not used":
+      "পাইলটত পৰিমাপ কৰা 0.55/0.45 একত্ৰীকৰণ অধিক বেয়া আছিল, সেয়েহে ইয়াক ব্যৱহাৰ কৰা নহয়",
     "Merge & investigate":
       "একত্ৰিত কৰক আৰু তদন্ত কৰক",
     "Merge manifest · base, tokenizer and adapter identities":
       "মেনিফেষ্ট · আধাৰ, টোকনাইজাৰ আৰু এডাপ্টাৰৰ পৰিচয় একত্ৰিত কৰক",
     "NPCI · Dispute redressal":
       "NPCI বিবাদ নিষ্পত্তি",
-    "Offline scorer ready · model evaluation pending":
-      "অফলাইন স্ক'ৰাৰ ৰেডি · মডেল মূল্যায়ন মুলতুবী হৈ আছে",
     "QR request · ₹24,500 · reported today":
       "কিউ. আৰ. অনুৰোধ · ₹24,500 · আজি প্ৰতিবেদন কৰা হৈছে",
     "RBI · Customer liability":
@@ -410,8 +419,6 @@ const bundle: LocaleBundle = {
       "1930 আৰু cybercrime.gov.in ৰ জৰিয়তে বিত্তীয় চাইবাৰ জালিয়াতিৰ বিষয়ে তৎক্ষণাত অৱগত কৰক। পুনৰুদ্ধাৰৰ নিশ্চয়তা নাই।",
     "Report · per-case evidence + paired bootstrap deltas":
       "প্ৰতিবেদন · প্ৰতি-গোচৰৰ প্ৰমাণ + যোৰা বুটষ্ট্ৰেপ ব-দ্বীপ",
-    "Requires compatible GPU + reviewed data":
-      "সামঞ্জস্যপূর্ণ জি. পি. ইউ. + পৰ্যালোচনা কৰা তথ্যৰ প্ৰয়োজন",
     "Sent to the wrong person":
       "ভুল ব্যক্তিৰ ওচৰলৈ পঠিওৱা হৈছিল",
     "Start with synthetic or authorised customer chats. Mask sensitive identities, retain only context-labelled transaction references, validate fields against source spans, and separate schema targets from same-task preference pairs.":

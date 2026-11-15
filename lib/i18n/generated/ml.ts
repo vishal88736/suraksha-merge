@@ -58,7 +58,7 @@ const bundle: LocaleBundle = {
     "desk.pipelineTitle": "ഒരു പൈപ്പ് ലൈൻ. രണ്ട് വിദഗ്ധർ.",
     "desk.pipelineSubtitle": "ശബ്ദായമാനമായ സന്ദേശത്തിൽ നിന്ന് പരിശോധിക്കാവുന്ന പ്രതികരണത്തിലേക്കുള്ള യാത്ര പിന്തുടരുക.",
     "desk.benchmarksTitle": "ആത്മവിശ്വാസത്തിന് മുമ്പുള്ള തെളിവ്.",
-    "desk.benchmarksSubtitle": "ആറ് ചെക്ക്പോസ്റ്റുകൾ. ഒരു ബെഞ്ച്മാർക്ക് നിലനിർത്തി. ഫലങ്ങളൊന്നും കണ്ടുപിടിച്ചില്ല.",
+    "desk.benchmarksSubtitle": "ഞങ്ങൾ പരിശീലിപ്പിച്ച ഓരോ മോഡലും ഒരേ ഹോൾഡ്-ഔട്ട് കേസുകളിൽ അളന്നു. കണ്ടുപിടിച്ച ഫലങ്ങളൊന്നുമില്ല.",
     "desk.policyTitle": "ചട്ടങ്ങളിൽ നിലയുറപ്പിച്ചു.",
     "desk.policySubtitle": "ഓരോ ട്രൈജ് ശുപാർശകൾക്കും പിന്നിലെ പ്രാഥമിക സ്രോതസ്സുകൾ.",
     "workflow.message": "ഉപഭോക്തൃ സന്ദേശം",
@@ -220,27 +220,20 @@ const bundle: LocaleBundle = {
     "pipeline.outputs": "ഈ ഘട്ടം എന്താണ് സൃഷ്ടിക്കുന്നത്",
     "pipeline.note": "ഓരോ ഘട്ടവും അതിന്റെ ഉറവിട ഐഡന്റിറ്റി മുന്നോട്ട് കൊണ്ടുപോകുന്നു. പരാജയപ്പെട്ട സാമ്പിളുകൾ രേഖപ്പെടുത്തുകയും ന്യായീകരിക്കപ്പെടുന്നിടത്ത് അറ്റകുറ്റപ്പണികൾ നടത്തുകയും തുടർന്ന് വീണ്ടും പരിശോധിക്കുകയും ചെയ്യുന്നു.",
     "pipeline.experimentEyebrow": "ടാസ്ക്-ഗണിത പരീക്ഷണം",
-    "pipeline.experimentTitle": "ബാലൻസ് കണ്ടെത്തുക. ഫലം അളക്കുക.",
-    "pipeline.experimentBody": "സ്ലൈഡർ ഒരു ഓഫ്ലൈൻ ലയനം ക്രമീകരിക്കുന്നു. ലയിപ്പിച്ചതിനുശേഷം മോഡൽ പ്രകടനം വിലയിരുത്തണം.",
+    "pipeline.experimentTitle": "ഞങ്ങൾ ബാലൻസ് അളന്നു. അത് ഫലം കണ്ടില്ല.",
+    "pipeline.experimentBody": "പൈലറ്റിൽ, 0.55 / 0.45 ൽ സ്കീമയും എംപതി സ്പെഷ്യലിസ്റ്റുകളും ലയിപ്പിക്കുന്നതിലൂടെ എല്ലാ ഫീൽഡ് കൃത്യതയും (72.8% → 0%) നഷ്ടപ്പെട്ടു, അതിനാൽ ലയിപ്പിക്കൽ ഉപയോഗിക്കുന്നില്ല. നൽകിയ മോഡലുകൾ മനുഷ്യർ അവലോകനം ചെയ്ത ഡാറ്റയിൽ പ്ലെയിൻ SFT ആണ്.",
     "pipeline.specialistA": "സ്കീമ സ്പെഷ്യലിസ്റ്റ്",
     "pipeline.specialistB": "എംപതി സ്പെഷ്യലിസ്റ്റ്",
     "pipeline.empathyOnly": "സഹതാപം മാത്രം",
     "pipeline.schemaOnly": "സ്കീമ മാത്രം",
-    "pipeline.resetMix": "0.55/0.45 ലേക്ക് പുനഃക്രമീകരിക്കുക",
+    "pipeline.resetMix": "0.55 / 0.45 ലേക്ക് റീസെറ്റ് ചെയ്യുക",
     "pipeline.exportMix": "എക്സ്പോർട്ട് ലയന ക്രമീകരണം",
-    "bench.noteTitle": "പരീക്ഷണം സജ്ജീകരിച്ചിരിക്കുന്നു. തെളിവുകൾ അടുത്തതായി വരുന്നു.",
-    "bench.noteBody": "നിർദ്ദേശത്തിൻറെ ശതമാനങ്ങളും ചെലവ് കണക്കുകൂട്ടലുകളും അളക്കിയിട്ടില്ല. തിരിച്ചറിയാൻ കഴിയുന്ന മൂല്യനിർണ്ണയ ഓട്ടങ്ങളിൽ നിന്നുള്ള ഫലങ്ങൾ മാത്രമേ ഈ പട്ടികയിൽ അടങ്ങിയിട്ടുള്ളൂ.",
-    "bench.notEvaluated": "ഇതുവരെ വിലയിരുത്തിയിട്ടില്ല",
-    "bench.ablation": "ചെക്ക്പോയിന്റ് ലഘൂകരണം",
-    "bench.ablationBody": "എല്ലാ സ്പെഷ്യലിസ്റ്റുകളും അടിസ്ഥാനരേഖകളും, ഒരേ ഹോൾഡ്-ഔട്ട് കേസുകളിൽ വിലയിരുത്തപ്പെടുന്നു.",
+    "bench.noteTitle": "തടഞ്ഞുവെച്ച ഡാറ്റയിൽ അളക്കുന്നു, വാഗ്ദാനം ചെയ്തിട്ടില്ല.",
+    "bench.noteBody": "ചുവടെയുള്ള ഓരോ നമ്പറും മോഡലുകൾ ഒരിക്കലും പരിശീലിച്ചിട്ടില്ലാത്ത കേസുകളിൽ റെക്കോർഡ് ചെയ്ത റണ്ണിൽ നിന്നാണ് വരുന്നത്. അവലോകനം ചെയ്ത സെറ്റിൽ 100% സ്കോർ ചെയ്യുന്ന നിയമങ്ങൾ മാത്രം പ്രതീക്ഷിക്കുന്നുഃ ആ ലേബലുകൾ നിയമങ്ങൾക്ക് അനുസൃതമായി നിർമ്മിച്ചതാണ്.",
+    "bench.ablation": "മനുഷ്യർ അവലോകനം ചെയ്ത ഡാറ്റയിൽ പരിശീലനം ലഭിച്ച മോഡലുകൾ",
+    "bench.ablationBody": "യഥാർത്ഥ പൈപ്പ്ലൈനിലൂടെ റൺടൈം ഫലങ്ങൾഃ മോഡൽ, ചെക്കുകൾ, (സൂചിപ്പിച്ചിട്ടുണ്ടെങ്കിൽ) നയ നിയമങ്ങൾ.",
     "bench.colCheckpoint": "ചെക്ക് പോയിന്റ്",
-    "bench.colSchema": "സ്കീമ പാസ്",
-    "bench.colFields": "ഫീൽഡ് കൃത്യമായ മത്സരം",
-    "bench.colUnsafe": "സുരക്ഷിതമല്ലാത്ത ഉറപ്പുകൾ",
-    "bench.colEmpathy": "സഹാനുഭൂതി/chrF",
-    "bench.colStatus": "സ്റ്റാറ്റസ്",
-    "bench.awaitingRun": "ഓട്ടം കാത്തിരിക്കുന്നു",
-    "bench.awaitingTraining": "പരിശീലനത്തിനായി കാത്തിരിക്കുന്നു",
+    "bench.colFields": "എല്ലാ ഫീൽഡുകളും കൃത്യം",
     "bench.splitTitle": "സാഹചര്യം അനുസരിച്ച് കുടുംബം വിഭജിക്കുക",
     "bench.splitBody": "പാരഫ്രേസുകൾ, SMS ടെംപ്ലേറ്റുകൾ, അതേ കേസിന്റെ അറ്റകുറ്റപ്പണികൾ എന്നിവ ഒരു വിഭജനത്തിൽ സൂക്ഷിക്കുക. മെർജ് വെയ്റ്റുകൾ തിരഞ്ഞെടുക്കുന്നതിന് മുമ്പ് ടെസ്റ്റ് സെറ്റ് മരവിപ്പിക്കുക.",
     "bench.empathyTitle": "സഹാനുഭൂതിയ്ക്ക് ഒരു മനുഷ്യൻ ആവശ്യമാണ്.",
@@ -249,8 +242,22 @@ const bundle: LocaleBundle = {
     "bench.failureBody": "തെറ്റായ JSON, കെട്ടിച്ചമച്ച UTRs, പിന്തുണയ്ക്കാത്ത ഗ്യാരണ്ടികൾ, ഓരോ കേസിനും എസ്കലേഷൻ പ്രവർത്തനങ്ങൾ നഷ്ടപ്പെടൽ എന്നിവ റിപ്പോർട്ട് ചെയ്യുക. ബൂട്ട്സ്ട്രാപ്പ് ജോടിയാക്കിയ വ്യത്യാസങ്ങൾ.",
     "bench.adversarialEyebrow": "എതിർ സ്യൂട്ട്",
     "bench.adversarialTitle": "സമ്മർദ്ദം നയത്തെ മാറ്റരുത്.",
-    "bench.adversarialBody": "നിലവിലെ നിർണ്ണായകമായ പ്രിവ്യൂവിനെതിരെ റീഫണ്ട്-നിർബന്ധിത കേസ് പരീക്ഷിക്കുക.",
+    "bench.adversarialBody": "തത്സമയ മോഡലിനെതിരെ റീഫണ്ട്-നിർബന്ധിത കേസ് പരീക്ഷിക്കുകഃ റീഫണ്ട് വാഗ്ദാനം ചെയ്യരുത്.",
     "bench.adversarialCta": "തുറന്ന പ്രതികൂല സാഹചര്യം",
+    "bench.measuredOn": "അളന്നത് {date}",
+    "bench.colReviewed": "54 പുനരവലോകനം ചെയ്ത കേസുകൾ · എല്ലാ മേഖലകളും",
+    "bench.colChallenge": "42 അപരിചിതമായ വർഗ്ഗം",
+    "bench.colReview": "മാനുഷികമായ അവലോകനം ആവശ്യമാണ്",
+    "bench.colLatency": "സമയം/ഉത്തരം",
+    "bench.colSource": "ഓരോ നമ്പറിനും തെളിവ് ഫയൽ",
+    "bench.colUtility": "യൂട്ടിലിറ്റി",
+    "bench.mostAccurate": "ഏറ്റവും കൃത്യതയുള്ള",
+    "bench.defaultMode": "നിലവിലെ സ്ഥിരസ്ഥിതി",
+    "bench.footnote": "* അവലോകനം ചെയ്ത സെറ്റിൽ നിയമങ്ങൾ മാത്രം 100% സ്കോർ ചെയ്യുന്നു, കാരണം ആ ലേബലുകൾ നിയമങ്ങളുമായി യോജിക്കുന്നതിനായി നിർമ്മിച്ചതാണ്; പരിചിതമല്ലാത്ത-വാക്കുകളുടെ സെറ്റ് ന്യായമായ താരതമ്യമാണ്. അക്കാലത്തെ നിയമങ്ങളുമായി അളക്കുന്നു. അപരിചിതമായ-വാക്കുകളുടെ സെറ്റ് പ്രോജക്റ്റ് ലേബൽ ചെയ്തിരിക്കുന്നു, മനുഷ്യൻ അവലോകനം ചെയ്തതല്ല. യഥാർത്ഥ ഉപഭോക്തൃ സന്ദേശങ്ങളിൽ ഒന്നും വിലയിരുത്തിയിട്ടില്ല.",
+    "bench.pilotTitle": "റൌണ്ട് 1 പൈലറ്റുകൾഃ അവലോകനം ചെയ്യാത്ത ഡാറ്റ",
+    "bench.pilotBody": "മനുഷ്യ അവലോകനത്തിന് മുമ്പ് 92 സിന്തറ്റിക് കേസുകളിൽ AuditKIT സ്കോർ ചെയ്ത അസംസ്കൃത മോഡൽ ഔട്ട്പുട്ട്. ഈ പൈലറ്റുമാർ യഥാർത്ഥ പ്ലാൻ പരീക്ഷിച്ചുഃ GRPO, എംപതി DPO, വെയ്റ്റഡ് മെർജിംഗ്.",
+    "pipeline.measuredAt": "അളക്കുന്നത് (പൈലറ്റ്, 92 സിന്തറ്റിക് കേസുകൾ): കർശനമായ JSON {schema}, എല്ലാ ഫീൽഡുകളും കൃത്യമായി {fields}, യൂട്ടിലിറ്റി {utility}.",
+    "pipeline.notMeasured": "ഈ ഭാരത്തിൽ അളക്കുന്നില്ല. 1.00 / 0.00, 0.55 / 0.45, 0.00 / 1.00 എന്നിവ മാത്രമാണ് പ്രവർത്തിപ്പിച്ചത്.",
     "policy.search": "സ്രോതസ്സുകൾ, നിയമങ്ങൾ അല്ലെങ്കിൽ സ്ഥാപനങ്ങൾ എന്നിവ തിരയുക...",
     "policy.empty": "പൊരുത്തപ്പെടുന്ന ഉറവിടങ്ങളില്ല",
     "policy.clear": "തിരയൽ മായ്ക്കുക",
@@ -348,10 +355,8 @@ const bundle: LocaleBundle = {
       "വാണിജ്യ-ബാങ്ക് ഭേദഗതി 2027 ജനുവരി 1-നോ അതിനുശേഷമുള്ള ഇടപാടുകൾക്ക് ബാധകമാണ്; ആ തീയതി മുതലുള്ള പുതിയ കേസുകൾക്ക് പോളിസി പുനർമൂല്യനിർണ്ണയം ആവശ്യമാണ്.",
     "Compare all six checkpoints on held-out scenario groups. Score the full JSON schema, all extracted fields, inappropriate guarantees and required actions. Keep human-rated empathy separate from lexical ChrF, and use paired bootstrap intervals rather than treating a single percentage as proof.":
       "ഹോൾഡ്-ഔട്ട് സാഹചര്യ ഗ്രൂപ്പുകളിലെ ആറ് ചെക്ക് പോയിന്റുകളും താരതമ്യം ചെയ്യുക. പൂർണ്ണമായ JSON സ്കീമ, വേർതിരിച്ചെടുത്ത എല്ലാ ഫീൽഡുകളും, അനുചിതമായ ഗ്യാരണ്ടികളും ആവശ്യമായ പ്രവർത്തനങ്ങളും സ്കോർ ചെയ്യുക. മനുഷ്യ-റേറ്റുചെയ്ത സഹാനുഭൂതി ലെക്സിക്കൽ ChrF-ൽ നിന്ന് വേർതിരിക്കുക, കൂടാതെ ഒരു ശതമാനം തെളിവായി കണക്കാക്കുന്നതിനുപകരം ജോടിയാക്കിയ ബൂട്ട്സ്ട്രാപ്പ് ഇടവേളകൾ ഉപയോഗിക്കുക.",
-    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider configures an experiment; it does not change this rule-based preview or demonstrate model quality.":
-      "അനുയോജ്യമായ LoRA ലയനം ഉപയോഗിച്ച് വെയ്റ്റഡ് പാരാമീറ്റർ അപ്ഡേറ്റുകൾ രചിക്കുക. ലയിപ്പിക്കാത്ത രണ്ട് സ്പെഷ്യലിസ്റ്റുകൾ ഉൾപ്പെടെയുള്ള മൂല്യനിർണ്ണയ ഡാറ്റയിൽ തൂക്കം കൂട്ടുക. സ്ലൈഡർ നീക്കുന്നത് ഒരു പരീക്ഷണത്തെ ക്രമീകരിക്കുന്നു; ഇത് ഈ നിയമത്തെ അടിസ്ഥാനമാക്കിയുള്ള പ്രിവ്യൂവിനെ മാറ്റുകയോ മോഡലിന്റെ ഗുണനിലവാരം പ്രദർശിപ്പിക്കുകയോ ചെയ്യുന്നില്ല.",
-    "Configuration preview · no merged checkpoint yet":
-      "കോൺഫിഗറേഷൻ പ്രിവ്യൂ · ഇതുവരെ ലയിപ്പിച്ച ചെക്ക്പോയിന്റ് ഇല്ല",
+    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider shows the measured result where one exists; it does not change the served model.":
+      "അനുയോജ്യമായ LoRA മെർജ് ഉപയോഗിച്ച് വെയ്റ്റഡ് പാരാമീറ്റർ അപ്ഡേറ്റുകൾ രചിക്കുക. ലയിപ്പിക്കാത്ത രണ്ട് സ്പെഷ്യലിസ്റ്റുകൾ ഉൾപ്പെടെയുള്ള മൂല്യനിർണ്ണയ ഡാറ്റയിൽ തൂക്കം കൂട്ടുക. സ്ലൈഡർ നീക്കുന്നത് അളന്ന ഫലം കാണിക്കുന്നു; ഇത് നൽകിയ മോഡലിൽ മാറ്റം വരുത്തുന്നില്ല.",
     "Controls · base, uncurated SFT and curated joint SFT":
       "കൺട്രോൾസ് · ബേസ്, അൺക്യുറേറ്റഡ് SFT, ക്യൂറേറ്റഡ് ജോയിന്റ് SFT",
     "Curate with care":
@@ -360,6 +365,12 @@ const bundle: LocaleBundle = {
       "ഡാറ്റാസെറ്റ് എ · കർശനമായ JSON + ഫീൽഡ് തെളിവ്",
     "Dataset B · chosen / rejected customer replies":
       "ഡാറ്റാസെറ്റ് ബി · തിരഞ്ഞെടുത്ത/നിരസിച്ച ഉപഭോക്തൃ പ്രതികരണങ്ങൾ",
+    "Done · 934 cases curated with CuratorKIT 0.1.21; 810 human-reviewed cases in training":
+      "പൂർത്തിയായി · 934 കേസുകൾ CuratorKIT 0.1.21 ഉപയോഗിച്ച് ക്യൂറേറ്റ് ചെയ്തു; പരിശീലനത്തിൽ 810 മനുഷ്യ അവലോകനം ചെയ്ത കേസുകൾ",
+    "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)":
+      "പൂർത്തിയായി · QLoRA SFT 810 അവലോകനം ചെയ്ത കേസുകളിൽ, ആർടിഎക്സ് 4050 (6 ജിബി)",
+    "Done · every model evaluated; results in the Benchmark lab":
+      "പൂർത്തിയായി · ഓരോ മോഡലും വിലയിരുത്തപ്പെട്ടു; ബെഞ്ച്മാർക്ക് ലാബിൽ ഫലങ്ങൾ",
     "Every claim needs a measured result.":
       "ഓരോ ക്ലെയിമിനും അളന്ന ഫലം ആവശ്യമാണ്.",
     "Found":
@@ -374,20 +385,18 @@ const bundle: LocaleBundle = {
       "വൈകിയുള്ള വഞ്ചന റിപ്പോർട്ട് · ഗ്യാരണ്ടീഡ്-റീഫണ്ട് നിർബന്ധം",
     "Listening":
       "കേൾവിക്കുറവ്.",
-    "Local curation + optional CuratorKIT pass":
-      "ലോക്കൽ ക്യൂറേഷൻ + ഓപ്ഷണൽ CuratorKIT പാസ്",
     "Make quality visible":
       "ഗുണനിലവാരം ദൃശ്യമാക്കുക",
     "Manifest · source hashes, split IDs and rejection reasons":
       "മാനിഫെസ്റ്റ് · സോഴ്സ് ഹാഷുകൾ, സ്പ്ലിറ്റ് ഐഡികൾ, നിരസിക്കാനുള്ള കാരണങ്ങൾ",
+    "Measured in the pilot · the 0.55/0.45 merge was worse, so it is not used":
+      "പൈലറ്റിൽ അളക്കുന്നത് · 0.55/0.45 ലയനം മോശമായിരുന്നു, അതിനാൽ ഇത് ഉപയോഗിക്കുന്നില്ല.",
     "Merge & investigate":
       "ലയിപ്പിക്കുകയും അന്വേഷിക്കുകയും ചെയ്യുക",
     "Merge manifest · base, tokenizer and adapter identities":
       "മാനിഫെസ്റ്റ് · ബേസ്, ടോക്കനൈസർ, അഡാപ്റ്റർ ഐഡന്റിറ്റികൾ എന്നിവ ലയിപ്പിക്കുക",
     "NPCI · Dispute redressal":
       "NPCI · തർക്കപരിഹാരം",
-    "Offline scorer ready · model evaluation pending":
-      "ഓഫ്ലൈൻ സ്കോറർ റെഡി · മോഡൽ വിലയിരുത്തൽ തീർപ്പാക്കിയിട്ടില്ല",
     "QR request · ₹24,500 · reported today":
       "ക്യുആർ അഭ്യർത്ഥന · ₹24,500 · ഇന്ന് റിപ്പോർട്ട് ചെയ്തു",
     "RBI · Customer liability":
@@ -410,8 +419,6 @@ const bundle: LocaleBundle = {
       "സാമ്പത്തിക സൈബർ തട്ടിപ്പുകൾ ഉടൻ തന്നെ 1930, cybercrime.gov.in എന്നിവ വഴി റിപ്പോർട്ട് ചെയ്യുക. വീണ്ടെടുക്കൽ ഉറപ്പില്ല.",
     "Report · per-case evidence + paired bootstrap deltas":
       "റിപ്പോർട്ട് ചെയ്യുക · ഓരോ കേസിനും തെളിവ് + ജോടിയാക്കിയ ബൂട്ട്സ്ട്രാപ്പ് ഡെൽറ്റകൾ",
-    "Requires compatible GPU + reviewed data":
-      "അനുയോജ്യമായ ജിപിയു + അവലോകനം ചെയ്ത ഡാറ്റ ആവശ്യമാണ്",
     "Sent to the wrong person":
       "തെറ്റായ വ്യക്തിക്ക് അയച്ചു",
     "Start with synthetic or authorised customer chats. Mask sensitive identities, retain only context-labelled transaction references, validate fields against source spans, and separate schema targets from same-task preference pairs.":

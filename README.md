@@ -84,6 +84,7 @@ When a UPI payment goes wrong, the customer is scared and the person helping the
 | Unreliable LLMs | A **fine-tuned 3B specialist trained on 810 human-reviewed cases**. With the rules as safety net it gets **90.5%** of categories right on unfamiliar wording (rules alone: 45%); writing everything itself, 76% |
 | Scattered escalation | Gives the **mandatory actions in order**: contact the bank or PSP, secure the channel, call 1930, report on cybercrime.gov.in, raise an in-app dispute, track the reversal, with escalation guidance up to the RBI Ombudsman |
 | Trust and audit | Shows who wrote the answer, every failed check, **field-level provenance** and the verification checks, with exportable masked traces. **Nothing is stored** |
+| Claims without evidence | The **Benchmark lab** shows every model we trained with its measured results and the evidence file for each number; the **Pipeline explorer** shows the merge experiment's measured outcome (it made the model worse, so it isn't used) |
 
 > **A human always decides.** SurakshaDesk drafts and structures. It never files a dispute, approves a refund or contacts a bank.
 

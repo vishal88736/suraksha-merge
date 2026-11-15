@@ -56,7 +56,22 @@ COMMON_TERMS = [
     "PSP", "SMS", "BSBD", "UDIR", "I4C", "OLX", "Swiggy", "AnyDesk", "1930",
 ]
 REPLY_TERMS = ["bank/PSP"]
-TOKEN_PATTERNS = [r"T\+\{\w+\}", r"T\+\d", r"₹\{\w+\}", r"₹[\d,]+", r"\{\w+\}"]
+TOKEN_PATTERNS = [
+    r"T\+\{\w+\}", r"T\+\d", r"₹\{\w+\}", r"₹[\d,]+", r"\{\w+\}",
+    # Decimals, version numbers, weight pairs and percentages pass through
+    # untouched: IndicTrans2 rewrote "0.55 / 0.45" as "055,0.45" in 13 languages.
+    r"\d+(?:\.\d+)+(?:\s*/\s*\d+(?:\.\d+)+)?(?:\s*%)?", r"\d+\s*%",
+]
+
+
+def number_errors(source: str, text: str) -> list[str]:
+    """Every number in the English source must survive, in any script's digits."""
+    import unicodedata
+    ascii_text = "".join(str(unicodedata.decimal(c)) if c.isdecimal() else c for c in text)
+    want = re.findall(r"\d+", re.sub(r"\{\w+\}", "", source))
+    have = re.findall(r"\d+", ascii_text)
+    missing = [n for n in set(want) if have.count(n) < want.count(n)]
+    return [f"number_changed {sorted(missing)}"] if missing else []
 
 NEGATION = re.compile(r"\b(?:not|never|no|cannot|without|nothing|none|neither|nor)\b|n't", re.I)
 PROMISE = re.compile(r"guarantee|approved|100\s*%", re.I)
@@ -259,6 +274,8 @@ def main() -> int:
         retry = []
         for i, (kind, key, text, m, found) in enumerate(masked):
             value, errors = unmask(known[m], found)
+            if kind != "reply":  # reply templates carry their numbers as placeholders
+                errors += number_errors(text, value)
             rows.append({"kind": kind, "key": key, "source": text, "text": value, "errors": errors})
             if errors:
                 retry.append(i)
@@ -267,6 +284,8 @@ def main() -> int:
             outs2 = forward([masked[i][3] for i in retry], "eng_Latn", flores, beams=1)
             for i, out in zip(retry, outs2):
                 value, errors = unmask(out, masked[i][4])
+                if masked[i][0] != "reply":
+                    errors += number_errors(masked[i][2], value)
                 if not errors:
                     rows[i].update(text=value, errors=[], retried=True)
         results[ui] = rows

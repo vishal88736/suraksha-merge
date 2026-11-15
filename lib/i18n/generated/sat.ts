@@ -58,7 +58,7 @@ const bundle: LocaleBundle = {
     "desk.pipelineTitle": "ᱢᱤᱫᱴᱟᱝ ᱯᱮᱞᱤᱯᱟᱭᱤᱱ, ᱵᱟᱨ ᱦᱚᱲ ᱮᱥᱯᱟᱨᱴ ᱾",
     "desk.pipelineSubtitle": "ᱢᱤᱫᱴᱟᱝ ᱞᱟᱹᱞᱤᱥ ᱥᱟᱸᱶᱛᱮ ᱠᱷᱚᱱ ᱥᱟᱹᱵᱩᱫ ᱧᱟᱢ ᱞᱮᱠᱟᱱ ᱨᱩᱛᱚᱱᱟ ᱫᱷᱟᱹᱵᱤᱡ ᱥᱟᱸᱜᱷᱟᱨ ᱫᱚ ᱯᱟᱞᱚᱱ ᱢᱮ ᱾",
     "desk.benchmarksTitle": "ᱚᱱᱩᱢᱟᱹᱱ ᱢᱟᱲᱟᱝ ᱥᱟᱹᱵᱩᱫ ᱾",
-    "desk.benchmarksSubtitle": "ᱛᱩᱨᱩᱭ ᱜᱚᱴᱟᱝ ᱪᱮᱠᱯᱚᱭᱮᱱᱴ ᱾ ᱢᱤᱫᱴᱟᱝ ᱵᱚᱱᱫᱮᱡ ᱵᱚᱱᱫᱮᱡ ᱨᱮ ᱫᱚᱦᱚ ᱦᱩᱭ ᱟᱠᱟᱱᱟ ᱾ ᱡᱟᱦᱟᱱ ᱧᱟᱢ ᱟᱠᱟᱱ ᱥᱤᱜᱤᱞ ᱫᱚ ᱵᱟᱝ ᱧᱟᱢ ᱟᱠᱟᱱᱟ ᱾",
+    "desk.benchmarksSubtitle": "ᱤᱧᱟᱹᱜ ᱥᱟᱱᱟᱢ ماڈل ᱨᱮ ᱥᱮᱪᱮᱫ ᱮᱢ ᱦᱩᱭ ᱞᱮᱱᱟ, ᱚᱱᱟ ᱜᱮ ᱦᱳᱞᱰᱼᱟᱣᱩᱴ ᱠᱟᱹᱥ ᱨᱮ ᱢᱮᱡᱽ ᱠᱚᱨᱟᱣ ᱦᱳᱭ ᱞᱮᱱᱟ ᱾ ᱡᱟᱦᱟᱱ ᱧᱟᱢ ᱟᱠᱟᱱ ᱢᱩᱪᱟᱹᱫ ᱵᱟᱝ ᱛᱟᱦᱮᱸ ᱠᱟᱱᱟ ᱾",
     "desk.policyTitle": "ᱟᱹᱨᱤ ᱞᱮᱠᱟᱛᱮ ᱛᱷᱟᱯᱚᱱ ᱟᱠᱟᱱᱟ ᱾",
     "desk.policySubtitle": "ᱥᱟᱱᱟᱢ ᱴᱨᱤᱭᱟᱡᱽ ᱨᱮᱭᱟᱜ ᱯᱚᱨᱟᱢᱚᱥ ᱛᱟᱭᱚᱢ ᱨᱮᱭᱟᱜ ᱮᱛᱚᱦᱚᱵ ᱯᱷᱮᱰᱟᱛᱠᱚ ᱨᱮᱭᱟᱜ ᱵᱚᱨᱱᱚᱱ ᱾",
     "workflow.message": "ᱠᱤᱨᱤᱧᱤᱭᱟᱹ ᱠᱚᱣᱟᱜ ᱠᱟᱛᱷᱟ ᱾",
@@ -220,27 +220,20 @@ const bundle: LocaleBundle = {
     "pipeline.outputs": "ᱱᱚᱶᱟ ᱥᱴᱮᱡ ᱫᱚ ᱪᱮᱫ ᱮ ᱵᱮᱱᱟᱣᱼᱟ ᱾",
     "pipeline.note": "ᱥᱟᱱᱟᱢ ᱦᱚᱨᱟ ᱜᱮ ᱚᱱᱟ ᱨᱮᱭᱟᱜ ᱯᱷᱮᱰᱟᱛ ᱪᱤᱱᱦᱟᱹ ᱤᱫᱤ ᱠᱟᱛᱮ ᱪᱟᱞᱟᱣᱚᱜᱼᱟ ᱾ ᱵᱟᱝ ᱥᱤᱜᱤᱞ ᱥᱮᱯᱮᱞ ᱠᱚ ᱚᱞ ᱫᱚᱦᱚ ᱦᱳᱭᱳᱜᱼᱟ, ᱡᱟᱦᱟᱸ ᱴᱷᱟᱶ ᱨᱮ ᱡᱩᱠᱛᱤ ᱮᱢ ᱦᱳᱭᱳᱜᱼᱟ, ᱚᱱᱟ ᱴᱷᱟᱶ ᱨᱮ ᱥᱟᱨᱵᱷᱟᱨ ᱦᱳᱭᱳᱜᱼᱟ, ᱟᱨ ᱚᱱᱟ ᱛᱟᱭᱚᱢ ᱟᱨᱦᱚᱸ ᱵᱤᱰᱟᱹᱣ ᱦᱳᱭᱳᱜᱼᱟ ᱾",
     "pipeline.experimentEyebrow": "ᱴᱟᱥᱠᱼᱟᱨᱤᱛᱷᱢᱮᱴᱤᱠ ᱵᱤᱰᱟᱹᱣ ᱾",
-    "pipeline.experimentTitle": "ᱵᱮᱞᱮᱱᱥ ᱛᱚᱞᱟᱥ ᱢᱮ ᱾ ᱢᱩᱪᱟᱹᱫ ᱨᱮᱭᱟᱜ ᱯᱚᱨᱤᱢᱟᱱ ᱢᱮ ᱾",
-    "pipeline.experimentBody": "ᱥᱞᱟᱭᱰᱟᱨ ᱫᱚ ᱢᱤᱫᱴᱟᱝ ᱚᱯᱷᱞᱤᱱ ᱢᱮᱡᱟᱨ ᱵᱮᱱᱟᱣᱼᱟ ᱾ ᱢᱮᱰᱮᱞ ᱨᱮᱭᱟᱜ ᱠᱟᱹᱢᱤ ᱦᱚᱨᱟ ᱫᱚ ᱢᱮᱡᱟᱨ ᱛᱟᱭᱚᱢ ᱵᱤᱰᱟᱹᱣ ᱦᱳᱭᱳᱜᱼᱟ ᱾",
+    "pipeline.experimentTitle": "ᱟᱢᱫᱚ ᱵᱮᱞᱮᱱᱥ ᱮ ᱵᱤᱰᱟᱹᱣ ᱞᱮᱫᱟᱠᱚ ᱾ ᱚᱱᱟ ᱫᱚ ᱵᱟᱝ ᱥᱤᱜᱤᱞ ᱞᱮᱱᱟ ᱾",
+    "pipeline.experimentBody": "In the pilot, merging the schema and empathy specialists at 0.55 / 0.45 lost all-field accuracy (72.8% → 0%), so merging is not used. The served models are plain SFT on human-reviewed data.",
     "pipeline.specialistA": "ᱥᱠᱤᱢᱟ ᱮᱥᱯᱮᱨᱮᱥᱴ ᱾",
     "pipeline.specialistB": "ᱮᱢᱚᱯᱮᱛᱤ ᱮᱥᱮᱨᱟᱱ ᱾",
     "pipeline.empathyOnly": "ᱥᱩᱢᱩᱝ ᱚᱱᱩᱢᱟᱹᱱᱛᱤ ᱾",
     "pipeline.schemaOnly": "ᱥᱩᱢᱩᱝ ᱥᱠᱤᱢᱟ ᱾",
-    "pipeline.resetMix": "0.55/0.45 ᱨᱮ ᱨᱤᱪᱮᱴ ᱢᱮ ᱾",
+    "pipeline.resetMix": "0.55 / 0.45 ᱨᱮ ᱨᱮᱭ ᱥᱮᱴ ᱢᱮ ᱾",
     "pipeline.exportMix": "ᱢᱟᱨᱡ ᱠᱤᱱᱯᱷᱤᱜᱟᱨᱮᱥᱚᱱ ᱨᱮ ᱩᱪᱷᱟᱹᱱ ᱢᱮ ᱾",
-    "bench.noteTitle": "ᱵᱤᱰᱟᱹᱣ ᱫᱚ ᱥᱟᱯᱲᱟᱣ ᱦᱳᱭ ᱟᱠᱟᱱᱟ ᱾ ᱥᱟᱹᱵᱩᱫ ᱫᱚ ᱛᱟᱭᱚᱢ ᱛᱮ ᱦᱮᱡᱚᱜᱼᱟ ᱾ \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"\" \"",
-    "bench.noteBody": "ᱯᱚᱨᱟᱢᱚᱥ ᱨᱮᱭᱟᱜ ᱥᱟᱭᱦᱤᱸᱥ ᱟᱨ ᱠᱷᱚᱨᱪᱟ ᱨᱮᱭᱟᱜ ᱚᱱᱩᱢᱟᱹᱱ ᱵᱟᱝ ᱮᱢ ᱦᱩᱭ ᱟᱠᱟᱱᱟ ᱾ ᱱᱚᱶᱟ ᱛᱟᱹᱞᱤᱠᱟ ᱨᱮ ᱥᱩᱢᱩᱝ ᱪᱤᱱᱦᱟᱹᱣᱟᱱ ᱯᱚᱨᱟᱢᱚᱥ ᱨᱮᱭᱟᱜ ᱯᱚᱨᱤᱢᱟᱱ ᱢᱮᱱᱟᱜᱼᱟ ᱾",
-    "bench.notEvaluated": "ᱱᱤᱛᱦᱚᱸ ᱵᱤᱰᱟᱹᱣ ᱵᱟᱝ ᱦᱩᱭ ᱟᱠᱟᱱᱟ ᱾",
-    "bench.ablation": "ᱪᱮᱠᱯᱚᱭᱮᱱᱴ ᱚᱵᱮᱞᱮᱥᱚᱱ ᱾",
-    "bench.ablationBody": "ᱥᱟᱱᱟᱢ ᱥᱚᱯᱟᱞᱚᱥᱛᱚ ᱟᱨ ᱵᱮᱥᱞᱟᱭᱤᱱ, ᱢᱤᱫ ᱞᱮᱠᱟᱱ ᱦᱳᱞᱰᱼᱟᱣᱩᱴ ᱜᱮᱢᱟᱜ ᱪᱮᱛᱟᱱ ᱨᱮ ᱵᱤᱰᱟᱹᱣ ᱦᱳᱭ ᱞᱮᱱᱟ ᱾",
+    "bench.noteTitle": "ᱦᱳᱞᱰᱼᱟᱣᱩᱴ ᱰᱮᱴᱟ ᱪᱮᱛᱟᱱ ᱨᱮ ᱢᱮᱡᱟᱨ ᱠᱚᱨᱟᱣ ᱦᱳᱭ ᱟᱠᱟᱱᱟ, ᱠᱟᱛᱷᱟ ᱵᱟᱝ ᱮᱢ ᱦᱩᱭ ᱟᱠᱟᱱᱟ ᱾",
+    "bench.noteBody": "ᱞᱟᱛᱟᱨ ᱨᱮ ᱢᱮᱱᱟᱜ ᱥᱟᱱᱟᱢ ᱱᱚᱢᱵᱚᱨ ᱠᱚ ᱨᱮᱠᱳᱰ ᱟᱠᱟᱱ ᱠᱟᱹᱹᱥ ᱠᱚ ᱠᱷᱚᱱ ᱦᱮᱡ ᱟᱠᱟᱱᱟ, ᱡᱟᱦᱟᱸ ᱨᱮ ᱢᱳᱰᱮᱞ ᱠᱚ ᱪᱮᱫᱦᱚᱸ ᱚᱠᱛᱚ ᱦᱚᱸ ᱥᱮᱪᱮᱫ ᱵᱟᱝ ᱠᱚ ᱧᱟᱢ ᱟᱠᱟᱫᱟ ᱾ ᱵᱤᱰᱟᱹᱣ ᱥᱮᱴ ᱨᱮ ᱥᱩᱢᱩᱝ 100% ᱥᱠᱳᱨᱤᱝ ᱨᱮᱭᱟᱜ ᱟᱹᱨᱤ ᱠᱚ ᱟᱭᱩᱢᱟᱹᱱ ᱦᱳᱭᱳᱜᱼᱟ ᱾ ᱚᱱᱟ ᱞᱮᱵᱮᱞ ᱠᱚᱫᱚ ᱟᱹᱨᱤ ᱠᱚ ᱥᱟᱶ ᱢᱤᱫᱚᱜ ᱞᱟᱹᱜᱤᱫ ᱵᱮᱱᱟᱣ ᱦᱩᱭ ᱞᱮᱱᱟ ᱾",
+    "bench.ablation": "ᱢᱚᱵᱮᱞ ᱠᱚᱫᱚ ᱦᱚᱲ ᱠᱚ ᱫᱟᱨᱟᱭ ᱛᱮ ᱵᱤᱰᱟᱹᱣ ᱟᱠᱟᱱ ᱰᱮᱴᱟ ᱪᱮᱛᱟᱱ ᱨᱮ ᱥᱮᱪᱮᱫ ᱠᱚ ᱧᱟᱢ ᱞᱮᱫᱟ ᱾",
+    "bench.ablationBody": "ᱨᱚᱱᱚᱛᱟᱭᱚᱢ ᱨᱮᱭᱟᱜ ᱚᱡᱮ ᱫᱚ ᱦᱩᱭᱩᱜ ᱠᱟᱱᱟ ᱨᱤᱦᱤᱴ ᱯᱮᱞᱤᱯᱟᱭᱤᱱ, ماڈل, ᱪᱮᱠ ᱟᱨ (ᱡᱟᱦᱟᱸ ᱴᱷᱟᱶ ᱨᱮ ᱚᱞ ᱢᱮᱱᱟᱜᱼᱟ) ᱟᱹᱨᱤ ᱨᱮᱭᱟᱜ ᱟᱹᱨᱤ ᱾",
     "bench.colCheckpoint": "ᱪᱮᱠᱯᱚᱭᱮᱱᱴ ᱾",
-    "bench.colSchema": "ᱥᱠᱤᱢᱟ ᱯᱟᱥ ᱾",
-    "bench.colFields": "ᱯᱷᱤᱞᱰ ᱮᱠᱴᱤᱠ ᱢᱮᱪ ᱾",
-    "bench.colUnsafe": "ᱵᱮᱼᱥᱤᱯᱷᱚᱴ ᱜᱟᱨᱮᱱᱴᱤ ᱾",
-    "bench.colEmpathy": "ᱮᱢᱯᱮᱛᱤ/chrF",
-    "bench.colStatus": "ᱯᱚᱨᱤᱢᱟᱱ ᱾",
-    "bench.awaitingRun": "ᱨᱟᱱ ᱞᱟᱹᱜᱤᱫ ᱮ ꯉꯥꯏ ᱠᱟᱱᱟ ᱾",
-    "bench.awaitingTraining": "ᱥᱮᱪᱮᱫ ᱞᱟᱹᱜᱤᱫ ᱚᱱᱩᱢᱟᱹᱱ ᱢᱮ ᱾",
+    "bench.colFields": "ᱥᱟᱱᱟᱢ ᱯᱷᱚᱞᱰ ᱜᱮ ᱥᱚᱨᱟᱥᱚᱨᱤ ᱾",
     "bench.splitTitle": "ᱪᱤᱛᱟᱹᱨ ᱞᱮᱠᱟᱛᱮ ᱜᱷᱟᱨᱚᱸᱡᱽ ᱦᱟᱹᱴᱤᱧ ᱢᱮ ᱾",
     "bench.splitBody": "ᱯᱮᱨᱟᱯᱷᱨᱟᱡᱽ, SMS ᱴᱮᱢᱯᱞᱮᱴ ᱟᱨ ᱢᱤᱫ ᱜᱮ ᱠᱟᱹᱥ ᱨᱮᱭᱟᱜ ᱨᱤᱦᱤᱴ ᱟᱠᱟᱱ ᱵᱚᱨᱱᱚᱱ ᱢᱤᱫ ᱦᱟᱹᱴᱤᱧ ᱨᱮ ᱫᱚᱦᱚ ᱢᱮ ᱾ ᱢᱮᱡᱟᱨᱡ ᱳᱭᱟᱹᱴ ᱵᱟᱪᱷᱱᱟᱣ ᱢᱟᱲᱟᱝ ᱵᱤᱰᱟᱹᱣ ᱥᱮᱴ ᱫᱚ ᱯᱷᱨᱤᱡ ᱢᱮ ᱾",
     "bench.empathyTitle": "ᱚᱱᱩᱢᱟᱹᱱᱛᱤ ᱞᱟᱹᱜᱤᱫ ᱢᱤᱫ ᱦᱚᱲᱟᱜ ᱞᱟᱹᱠᱛᱤ ᱢᱮᱱᱟᱜᱼᱟ ᱾",
@@ -249,15 +242,29 @@ const bundle: LocaleBundle = {
     "bench.failureBody": "ᱵᱮᱼᱲᱤᱪᱟᱹᱲ ᱟᱠᱟᱱ JSON, ᱵᱮᱱᱟᱣ ᱟᱠᱟᱱ UTRs, ᱵᱟᱝ ᱮᱥᱯᱳᱨᱴᱟᱨᱰ ᱜᱟᱨᱮᱱᱴᱤ ᱟᱨ ᱡᱚᱛᱚ ᱴᱷᱟᱶ ᱨᱮ ᱮᱠᱥᱮᱞᱮᱥᱚᱱ ᱮᱠᱥᱚᱱ ᱵᱟᱝ ᱛᱟᱦᱮᱸ ᱠᱟᱱᱟ ᱢᱮᱱᱛᱮ ᱵᱟᱰᱟᱭ ᱢᱮ ᱾ ᱵᱳᱴᱥᱴᱨᱟᱯ ᱡᱳᱴ ᱨᱮᱭᱟᱜ ᱵᱷᱮᱜᱟᱨ ᱾",
     "bench.adversarialEyebrow": "ᱮᱰᱵᱷᱟᱨᱥᱟᱨᱤᱭᱟᱞ ᱥᱩᱭᱮᱴ ᱾",
     "bench.adversarialTitle": "ᱡᱳᱨ ᱛᱮ ᱟᱹᱨᱤ ᱵᱚᱱᱚᱫᱚᱞ ᱵᱟᱝ ᱦᱳᱭᱳᱜᱼᱟ ᱾",
-    "bench.adversarialBody": "ᱱᱟᱦᱟᱜ ᱜᱚᱴᱟᱼᱵᱩᱴᱟᱹᱣᱟᱱ ᱩᱫᱩᱜ ᱥᱚᱫᱚᱨ ᱵᱤᱨᱩᱫᱷ ᱨᱮ ᱢᱤᱫᱴᱟᱝ ᱨᱩᱣᱟᱹᱲᱼᱵᱩᱫᱤᱥ ᱨᱮᱭᱟᱜ ᱞᱟᱹᱞᱤᱥ ᱨᱮᱭᱟᱜ ᱵᱤᱰᱟᱹᱣ ᱢᱮ ᱾",
+    "bench.adversarialBody": "ᱡᱩᱭᱟᱹᱱᱟᱱ ᱢᱚᱰᱮᱞ ᱵᱤᱨᱩᱫᱷ ᱨᱮ ᱢᱤᱫᱴᱟᱝ ᱨᱩᱣᱟᱹᱲᱼᱵᱩᱫᱤᱥ ᱨᱮᱭᱟᱜ ᱞᱟᱹᱞᱤᱥ ᱧᱮᱞ ᱢᱮ, ᱡᱟᱦᱟᱱ ᱨᱩᱣᱟᱹᱲ ᱨᱮᱭᱟᱜ ᱠᱟᱛᱷᱟ ᱵᱟᱝ ᱮᱢ ᱦᱳᱭᱳᱜᱼᱟ ᱾",
     "bench.adversarialCta": "ᱫᱚᱯᱛᱚᱨᱟᱱ ᱵᱚᱱᱚᱫᱚᱞ ᱨᱮᱭᱟᱜ ᱩᱫᱩᱜ ᱥᱚᱫᱚᱨ ᱢᱮ ᱾",
+    "bench.measuredOn": "ᱯᱚᱨᱤᱢᱟᱱ {date}",
+    "bench.colReviewed": "54 ᱜᱚᱴᱟᱝ ᱵᱤᱰᱟᱹᱣ ᱟᱠᱟᱱ ᱞᱟᱹᱞᱤᱥ · ᱥᱟᱱᱟᱢ ᱴᱚᱴᱷᱟ ᱾",
+    "bench.colChallenge": "42 ᱵᱟᱝ ᱩᱯᱨᱩᱢᱟᱱ ᱛᱷᱚᱱᱚᱛ ᱾",
+    "bench.colReview": "ᱦᱚᱲ ᱠᱚᱣᱟᱜ ᱵᱤᱰᱟᱹᱣ ᱞᱟᱹᱠᱛᱤ ᱢᱮᱱᱟᱜᱼᱟ ᱾",
+    "bench.colLatency": "ᱚᱠᱛᱚ/ᱩᱛᱛᱚᱨ ᱾",
+    "bench.colSource": "ᱥᱟᱱᱟᱢ ᱱᱚᱢᱵᱚᱨ ᱞᱟᱹᱜᱤᱫ ᱥᱟᱹᱵᱩᱫ ᱯᱷᱟᱭᱤᱞ ᱾",
+    "bench.colUtility": "ᱵᱮᱣᱦᱟᱨᱟᱱ ᱾",
+    "bench.mostAccurate": "ᱡᱚᱛᱚ ᱠᱷᱚᱱ ᱥᱚᱨᱟᱥᱚᱨᱤ ᱾",
+    "bench.defaultMode": "ᱱᱟᱦᱟᱜ ᱰᱤᱯᱷᱚᱞᱴ ᱾",
+    "bench.footnote": "* ᱢᱤᱫᱴᱟᱝ ᱟᱹᱨᱤ ᱜᱮ ᱵᱤᱰᱟᱹᱣ ᱥᱮᱴ ᱨᱮ 100% ᱥᱠᱳᱭ ᱠᱚᱨᱟᱣᱼᱟ ᱪᱮᱫᱟᱜ ᱥᱮ ᱚᱱᱟ ᱞᱮᱵᱮᱞ ᱠᱚᱫᱚ ᱟᱹᱨᱤ ᱠᱚ ᱥᱟᱶ ᱢᱤᱫᱚᱜ ᱞᱟᱹᱜᱤᱫ ᱵᱮᱱᱟᱣ ᱦᱩᱭ ᱞᱮᱱᱟ; ᱵᱟᱝ ᱩᱯᱨᱩᱢᱟᱱᱼᱵᱳᱨᱰᱤᱝ ᱥᱮᱴ ᱫᱚ ᱦᱩᱭᱩᱜ ᱠᱟᱱᱟ ᱱᱟᱯᱟᱭ ᱚᱱᱩᱢᱟᱹᱱ ᱾ Â ᱚᱱᱟ ᱚᱠᱛᱚ ᱨᱮᱭᱟᱜ ᱟᱹᱨᱤ ᱠᱚ ᱥᱟᱞᱟᱜ ᱢᱮᱡᱟᱨ ᱦᱳᱭᱳᱜᱼᱟ ᱾ ᱵᱟᱝ ᱩᱯᱨᱩᱢᱟᱱᱼᱵᱳᱨᱰᱤᱝ ᱥᱮᱴ ᱫᱚ ᱯᱚᱨᱡᱚᱠ ᱫᱟᱨᱟᱭ ᱛᱮ ᱞᱮᱵᱮᱞ ᱠᱚᱨᱟᱣ ᱦᱳᱭᱳᱜᱼᱟ, ᱦᱚᱲᱼᱵᱳᱨᱵᱷᱤᱣ ᱵᱟᱝ ᱦᱳᱭᱳᱜᱼᱟ ᱾ ᱜᱚᱴᱟᱵᱩᱴᱟᱹ ᱠᱤᱨᱤᱧᱤᱭᱟᱹ ᱠᱚᱣᱟᱜ ᱰᱚᱜᱚᱨ ᱠᱚ ᱪᱮᱛᱟᱱ ᱨᱮ ᱪᱮᱫ ᱦᱚᱸ ᱵᱤᱰᱟᱹᱣ ᱵᱟᱝ ᱦᱳᱭᱳᱜᱼᱟ ᱾",
+    "bench.pilotTitle": "ᱨᱩᱱᱰ 1 پائلᱴ ᱠᱚᱫᱚ ᱵᱟᱝ ᱧᱮᱞ ᱟᱠᱟᱱ ᱰᱮᱴᱟ ᱾",
+    "bench.pilotBody": "ᱦᱚᱲ ᱠᱚᱣᱟᱜ ᱵᱤᱰᱟᱹᱣ ᱢᱟᱲᱟᱝ 92 ᱜᱚᱴᱟᱝ ᱥᱱᱛᱷᱮᱴᱤᱠ ᱠᱟᱹᱥ ᱨᱮ AuditKIT ᱫᱟᱨᱟᱭ ᱛᱮ ᱠᱟᱹᱪ ماڈل ᱨᱮᱭᱟᱜ ᱚᱯᱩᱴᱩᱯᱩᱴ ᱥᱠᱳᱨ ᱠᱚᱨᱟᱣ ᱦᱩᱭ ᱞᱮᱱᱟ ᱾ ᱱᱚᱶᱟ پائلᱴ ᱠᱚᱫᱚ ᱢᱩᱲᱩᱫ ᱯᱚᱨᱤᱠᱚᱞ ᱫᱚ ᱵᱤᱰᱟᱹᱣ ᱞᱮᱫᱟ ᱾ GRPO, ᱮᱢᱯᱮᱛᱤ DPO ᱟᱨ ᱳᱭᱟᱴᱰ ᱢᱮᱡᱟᱨᱝ ᱾",
+    "pipeline.measuredAt": "ᱢᱮᱡᱟᱨ (پائلᱴ, 92 ᱥᱤᱱᱛᱤᱪ ᱠᱮᱹᱥ) ᱼ ᱟᱹᱰᱤ ᱱᱟᱯᱟᱭ JSON {schema}, ᱥᱟᱱᱟᱢ ᱯᱷᱤᱞᱰ ᱜᱮ ᱥᱤᱜᱤᱞ {fields}, ᱤᱭᱩᱴᱞᱤᱴᱤ {utility} ᱾",
+    "pipeline.notMeasured": "ᱱᱚᱶᱟ ᱳᱭᱟᱹᱴ ᱛᱮ ᱞᱮᱠᱷᱟ ᱵᱟᱝ ᱦᱩᱭ ᱟᱠᱟᱱᱟ ᱾ ᱥᱩᱢᱩᱝ 1.00 / 0.00, 0.55 / 0.45 ᱟᱨ 0.00 / 1.00 ᱪᱟᱞᱟᱣ ᱟᱠᱟᱱᱟ ᱾",
     "policy.search": "ᱛᱟᱹᱞᱤᱠᱟ, ᱟᱹᱨᱤ ᱥᱮ ᱛᱷᱟᱯᱚᱱᱟ ᱛᱚᱞᱟᱥ ᱢᱮ ᱾",
     "policy.empty": "ᱡᱳᱜᱟᱡᱳᱜ ᱨᱮᱭᱟᱜ ᱡᱟᱦᱟᱱ ᱯᱷᱮᱰᱟᱛ ᱵᱟᱝ ᱢᱮᱱᱟᱜᱼᱟ ᱾",
     "policy.clear": "ᱛᱚᱞᱟᱥ ᱵᱚᱱᱚᱫᱚᱞ ᱢᱮ ᱾",
     "policy.disclaimerTitle": "ᱢᱤᱫᱴᱟᱝ ᱯᱚᱨᱤᱢᱟᱱᱼᱥᱚᱯᱳᱨᱴᱟᱨ ᱛᱚᱞᱟᱥ ᱨᱮᱭᱟᱜ ᱩᱯᱟᱹᱭ ᱾",
     "policy.disclaimerBody": "ᱱᱚᱶᱟ ᱛᱚᱛᱛᱚᱨ ᱠᱚᱫᱚ ᱚᱱᱩᱢᱟᱹᱱ ᱴᱨᱤᱭᱟᱡᱽ ᱟᱹᱨᱤ ᱠᱚ ᱞᱟᱹᱭ ᱥᱚᱫᱚᱨᱼᱟ ᱾ ᱱᱚᱶᱟ ᱮᱯᱞᱤᱠᱮᱥᱚᱱ ᱫᱚ ᱵᱮᱝᱠ, ᱨᱮᱜᱩᱞᱤᱴᱟᱨ, ᱚᱯᱷᱤᱥᱤᱠ UDIR ᱜᱮᱴᱣᱮ ᱥᱮ ᱚᱱᱩᱢᱟᱹᱱ ᱥᱟᱨᱴᱤᱯᱷᱤᱠᱮᱴ ᱫᱚ ᱵᱟᱝ ᱠᱟᱱᱟ ᱾ ᱠᱟᱹᱢᱤ ᱞᱮᱠᱟᱛᱮ ᱵᱮᱣᱦᱟᱨ ᱢᱟᱲᱟᱝ ᱵᱮᱣᱦᱟᱨ ᱟᱨ ترمیمᱠᱚ ᱵᱤᱰᱟᱹᱣ ᱢᱮ ᱾",
     "footer.tagline": "ᱩᱭᱦᱟᱹᱨᱼᱵᱩᱴᱟᱹ ᱟᱱᱟᱜ ᱴᱨᱤᱭᱟᱡᱽ ᱾ ᱴᱨᱮᱥᱮᱵᱤᱞ ᱯᱚᱨᱤᱢᱟᱱ ᱾",
-    "footer.version": "Suraksha-Merge · ᱛᱚᱞᱟᱥ ᱨᱮᱭᱟᱜ ᱢᱟᱲᱟᱝ ᱧᱮᱞ v0.1",
+    "footer.version": "Suraksha-Merge · ᱛᱚᱞᱟᱥ ᱢᱟᱲᱟᱝ ᱧᱮᱞ v0.1",
     "mascot.hideHint": "ᱛᱟᱹᱞᱤᱠᱟ ᱫᱚᱦᱚ ᱢᱮ ᱾",
     "mascot.dismissHint": "ᱥᱩᱪᱤ ᱵᱟᱛᱟᱶ ᱢᱮ ᱾",
     "error.unavailable": "ᱴᱨᱤᱭᱟᱡᱤ ᱵᱟᱝ ᱧᱟᱢᱚᱜᱼᱟ ᱾ ᱟᱨᱦᱚᱸ ᱨᱤᱠᱟᱹᱭ ᱢᱮ ᱾",
@@ -298,7 +305,7 @@ const bundle: LocaleBundle = {
     "landing.illustrationLabel": "ᱞᱚᱠ ᱟᱨ ᱥᱩᱨᱤᱥᱼᱵᱳᱨᱮᱱᱰ ᱞᱮᱱᱫᱮᱱ ᱨᱮᱠᱳᱰ ᱫᱟᱨᱟᱭ ᱛᱮ ᱨᱩᱠᱷᱟᱹᱭᱟᱹ ᱟᱠᱟᱱ ᱢᱤᱫᱴᱟᱝ ᱠᱤᱨᱤᱧᱤᱭᱟᱹ ᱟᱜ ᱪᱤᱛᱟᱹᱨ ᱾",
     "landing.illustrationTag": "ᱥᱟᱹᱵᱩᱫ, ᱯᱳᱭᱞᱳ ᱾",
     "landing.illustrationTagBody": "ᱥᱟᱱᱟᱢ ᱴᱚᱴᱷᱟ ᱨᱮᱭᱟᱜ ᱢᱤᱫᱴᱟᱝ ᱩᱯᱟᱹᱭ ᱢᱮᱱᱟᱜᱼᱟ ᱾",
-    "landing.approachKicker": "ᱥᱩᱨᱚᱠᱥᱚ ᱦᱚᱨᱟ/1",
+    "landing.approachKicker": "THE SURAKSHA APPROACH / 01",
     "landing.approachTitleLine1": "ᱜᱷᱟᱹᱞ ᱠᱚᱢᱚᱜᱼᱟ ᱾",
     "landing.approachTitleLine2": "ᱟᱨᱦᱚᱸ ᱵᱚᱨᱱᱚᱱ ᱢᱮ ᱾",
     "landing.approachBody1": "ᱢᱤᱫᱴᱟᱝ ᱥᱟᱨᱵᱷᱟᱨ ᱟᱨᱡᱤ ᱨᱮᱭᱟᱜ ᱞᱟᱹᱞᱤᱥ ᱾ ᱢᱤᱫᱴᱟᱝ ᱯᱮᱢᱮᱱᱴ ᱡᱟᱦᱟᱸ ᱫᱚ ᱱᱤᱛᱦᱚᱸ ᱵᱟᱝ ᱦᱮᱡ ᱟᱠᱟᱱᱟ ᱾ ᱢᱤᱫ ᱦᱚᱲ ᱠᱤᱨᱤᱧᱤᱭᱟᱹ ᱡᱟᱦᱟᱸᱭ ᱫᱚ ᱟᱡᱟᱜ ᱠᱟᱛᱷᱟ ᱞᱮᱠᱟᱛᱮ ᱜᱚᱲᱚ ᱞᱟᱹᱠᱛᱤ ᱠᱟᱱᱟ ᱾",
@@ -348,10 +355,8 @@ const bundle: LocaleBundle = {
       "2027 ᱥᱟᱹᱦᱤᱛ ᱨᱮᱭᱟᱜ 1 ᱡᱟᱱᱩᱭᱟᱹᱨᱤ ᱥᱮ ᱚᱱᱟ ᱛᱟᱭᱚᱢ ᱞᱮᱱᱫᱮᱱ ᱨᱮ ᱵᱮᱯᱟᱨᱤᱭᱟᱹᱼᱵᱮᱱᱠ ᱨᱮᱭᱟᱜ ترمیم ᱵᱮᱣᱦᱟᱨᱚᱜᱼᱟ; ᱚᱱᱟ ᱫᱤᱱ ᱠᱷᱚᱱ ᱱᱟᱶᱟ ᱥᱟᱛᱟᱢ ᱠᱚ ᱞᱟᱹᱜᱤᱫ ᱟᱹᱨᱤ ᱨᱩᱭᱮᱞᱤᱰᱮᱥᱚᱱ ᱨᱮᱭᱟᱜ ᱞᱟᱹᱠᱛᱤ ᱢᱮᱱᱟᱜᱼᱟ ᱾",
     "Compare all six checkpoints on held-out scenario groups. Score the full JSON schema, all extracted fields, inappropriate guarantees and required actions. Keep human-rated empathy separate from lexical ChrF, and use paired bootstrap intervals rather than treating a single percentage as proof.":
       "ᱦᱳᱞᱰᱼᱟᱣᱩᱴ ᱥᱤᱱᱤᱣᱳ ᱜᱨᱚᱯ ᱨᱮ ᱛᱩᱨᱩᱭ ᱜᱚᱴᱟᱝ ᱪᱮᱠᱯᱚᱭᱮᱱᱴ ᱨᱮᱭᱟᱜ ᱵᱤᱰᱟᱹᱣ ᱢᱮ ᱾ ᱥᱟᱱᱟᱢ JSON ᱥᱠᱤᱢᱟ, ᱥᱟᱱᱟᱢ ᱮᱠᱥᱴᱨᱟᱠᱰ ᱯᱷᱮᱞᱰ, ᱵᱮᱼᱵᱩᱴᱟᱹ ᱜᱟᱨᱮᱱᱴᱤ ᱟᱨ ᱞᱟᱹᱠᱛᱤ ᱠᱟᱹᱢᱤ ᱠᱚ ᱥᱠᱳᱨ ᱢᱮ ᱾ ᱦᱚᱲ ᱨᱮᱴ ᱮᱢᱯᱷᱤᱴᱤ ᱫᱚ ᱞᱮᱠᱥᱤᱠᱮᱞ ᱥᱤ ᱟᱨ ᱮᱯᱷ ᱠᱷᱚᱱ ᱵᱷᱮᱜᱟᱨ ᱫᱚᱦᱚ ᱢᱮ, ᱟᱨ ᱢᱤᱫ ᱥᱟᱭᱦᱤᱸᱥ ᱯᱚᱨᱟᱢᱮᱥ ᱞᱮᱠᱟᱛᱮ ᱵᱮᱣᱦᱟᱨ ᱵᱟᱝ ᱠᱟᱛᱮ ᱡᱳᱰᱟᱜ ᱵᱳᱴᱥᱴᱨᱟᱯ ᱛᱟᱞᱟ ᱠᱚ ᱵᱮᱣᱦᱟᱨ ᱢᱮ ᱾",
-    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider configures an experiment; it does not change this rule-based preview or demonstrate model quality.":
-      "ᱡᱳᱜᱟᱡᱳᱜ ᱟᱱ LoRA ᱢᱮᱡᱟᱨ ᱵᱮᱣᱦᱟᱨ ᱠᱟᱛᱮ ᱳᱣᱟᱴᱰ ᱯᱮᱨᱟᱢᱤᱴᱟᱨ ᱨᱮᱭᱟᱜ ᱱᱟᱶᱟᱱ ᱠᱚ ᱚᱞ ᱢᱮ ᱾ ᱵᱟᱨ ᱦᱚᱲ ᱵᱟᱝ ᱥᱮᱞᱮᱫ ᱟᱠᱟᱱ ᱦᱚᱲ ᱥᱟᱶᱛᱮ ᱵᱷᱮᱞᱮᱰᱤᱣᱮᱥᱚᱱ ᱰᱮᱴᱟ ᱪᱮᱛᱟᱱ ᱳᱭᱟᱹᱴ ᱠᱚ ᱥᱩᱭᱤᱯ ᱢᱮ ᱾ ᱥᱞᱟᱭᱰᱟᱨ ᱪᱟᱞᱟᱣ ᱠᱟᱛᱮ ᱢᱤᱫᱴᱟᱝ ᱵᱤᱰᱟᱹᱣ ᱵᱮᱱᱟᱣ ᱦᱳᱭᱳᱜᱼᱟ; ᱱᱚᱶᱟ ᱟᱹᱨᱤᱼᱵᱩᱫᱟᱹ ᱢᱟᱲᱟᱝ ᱧᱮᱞ ᱵᱚᱱᱚᱫᱚᱞ ᱵᱟᱝ ᱦᱳᱭᱳᱜᱼᱟ ᱥᱮ ᱢᱳᱰᱮᱞ ᱨᱮᱭᱟᱜ ᱜᱚᱱᱚᱝ ᱩᱫᱩᱜ ᱵᱟᱝ ᱦᱩᱭᱩᱜᱼᱟ ᱾",
-    "Configuration preview · no merged checkpoint yet":
-      "ᱠᱚᱱᱯᱷᱤᱜᱽᱨᱟᱹᱥᱚᱱ ᱯᱚᱨᱤᱥᱮᱵᱟᱼ ᱱᱚᱶᱟ ᱦᱟᱹᱵᱤᱡ ᱡᱟᱦᱟᱱ ᱢᱮᱡᱟᱨᱰ ᱪᱮᱠᱯᱚᱭᱮᱱᱴ ᱵᱟᱝ ᱢᱮᱱᱟᱜᱼᱟ ᱾",
+    "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider shows the measured result where one exists; it does not change the served model.":
+      "Compose the weighted parameter updates using a compatible LoRA merge. Sweep weights on validation data, including the two unmerged specialists. Moving the slider shows the measured result where one exists; it does not change the served model.",
     "Controls · base, uncurated SFT and curated joint SFT":
       "ᱠᱟᱱᱴᱳᱨᱚᱞᱥ ᱵᱮᱹᱥ, ᱚᱱᱠᱩᱨᱮᱴᱰ SFT ᱟᱨ ᱠᱤᱭᱩᱨᱮᱴᱰ ᱡᱳᱭᱮᱱᱴ SFT ᱾",
     "Curate with care":
@@ -360,6 +365,12 @@ const bundle: LocaleBundle = {
       "ᱰᱮᱴᱟᱥᱮᱴ A· ᱥᱟᱨᱴᱤᱠᱴᱤᱠ JSON + ᱯᱷᱮᱞᱰ ᱥᱟᱨᱵᱷᱮᱱᱮᱱᱥ ᱾",
     "Dataset B · chosen / rejected customer replies":
       "ᱰᱮᱴᱟᱥᱮᱴ ᱵᱤᱼ ᱵᱟᱪᱷᱱᱟᱣ/ᱵᱟᱛᱟᱣᱟᱜ ᱠᱤᱨᱤᱧᱤᱭᱟᱹ ᱠᱚᱣᱟᱜ ᱩᱛᱛᱚᱨ ᱾",
+    "Done · 934 cases curated with CuratorKIT 0.1.21; 810 human-reviewed cases in training":
+      "CuratorKIT 0.1.21 ᱥᱟᱶ ᱠᱤᱭᱩᱨᱮᱴ ᱠᱚᱨᱟᱣ ᱦᱩᱭ ᱟᱠᱟᱱᱟ 934 ᱜᱚᱴᱟᱝ ᱜᱮᱢ; ᱥᱮᱪᱮᱫ ᱨᱮ 810 ᱜᱚᱴᱟᱝ ᱦᱚᱲ ᱨᱮᱵᱷᱤᱭᱩᱭ ᱟᱠᱟᱱ ᱜᱮᱢᱟᱜᱟᱱ ᱾",
+    "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)":
+      "Done · QLoRA SFT on 810 reviewed cases, RTX 4050 (6 GB)",
+    "Done · every model evaluated; results in the Benchmark lab":
+      "ᱠᱚᱨᱟᱣ ᱦᱩᱭ ᱟᱠᱟᱱᱟ · ᱡᱚᱛᱚ ᱢᱚᱰᱮᱞ ᱨᱮᱭᱟᱜ ᱵᱤᱰᱟᱹᱣ ᱦᱩᱭ ᱟᱠᱟᱱᱟ; ᱵᱮᱱᱪᱢᱟᱨᱠ ᱞᱮᱵᱨᱮᱴ ᱨᱮ ᱧᱟᱢ ᱟᱠᱟᱱᱟ ᱾",
     "Every claim needs a measured result.":
       "ᱥᱟᱱᱟᱢ ᱫᱟᱵᱤ ᱞᱟᱹᱜᱤᱫ ᱢᱤᱫᱴᱟᱝ ᱯᱚᱨᱤᱢᱟᱱ ᱯᱚᱨᱤᱢᱟᱱ ᱨᱮᱭᱟᱜ ᱞᱟᱹᱠᱛᱤ ᱢᱮᱱᱟᱜᱼᱟ ᱾",
     "Found":
@@ -374,20 +385,18 @@ const bundle: LocaleBundle = {
       "ᱛᱟᱭᱚᱢ ᱛᱮᱱᱟᱜ ᱞᱟᱹᱞᱤᱥ ᱨᱮ ᱨᱮᱯᱳᱨᱴ · ᱜᱮᱨᱟᱱᱴᱤᱼᱨᱤᱯᱷᱟᱱᱰ ᱡᱳᱨ ᱾",
     "Listening":
       "ᱥᱳᱯᱳᱨ ᱦᱩᱭᱩᱜ ᱠᱟᱱᱟ ᱾",
-    "Local curation + optional CuratorKIT pass":
-      "ᱛᱷᱟᱭᱤ ᱠᱤᱭᱩᱨᱮᱥᱚᱱ + ᱚᱵᱷᱟᱵᱽ ᱟᱱᱟᱜ CuratorKIT ᱯᱟᱥ ᱾",
     "Make quality visible":
       "ᱢᱟᱱ ᱫᱚ ᱧᱮᱞᱧᱟᱢ ᱢᱮ ᱾",
     "Manifest · source hashes, split IDs and rejection reasons":
       "ᱢᱮᱱᱤᱯᱷᱮᱥᱴ · ᱥᱳᱨᱥ ᱦᱮᱪ, ᱮᱥᱯᱞᱤᱴ ᱟᱭᱰᱤ ᱟᱨ ᱵᱟᱛᱟᱣᱟᱜ ᱚᱡᱮ ᱾",
+    "Measured in the pilot · the 0.55/0.45 merge was worse, so it is not used":
+      "پائلᱴ ᱨᱮ ᱢᱮᱡᱟᱨ ᱟᱠᱟᱱ 0.55/0.45 ᱢᱮᱡᱟᱨ ᱫᱚ ᱟᱨᱦᱚᱸ ᱵᱟᱹᱲᱤᱡ ᱛᱟᱦᱮᱸ ᱠᱟᱱᱟ, ᱚᱱᱟᱛᱮ ᱱᱚᱶᱟ ᱫᱚ ᱵᱮᱶᱦᱟᱨ ᱵᱟᱝ ᱦᱩᱭᱩᱜᱼᱟ ᱾",
     "Merge & investigate":
       "ᱥᱮᱞᱮᱫ ᱢᱮ ᱟᱨ ᱵᱤᱰᱟᱹᱣ ᱢᱮ ᱾",
     "Merge manifest · base, tokenizer and adapter identities":
       "ᱢᱮᱱᱤᱯᱷᱮᱥᱴ ᱵᱮᱹᱥ, ᱴᱳᱠᱮᱱᱤᱡᱽᱟᱨ ᱟᱨ ᱮᱰᱚᱯᱮᱴᱟᱨ ᱟᱭᱴᱮᱱᱴᱤ ᱢᱤᱫ ᱢᱮ ᱾",
     "NPCI · Dispute redressal":
       "NPCI · ᱞᱟᱹᱞᱤᱥ ᱪᱷᱟᱹᱲ ᱾",
-    "Offline scorer ready · model evaluation pending":
-      "ᱚᱯᱞᱟᱭᱤᱱ ᱥᱠᱳᱨᱟᱨ ᱨᱮᱰᱤ·ᱢᱮᱹᱰᱮᱞ ᱨᱮᱭᱟᱜ ᱵᱤᱰᱟᱹᱣ ᱵᱟᱝ ᱦᱩᱭ ᱟᱠᱟᱱᱟ ᱾",
     "QR request · ₹24,500 · reported today":
       "ᱠᱤᱭᱩ ᱟᱨ ᱨᱤᱠᱮᱥᱴ · ₹24,500 · ᱱᱟᱦᱟᱜ ᱨᱮ ᱵᱟᱰᱟᱭ ᱧᱟᱢ ᱟᱠᱟᱱᱟ ᱾",
     "RBI · Customer liability":
@@ -410,8 +419,6 @@ const bundle: LocaleBundle = {
       "1930 ᱟᱨ cybercrime.gov.in ᱛᱟᱞᱟᱛᱮ ᱠᱟᱹᱣᱰᱤ ᱥᱟᱭᱵᱟᱨ ᱞᱟᱹᱞᱤᱥ ᱨᱮᱭᱟᱜ ᱞᱟᱹᱞᱤᱥ ᱮᱢ ᱢᱮ ᱾ ᱧᱟᱢ ᱨᱮᱭᱟᱜ ᱵᱟᱛᱟᱣᱟᱜ ᱫᱚ ᱵᱟᱝ ᱠᱟᱱᱟ ᱾",
     "Report · per-case evidence + paired bootstrap deltas":
       "ᱨᱮᱯᱳᱨᱴᱼᱯᱟᱨᱼᱠᱮᱹᱥ ᱥᱟᱹᱵᱩᱫ + ᱡᱳᱜᱟᱵᱩᱴᱟᱹ ᱵᱳᱴᱥᱴᱨᱟᱯ ᱰᱮᱞᱴᱟᱥᱼᱨᱮᱹᱯ ᱢᱮ ᱾ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾ ᱼᱟ ᱾",
-    "Requires compatible GPU + reviewed data":
-      "ᱪᱚᱯᱮᱴᱤᱵᱚᱞᱮ ᱡᱤᱯᱤᱤᱭᱩ + ᱨᱩᱭᱤᱭᱩᱰ ᱰᱮᱴᱟ ᱨᱮᱭᱟᱜ ᱞᱟᱹᱠᱛᱤ ᱢᱮᱱᱟᱜᱼᱟ ᱾",
     "Sent to the wrong person":
       "ᱵᱮᱼᱵᱩᱴᱟᱹ ᱦᱚᱲ ᱴᱷᱮᱱ ᱥᱮᱱ ᱟᱠᱟᱱᱟ ᱾",
     "Start with synthetic or authorised customer chats. Mask sensitive identities, retain only context-labelled transaction references, validate fields against source spans, and separate schema targets from same-task preference pairs.":
