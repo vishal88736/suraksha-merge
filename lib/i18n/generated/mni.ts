@@ -43,6 +43,8 @@ const bundle: LocaleBundle = {
     "topbar.engine": "ꯆꯠꯅ ꯀꯥꯡꯂꯣꯟ ꯏꯟꯖꯤꯟ ꯑꯦꯛꯇꯤꯕ ꯑꯣꯏꯔꯦ",
     "topbar.engineModel": "ꯄꯥꯏꯂꯣꯠ ꯃꯣꯗꯦꯜ · ꯅꯤꯌꯝꯁꯤꯡ ꯐꯣꯜꯕꯦꯛ",
     "topbar.engineTrained": "ꯐꯥꯏꯟ-ꯇ ꯭ ꯌꯨꯟ ꯇꯧꯔꯕ ꯃꯣꯗꯦꯜ · ꯅꯤꯌꯝꯁꯤꯡ ꯐꯣꯜꯕꯦꯛ",
+    "topbar.engineAuthority": "ꯐꯥꯏꯟ-ꯇ ꯭ ꯌꯨꯟ ꯇꯧꯔꯕ ꯃꯣꯗꯦꯜꯅ पाउखुम ꯈꯨꯗꯤꯡꯃꯛ ꯏꯔꯤ ꯫",
+    "topbar.engineOffline": "ꯃꯣꯗꯦꯜ ꯑꯣꯐꯂꯥꯏꯟ: ꯑꯃꯨꯛ ꯍꯜꯂꯛꯄ ꯐꯥꯎꯗ ꯭ ꯔꯤꯐꯥꯎꯕ ꯋꯥꯔꯣꯏꯁꯤꯟ ꯑꯃꯠꯇ ꯂꯩꯇꯦ",
     "topbar.research": "ꯔꯤꯁꯔꯆ ꯄ ꯭ ꯔꯤꯚ ꯭ ꯌꯨ",
     "common.exportTrace": "ꯃꯄꯥꯟꯗ ꯊꯥꯗꯣꯛꯄ ꯇ ꯭ ꯔꯦꯁ",
     "common.exportConfiguration": "ꯃꯄꯥꯟꯗ ꯊꯥꯗꯣꯛꯄꯒꯤ ꯃꯑꯣꯡ-ꯃꯇꯧ",
@@ -259,6 +261,12 @@ const bundle: LocaleBundle = {
     "mascot.hideHint": "ꯍꯤꯟ ꯭ ꯇ ꯃꯨꯊꯠꯂꯨ",
     "mascot.dismissHint": "ꯍꯤꯟ ꯭ ꯇ ꯑꯗꯨ ꯂꯧꯊꯣꯛꯎ",
     "error.unavailable": "ꯇ ꯭ ꯔꯥꯏꯖ ꯑꯁꯤ ꯐꯪꯗ ꯭ ꯔꯤ ꯫ ꯑꯃꯨꯛ ꯍꯟꯅ ꯍꯣꯠꯅꯧ ꯫",
+    "error.modelUnavailable": "ꯃꯣꯗꯦꯜ ꯑꯗꯨꯅ पाउखुम ꯑꯃ ꯄꯨꯊꯣꯛꯄ ꯉꯝꯈꯤꯗꯦ: ꯃꯁꯤ ꯑꯣꯐꯂꯥꯏꯟꯗ ꯅꯠꯇ ꯭ ꯔꯒ ꯌꯥꯝꯅ ꯊꯨꯅ ꯂꯩ, ꯅꯠꯇ ꯭ ꯔꯒ ꯃꯁꯤꯒꯤ ꯑꯥꯎꯠꯄꯨꯠ ꯑꯗꯨ ꯑꯅꯤꯔꯛ ꯃꯥꯏ ꯄꯥꯛꯄ ꯉꯝꯈꯤꯗꯦ ꯫ ꯑꯃꯨꯛ ꯍꯟꯅ ꯍꯣꯠꯅꯧ ꯫",
+    "authority.reviewTitle": "ꯍ ꯭ ꯌꯨꯃꯦꯟ ꯔꯤꯚ ꯭ ꯌꯨ ꯃꯊꯧ ꯇꯥꯏ: ꯃꯣꯗꯦꯜ ꯑꯗꯨꯒꯤ पाउखुम ꯑꯗꯨ ꯆꯦꯛ ꯑꯃꯗ ꯃꯥꯏ ꯄꯥꯛꯄ ꯉꯝꯈꯤꯗꯦ ꯫",
+    "authority.passedTitle": "ꯃꯄꯨꯡꯐꯥꯅ ꯃꯣꯗꯦꯜ ꯑꯁꯤꯅ ꯏꯈꯤꯕ · ꯆꯦꯛ ꯈꯨꯗꯤꯡꯃꯛ ꯄꯥꯁ ꯇꯧꯈ ꯭ ꯔꯦ",
+    "authority.body": "ꯃꯈꯥꯗ ꯄꯤꯔꯤꯕ ꯑꯃꯠꯇ ꯑꯁꯤ ꯅꯤꯌꯝꯁꯤꯡ ꯅꯠꯇ ꯭ ꯔꯒ ꯇꯦꯝꯄ ꯭ ꯂꯦꯠꯁꯤꯡꯅ ꯍꯣꯡꯗꯣꯛꯈꯤꯗꯦ ꯫ ꯍꯣꯠꯅꯔꯤꯕꯁꯤꯡ: ꯌꯦꯡꯁꯤꯟꯕ {payload}, ꯔꯤꯄ ꯭ ꯂꯥꯏ {reply} ꯫",
+    "authority.payloadFlags": "ꯃꯃꯜ ꯂꯦꯞꯄꯒꯤ ꯆꯦꯛꯁꯤꯡ ꯑꯗꯨ ꯃꯥꯏ ꯄꯥꯛꯄ ꯉꯝꯈꯤꯗꯦ: {flags}",
+    "authority.replyFlags": "ꯔꯤꯄ ꯭ ꯂꯥꯏ ꯆꯦꯛꯁꯤꯡ ꯃꯥꯏ ꯄꯥꯛꯄ ꯉꯝꯈꯤꯗꯦ: {flags}",
     "error.connection": "Could not connect. Please try again.",
     "toast.copied": "ꯀ ꯭ ꯂꯤꯞꯕꯣꯔꯗꯇ ꯀꯣꯄꯤ ꯇꯧꯔꯦ",
     "toast.clipboardUnavailable": "ꯀ ꯭ ꯂꯤꯞꯕꯣꯔ ꯭ ꯗ ꯐꯪꯗ ꯭ ꯔꯤ ꯫ ꯅꯍꯥꯛꯅ ꯂꯥꯏꯔꯤꯛ ꯑꯗꯨ ꯈꯟꯗꯣꯛꯂꯒ ꯀꯣꯄꯤ ꯇꯧꯕ ꯌꯥꯏ ꯫",
@@ -427,7 +435,7 @@ const bundle: LocaleBundle = {
     "UPI P2P · ₹1,500 · T+2 calendar days":
       "UPI P2P · ₹1,500 · T+2 ꯀꯦꯂꯦꯟꯗꯔꯒꯤ ꯅꯨꯃꯤꯠꯁꯤꯡ",
     "UPI transfer: T+1. Merchant confirmation failure: T+5. T refers to calendar date; compensation is ₹100 per day beyond the applicable deadline.":
-      "UPI ꯊꯥꯗꯣꯛꯄ: T+1 ꯫ ꯃꯔꯆꯦꯟ ꯭ ꯇ ꯀꯟꯐꯔꯃꯦꯁꯟ ꯐꯦꯜ: T+5 ꯫ Tꯅ ꯀꯦꯂꯦꯟꯗꯔꯒꯤ ꯇꯥꯡ ꯑꯗꯨ ꯇꯥꯛꯏ; ꯁꯦꯟꯊꯣꯛ ꯄꯤꯕꯁꯤ ꯆꯠꯅꯔꯤꯕ ꯃꯇꯝ ꯑꯗꯨꯒꯤ ꯃꯊꯛꯇ ꯂꯩꯕ ꯅꯨꯃꯤꯠ ꯈꯨꯗꯤꯡꯒꯤ ₹100 ꯅꯤ ꯫",
+      "UPI ꯊꯥꯗꯣꯛꯄ: T+1 ꯫ ꯃꯔꯆꯦꯟ ꯭ ꯇ ꯀꯟꯐꯔꯃꯦꯁꯟ ꯐꯦꯜ: T+5 ꯫ Tꯅ ꯀꯦꯂꯦꯟꯗꯔꯒꯤ ꯇꯥꯡ ꯇꯥꯛꯏ; ꯁꯦꯟꯊꯣꯛ ꯄꯤꯕꯁꯤ ꯆꯠꯅꯔꯤꯕ ꯃꯇꯝ ꯑꯗꯨꯒꯤ ꯃꯊꯛꯇ ꯂꯩꯕ ꯅꯨꯃꯤꯠ ꯈꯨꯗꯤꯡꯒꯤ ₹100 ꯅꯤ ꯫",
     "Validation sweep · weights selected before held-out test":
       "ꯚꯦꯜꯗꯤꯗꯦꯁꯟ ꯁ ꯭ ꯋꯤꯞ · ꯍꯣꯜꯗ-ꯑꯥꯎꯠ ꯇꯦꯁ ꯭ ꯠ ꯇꯧꯗ ꯭ ꯔꯤꯉꯩ ꯃꯃꯥꯡꯗ ꯈꯟꯒꯠꯂꯕ ꯋꯦꯠꯁꯤꯡ",
     "Voluntary wrong VPA · no automatic reversal":

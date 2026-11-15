@@ -64,6 +64,8 @@ const en = {
   "topbar.engine": "Rule engine active",
   "topbar.engineModel": "Pilot model · rules fallback",
   "topbar.engineTrained": "Fine-tuned model · rules fallback",
+  "topbar.engineAuthority": "Fine-tuned model writes every answer",
+  "topbar.engineOffline": "Model offline: no answers until it is back",
   "topbar.research": "Research preview",
 
   "common.exportTrace": "Export trace",
@@ -338,6 +340,14 @@ const en = {
   "mascot.hideHint": "Hide hint",
   "mascot.dismissHint": "Dismiss hint",
   "error.unavailable": "Triage is unavailable. Try again.",
+  "error.modelUnavailable":
+    "The model could not produce an answer: it is offline or busy, or its output was invalid twice. Try again.",
+  "authority.reviewTitle": "Needs human review: the model's answer failed a check",
+  "authority.passedTitle": "Written entirely by the model · every check passed",
+  "authority.body":
+    "Nothing below was replaced by rules or templates. Attempts: assessment {payload}, reply {reply}.",
+  "authority.payloadFlags": "Assessment checks failed: {flags}",
+  "authority.replyFlags": "Reply checks failed: {flags}",
   "error.connection": "Could not connect. Please try again.",
 
   "toast.copied": "Copied to clipboard",
@@ -449,6 +459,8 @@ const hi: Record<MessageKey, string> = {
   "nav.interfaceLanguage": "इंटरफ़ेस की भाषा",
 
   "topbar.engine": "नियम-आधारित इंजन सक्रिय",
+  "topbar.engineAuthority": "हर उत्तर फ़ाइन-ट्यून्ड मॉडल लिखता है",
+  "topbar.engineOffline": "मॉडल ऑफ़लाइन: वापस आने तक कोई उत्तर नहीं",
   "topbar.engineModel": "पायलट मॉडल · नियम बैकअप",
   "topbar.engineTrained": "फ़ाइन-ट्यून मॉडल · नियम बैकअप",
   "topbar.research": "शोध पूर्वावलोकन",
@@ -717,6 +729,14 @@ const hi: Record<MessageKey, string> = {
   "mascot.hideHint": "सुझाव छिपाएँ",
   "mascot.dismissHint": "सुझाव हटाएँ",
   "error.unavailable": "ट्रायेज उपलब्ध नहीं है। फिर कोशिश करें।",
+  "error.modelUnavailable":
+    "मॉडल उत्तर नहीं दे सका: वह बंद या व्यस्त है, या उसका आउटपुट दो बार अमान्य रहा। फिर कोशिश करें।",
+  "authority.reviewTitle": "मानवीय समीक्षा ज़रूरी: मॉडल का उत्तर एक जाँच में विफल रहा",
+  "authority.passedTitle": "पूरी तरह मॉडल द्वारा लिखा गया · सभी जाँचें पास",
+  "authority.body":
+    "नीचे कुछ भी नियमों या टेम्पलेट से बदला नहीं गया। प्रयास: आकलन {payload}, उत्तर {reply}।",
+  "authority.payloadFlags": "आकलन की विफल जाँचें: {flags}",
+  "authority.replyFlags": "उत्तर की विफल जाँचें: {flags}",
   "error.connection": "कनेक्ट नहीं हो सका। कृपया फिर कोशिश करें।",
 
   "toast.copied": "क्लिपबोर्ड पर कॉपी हो गया",

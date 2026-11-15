@@ -76,6 +76,14 @@ export const triageResponseSchema = z.object({
             z.object({ source: z.literal("template"), reasons: z.array(z.string()) }),
           ])
           .optional(),
+        authority: z
+          .object({
+            review_required: z.boolean(),
+            payload_flags: z.array(z.string()),
+            reply_flags: z.array(z.string()),
+            attempts: z.object({ payload: z.number().int().min(0), reply: z.number().int().min(0) }),
+          })
+          .optional(),
       }),
       z.object({
         status: z.literal("fallback"),

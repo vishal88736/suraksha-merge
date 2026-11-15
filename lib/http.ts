@@ -10,6 +10,7 @@ export type ApiErrorCode =
   | "unauthorized"
   | "rate_limited"
   | "method_not_allowed"
+  | "model_unavailable"
   | "internal_error";
 export function apiError(
   code: ApiErrorCode,

@@ -179,7 +179,12 @@ test("model endpoint must be loopback http; timeout is bounded", () => {
       SURAKSHA_MODEL_URL: "http://127.0.0.1:8765/",
       SURAKSHA_MODEL_TIMEOUT_MS: "999999",
     }),
-    { url: "http://127.0.0.1:8765", token: undefined, timeoutMs: 35_000 },
+    { url: "http://127.0.0.1:8765", token: undefined, authority: "model", timeoutMs: 35_000 },
+  );
+  // The model writes the whole answer by default; rules-as-fallback is opt-in.
+  assert.equal(
+    modelConfigFromEnv({ SURAKSHA_MODEL_URL: "http://127.0.0.1:8765", SURAKSHA_MODEL_AUTHORITY: "rules" })?.authority,
+    undefined,
   );
   assert.equal(
     runWithModelConfig(CONFIG, () => modelConfigFromEnv({ SURAKSHA_MODEL_URL: "http://localhost:1" })?.url),
@@ -339,7 +344,7 @@ test("a remote model endpoint needs an explicit opt-in, https and a token", () =
   assert.equal(modelConfigFromEnv({ ...remote, SURAKSHA_MODEL_ALLOW_REMOTE: "true", SURAKSHA_MODEL_TOKEN: "" }), undefined);
   assert.equal(modelConfigFromEnv({ ...remote, SURAKSHA_MODEL_ALLOW_REMOTE: "true", SURAKSHA_MODEL_URL: "http://inference.example.org" }), undefined);
   assert.deepEqual(modelConfigFromEnv({ ...remote, SURAKSHA_MODEL_ALLOW_REMOTE: "true" }), {
-    url: "https://inference.example.org", token: "t", timeoutMs: 35_000,
+    url: "https://inference.example.org", token: "t", authority: "model", timeoutMs: 35_000,
   });
 });
 
@@ -426,4 +431,79 @@ test("a caller who made the customer download an app, then money left, is a remo
   ])
     assert.equal(triage({ message }).payload.dispute_category, "REMOTE_ACCESS_SCAM", message);
   assert.equal(triage({ message: "I installed AnyDesk for my office work. My UPI is working normally." }).payload.dispute_category, "NEEDS_INFORMATION");
+});
+
+// Model authority: fixtures stand in for the server; they test the contract
+// (nothing replaced, retries, flags), not model quality.
+const AUTHORITY = { ...CONFIG, authority: "model" as const };
+const GOOD_REPLY =
+  "Samajh sakte hain, yeh stressful hai.\n\n1. Abhi bank/PSP ko fraud report karein.\n\n2. Turant 1930 par call karein aur cybercrime.gov.in par complaint karein.\n\nRefund abhi confirm nahi hai; bank verify karega.";
+function authorityServer(payloads: string[], replies: (string | null)[], seen: { task: string; sample: boolean; language?: string }[] = []) {
+  return (async (_url: string, init: RequestInit) => {
+    const body = JSON.parse(String(init.body));
+    const task = body.task ?? "schema";
+    seen.push({ task, sample: Boolean(body.sample), ...(task === "reply" ? { language: body.context?.language } : {}) });
+    const index = seen.filter((s) => s.task === task).length - 1;
+    return task === "reply"
+      ? Response.json({ raw: "", reply: replies[Math.min(index, replies.length - 1)], latency_ms: 900, model: MODEL })
+      : Response.json({ raw: payloads[Math.min(index, payloads.length - 1)], reply: null, latency_ms: 800, model: MODEL });
+  }) as unknown as typeof fetch;
+}
+
+test("model authority: the model's payload and reply are shown as written when every check passes", async () => {
+  const seen: { task: string; sample: boolean }[] = [];
+  const result = await triageWithModel({ message: MESSAGE }, AUTHORITY, authorityServer([JSON.stringify(GOOD)], [GOOD_REPLY], seen));
+  assert.deepEqual(result.payload, GOOD);
+  assert.equal(result.reply.text, GOOD_REPLY);
+  assert.equal(result.audit.model.status, "used");
+  const audit = result.audit.model.status === "used" ? result.audit.model : null;
+  assert.equal(audit?.policy_from_rules, undefined); // the rules changed nothing
+  assert.deepEqual(audit?.authority, { review_required: false, payload_flags: [], reply_flags: [], attempts: { payload: 1, reply: 1 } });
+  // The reply request names the language the model detected, as every reply training row did.
+  assert.deepEqual(seen, [{ task: "schema", sample: false }, { task: "reply", sample: false, language: "hinglish" }]);
+  assert.equal(triageResponseSchema.safeParse(result).success, true);
+});
+
+test("model authority: a failed check is retried once, sampled, and then shown flagged, never replaced", async () => {
+  const seen: { task: string; sample: boolean }[] = [];
+  // The model names the wrong category twice; the reply promises a refund twice.
+  const wrong = JSON.stringify({ ...GOOD, dispute_category: "P2M_CONFIRMATION_FAILURE", rbi_liability_tier: "TECHNICAL_T_PLUS_5" });
+  const promise = GOOD_REPLY + " Refund 100% guaranteed hai.";
+  const result = await triageWithModel({ message: MESSAGE }, AUTHORITY, authorityServer([wrong], [promise], seen));
+  assert.equal(result.payload.dispute_category, "P2M_CONFIRMATION_FAILURE"); // the model's, not the rules'
+  assert.equal(result.reply.text, promise); // the model's, not a template
+  const audit = result.audit.model.status === "used" ? result.audit.model.authority : undefined;
+  assert.equal(audit?.review_required, true);
+  assert.ok(audit?.payload_flags.includes("model_contradicts_rules_category"));
+  assert.ok(audit?.reply_flags.includes("reply_promise"));
+  assert.deepEqual(audit?.attempts, { payload: 2, reply: 2 });
+  assert.deepEqual(seen.map((s) => s.sample), [false, true, false, true]);
+  assert.equal(result.audit.no_unauthorized_promises, false); // visible in the checks panel too
+});
+
+test("model authority: a retry that passes replaces the failed first attempt", async () => {
+  const result = await triageWithModel(
+    { message: MESSAGE },
+    AUTHORITY,
+    authorityServer(["not json", JSON.stringify(GOOD)], [GOOD_REPLY]),
+  );
+  const audit = result.audit.model.status === "used" ? result.audit.model.authority : undefined;
+  assert.deepEqual(result.payload, GOOD);
+  assert.equal(audit?.review_required, false);
+  assert.deepEqual(audit?.attempts, { payload: 2, reply: 1 });
+});
+
+test("model authority: with no usable model answer there is no rules answer to fall back to", async () => {
+  await assert.rejects(
+    triageWithModel({ message: MESSAGE }, AUTHORITY, authorityServer(["not json"], [GOOD_REPLY])),
+    (error: Error) => error.name === "ModelUnavailableError",
+  );
+  const down = (async () => { throw new TypeError("fetch failed"); }) as unknown as typeof fetch;
+  await assert.rejects(triageWithModel({ message: MESSAGE }, AUTHORITY, down), (error: Error) => error.name === "ModelUnavailableError");
+  const handler = createTriageHandler({ engine: (input) => triageWithModel(input, AUTHORITY, down) });
+  const response = await handler(new Request("http://localhost/api/triage", {
+    method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ message: MESSAGE }),
+  }));
+  assert.equal(response.status, 503);
+  assert.equal(((await response.json()) as { error: { code: string } }).error.code, "model_unavailable");
 });

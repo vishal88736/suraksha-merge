@@ -19,5 +19,6 @@ declare namespace Cloudflare {
     SURAKSHA_MODEL_ALLOW_REMOTE?: string;
     /** "true": the model also writes the customer reply (checked; off by default). */
     SURAKSHA_MODEL_REPLIES?: string;
+    SURAKSHA_MODEL_AUTHORITY?: string;
   }
 }

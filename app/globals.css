@@ -4699,3 +4699,21 @@ td strong {
   background: #eaf5fc;
   border-color: #c6e3f5;
 }
+
+.authority-review {
+  display: grid;
+  gap: 4px;
+  margin: 0 24px 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.45;
+  border: 1px solid color-mix(in srgb, #16a34a 35%, transparent);
+  background: color-mix(in srgb, #16a34a 8%, transparent);
+}
+.authority-review[data-review="true"] {
+  border-color: color-mix(in srgb, #dc2626 45%, transparent);
+  background: color-mix(in srgb, #dc2626 9%, transparent);
+}
+.authority-review strong { font-size: 13.5px; }
+.authority-review span { overflow-wrap: anywhere; }

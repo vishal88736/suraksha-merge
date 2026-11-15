@@ -31,12 +31,15 @@ CONTEXT_KEYS = {"reporting_delay_working_days", "elapsed_calendar_days", "respon
 
 def parse_request(body: bytes, with_options: bool = False):
     """Validate the request; returns (message, context), or with_options
-    (message, context, task) where task is "schema" (the JSON payload) or
-    "reply" (only the customer reply, asked for once the payload was used)."""
+    (message, context, task, sample) where task is "schema" (the JSON
+    payload) or "reply" (the customer reply), and sample asks for a sampled
+    generation instead of greedy decoding (a retry after a failed check)."""
     if len(body) > MAX_BODY_BYTES:
         raise ValueError("payload_too_large")
     data = json.loads(body)
-    if not isinstance(data, dict) or set(data) - {"message", "context", "task"}:
+    if not isinstance(data, dict) or set(data) - {"message", "context", "task", "sample"}:
+        raise ValueError("invalid_request")
+    if not isinstance(data.get("sample", False), bool):
         raise ValueError("invalid_request")
     if data.get("task", "schema") not in ("schema", "reply"):
         raise ValueError("invalid_request")
@@ -47,7 +50,7 @@ def parse_request(body: bytes, with_options: bool = False):
         raise ValueError("invalid_context")
     if any(not (value is None or isinstance(value, (str, int)) and not isinstance(value, bool)) for value in context.values()):
         raise ValueError("invalid_context")
-    return (message, context, data.get("task", "schema")) if with_options else (message, context)
+    return (message, context, data.get("task", "schema"), data.get("sample", False)) if with_options else (message, context)
 
 
 def schema_prompt(message: str, context: dict) -> str:
@@ -115,7 +118,7 @@ def make_handler(generate, info: dict, token: str | None, max_queue: int = 2, qu
                 length = int(self.headers.get("content-length") or 0)
                 if length > MAX_BODY_BYTES:
                     raise ValueError("payload_too_large")
-                message, context, task = parse_request(self.rfile.read(length), with_options=True)
+                message, context, task, sample = parse_request(self.rfile.read(length), with_options=True)
             except (ValueError, json.JSONDecodeError) as error:
                 code = str(error) if str(error) in {"payload_too_large", "invalid_request", "invalid_message", "invalid_context"} else "invalid_json"
                 return self._send(413 if code == "payload_too_large" else 400, {"error": code})
@@ -141,10 +144,10 @@ def make_handler(generate, info: dict, token: str | None, max_queue: int = 2, qu
                 # One generation per request: the caller asks for the reply
                 # separately, and only after the payload passed its gates.
                 if task == "reply":
-                    reply_text, input_tokens, output_tokens = generate(reply_prompt(message, context), max_new_tokens=max_reply_tokens)
+                    reply_text, input_tokens, output_tokens = generate(reply_prompt(message, context), max_new_tokens=max_reply_tokens, sample=sample)
                     text = ""
                 else:
-                    text, input_tokens, output_tokens = generate(schema_prompt(message, context))
+                    text, input_tokens, output_tokens = generate(schema_prompt(message, context), sample=sample)
                     reply_text = None
             except Exception:  # do not echo internals or inputs
                 return self._send(500, {"error": "generation_failed"})
@@ -214,12 +217,14 @@ def load_model(args):
         "adapter": adapter_path, "adapter_sha256": adapter_sha, "quantization": args.quantization,
         "fine_tuned": adapter_path is not None, "unreviewed_pilot": pilot, "max_new_tokens": args.max_new_tokens, "do_sample": False}
 
-    def generate(prompt, max_new_tokens=None):
+    def generate(prompt, max_new_tokens=None, sample=False):
         rendered = tokenizer.apply_chat_template([{"role": "user", "content": prompt}], tokenize=False, add_generation_prompt=True)
         encoded = tokenizer(rendered, return_tensors="pt").to(model.device)
         count = encoded["input_ids"].shape[1]
         with torch.inference_mode():
-            out = model.generate(**encoded, do_sample=False, max_new_tokens=max_new_tokens or args.max_new_tokens, pad_token_id=tokenizer.eos_token_id)
+            out = model.generate(**encoded, max_new_tokens=max_new_tokens or args.max_new_tokens, pad_token_id=tokenizer.eos_token_id,
+                # Greedy by default (reproducible); a retry after a failed check samples.
+                **({"do_sample": True, "temperature": 0.7, "top_p": 0.9} if sample else {"do_sample": False}))
         tokens = out[0, count:]
         return tokenizer.decode(tokens, skip_special_tokens=True), int(count), int(len(tokens))
 

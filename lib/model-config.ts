@@ -7,6 +7,12 @@ export type ModelConfig = {
   timeoutMs: number;
   /** The model also writes the customer reply (SURAKSHA_MODEL_REPLIES=true). */
   replies?: boolean;
+  /**
+   * "model": the model writes the whole answer (payload and reply); the rules
+   * and checks only flag it, never replace it. Default when a model is
+   * connected; SURAKSHA_MODEL_AUTHORITY=rules restores rules-as-fallback.
+   */
+  authority?: "model";
 };
 
 const configs = new AsyncLocalStorage<ModelConfig | undefined>();
@@ -27,6 +33,7 @@ export function modelConfigFromEnv(env: {
   SURAKSHA_MODEL_TIMEOUT_MS?: string;
   SURAKSHA_MODEL_ALLOW_REMOTE?: string;
   SURAKSHA_MODEL_REPLIES?: string;
+  SURAKSHA_MODEL_AUTHORITY?: string;
 }): ModelConfig | undefined {
   const raw = env.SURAKSHA_MODEL_URL?.trim();
   if (!raw) return undefined;
@@ -54,6 +61,7 @@ export function modelConfigFromEnv(env: {
     // Opt-in: the model also writes the customer reply (checked before use).
     // Off by default; the reviewed templates write it otherwise.
     ...(env.SURAKSHA_MODEL_REPLIES === "true" ? { replies: true } : {}),
+    ...(env.SURAKSHA_MODEL_AUTHORITY?.trim() === "rules" ? {} : { authority: "model" as const }),
     timeoutMs:
       // Capped below the browser's 45 s client timeout, leaving time for the
       // rules fallback to answer when the model is slow or busy.

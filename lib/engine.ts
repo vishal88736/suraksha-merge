@@ -393,6 +393,16 @@ export type ModelAudit =
       };
       /** Who wrote the customer reply, and why a model reply was not used. */
       reply?: { source: "model" } | { source: "template"; reasons: string[] };
+      /**
+       * Model authority: the model wrote the whole answer. The checks did not
+       * change it; what they found is listed here for the human reviewer.
+       */
+      authority?: {
+        review_required: boolean;
+        payload_flags: string[];
+        reply_flags: string[];
+        attempts: { payload: number; reply: number };
+      };
     }
   | {
       status: "fallback";

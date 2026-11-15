@@ -6,26 +6,26 @@ with the English source (0-100); it is a rough fidelity signal, not a quality sc
 
 | Language | Strings | Translated | English fallback | Reply templates translated | Reply checks failed | Mean chrF (UI) | Mean chrF (replies) |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| assamese (`asm_Beng`) | 392 | 391 | 1 | 26/26 | 0 | 55.8 | 76.4 |
-| bengali (`ben_Beng`) | 392 | 391 | 1 | 26/26 | 0 | 56.0 | 79.8 |
-| bodo (`brx_Deva`) | 392 | 389 | 3 | 25/26 | 1 | 49.8 | 72.1 |
-| dogri (`doi_Deva`) | 392 | 392 | 0 | 26/26 | 0 | 55.9 | 77.6 |
-| gujarati (`guj_Gujr`) | 392 | 392 | 0 | 26/26 | 0 | 57.8 | 76.2 |
-| kannada (`kan_Knda`) | 392 | 388 | 4 | 26/26 | 0 | 55.2 | 72.9 |
-| kashmiri (`kas_Arab`) | 392 | 390 | 2 | 26/26 | 0 | 46.3 | 68.4 |
-| konkani (`gom_Deva`) | 392 | 392 | 0 | 26/26 | 0 | 54.0 | 75.6 |
-| maithili (`mai_Deva`) | 392 | 392 | 0 | 26/26 | 0 | 54.6 | 80.0 |
-| malayalam (`mal_Mlym`) | 392 | 387 | 5 | 26/26 | 0 | 57.0 | 76.1 |
-| manipuri (`mni_Mtei`) | 392 | 377 | 15 | 25/26 | 1 | 54.7 | 73.8 |
-| marathi (`mar_Deva`) | 392 | 391 | 1 | 26/26 | 0 | 54.9 | 73.1 |
-| nepali (`npi_Deva`) | 392 | 392 | 0 | 26/26 | 0 | 57.8 | 81.8 |
-| odia (`ory_Orya`) | 392 | 391 | 1 | 26/26 | 0 | 56.6 | 81.6 |
-| punjabi (`pan_Guru`) | 392 | 390 | 2 | 25/26 | 1 | 56.7 | 73.6 |
-| sanskrit (`san_Deva`) | 392 | 388 | 4 | 24/26 | 2 | 46.1 | 73.7 |
-| santali (`sat_Olck`) | 392 | 391 | 1 | 26/26 | 0 | 37.7 | 64.3 |
-| sindhi (`snd_Arab`) | 392 | 389 | 3 | 25/26 | 1 | 47.1 | 67.7 |
-| tamil (`tam_Taml`) | 392 | 390 | 2 | 26/26 | 0 | 53.8 | 75.7 |
-| telugu (`tel_Telu`) | 392 | 391 | 1 | 26/26 | 0 | 57.0 | 77.8 |
-| urdu (`urd_Arab`) | 392 | 387 | 5 | 23/26 | 3 | 55.5 | 74.9 |
+| assamese (`asm_Beng`) | 400 | 399 | 1 | 26/26 | 0 | 56.0 | 76.4 |
+| bengali (`ben_Beng`) | 400 | 399 | 1 | 26/26 | 0 | 56.4 | 79.8 |
+| bodo (`brx_Deva`) | 400 | 397 | 3 | 25/26 | 1 | 50.1 | 72.1 |
+| dogri (`doi_Deva`) | 400 | 400 | 0 | 26/26 | 0 | 56.1 | 77.6 |
+| gujarati (`guj_Gujr`) | 400 | 400 | 0 | 26/26 | 0 | 57.8 | 76.2 |
+| kannada (`kan_Knda`) | 400 | 396 | 4 | 26/26 | 0 | 55.5 | 72.9 |
+| kashmiri (`kas_Arab`) | 400 | 398 | 2 | 26/26 | 0 | 46.6 | 68.4 |
+| konkani (`gom_Deva`) | 400 | 399 | 1 | 26/26 | 0 | 54.0 | 75.6 |
+| maithili (`mai_Deva`) | 400 | 400 | 0 | 26/26 | 0 | 54.8 | 80.0 |
+| malayalam (`mal_Mlym`) | 400 | 395 | 5 | 26/26 | 0 | 57.4 | 76.1 |
+| manipuri (`mni_Mtei`) | 400 | 385 | 15 | 25/26 | 1 | 55.1 | 73.8 |
+| marathi (`mar_Deva`) | 400 | 399 | 1 | 26/26 | 0 | 55.0 | 73.1 |
+| nepali (`npi_Deva`) | 400 | 400 | 0 | 26/26 | 0 | 58.0 | 81.8 |
+| odia (`ory_Orya`) | 400 | 399 | 1 | 26/26 | 0 | 56.9 | 81.6 |
+| punjabi (`pan_Guru`) | 400 | 398 | 2 | 25/26 | 1 | 56.8 | 73.6 |
+| sanskrit (`san_Deva`) | 400 | 396 | 4 | 24/26 | 2 | 46.5 | 73.7 |
+| santali (`sat_Olck`) | 400 | 399 | 1 | 26/26 | 0 | 37.9 | 64.3 |
+| sindhi (`snd_Arab`) | 400 | 397 | 3 | 25/26 | 1 | 47.2 | 67.7 |
+| tamil (`tam_Taml`) | 400 | 398 | 2 | 26/26 | 0 | 54.0 | 75.7 |
+| telugu (`tel_Telu`) | 400 | 399 | 1 | 26/26 | 0 | 57.2 | 77.8 |
+| urdu (`urd_Arab`) | 400 | 395 | 5 | 23/26 | 3 | 55.6 | 74.9 |
 
 Failed reply checks are listed per language in `artifacts/i18n/qa.json` (not committed).

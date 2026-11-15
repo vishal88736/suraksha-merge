@@ -48,6 +48,7 @@ const ERROR_KEYS: Record<ClientErrorCode, MessageKey> = {
   invalid_response: "error.invalidResponse",
   network: "error.connection",
   unavailable: "error.unavailable",
+  model_unavailable: "error.modelUnavailable",
 };
 
 type Tab = "overview" | "json" | "provenance";

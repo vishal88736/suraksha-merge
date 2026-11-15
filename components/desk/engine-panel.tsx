@@ -218,6 +218,39 @@ export function EnginePanel({
               )
             : t("engine.sourceRules")}
       </p>
+      {result.audit.model.status === "used" && result.audit.model.authority && (
+        <div
+          className="authority-review"
+          data-review={result.audit.model.authority.review_required}
+          role="status"
+        >
+          <strong>
+            {result.audit.model.authority.review_required
+              ? t("authority.reviewTitle")
+              : t("authority.passedTitle")}
+          </strong>
+          <span>
+            {t("authority.body", {
+              payload: result.audit.model.authority.attempts.payload,
+              reply: result.audit.model.authority.attempts.reply,
+            })}
+          </span>
+          {result.audit.model.authority.payload_flags.length > 0 && (
+            <span>
+              {t("authority.payloadFlags", {
+                flags: result.audit.model.authority.payload_flags.join(", "),
+              })}
+            </span>
+          )}
+          {result.audit.model.authority.reply_flags.length > 0 && (
+            <span>
+              {t("authority.replyFlags", {
+                flags: result.audit.model.authority.reply_flags.join(", "),
+              })}
+            </span>
+          )}
+        </div>
+      )}
       <div
         id="output-panel"
         role="tabpanel"

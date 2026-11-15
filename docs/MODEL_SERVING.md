@@ -1,6 +1,26 @@
 # Local model serving for the website
 
-The website runs **model first, rules fallback**. On each `/api/triage` request:
+## Two modes
+
+- **Model authority (default when a model is connected).** The model writes the whole answer: category, amount, UTR, liability tier, actions, panic, language and the customer reply. Rules and templates never replace any of it. Every output is checked (the gates below and the reply checks further down); a failed check gets **one sampled retry** (`"sample": true`, temperature 0.7, top-p 0.9), and if the retry fails too, the model's answer is still shown with a red **"Needs human review"** banner listing each failed check (`audit.model.authority`). If the model is down, busy, or returns unparseable output twice, `/api/triage` answers `503 model_unavailable`; there is no rules answer to fall back to. Privacy masking still runs before the model. Serve `merged-dual-sft-004` (trained on JSON and replies); the reply request names the language the model detected, as every reply training row did.
+- **Rules as safety net** (`SURAKSHA_MODEL_AUTHORITY=rules`). The behaviour described in the rest of this section: model first, rules fallback, template replies.
+
+### Model authority, measured (`scripts/eval-authority.ts`, `artifacts/reviewed/eval/authority-dual-004.json`)
+
+| | 54 reviewed test cases | 42 unfamiliar wordings |
+|---|---:|---:|
+| Category correct | 96.3% | 76.2% |
+| All 8 fields correct | 55.6% | n/a |
+| Answer needs human review (a check failed after the retry) | 22 | 28 |
+| Reply passed every check | 36 | 18 |
+| No answer at all | 0 | 0 |
+| Median time | 11.0 s | 11.7 s |
+
+For comparison, with rules as the safety net (`merged-schema-sft-004`): 98.1% all fields on the reviewed test, 90.5% category on unfamiliar wordings, 2–4 s per answer. On its own the model mostly gets the liability tier wrong where it depends on verified operator context (`tier_requires_policy_revalidation`, `tier_not_supported_by_operator_context`), and its replies often give another category's advice (`reply_inconsistent_with_category`). Examples read during evaluation: fraud advice for a plain failed payment, an invented link (`report.cybercrime.gov.in`), and a Hindi reply claiming RBI had paid compensation for a lakh-rupee loss on a ₹9,000 case. All of these were flagged, none was hidden.
+
+## Rules as safety net
+
+On each `/api/triage` request:
 
 1. The rules engine always runs. It redacts PII and computes evidence, SLA and a complete rules payload.
 2. If `SURAKSHA_MODEL_URL` is set, the redacted message and operator context are sent to the local model server. It builds the exact schema prompt used in training (`research/common.py:prompt_for`), verified equal on all 758 training rows by `research/test_serve_model.py`.

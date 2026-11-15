@@ -14,9 +14,9 @@ CORPUS = ROOT / "data/processed/upi-v1/train/rlvr.jsonl"
 
 class ServeModelTests(unittest.TestCase):
     def serve(self, token=None):
-        prompts = []
-        def generate(prompt, max_new_tokens=None):  # fixture generator, not a model
-            prompts.append(prompt)
+        prompts = []; self.samples = []
+        def generate(prompt, max_new_tokens=None, sample=False):  # fixture generator, not a model
+            prompts.append(prompt); self.samples.append(sample)
             return ("fixture-reply" if "customer support reply" in prompt else "fixture-output"), 10, 2
         server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(generate, INFO, token))
         threading.Thread(target=server.serve_forever, daemon=True).start()
@@ -38,7 +38,7 @@ class ServeModelTests(unittest.TestCase):
         started = threading.Event()
         release = threading.Event()
         calls = []
-        def slow_generate(prompt, max_new_tokens=None):  # fixture: holds the GPU lock until released
+        def slow_generate(prompt, max_new_tokens=None, sample=False):  # fixture: holds the GPU lock until released
             calls.append(prompt)
             started.set()
             release.wait(5)
@@ -79,6 +79,10 @@ class ServeModelTests(unittest.TestCase):
         self.assertEqual(len(prompts), 2)
         self.assertIn("customer support reply", prompts[-1])
         self.assertEqual(self.call(url + "/v1/triage", {"message": "m", "task": "poem"})[0], 400)
+        # A retry asks for a sampled generation; anything but a boolean is refused.
+        self.assertEqual(self.call(url + "/v1/triage", {"message": "m", "sample": True})[0], 200)
+        self.assertEqual(self.samples, [False, False, True])
+        self.assertEqual(self.call(url + "/v1/triage", {"message": "m", "sample": "yes"})[0], 400)
         self.assertEqual(self.call(url + "/v1/triage", {"message": "m", "reply": True})[0], 400)
 
     def test_request_validation(self):

@@ -206,20 +206,21 @@ export function validateModelReply(
     if (!ALLOWED_DOMAINS.has(domain.toLowerCase())) reasons.push("reply_unknown_link");
   if (/(?<!\d)(?:\+?91[ -]?)?[6-9](?:[ -]?\d){9}(?!\d)/.test(digits)) reasons.push("reply_contact_number");
   if (reasons.length) return { ok: false, reasons: [...new Set(reasons)] };
-  // Same layout as the templates: an opening paragraph, numbered steps, and a
-  // closing paragraph.
+  return { ok: true, reply: splitReply(reply) };
+}
+
+/** The desk's layout: an opening paragraph, numbered steps, a closing paragraph. */
+function splitReply(text: string) {
+  const reply = text.trim();
   const paragraphs = reply.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
   const isStep = (p: string) => /^\d+[.)]\s/.test(p);
   const steps = paragraphs.filter(isStep).map((p) => p.replace(/^\d+[.)]\s*/, ""));
   const prose = paragraphs.filter((p) => !isStep(p));
   return {
-    ok: true,
-    reply: {
-      introduction: prose[0] ?? "",
-      steps,
-      escalation: prose.length > 1 ? prose.slice(1).join("\n\n") : "",
-      text: reply,
-    },
+    introduction: prose[0] ?? "",
+    steps,
+    escalation: prose.length > 1 ? prose.slice(1).join("\n\n") : "",
+    text: reply,
   };
 }
 
@@ -239,6 +240,7 @@ async function callModel(
   fetchImpl: Fetch,
   task: "schema" | "reply" = "schema",
   timeoutMs: number = config.timeoutMs,
+  sample = false,
 ) {
   const response = await fetchImpl(`${config.url}/v1/triage`, {
     method: "POST",
@@ -248,9 +250,12 @@ async function callModel(
       // The server drops queued work it could not start before this budget.
       "x-suraksha-deadline-ms": String(timeoutMs),
     },
-    body: JSON.stringify(
-      task === "reply" ? { message: sanitized, context, task } : { message: sanitized, context },
-    ),
+    body: JSON.stringify({
+      message: sanitized,
+      context,
+      ...(task === "reply" ? { task } : {}),
+      ...(sample ? { sample } : {}),
+    }),
     signal: AbortSignal.timeout(timeoutMs),
   });
   if (response.status === 503) throw new Error("model_busy");
@@ -282,6 +287,151 @@ async function modelReply(
   }
 }
 
+/** The model could not produce an answer at all (down, busy, or invalid output twice). */
+export class ModelUnavailableError extends Error {
+  readonly reasons: string[];
+  constructor(reasons: string[]) {
+    super(`model_unavailable: ${reasons.join(", ")}`);
+    this.name = "ModelUnavailableError";
+    this.reasons = reasons;
+  }
+}
+
+function modelError(error: unknown): string {
+  return error instanceof Error && error.name === "TimeoutError"
+    ? "model_timeout"
+    : error instanceof Error && (error.message.startsWith("model_http_") || error.message === "model_busy")
+      ? error.message
+      : "model_unavailable";
+}
+
+/**
+ * Model authority: the model writes the whole answer, the payload and the
+ * customer reply. Nothing is replaced by rules or templates. Each output is
+ * checked; a failed check gets one sampled retry, and if the retry fails too
+ * the model's answer is still shown, flagged for human review with every
+ * failed check listed. Only privacy masking runs before the model.
+ */
+async function triageModelAuthority(
+  raw: TriageInput,
+  input: z.infer<typeof inputSchema>,
+  rules: TriageResult,
+  config: ModelConfig,
+  fetchImpl: Fetch,
+): Promise<TriageResult> {
+  const started = Date.now();
+  const context = operatorContext(raw);
+  const remaining = () => config.timeoutMs - (Date.now() - started);
+  const languageFlags = MODEL_LANGUAGES.includes(rules.payload.detected_language)
+    ? []
+    : ["language_outside_model_training"];
+
+  // 1. The payload: greedy first, one sampled retry if a check fails.
+  type Attempt = { payload: Payload | null; reasons: string[] };
+  let best: Attempt | null = null;
+  let model: ModelInfo | null = null;
+  let latency = 0;
+  let payloadAttempts = 0;
+  const errors: string[] = [];
+  for (const sample of [false, true]) {
+    if (sample && remaining() < MIN_REPLY_MS) break;
+    payloadAttempts++;
+    let response: z.infer<typeof serverResponse>;
+    try {
+      response = await callModel(config, rules.privacy.sanitized, context, fetchImpl, "schema", remaining(), sample);
+    } catch (error) {
+      errors.push(modelError(error));
+      continue;
+    }
+    model = response.model;
+    latency += response.latency_ms;
+    const checked = validateModelPayload(response.raw, input, rules);
+    const attempt: Attempt = checked.ok
+      ? { payload: checked.payload, reasons: [] }
+      : (() => {
+          // A schema-valid answer is kept even when checks fail: it is shown
+          // flagged. Only unparseable output cannot be shown at all.
+          try {
+            const parsed = payloadSchema.safeParse(parseStrictJson(response.raw.trim()));
+            return { payload: parsed.success ? parsed.data : null, reasons: checked.reasons };
+          } catch {
+            return { payload: null, reasons: checked.reasons };
+          }
+        })();
+    if (!best || (attempt.payload && (!best.payload || attempt.reasons.length < best.reasons.length)))
+      best = attempt;
+    if (attempt.payload && !attempt.reasons.length) break;
+  }
+  if (!best?.payload || !model)
+    throw new ModelUnavailableError(best ? best.reasons : errors.length ? [...new Set(errors)] : ["model_unavailable"]);
+  const payload = best.payload;
+  const payloadFlags = [...languageFlags, ...best.reasons];
+
+  // Facts derived from the model's own payload (due date, compensation,
+  // evidence spans); the template reply this builds is discarded below.
+  const derived = triage(raw, { payload, model: { status: "used", model, latency_ms: latency } });
+
+  // 2. The reply: greedy first, one sampled retry if a check fails. Every
+  // reply training row named its language, so the reply request names the
+  // language the model itself detected (the operator's choice, if set).
+  const replyContext = { ...context, language: input.language === "auto" ? payload.detected_language : input.language };
+  let replyText: string | null = null;
+  let replyFlags: string[] = [];
+  let replyAttempts = 0;
+  for (const sample of [false, true]) {
+    if (remaining() < MIN_REPLY_MS) {
+      if (replyText === null) replyFlags = ["reply_no_time"];
+      break;
+    }
+    replyAttempts++;
+    let text: string | null = null;
+    try {
+      const response = await callModel(config, rules.privacy.sanitized, replyContext, fetchImpl, "reply", remaining(), sample);
+      latency += response.latency_ms;
+      text = response.reply?.trim() || null;
+    } catch (error) {
+      if (replyText === null) replyFlags = [modelError(error).replace("model_", "reply_")];
+      continue;
+    }
+    if (!text) {
+      if (replyText === null) replyFlags = ["reply_not_generated"];
+      continue;
+    }
+    const checked = validateModelReply(text, payload, input.message, derived.sla.estimated_compensation_inr);
+    const reasons = checked.ok ? [] : checked.reasons;
+    if (replyText === null || reasons.length < replyFlags.length) {
+      replyText = text;
+      replyFlags = reasons;
+    }
+    if (!reasons.length) break;
+  }
+
+  const reply = replyText
+    ? splitReply(replyText)
+    : { introduction: "", steps: [], escalation: "", text: "" };
+  const policy = policyCheck(reply.text, payload);
+  return {
+    ...derived,
+    reply,
+    audit: {
+      ...derived.audit,
+      ...policy,
+      model: {
+        status: "used",
+        model,
+        latency_ms: latency,
+        reply: { source: "model" },
+        authority: {
+          review_required: payloadFlags.length > 0 || replyFlags.length > 0 || !replyText,
+          payload_flags: payloadFlags,
+          reply_flags: replyText ? replyFlags : replyFlags.length ? replyFlags : ["reply_not_generated"],
+          attempts: { payload: payloadAttempts, reply: replyAttempts },
+        },
+      },
+    },
+  };
+}
+
 /** Model first, rules fallback. Rules always run and remain the safety net. */
 export async function triageWithModel(
   raw: TriageInput,
@@ -291,6 +441,7 @@ export async function triageWithModel(
   const input = inputSchema.parse(raw);
   const rules = triage(raw);
   if (!config) return rules;
+  if (config.authority === "model") return triageModelAuthority(raw, input, rules, config, fetchImpl);
   // The pilot model was trained on five languages only. For any other
   // language the rules engine answers, and the reason is shown.
   if (!MODEL_LANGUAGES.includes(rules.payload.detected_language))

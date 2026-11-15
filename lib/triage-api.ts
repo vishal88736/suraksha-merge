@@ -5,7 +5,7 @@ import {
 } from "./engine.ts";
 import { parseStrictJson } from "./strict-json.ts";
 import { getModelConfig } from "./model-config.ts";
-import { triageWithModel } from "./model-triage.ts";
+import { ModelUnavailableError, triageWithModel } from "./model-triage.ts";
 import {
   apiError,
   BodyReadError,
@@ -104,7 +104,16 @@ export function createTriageHandler(
       return Response.json(result, {
         headers: { ...NO_STORE, "x-request-id": id },
       });
-    } catch {
+    } catch (error) {
+      // Model authority has no rules answer to fall back to: say the model
+      // could not answer, with the reasons, rather than inventing one.
+      if (error instanceof ModelUnavailableError)
+        return apiError(
+          "model_unavailable",
+          `The model could not produce an answer (${error.reasons.join(", ")}). Please try again.`,
+          503,
+          id,
+        );
       (options.log ?? ((event) => console.error(JSON.stringify(event))))({
         level: "error",
         request_id: id,

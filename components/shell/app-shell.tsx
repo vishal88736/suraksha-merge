@@ -51,7 +51,7 @@ export function LanguageSwitcher() {
   );
 }
 
-type ModelStatus = "none" | "pilot" | "trained";
+type ModelStatus = "none" | "pilot" | "trained" | "authority" | "offline";
 
 /** Ask /api/health once which model, if any, is answering. */
 function useModelStatus(): ModelStatus {
@@ -64,15 +64,20 @@ function useModelStatus(): ModelStatus {
           (response.ok ? response.json() : null) as Promise<{
             model_reachable?: boolean;
             trained_model_connected?: boolean;
+            engine?: string;
           } | null>,
       )
       .then((body) =>
         setStatus(
-          body?.trained_model_connected
-            ? "trained"
-            : body?.model_reachable
-              ? "pilot"
-              : "none",
+          body?.engine === "model_authority_offline"
+            ? "offline"
+            : body?.engine === "model_authority" && body.trained_model_connected
+              ? "authority"
+              : body?.trained_model_connected
+                ? "trained"
+                : body?.model_reachable
+                  ? "pilot"
+                  : "none",
         ),
       )
       .catch(() => {
@@ -197,11 +202,15 @@ export function AppShell({
             <span className="engine-status">
               <span className="online-dot" />{" "}
               {t(
-                modelStatus === "trained"
-                  ? "topbar.engineTrained"
-                  : modelStatus === "pilot"
-                    ? "topbar.engineModel"
-                    : "topbar.engine",
+                modelStatus === "authority"
+                  ? "topbar.engineAuthority"
+                  : modelStatus === "offline"
+                    ? "topbar.engineOffline"
+                    : modelStatus === "trained"
+                      ? "topbar.engineTrained"
+                      : modelStatus === "pilot"
+                        ? "topbar.engineModel"
+                        : "topbar.engine",
               )}
             </span>
             <span className="topbar-divider" />

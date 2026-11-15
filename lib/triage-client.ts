@@ -10,7 +10,8 @@ export type ClientErrorCode =
   | "timeout"
   | "network"
   | "invalid_response"
-  | "unavailable";
+  | "unavailable"
+  | "model_unavailable";
 export class TriageClientError extends Error {
   readonly code: ClientErrorCode;
   readonly requestId?: string;
@@ -77,6 +78,7 @@ export async function requestTriage(
         408: "timeout",
         413: "payload_too_large",
         429: "rate_limited",
+        503: "model_unavailable",
       };
       const retry = Number(response.headers.get("retry-after"));
       throw new TriageClientError(
