@@ -1,5 +1,7 @@
 # Review and AlignTune preparation
 
+> **Status (15 November 2026).** Review and training have since been done: 652 corpus cases and 213 varied-wording cases reviewed (decisions in `data/review/`), and four training rounds run. The latest, round 4, trained `merged-schema-sft-004` and `merged-dual-sft-004` on 810 reviewed cases (`data/processed/upi-reviewed-v3`); the round-by-round record, with commands and results, is in [VERIFICATION.md](VERIFICATION.md). The text below is the original preparation runbook.
+
 Implementation executed on 12 November 2026. No model has been trained or evaluated. The original 934-case corpus and CuratorKIT outputs are preserved. Review data and smoke outputs are local, private JSONL files ignored by Git.
 
 ## Current evidence

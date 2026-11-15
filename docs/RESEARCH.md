@@ -1,5 +1,7 @@
 # Research workflow and evidence boundary
 
+> **Status (15 November 2026).** The research question below (weighted merging of schema and empathy specialists) was tested in the pilots: the empathy merge hurt accuracy and isn't used. The served models are plain SFT on human-reviewed data; see [VERIFICATION.md](VERIFICATION.md) and [MODEL_SERVING.md](MODEL_SERVING.md).
+
 Suraksha-Merge tests whether independently trained schema and response specialists retain their strengths after weighted-delta merging. It does not assume that merging eliminates task interference. The live desk currently executes the shared TypeScript rule engine and reply templates.
 
 ## Environment

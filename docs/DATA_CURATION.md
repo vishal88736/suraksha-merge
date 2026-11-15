@@ -1,5 +1,7 @@
 # Public data curation
 
+> **Status (15 November 2026).** This is the original public-data curation. The reviewed training set built on it (810 cases: corpus + 213 hand-written varied-wording cases) is `data/processed/upi-reviewed-v3`; see [HUMAN_REVIEW_AND_TRAINING.md](HUMAN_REVIEW_AND_TRAINING.md) and [VERIFICATION.md](VERIFICATION.md).
+
 Executed locally on 12 November 2026. This extends `phase1_curatorkit_pipeline.py`; it does not train a model. The generated corpus has **934 examples**, including **259 publicly sourced CuCom examples** and **675 locally authored synthetic examples**. **Zero examples are human-reviewed.** All public contribution here is itself publisher-declared synthetic dialogue, not operational bank evidence.
 
 ## Reproduce the run

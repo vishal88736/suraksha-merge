@@ -1,5 +1,7 @@
 # RTX 4050 NF4 smoke profile
 
+> **Status (15 November 2026).** This profile (`--profile laptop-6gb`) is what trained every reviewed model on the RTX 4050, including `merged-schema-sft-004` (92 steps) and `merged-dual-sft-004` (183 steps). Commands: [README](../README.md#-quick-start), *Reproduce the pipeline*.
+
 This experimental profile was added after CUDA and bitsandbytes NF4 execution passed on the user's RTX 4050 laptop. It enables actual training commands for a one-step allocation/adapter-saving experiment. Whether Qwen 3B fits remains unverified until that step executes; configuration checks do not establish memory fit or model quality.
 
 The `laptop-6gb` profile uses the existing AlignTune TRL backend with NF4 double quantization, bf16 compute when supported, rank 8 / alpha 16 LoRA on q_proj and v_proj, gradient checkpointing, SDPA attention, an 8-bit AdamW optimizer, batch 1 and accumulation 2. Sequence budget is 1,280; schema uses two generations and at most 256 generated tokens. Schema KL beta is zero for this smoke experiment. DPO keeps beta 0.1 and uses the base with adapters disabled as its reference, following the pinned backend's PEFT path. No second reference model or vLLM server is requested. These are experimental smoke settings, not selected full-training hyperparameters.

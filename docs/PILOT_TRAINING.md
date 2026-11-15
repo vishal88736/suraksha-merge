@@ -1,5 +1,7 @@
 # Unreviewed pilot: CuratorKIT → AlignTune → AuditKIT on an RTX 4050
 
+> **Historical record (13–14 November 2026).** The pilots here were trained on unreviewed data and are not served. The current models are trained on 810 human-reviewed cases: `merged-schema-sft-004` and `merged-dual-sft-004`; see [MODEL_SERVING.md](MODEL_SERVING.md) and [VERIFICATION.md](VERIFICATION.md).
+
 **Status:** an explicitly labelled research pilot on the *unreviewed synthetic* corpus. The corpus has 0 human-reviewed cases, and the test set is synthetic and from the same distribution. These numbers are **not** a model-quality claim: the report sets `model_quality_claim_permitted: false` and `benchmark_human_reviewed: false`. Pilot adapters can't be promoted. `scripts/merge_pilot_adapter.py` merges one only into a pilot base under `artifacts/pilot` (a GRPO warm start and a faster pilot server), and that merge is still labelled a pilot. They can be served only with `--allow-pilot-adapter`, and are then labelled as a pilot in the UI and `/api/health` (`trained_model_connected` stays false). Real training still requires human review (docs/HUMAN_REVIEW_AND_TRAINING.md).
 
 ## Pipeline

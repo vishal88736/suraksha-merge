@@ -50,7 +50,7 @@
 | 1:35 | The interface in Tamil, Bengali and Urdu (all 22 scheduled languages) |
 | 1:43 | Pipeline explorer, policy library and the round-4 results |
 
-<sub>Recorded on the live site with the round-4 model (`merged-schema-sft-004`) on an RTX 4050.</sub>
+<sub>Recorded on the live site with the round-4 model (`merged-schema-sft-004`) on an RTX 4050, in **rules-as-safety-net** mode, before the model-authority mode (now the default) existed. In model-authority mode the same messages are answered entirely by the model, and most are flagged for human review; see [Results](#-results).</sub>
 
 ---
 
@@ -78,12 +78,12 @@ When a UPI payment goes wrong, the customer is scared and the person helping the
 | Code-mixed, panicked messages | Detects the language and script and **replies in the same language** (all 22 scheduled Indian languages plus English, Hinglish, Tanglish and Marathi–English), with a tone matched to a panic-severity score |
 | Facts buried in text or screenshots | Extracts a **strict 8-field JSON**: `utr_number`, `dispute_category`, `amount_inr`, `reporting_delay_working_days`, `rbi_liability_tier`, `mandatory_actions`, `detected_language`, `panic_severity`. It **reads screenshots of bank SMS and UPI receipts on the device** and finds UTRs in bank-statement lines (`UPI/612345678901/…`) |
 | Look-alike cases | Classifies into **7 dispute categories** and maps each to its RBI tier (T+1, T+5, conditional fraud liability, bank-policy review, or pending verification). It turns a transaction date into a **due date and delay compensation** ("reversal due by 6 Nov · ₹800") |
-| Over-promising | Every draft is **checked for refund guarantees**. Liability stays "pending verification" until a human confirms the facts |
+| Over-promising | Every draft is **checked for refund guarantees**, missing fraud steps and invented links or numbers. A failing answer is flagged "Needs human review" with the reason |
 | PII leakage | **Masks PII before any model sees the text**: phones in any grouping, VPAs, Aadhaar, accounts, PAN, and OTP, PIN, CVV and passwords of any shape. A 12-digit number survives only when it's labelled as a UTR or RRN |
-| Prompt injection and model mistakes | The model only **reads facts and the category**. The **policy rules decide** the tier, the actions, the reply language and a minimum urgency. Grounding gates reject invented or ambiguous facts, and the rules answer whenever a check fails |
-| Unreliable LLMs | A **fine-tuned 3B specialist trained on human-reviewed data** takes category accuracy on unfamiliar wording from 38% (rules alone) to **74%**, and the rules engine is always the fallback |
+| Prompt injection and model mistakes | The message is treated as data, never instructions. Every model answer is **checked against the message and the RBI rules**: invented or ambiguous facts, unsupported liability tiers, wrong-category advice. In the default mode a failed check gets one retry and is then **shown flagged**; in rules-as-safety-net mode the rules answer instead |
+| Unreliable LLMs | A **fine-tuned 3B specialist trained on 810 human-reviewed cases**. With the rules as safety net it gets **90.5%** of categories right on unfamiliar wording (rules alone: 45%); writing everything itself, 76% |
 | Scattered escalation | Gives the **mandatory actions in order**: contact the bank or PSP, secure the channel, call 1930, report on cybercrime.gov.in, raise an in-app dispute, track the reversal, with escalation guidance up to the RBI Ombudsman |
-| Trust and audit | Shows the payload source, **what the policy rules changed**, **field-level provenance** and the verification checks, with exportable masked traces. **Nothing is stored** |
+| Trust and audit | Shows who wrote the answer, every failed check, **field-level provenance** and the verification checks, with exportable masked traces. **Nothing is stored** |
 
 > **A human always decides.** SurakshaDesk drafts and structures. It never files a dispute, approves a refund or contacts a bank.
 
@@ -148,6 +148,8 @@ SurakshaDesk supports **all 22 languages of the Eighth Schedule of the Constitut
 
 ✍️ = written by hand. Every other cell is a **machine translation** by [AI4Bharat IndicTrans2](https://github.com/AI4Bharat/IndicTrans2) that hasn't been reviewed by a native speaker. Machine-translated replies are labelled as such in the desk.
 
+> **Reply drafts in these 22 languages are the reviewed templates**, used in rules-as-safety-net and rules-only modes. In the default model-authority mode the model writes the reply, and it was trained only on English, Hinglish and Hindi; other languages are sent to it anyway and flagged `language_outside_model_training`.
+
 ### Romanized registers (Latin script)
 
 | Register | Example customer message | Reply |
@@ -160,9 +162,9 @@ SurakshaDesk supports **all 22 languages of the Eighth Schedule of the Constitut
 ### How the language is chosen
 
 - **The reply matches the customer.** A native-script message gets a native-script reply, and a romanized Hinglish, Tanglish or Marathi–English message gets the same romanized register.
-- **Script first, then words.** Unique scripts decide the language directly. Shared scripts are resolved by distinctive letters and marker words: Assamese ৰ/ৱ, Sindhi and Kashmiri letters, and Marathi, Nepali, Konkani, Maithili, Bodo, Dogri and Sanskrit marker words. **The rules, not the model, choose the reply language.**
+- **Script first, then words.** Unique scripts decide the language directly. Shared scripts are resolved by distinctive letters and marker words: Assamese ৰ/ৱ, Sindhi and Kashmiri letters, and Marathi, Nepali, Konkani, Maithili, Bodo, Dogri and Sanskrit marker words. In model-authority mode the model names the language and writes the reply in it; a mismatch with the script is flagged (`language_not_grounded`). With the rules as safety net, the rules choose.
 - **The rules understand native scripts.** Fraud, failed, not-received, recipient, merchant and wrong-account keywords are recognised in Bengali, Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam, Punjabi, Urdu, Odia and Hindi.
-- **The fine-tuned model reads English, Hindi and Hinglish**, the languages with human-reviewed training data. For every other language the rules engine answers, and the reason (`language_outside_model_training`) is shown.
+- **The fine-tuned model was trained on English, Hindi and Hinglish**, the languages with human-reviewed data. With the rules as safety net, every other language is answered by the rules (`language_outside_model_training`); in model-authority mode it goes to the model, flagged.
 - **Right-to-left** layout is used for Urdu, Kashmiri and Sindhi. Noto fonts cover every script; each interface language loads only when it's chosen.
 
 ### How the translations were made and checked
@@ -177,29 +179,39 @@ SurakshaDesk supports **all 22 languages of the Eighth Schedule of the Constitut
 
 ## ⚙️ How it works
 
+SurakshaDesk runs in one of three modes, chosen by configuration ([details](docs/MODEL_SERVING.md)):
+
+| Mode | When | Who writes the answer |
+| :--- | :--- | :--- |
+| **Model authority** (default with a model) | a model server is configured | **The model writes everything**: payload and customer reply. Rules and templates only check it. |
+| **Rules as safety net** | `SURAKSHA_MODEL_AUTHORITY=rules` | The model reads facts and the category; policy rules decide tier, actions, language; reviewed templates write the reply; any failed gate → the rules answer |
+| **Rules only** | no model server | The rules engine and templates. Works anywhere, including a deployed Worker |
+
 ```mermaid
 flowchart LR
-    A["💬 Message or screenshot<br/><sub>22 Indian languages + English</sub>"] --> B["🪪 Redaction<br/><sub>phone · VPA · Aadhaar · OTP/PIN/password<br/>UTR kept only with a label</sub>"]
-    B --> R["📏 Rules engine<br/><sub>category · language · urgency<br/>RBI tier · actions · due date</sub>"]
-    B --> C{"🤖 Model server<br/>configured?"}
-    C -- yes --> D["Qwen2.5-3B<br/><sub>reads facts + category</sub>"]
-    D --> E{"✅ Gates<br/><sub>schema · grounded & unique facts<br/>may not contradict the rules</sub>"}
-    E -- pass --> P["⚖️ Policy rules decide<br/><sub>tier · actions · reply language<br/>urgency floor</sub>"]
-    E -- fail / busy / timeout --> R
-    C -- no --> R
-    P --> G["🧾 Structured triage<br/><sub>8-field JSON + provenance</sub>"]
-    R --> G
-    G --> H["✍️ Reply draft<br/><sub>customer's language<br/>no-guarantee & rail checks</sub>"]
-    H --> I["👩‍💼 Human agent<br/><sub>reviews, decides, acts</sub>"]
+    A["💬 Message or screenshot"] --> B["🪪 Redaction<br/><sub>phone · VPA · Aadhaar · OTP/PIN/password<br/>UTR kept only with a label</sub>"]
+    B --> M["🤖 Qwen2.5-3B, fine-tuned<br/><sub>writes the 8-field JSON</sub>"]
+    M --> C1{"✅ Checks<br/><sub>grounded facts · RBI tier<br/>fraud rails · category</sub>"}
+    C1 -- fail --> R1["🔁 one sampled retry"]
+    R1 --> C1
+    C1 --> W["🤖 Model writes the reply<br/><sub>in the language it detected</sub>"]
+    W --> C2{"✅ Reply checks<br/><sub>no promise · rails · language<br/>no invented links or numbers</sub>"}
+    C2 -- fail --> R2["🔁 one sampled retry"]
+    R2 --> C2
+    C2 --> S["🧾 Model's answer, as written<br/><sub>green: every check passed<br/>red: needs human review + reasons</sub>"]
+    S --> H["👩‍💼 Human agent<br/><sub>reviews, decides, acts</sub>"]
 ```
 
-1. **Redact.** Context-aware masking runs first. Labelled UTR/RRN numbers survive; anything else that looks like PII or a credential is masked.
-2. **Rules always run.** The rules classify on evidence: a scam needs money to have left, and "no money was debited" or "the recipient received it" rule out a reversal. They detect the language and urgency and compute the tier, the actions and the due date.
-3. **The model reads the message** (if a model server is configured) and returns the strict JSON. It may **name a category when the rules can't**, but it may not contradict one they found.
-4. **Gates.** The output is rejected if it isn't strict JSON, if a UTR or amount doesn't appear in the message, or if it picks one of several UTRs or amounts.
-5. **The policy rules decide the rest.** The tier, the actions and the reply language come from the rules for the model's category. Urgency can be raised by the model but never lowered. Every change is recorded in `policy_from_rules`.
-6. **Fallback.** Any failure, timeout or busy model (bounded queue, 15 s budget) means the rules answer instead.
-7. **Draft, check, show.** A templated reply in the customer's language is checked for refund promises and the required rails. The UI shows the source, what the rules changed, provenance and every check.
+**Model authority, step by step**
+
+1. **Redact.** Context-aware masking runs first. Labelled UTR/RRN numbers survive; anything else that looks like PII or a credential is masked before the model sees the text.
+2. **The model writes the assessment**: UTR, category, amount, reporting delay, RBI liability tier, mandatory actions, language and urgency, as strict JSON.
+3. **Checks.** Facts must appear in the message (and be unique); the tier must be one the operator-verified context supports; fraud categories need the fraud rails; the category may not contradict clear keyword evidence. A failed check → **one sampled retry**.
+4. **The model writes the reply** in the language it detected. It is checked for refund promises, missing fraud steps, wrong language, invented UTRs, amounts, links or phone numbers, and advice from another category, again with one retry.
+5. **Show it, never replace it.** The desk shows the model's answer. If a check still fails, a red **"Needs human review"** banner lists every failure. Due date and compensation are computed from the model's own category and dates.
+6. **No answer is better than a fake one.** If the model is offline, busy or produces unreadable output twice, the desk says the model could not answer.
+
+With **rules as safety net**, steps 2–3 become gates: the policy rules then decide the tier, actions and language, a reviewed template writes the reply, and any failure means the rules answer instead (see [MODEL_SERVING.md](docs/MODEL_SERVING.md), "Rules as safety net").
 
 ---
 
@@ -214,14 +226,14 @@ flowchart LR
     C --> H["👤 2 · Human review<br/><sub>652 corpus + 213 varied-wording<br/>cases, batch sign-off</sub>"]
     H --> T
     subgraph T ["3 · AlignTune"]
-      T1["QLoRA SFT on 810<br/>reviewed cases (6 GB GPU)"]
+      T1["QLoRA SFT on 810<br/>reviewed cases (6 GB GPU)<br/><sub>JSON model + JSON & reply model</sub>"]
       T2["DR-GRPO · DPO · weighted merge<br/><sub>pilot experiments</sub>"]
     end
     T --> A
     subgraph A ["4 · AuditKIT + runtime eval"]
       A1["schema · all-fields · guarantees<br/>paired bootstrap · real gates"]
     end
-    A --> M["🖥️ Served<br/><sub>model reads facts,<br/>rules decide policy</sub>"]
+    A --> M["🖥️ Served<br/><sub>model writes the answer,<br/>checks flag it</sub>"]
 ```
 
 ### 1 · CuratorKIT: clean, safe, split data
@@ -246,7 +258,9 @@ flowchart LR
 [`phase2_aligntune_train_and_merge.py`](phase2_aligntune_train_and_merge.py) · [pilot log](docs/PILOT_TRAINING.md)
 
 - **QLoRA SFT** on Qwen2.5-3B-Instruct (NF4, LoRA r16/α32 on all projections, assistant-only chunked loss) on a **6 GB RTX 4050 laptop GPU**.
-- `--reviewed-laptop` trains only on data whose curation manifest marks every row human-reviewed. Round 4 used 810 cases and 92 steps, and was merged into `artifacts/reviewed/merged-schema-sft-004`.
+- `--reviewed-laptop` trains only on data whose curation manifest marks every row human-reviewed. Round 4 used 810 cases:
+  - `merged-schema-sft-004`: the JSON task, 92 steps (used with the rules as safety net);
+  - `merged-dual-sft-004`: JSON and reply tasks, 183 steps (used in model-authority mode, the default).
 - Pilot experiments on the unreviewed corpus (DR-GRPO, empathy DPO with a memory patch, task-arithmetic merging) are documented. The empathy merge hurt accuracy and isn't used.
 
 ### 4 · AuditKIT and runtime evaluation
@@ -254,14 +268,29 @@ flowchart LR
 [`phase3_auditkit_eval.py`](phase3_auditkit_eval.py) · [`scripts/eval-runtime.ts`](scripts/eval-runtime.ts) · [`scripts/eval-challenge.ts`](scripts/eval-challenge.ts)
 
 - **AuditKIT 1.1.6** scores schema validity, all-fields exact match and unsafe guarantees, with **paired bootstrap** confidence intervals. It must agree with an independent scorer, and that requirement exposed a stale-cache bug that is now fixed.
-- **Runtime evaluation** replays recorded model outputs through the real gates and policy rules, so it measures what users actually get.
+- **Runtime evaluation** replays recorded model outputs through the real gates and policy rules ([`scripts/eval-runtime.ts`](scripts/eval-runtime.ts)), and [`scripts/eval-authority.ts`](scripts/eval-authority.ts) runs the model-authority pipeline live, so both measure what users actually get.
 - A **42-case challenge set** of unfamiliar wording ([`data/challenge/`](data/challenge)) measures generalisation beyond the templates.
 
 ---
 
 ## 📊 Results
 
-Every row goes through the real runtime path: model, gates, then the policy rules.
+### Model authority (the default): the model writes everything
+
+`merged-dual-sft-004`, live through the real pipeline, measured with [`scripts/eval-authority.ts`](scripts/eval-authority.ts).
+
+| | 54 reviewed test cases | 42 unfamiliar-wording cases |
+| :--- | ---: | ---: |
+| Category correct | 96.3% | 76.2% |
+| All 8 fields correct | 55.6% | n/a |
+| Needs human review (a check still failed after the retry) | 22 | 28 |
+| Reply passed every check | 36 | 18 |
+| No answer at all | 0 | 0 |
+| Median time per answer | 11 s | 12 s |
+
+### Rules as safety net (`SURAKSHA_MODEL_AUTHORITY=rules`)
+
+Model, gates, then the policy rules; template replies.
 
 | Pipeline | 54 reviewed test cases<br>(all 8 fields exact) | 42 unfamiliar-wording cases<br>(category correct) |
 | :--- | ---: | ---: |
@@ -269,16 +298,16 @@ Every row goes through the real runtime path: model, gates, then the policy rule
 | Rules only (today's rules) | **100%** | 45.2% |
 | Round 2: SFT on 598 reviewed cases | 90.7% | 59.5%¹ |
 | Round 3: SFT on 765 reviewed cases incl. varied wording | 96.3% | 81.0% |
-| **Round 4: SFT on 810 reviewed cases incl. live-testing cases** ⭐ *served* | **98.1%** | **90.5%** |
+| **Round 4: SFT on 810 reviewed cases incl. live-testing cases** | **98.1%** | **90.5%** |
 
 <sub>¹ Measured with the rules of that time. Rounds 3 and 4 were both re-measured with today's rules, so they compare directly.</sub>
 
 **How to read this honestly**
 
-- ✅ **Reviewed, varied wording is what improved generalisation.** On wording it never saw, the system goes from 45% (rules alone) to 91%. The one remaining reviewed-test error is in panic severity.
-- ⚠️ **The rules are still the safety net.** On six fresh messages typed into the live site, every final answer was right, but the model's own answer was accepted for only 2; for the other 4 the rules contradicted it and answered instead.
+- ⚠️ **On its own, the model is not reliable enough for customers.** It gets most categories right, but often picks a liability tier the verified facts don't support, and its replies mix up which advice fits which case (for example fraud advice for a plain failed payment, or an invented link). In the default mode every such answer is flagged, not hidden.
+- ✅ **With the rules as safety net it is accurate**, and reviewed, varied wording is what improved it: on unfamiliar wording, 45% (rules alone) → 91%.
+- ⚠️ **Its replies were learned from the reviewed templates**, so they read like them, with errors. Genuinely better replies would need human-written reply examples.
 - ⚠️ **Rules-only scores 100% on the reviewed test set because those labels were built to agree with the engine.** That set can't show the model beating the rules; the unfamiliar-wording set can.
-- ⚠️ **When the model writes everything (the default), it is less accurate.** Category: 96.3% reviewed test, 76.2% unfamiliar wording; all 8 fields 55.6%. Its answer needed human review (a check still failed after a retry) for 22 of 54 and 28 of 42 cases, mostly a liability tier the operator context doesn't support or a reply giving another category's advice. Its replies were learned from the templates, so they read like them, with errors. The table above is the rules-as-safety-net mode.
 - ⚠️ **The challenge set is labelled by the project, not human-reviewed**, and the same author wrote the varied training cases. They were kept dissimilar (trigram Jaccard ≤ 0.6), but some style overlap is possible. **The true measure, evaluation on real human-labelled messages, hasn't been done.**
 
 <details>
@@ -321,7 +350,7 @@ Every pilot got the liability tier wrong in 15–18 of 92 cases, which is why th
   </tr>
 </table>
 
-<sub>Taken on the live site with the round-4 model.</sub>
+<sub>Taken on the live site with the round-4 model in rules-as-safety-net mode. In the default model-authority mode the desk also shows a green "Written entirely by the model" or red "Needs human review" banner under the payload source.</sub>
 
 ---
 
@@ -335,7 +364,7 @@ npm run dev -- --host 127.0.0.1
 # open http://localhost:5173 → "Open desk"
 ```
 
-Without a model server, the **rules engine** answers every request, so the app is fully usable on any machine.
+Without a model server, the **rules engine** answers every request (rules-only mode), so the app is fully usable on any machine.
 
 <details>
 <summary><b>🤖 Run with the fine-tuned model</b></summary>
@@ -357,10 +386,9 @@ npm run dev -- --host 127.0.0.1
 curl -s http://127.0.0.1:5173/api/health
 ```
 
-- **The status bar** shows "Fine-tuned model · rules fallback" when the model is connected.
-- **Under load,** the server lets at most `--max-queue` requests wait (default 2), refuses the rest with `503 busy`, and drops work whose caller has given up. The site then answers with the rules.
-- **The model writes everything (default).** Category, tier, actions and the customer reply all come from the model; rules and templates only check it. A failed check gets one retry, then the answer is shown with a red "Needs human review" banner listing what failed. If the model is offline the desk says so instead of answering. See [docs/MODEL_SERVING.md](docs/MODEL_SERVING.md#two-modes).
-- **Rules as safety net instead:** add `SURAKSHA_MODEL_AUTHORITY=rules` to `.dev.vars` and serve `merged-schema-sft-004`. More accurate (table below), but rules and templates then write parts of the answer.
+- **The model writes everything (default).** Category, tier, actions and the customer reply all come from the model; rules and templates only check it. A failed check gets one retry, then the answer is shown with a red "Needs human review" banner listing what failed. The status bar shows "Fine-tuned model writes every answer".
+- **If the model is offline or busy,** the desk says the model could not answer (`503 model_unavailable`) and the status bar shows "Model offline". The server lets at most `--max-queue` requests wait (default 2) and drops work whose caller has given up.
+- **Rules as safety net instead:** add `SURAKSHA_MODEL_AUTHORITY=rules` to `.dev.vars` and serve `merged-schema-sft-004`. More accurate (see Results), but the rules decide the tier and actions and templates write the reply. Status bar: "Fine-tuned model · rules fallback".
 - **For a deployed Worker** to use a hosted model server, set all three: `SURAKSHA_MODEL_ALLOW_REMOTE=true`, an `https://` URL, and `SURAKSHA_MODEL_TOKEN`. Otherwise it stays rules-only.
 
 </details>
@@ -371,16 +399,17 @@ curl -s http://127.0.0.1:5173/api/health
 <br>
 
 ```bash
-npm test          # 124 financial-policy, privacy, i18n and gate regression tests
+npm test          # 137 financial-policy, privacy, i18n, gate and model-authority tests
 npm run check     # TypeScript
 npm run lint      # ESLint
 npm run build     # Cloudflare Worker build (also copies the on-device OCR assets)
-.venv/bin/python -m unittest discover -s research -p "test_*.py"   # 78 Python tests
+.venv/bin/python -m unittest discover -s research -p "test_*.py"   # 79 Python tests
 
 # evaluations (need recorded predictions or a running model server)
 node scripts/eval-runtime.ts data/processed/upi-reviewed-v1/test-reviewed/benchmark.jsonl \
-  data/review/annotation_queue.jsonl model=artifacts/reviewed/eval/reviewed-sft-002.jsonl
-node scripts/eval-challenge.ts http://127.0.0.1:8765
+  data/review/annotation_queue.jsonl model=artifacts/reviewed/eval/reviewed-sft-004.jsonl
+node scripts/eval-challenge.ts http://127.0.0.1:8765     # rules as safety net
+node scripts/eval-authority.ts http://127.0.0.1:8765     # model authority (serve merged-dual-sft-004)
 ```
 
 </details>
@@ -409,6 +438,12 @@ HF_HUB_OFFLINE=1 .venv-training/bin/python phase2_aligntune_train_and_merge.py \
   --data data/processed/upi-reviewed-v3 --output artifacts/reviewed/schema-sft-004 --max-steps 92
 HF_HUB_OFFLINE=1 .venv-training/bin/python scripts/merge_pilot_adapter.py \
   --adapter artifacts/reviewed/schema-sft-004/curated-sft --output artifacts/reviewed/merged-schema-sft-004
+# the JSON + reply model used in model-authority mode
+HF_HUB_OFFLINE=1 .venv-training/bin/python phase2_aligntune_train_and_merge.py \
+  --stage curated-sft --profile laptop-6gb --reviewed-laptop --pilot-task dual \
+  --data data/processed/upi-reviewed-v3 --output artifacts/reviewed/dual-sft-004 --max-steps 183
+HF_HUB_OFFLINE=1 .venv-training/bin/python scripts/merge_pilot_adapter.py \
+  --adapter artifacts/reviewed/dual-sft-004/curated-sft --output artifacts/reviewed/merged-dual-sft-004
 
 # 4 · AuditKIT: score recorded predictions
 .venv/bin/python phase3_auditkit_eval.py --help
@@ -429,7 +464,8 @@ curl -s http://127.0.0.1:5173/api/triage -H 'content-type: application/json' \
 ```
 
 - `POST /api/triage` takes one JSON object: a non-empty `message` (at most 12,000 UTF-16 characters), plus optional operator context: `transaction_date`, `elapsed_calendar_days`, `reporting_delay_working_days`, `responsibility`, `account_tier` and `language`.
-- The response contains the 8-field `payload`, the reply, the masked text, the evidence, the SLA (`reversal_due_date`, estimated compensation) and the audit. The audit includes the model status, the fallback reasons and `policy_from_rules`.
+- The response contains the 8-field `payload`, the reply, the masked text, the evidence, the SLA (`reversal_due_date`, estimated compensation) and the audit. In model-authority mode `audit.model.authority` holds `review_required`, `payload_flags`, `reply_flags` and the attempt counts; with the rules as safety net the audit holds the fallback reasons and `policy_from_rules`.
+- In model-authority mode, if the model can't produce an answer the API returns **`503`** with `error.code = "model_unavailable"` and the reasons.
 - Malformed or oversized input **fails safely**, with a stable `error.code`, a request ID and `Cache-Control: no-store`.
 - `GET /api/health` reports the engine mode, the model identity, `trained_model_connected` and the policy version.
 - `TRIAGE_API_KEY` makes the API require `x-api-key`. An optional Cloudflare Rate Limiting binding (`TRIAGE_RATE_LIMITER`) shares one quota across all Worker instances.
@@ -470,11 +506,11 @@ Primary sources and review dates are in [`lib/policy.ts`](lib/policy.ts). The ca
 | :--- | :--- |
 | `app/`, `components/` | The Next (vinext) app on Cloudflare Workers: desk, input checklist, screenshot reader, views, mascot |
 | `lib/engine.ts`, `lib/rules/` | Redaction, extraction, evidence-based classification, liability tiers, due dates |
-| `lib/model-triage.ts` | The model-first path: gates, and the policy rules deciding tier, actions, language and urgency |
+| `lib/model-triage.ts` | Both model modes: model authority (retry, flags, no replacement) and rules as safety net (gates, policy rules) |
 | `lib/policy.ts` | Versioned policy rules and primary sources |
 | `lib/i18n/` | Locale registry, message catalog, hand-written and generated (IndicTrans2) translations |
 | `phase1_…`, `phase2_…`, `phase3_…` | CuratorKIT curation, AlignTune training and merging, AuditKIT evaluation |
-| `scripts/` | Human-review CLI, variation generator, translator, model server, merge, evaluators, OCR asset copy |
+| `scripts/` | Human-review CLI, variation generators, translator, model server, merge, evaluators (`eval-runtime`, `eval-challenge`, `eval-authority`, `eval-replies`), OCR asset copy |
 | `data/review/`, `data/challenge/` | Review queues and decisions; the unfamiliar-wording challenge set |
 | `research/` | Training helpers and Python tests |
 | `docs/` | Runbooks, verification record, project guide, demo media |
@@ -483,14 +519,15 @@ Primary sources and review dates are in [`lib/policy.ts`](lib/policy.ts). The ca
 
 | Guide | What it covers |
 | :--- | :--- |
-| [Project & code guide](docs/PROJECT_GUIDE.md) | Architecture, walkthroughs, source index ([Word version](docs/SurakshaMerge_Project_and_Code_Guide.docx)) |
+| [Project & code guide](docs/PROJECT_GUIDE.md) | Architecture, walkthroughs, source index ([Word version](docs/SurakshaMerge_Project_and_Code_Guide.docx), an older snapshot) |
 | [Data curation](docs/DATA_CURATION.md) | Sources, CuratorKIT execution, distributions |
 | [Human review & training](docs/HUMAN_REVIEW_AND_TRAINING.md) | Review CLI and the gates before training |
 | [Pilot training](docs/PILOT_TRAINING.md) | Every pilot run, its results and what went wrong |
-| [Model serving](docs/MODEL_SERVING.md) | Model server, load handling, hosted endpoints |
+| [Model serving](docs/MODEL_SERVING.md) | The three modes, model server, gates and checks, load handling, hosted endpoints |
 | [Research runbook](docs/RESEARCH.md) | AlignTune training, merging, AuditKIT evaluation |
 | [Laptop smoke test](docs/LAPTOP_SMOKE.md) | 6 GB GPU runbook |
 | [Verification record](docs/VERIFICATION.md) | Everything that was run and measured, dated |
+| [Demo script](docs/DEMO_SCRIPT.md) | Scenes, messages to paste and narration for recording a demo |
 
 ---
 
@@ -502,7 +539,7 @@ Primary sources and review dates are in [`lib/policy.ts`](lib/policy.ts). The ca
   - native-speaker review of the 278 Tanglish and Marathi–English cases;
   - native-speaker review of the 21 machine-translated languages and the native-script keywords;
   - the independent second review of the 92-case evaluation queue.
-- **The model writes the replies.** Checks flag unsafe or wrong ones for human review but don't replace them; on unfamiliar wording 28 of 42 answers were flagged. Nothing it writes has been human-reviewed for quality.
+- **By default the model writes the whole answer.** Checks flag unsafe or wrong answers for human review but don't replace them; on unfamiliar wording 28 of 42 answers were flagged. Nothing it writes has been human-reviewed for quality. Every answer is a draft for a human agent.
 - **Not evaluated on real messages.** The headline numbers come from synthetic and project-labelled sets.
 - **Privacy.** No customer message is stored, and exported traces are masked. Screenshots are read on the device, and dictation needs an explicit opt-in. A hosted model endpoint would receive redacted transaction details and needs data-protection approval.
 - **Not a certification.** Operational use would need a bank-approved category mapping, a compliance review, real-message evaluation, agent authentication and audit logging.

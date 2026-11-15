@@ -2,9 +2,17 @@
 
 This guide explains how SurakshaDesk processes UPI fraud and dispute messages, how its TypeScript application is organized, and how its separate Python research workflow prepares data, trains specialist adapters and evaluates recorded predictions. It is intended for a project owner, reviewer or developer who needs to explain the system and change its code safely.
 
-The working application uses deterministic extraction rules and multilingual response templates. The model training and merging entry points are implemented separately; a trained checkpoint is not connected to the live desk. Understanding that boundary is essential to interpreting the UI, the tests and the research results.
+Source snapshot: `541d5b6ca945d1ace3d53b9f66b4c80dd3cb6fd6`. Repository: https://github.com/vishal88736/suraksha-merge. The file inventory and function index (appendices) cover the 178 tracked files of that snapshot; the Word version is a copy of that snapshot. Sections 1, 3, 11, 14, 19 and 20 were brought up to date on 15 November 2026; read the next section first.
 
-Source snapshot: `541d5b6ca945d1ace3d53b9f66b4c80dd3cb6fd6`. Repository: https://github.com/vishal88736/suraksha-merge. The file inventory covers all 178 tracked files in that snapshot. This documentation and its Word version are additional documentation artifacts.
+## 0 What changed since the snapshot (15 November 2026)
+
+- **A fine-tuned model is connected.** `scripts/serve_model.py` serves Qwen2.5-3B-Instruct with a merged LoRA (NF4, about 2.5 GB of GPU memory) on loopback; the Worker calls it through `lib/model-triage.ts`. Models were trained on 810 human-reviewed cases: `merged-schema-sft-004` (JSON) and `merged-dual-sft-004` (JSON and reply).
+- **Three runtime modes** ([MODEL_SERVING.md](MODEL_SERVING.md)): *model authority* (default when a model is connected: the model writes the whole answer, checks only flag it, one sampled retry, a "Needs human review" banner, `503 model_unavailable` when it can't answer); *rules as safety net* (`SURAKSHA_MODEL_AUTHORITY=rules`: gates, policy rules decide tier/actions/language, templates write the reply, rules answer on any failure); *rules only* (no model configured).
+- **Human review.** 652 corpus cases and 213 hand-written varied-wording cases reviewed, with recorded decisions (`data/review/`). See [HUMAN_REVIEW_AND_TRAINING.md](HUMAN_REVIEW_AND_TRAINING.md) and [VERIFICATION.md](VERIFICATION.md).
+- **22 scheduled languages.** The interface and reply templates are machine-translated with IndicTrans2 and back-translation checks (`scripts/translate_i18n.py`, `lib/i18n/generated/`); native-script keywords, RTL layout and Noto fonts.
+- **Desk features added:** live "What to include" checklist; on-device screenshot reading (Tesseract WebAssembly); opt-in dictation; transaction date → reversal due date and ₹100/day compensation; reply-language switch (Hinglish ↔ हिन्दी, Tanglish ↔ தமிழ், Marathi-English ↔ मराठी); masked-evidence export.
+- **Rules.** Evidence-based classification (loss, non-receipt, received-OK and no-debit signals), amounts written in words or after a payment verb, bank-statement UTRs, OTP/PIN-sharing takeover, QR "receive money" scam, billers and apps.
+- **Measured:** rules as safety net 98.1% all fields (54 reviewed test cases) and 90.5% category on 42 unfamiliar wordings; model authority 55.6% and 76.2%, with 22 and 28 answers flagged for review. Details in the README Results section.
 
 ## 1 Project purpose and capabilities
 
@@ -41,7 +49,9 @@ A reviewer should distinguish four questions: does the application behave correc
 
 ## 3 Architecture and runtime flow
 
-The live path is customer input -> Worker guard -> rule engine -> validated result -> operator review. The separate research path is seeds -> curation -> specialist training -> weighted merge -> recorded evaluation.
+The live path is customer input -> Worker guard -> redaction -> model (model authority or rules as safety net) or rule engine (rules only) -> validated result -> operator review. The research path is sources -> CuratorKIT curation -> human review -> AlignTune training -> merge -> runtime and AuditKIT evaluation.
+
+*Updated 15 November 2026:* when `SURAKSHA_MODEL_URL` is set, `createTriageHandler` calls `triageWithModel` (`lib/model-triage.ts`) instead of `triage`. In model authority (default) the model's payload and reply are returned as written, with `audit.model.authority` listing failed checks; with `SURAKSHA_MODEL_AUTHORITY=rules` the model's payload passes gates and the policy rules before use, and the rules answer on any failure. The rules engine still runs first in every mode, for redaction, evidence and the checks. The paragraphs below describe the rules-only path of the original snapshot.
 
 The live request path begins in `app/page.tsx`. The composer edits a `TriageInput`; `requestTriage` sends it to `/api/triage`. The custom Worker checks the method, optional key and per-isolate request budget before delegating to Vinext. The route handler reads a bounded body, parses strict JSON and validates the input before calling `triage`.
 
@@ -344,6 +354,8 @@ The trace exporter removes the privacy redaction arrays and raw submitted messag
 
 ## 11 Languages dictation and presentation
 
+*Updated 15 November 2026:* `lib/i18n/locales.ts` now defines all 22 scheduled languages plus English (interface and reply templates), and the romanized registers Hinglish, Tanglish and Marathi-English; generated translations live in `lib/i18n/generated/` and load on demand. `detectLanguage` resolves shared scripts with distinctive letters and marker words. In model-authority mode the model names the language and writes the reply; a mismatch with the detected script is flagged. The original description follows.
+
 The UI locale and the customer's reply language solve different problems. `lib/i18n/locales.ts` defines English/Hindi UI choices and the five reply language codes. `catalog.ts` holds typed interface messages, interpolation and fallback behavior. `replies.ts` holds complete response bundles for each reply language, including fraud steps, technical timelines, voluntary-transfer language and escalation.
 
 `I18nProvider` reads the URL's `lang` parameter first, then the stored locale, and finally the default. It updates the document language and subscribes to storage, popstate and a custom locale-change event. The server and first hydration snapshot use the default locale, after which the browser applies the URL or stored preference. Only the locale preference is persisted in browser storage by this feature.
@@ -454,7 +466,9 @@ A baked full model avoids loading two independent adapters during deployment. It
 
 The first call asks for schema output. The second asks for a customer reply and includes the first output as an untrusted model draft. It does not inject the gold target into the held-out reply prompt. The two outputs are joined with the research delimiter. No repair pass cleans malformed JSON or unsafe text before scoring.
 
-Generation uses deterministic decoding with `do_sample=False`, a configured token cap, model chat formatting and inference mode. Recorded latency includes both calls, with CUDA synchronization around the measurement. Token counts include both inputs and outputs. The inference manifest records the benchmark and prediction digests, identity, device, generation settings and `repairs_applied: false`. This command has not been run with downloaded model weights in the recorded project verification.
+Generation uses deterministic decoding with `do_sample=False`, a configured token cap, model chat formatting and inference mode. Recorded latency includes both calls, with CUDA synchronization around the measurement. Token counts include both inputs and outputs. The inference manifest records the benchmark and prediction digests, identity, device, generation settings and `repairs_applied: false`.
+
+*Updated 15 November 2026:* this has since been run on an RTX 4050 for every reviewed model. `scripts/eval-runtime.ts` replays recorded predictions through the live gates and rules; `scripts/eval-challenge.ts` and `scripts/eval-authority.ts` run the live pipelines against a model server. Results are in [VERIFICATION.md](VERIFICATION.md).
 
 ### Checkpoint comparison
 
@@ -667,7 +681,7 @@ Review the primary source and effective dates first. Update `lib/policy.ts`, eng
 
 ### Connect a trained model
 
-Add a server-only inference boundary with request and response budgets, model version provenance, strict structured validation and explicit fallback behavior. Decide whether extraction and reply remain two separate calls. Preserve unrepaired outputs for evaluation, and do not send raw customer data to an external provider without the appropriate controls. Connecting a checkpoint is a new integration; changing a model label in the UI does not implement inference.
+*Done (15 November 2026).* Serve a merged model with `scripts/serve_model.py --model <dir>` and set `SURAKSHA_MODEL_URL` in `.dev.vars`; choose the mode with `SURAKSHA_MODEL_AUTHORITY`. The server refuses adapters whose base identity doesn't match or that have no verified parameter update. A hosted endpoint needs `SURAKSHA_MODEL_ALLOW_REMOTE=true`, HTTPS and `SURAKSHA_MODEL_TOKEN`. See [MODEL_SERVING.md](MODEL_SERVING.md).
 
 ### Add real storage or banking actions
 
@@ -693,6 +707,10 @@ Sweep weights using validation data, including specialist-only endpoints and the
 | Prediction evaluation fails | Missing IDs, duplicate IDs or mismatched inference manifest | Regenerate aligned predictions; never silently drop cases |
 | Scorer results appear perfect | Fixture mode is being viewed as a benchmark | Inspect report mode and model-inference evidence |
 | D1 helper fails | Optional database binding is inactive | Check hosting configuration; the active desk does not need DB |
+| "The model could not produce an answer" (503) | Model-authority mode and the model server is down, busy or returned unparseable JSON twice | Check `/api/health` and the server log; or set `SURAKSHA_MODEL_AUTHORITY=rules` so the rules answer |
+| Red "Needs human review" banner | A check still failed after the model's retry | Read the listed flags; verify those fields before using the answer |
+
+*Updated 15 November 2026:* in model-authority mode the model writes every answer and is markedly less accurate than with the rules as safety net (see section 0); its replies were learned from the templates and often give another category's advice. Every answer remains a draft for a human agent.
 
 Known design limits are local and specific. Classification and policy gates are lexical heuristics. The policy snapshot does not refresh itself. Elapsed and working days are operator inputs rather than a bank calendar or transaction-status query. Redaction is pattern-based, and a preserved UTR still identifies a transaction.
 

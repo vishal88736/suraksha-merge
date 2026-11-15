@@ -1,5 +1,7 @@
 # Verification record
 
+Dated record of what was run and measured, oldest first. **Latest state (15 November 2026):** the website defaults to model authority (the model writes the whole answer, checks only flag), measured in the last section; the more accurate rules-as-safety-net mode is measured in *Round 4*. The table below is the original 10 November implementation check.
+
 Implementation check on 10 November 2026. These are local implementation and fixture checks; current GitHub Actions status is recorded separately by the commit's Actions run.
 
 | Surface                           | Observed result            | Scope                                                                                                                                        |
@@ -132,4 +134,35 @@ CPU smoke-data checks passed for two synthetic fixtures. Trainer/reward registra
 Files: `artifacts/reviewed/eval/runtime-004.json`, `challenge-r002-now.txt`, `challenge-r004-now.txt`. Six fresh user-style messages: all final answers correct; the model's own answer was used for 2, the rules overruled it for 4.
 
 **Caveat.** The 45 new cases were written after looking at failures, by the same author as the challenge set. The challenge gain may overstate the improvement on real messages.
+
+## Rules fixes from a user report, 15 November 2026
+
+"bhaiya ji mera paisa cut gaya hai, samne wale ko nahi mila" was classified NEEDS_INFORMATION: the debit and the non-receipt were found, but no recipient. P2P now recognises "samne/saamne wale" and "jisko bheja"; failure wording adds "payment/paise nahi aaya" (not "samajh nahi aaya"); merchant adds "dukaan". Across the 930 corpus, 213 variation and 42 challenge cases exactly one classification changed, from wrong to right (a "paisa nahi aaya" case). 133 app tests passed.
+
+## Model authority, 15 November 2026
+
+**Why.** The project owner asked for every answer, the customer reply included, to come from the model, with no rules or templates writing any part of it, and chose: a failed check gets one retry, then the model's answer is shown flagged for human review.
+
+**Model.** `merged-dual-sft-004`: QLoRA SFT on the same 810 reviewed round-4 cases, JSON and reply tasks (`--pilot-task dual`), 183 steps, train loss 0.307, parameters updated; merged on CPU.
+
+**Implementation.** `triageModelAuthority` in `lib/model-triage.ts`; sampled retries in `scripts/serve_model.py` (`"sample": true`); `audit.model.authority`; `503 model_unavailable` when there is no usable answer; review banner and status-bar states; default whenever a model is connected (`SURAKSHA_MODEL_AUTHORITY=rules` restores the safety net). 137 app tests (five new for this mode) and 79 Python tests passed; typecheck, lint and build passed.
+
+**Language fix found while evaluating.** Every reply training row named its language in the operator context; at runtime the reply request said `auto`, so the model guessed, mostly Hindi: English messages got Hindi replies (31 of 42 challenge replies flagged `reply_wrong_language`). The reply request now carries the language the model detected. After the fix: 2 of 42.
+
+**Results (`scripts/eval-authority.ts`, `artifacts/reviewed/eval/authority-dual-004.json`).**
+
+| | 54 reviewed test cases | 42 unfamiliar wordings |
+|---|---:|---:|
+| Category correct | 96.3% | 76.2% |
+| All 8 fields correct | 55.6% | n/a |
+| Needs human review after the retry | 22 | 28 |
+| Reply passed every check | 36 | 18 |
+| No answer at all | 0 | 0 |
+| Median seconds | 11.0 | 11.7 |
+
+Compared with rules as safety net (round 4): 98.1% all fields and 90.5% challenge category.
+
+**Seven demo messages on the live site** (`docs/DEMO_SCRIPT.md`; translation was running on the same GPU, so times are inflated): 6 of 7 flagged. "samne wale ko nahi mila" → NEEDS_INFORMATION with a Hindi reply that opens with nonsense and gives wrong-UPI-ID advice; Hinglish messages read as English and answered in English; the OTP scam called remote access; the OLX reply missing the 1930 helpline; the Zomato failure right on one run and P2P (T+1) on another; the Hindi wrong-UPI-ID message passed every check.
+
+**Assessment.** The checks surface the model's errors as designed and nothing is hidden, but on its own the model is not reliable enough for customers: liability tiers it cannot infer from a message, and replies that mix up categories. Rules as safety net remains the more accurate configuration.
 
