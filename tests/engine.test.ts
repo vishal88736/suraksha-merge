@@ -578,3 +578,15 @@ test("an OTP given to a caller is a takeover, a QR scanned to receive money is a
   );
   assert.equal(triage({ message: "Instead 15000 got debited from my account" }).payload.amount_inr, 15000);
 });
+
+test("'the other person did not get it' is a transfer; 'dukaan' is a shop", () => {
+  const category = (message: string) => triage({ message }).payload.dispute_category;
+  assert.equal(
+    category("bhaiya Ji mera Paisa cut Gaya Hai Bus Samne Wale Ko nahin mila hai mere pass kya karun"),
+    "P2P_BENEFICIARY_NOT_CREDITED",
+  );
+  assert.equal(category("saamne wala bol raha payment nahi aaya par mere paise kat gaye"), "P2P_BENEFICIARY_NOT_CREDITED");
+  assert.equal(category("dukaan pe samne wale ko pay kiya, payment failed, Rs 300 kat gaye"), "P2M_CONFIRMATION_FAILURE");
+  // "samajh nahi aaya" (did not understand) is not a non-receipt.
+  assert.equal(category("mujhe samajh nahi aaya ye SMS kya hai, paise kat gaye kya?"), "NEEDS_INFORMATION");
+});

@@ -72,11 +72,11 @@ export const VOLUNTARY_INTENT_SIGNALS =
 
 /** The transaction did not complete as expected. */
 export const TECHNICAL_FAILURE_SIGNALS =
-  /not\s*(?:credited|received?|recvd|reached|got)|no\s*got|didn[’']?t\s*(?:get|receive|reach)|did\s*not\s*(?:get|receive|reach)|stuck|pending|failed|declined|(?:payment|transaction|transfer|order)\s+(?:was\s+|is\s+|got\s+)?unsuccessful|(?:did\s*not|didn[’']?t)\s*go\s*through|not\s*(?:placed|completed|successful|processed)|order\s*(?:failed|cancel+ed)|n(?:a|ah)?[hi]i?n?\s*(?:mil[ae]|pahunch[ae]|phuch[ae])|mil[ae]\s*n(?:a|h)?(?:h?i|ai)\b|receive\s*n(?:a)?h?i|illa|debitaachu|confirmation|unconfirmed|\bunpaid\b|(?:place|complete|successful)\s*nahi\s*hu/i;
+  /not\s*(?:credited|received?|recvd|reached|got)|no\s*got|didn[’']?t\s*(?:get|receive|reach)|did\s*not\s*(?:get|receive|reach)|stuck|pending|failed|declined|(?:payment|transaction|transfer|order)\s+(?:was\s+|is\s+|got\s+)?unsuccessful|(?:did\s*not|didn[’']?t)\s*go\s*through|not\s*(?:placed|completed|successful|processed)|order\s*(?:failed|cancel+ed)|n(?:a|ah)?[hi]i?n?\s*(?:mil[ae]|pahunch[ae]|phuch[ae])|mil[ae]\s*n(?:a|h)?(?:h?i|ai)\b|receive\s*n(?:a)?h?i|illa|debitaachu|confirmation|unconfirmed|\bunpaid\b|(?:place|complete|successful)\s*nahi\s*hu|\b(?:payment|paise|paisa|amount|money)\s+n(?:a|ah)?h?in?\s*aa?y[aei]\b/i;
 
 /** Merchant or acquiring context. */
 export const MERCHANT_SIGNALS =
-  /merchant|swiggy|zomato|shop|store|p2m|bigbasket|amazon|flipkart|\buber\b|\bola\b|irctc|dmart|petrol\s*pump|electricity|\bbiller\b|\bdth\b|broadband|\bpremium\b|bijli|gas\s*(?:bill|cylinder|booking)/i;
+  /merchant|swiggy|zomato|shop|store|\bduk(?:a|aa)n|p2m|bigbasket|amazon|flipkart|\buber\b|\bola\b|irctc|dmart|petrol\s*pump|electricity|\bbiller\b|\bdth\b|broadband|\bpremium\b|bijli|gas\s*(?:bill|cylinder|booking)/i;
 
 /**
  * Generic purchase words. They mean a merchant only when no person is named as
@@ -87,7 +87,7 @@ export const PURCHASE_SIGNALS =
 
 /** Peer-to-peer transfer context. */
 export const P2P_SIGNALS =
-  /transfer|friend|p2p|beneficiary|re[cs]e?ipi?ent|rec\w{0,3}ver|payee|other\s*(?:person|party)|\bbande?y?\b|roommate|brother|sister|landlord|\bsent\s+(?:him|her)\b|\b(?:he|she)\s+(?:has\s+not|hasn[’']?t|did\s*not|didn[’']?t)\s+(?:received?|got|get)\b|\bdost\b|\busko\b/i;
+  /transfer|friend|p2p|beneficiary|re[cs]e?ipi?ent|rec\w{0,3}ver|payee|other\s*(?:person|party)|\bbande?y?\b|roommate|brother|sister|landlord|\bsent\s+(?:him|her)\b|\b(?:he|she)\s+(?:has\s+not|hasn[’']?t|did\s*not|didn[’']?t)\s+(?:received?|got|get)\b|\bdost\b|\busko\b|\bs(?:a|aa)mne\s*wa+l[aei]\b|\bjis(?:ko|e)\s*bhej/i;
 
 /**
  * Evidence that money actually left the account. A scam category needs it:
