@@ -6,6 +6,10 @@ When a UPI payment goes wrong, a customer writes in panic, in Hinglish, Hindi or
 
 The project fine-tunes a small open model, Qwen2.5-3B-Instruct, on 810 human-reviewed synthetic cases, using three toolkits (CuratorKIT, AlignTune, AuditKIT) on a single 6 GB RTX 4050 laptop GPU. The model is served locally; customer text is masked before the model sees it.
 
+## Built on
+
+The base model is **Qwen2.5-3B-Instruct** from Hugging Face, and the 21 machine-translated languages use **AI4Bharat IndicTrans2** models from Hugging Face. Training cases came from the Apache-2.0 **CuCom** banking dataset plus cases we wrote; four further public datasets from Hugging Face (IndicJevBench, Chakravyuh-Bench, BANKING77, Indian Scam/Ham) were inspected or kept as external benchmarks, not used for training. The three toolkits are Lexsi-Labs projects. Licences, revisions and roles: [THIRD_PARTY.md](THIRD_PARTY.md).
+
 ## The three toolkits
 
 | Toolkit | What it did in this project |
