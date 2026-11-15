@@ -520,6 +520,7 @@ Primary sources and review dates are in [`lib/policy.ts`](lib/policy.ts). The ca
 
 | Guide | What it covers |
 | :--- | :--- |
+| [Abstract](docs/ABSTRACT.md) | One-page summary: the three toolkits, the two trained models, languages, policies and limitations |
 | [Project & code guide](docs/PROJECT_GUIDE.md) | Architecture, walkthroughs, source index ([Word version](docs/SurakshaMerge_Project_and_Code_Guide.docx), an older snapshot) |
 | [Data curation](docs/DATA_CURATION.md) | Sources, CuratorKIT execution, distributions |
 | [Human review & training](docs/HUMAN_REVIEW_AND_TRAINING.md) | Review CLI and the gates before training |
